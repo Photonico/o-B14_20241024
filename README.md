@@ -1,3 +1,3 @@
-# Plasmonic 2024
+# Cluster 2024
 
-The study in Plasmonics for 2-D systems
+A study on molecular cluster with DFT
