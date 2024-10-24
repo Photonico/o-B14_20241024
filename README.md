@@ -1,3 +1,3 @@
 # Cluster 2024
 
-The study in Cluster with DFT
+A study on molecular cluster with DFT
