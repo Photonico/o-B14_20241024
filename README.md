@@ -1,3 +1,3 @@
-# Cluster 2024
+# Bulk o-B14
 
-A study on molecular cluster with DFT
+A study on Bulk o-B14 with DFT.
