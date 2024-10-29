@@ -1,4 +1,5 @@
 #### Kpoints
+# energy versus kpoints
 # pylint: disable = C0103, C0114, C0116, C0301, C0321, R0914
 
 import xml.etree.ElementTree as ET
@@ -185,7 +186,7 @@ def read_kpoints_free_energy(data_path):
 
     return kpoints, direct_kpoints, lattice, free_energy
 
-def plot_kpoints_free_energy_data(matter, source_data=None, kpoints_boundary=None, color_family="blue"):
+def plot_kpoints_energy(matter, source_data=None, kpoints_boundary=None, color_family="blue"):
     help_info = "Usage: read_kpoints_free_energy(data_path)\n" + \
                 "data_path: Path to the data file containing lattice and free energy values.\n"
 
