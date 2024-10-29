@@ -4,8 +4,9 @@
 import xml.etree.ElementTree as ET
 import os
 
-from typing import Tuple, Union
 import numpy as np
+
+from typing import Tuple, Union
 
 def check_vasprun(directory="."):
     """Find folders with complete vasprun.xml and print incomplete ones."""
