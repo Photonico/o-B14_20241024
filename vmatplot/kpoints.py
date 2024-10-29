@@ -210,7 +210,7 @@ def plot_kpoints_free_energy_data(matter, source_data=None, kpoints_boundary=Non
     # Data input
     data_input = read_kpoints_free_energy(source_data)
     tot_kpoints = data_input[0]
-    sep_kpoints = data_input[1]     # List of kpoints configurations like [(1, 1, 1), (2, 3, 2), ...]
+    sep_kpoints = data_input[1]  # List of kpoints configurations like [(1, 1, 1), (2, 3, 2), ...]
     energy = data_input[3]
 
     # Figure title
@@ -221,13 +221,13 @@ def plot_kpoints_free_energy_data(matter, source_data=None, kpoints_boundary=Non
     # Boundary based on the sum of kpoints values
     kpoints_sum = [sum(kpoint) for kpoint in sep_kpoints]  # Sum each (X, Y, Z) to create boundaries
 
-    kpoints_start = kpoints_boundary[0]
-    kpoints_end = kpoints_boundary[1]
-
-    if kpoints_end in ["", None]:
-        kpoints_end = max(kpoints_sum)
-    if kpoints_start in ["", None]:
+    # Handle missing or empty boundary to show all data
+    if kpoints_boundary in [None, ""]:
         kpoints_start = min(kpoints_sum)
+        kpoints_end = max(kpoints_sum)
+    else:
+        kpoints_start = kpoints_boundary[0]
+        kpoints_end = kpoints_boundary[1]
 
     # Find indices for the specified boundary
     start_index = kpoints_sum.index(kpoints_start) if kpoints_start in kpoints_sum else 0
