@@ -341,7 +341,7 @@ def plot_energy_kpoints(matter, source_data=None, kpoints_boundary=None, color_f
     energy_plotting = energy_sorted[start_index:end_index + 1]
 
     # Plotting
-    plt.scatter(range(len(kpoints_plotting)), energy_plotting, s=6, c=colors[1], zorder=1)
+    plt.scatter(range(len(kpoints_plotting)), energy_plotting, size=6, c=colors[1], zorder=1)
     plt.plot(range(len(kpoints_plotting)), energy_plotting, c=colors[1], lw=1.5)
 
     # Set custom tick labels for x-axis to show kpoints configurations
@@ -414,7 +414,7 @@ def plot_energy_encut(matter, source_data=None, encut_boundary=None, color_famil
     energy_plotting = energy_sorted[start_index:end_index + 1]
 
     # Plotting
-    plt.scatter(encut_plotting, energy_plotting, s=6, c=colors[1], zorder=1)
+    plt.scatter(encut_plotting, energy_plotting, size=6, c=colors[1], zorder=1)
     plt.plot(encut_plotting, energy_plotting, c=colors[1], lw=1.5)
 
     plt.tight_layout()
