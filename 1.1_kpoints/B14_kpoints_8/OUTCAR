@@ -1293,3 +1293,54 @@ Automatic generation of k-mesh.
 
     POTLOK:  cpu time      0.0096: real time      0.0111
     SETDIJ:  cpu time      0.0011: real time      0.0012
+     EDDAV:  cpu time      3.8961: real time      3.9224
+       DOS:  cpu time      0.0011: real time      0.0022
+    CHARGE:  cpu time      0.0522: real time      0.0532
+    MIXING:  cpu time      0.0008: real time      0.0008
+    --------------------------------------------
+      LOOP:  cpu time      3.9610: real time      3.9910
+
+ eigenvalue-minimisations  : 13800
+ total energy-change (2. order) : 0.1651516E+01  (-0.3240246E+00)
+ number of electron      41.9999999 magnetization 
+ augmentation part       -0.1695488 magnetization 
+
+ Broyden mixing:
+  rms(total) = 0.17299E+00    rms(broyden)= 0.17299E+00
+  rms(prec ) = 0.25578E+00
+  weight for this iteration     100.00
+
+ eigenvalues of (default mixing * dielectric matrix)
+  average eigenvalue GAMMA=   1.7736
+  1.3295  2.2177
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -342.73266844
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       101.07541398
+  PAW double counting   =      3067.24166143    -3056.44832088
+  entropy T*S    EENTRO =        -0.00466234
+  eigenvalues    EBANDS =      -154.51465079
+  atomic energy  EATOM  =       996.36613177
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -90.54009627 eV
+
+  energy without entropy =      -90.53543393  energy(sigma->0) =      -90.53776510
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   8)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.0100: real time      0.0109
+    SETDIJ:  cpu time      0.0011: real time      0.0011
+     EDDAV:  cpu time      2.8783: real time      2.8976
+       DOS:  cpu time      0.0008: real time      0.0008
