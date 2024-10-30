@@ -393,7 +393,7 @@ def plot_energy_encut(matter, source_data=None, encut_boundary=None, color_famil
     encut_sorted, energy_sorted = zip(*sorted_data)
 
     # Figure title
-    plt.title(f"Energy versus ENCUT {matter}")
+    plt.title(f"Energy versus energy cutoff {matter}")
     plt.xlabel("Energy cutoff (eV)")
     plt.ylabel(r"Energy (eV)")
 
