@@ -7113,3 +7113,52 @@ Automatic generation of k-mesh.
 
     POTLOK:  cpu time      0.0095: real time      0.0106
     SETDIJ:  cpu time      0.0012: real time      0.0012
+     EDDAV:  cpu time     46.1373: real time     46.5015
+       DOS:  cpu time      0.0061: real time      0.0081
+    CHARGE:  cpu time      0.5738: real time      0.5762
+    MIXING:  cpu time      0.0008: real time      0.0008
+    --------------------------------------------
+      LOOP:  cpu time     46.7289: real time     47.0985
+
+ eigenvalue-minimisations  :180576
+ total energy-change (2. order) : 0.1650684E+01  (-0.3206366E+00)
+ number of electron      41.9999999 magnetization 
+ augmentation part       -0.1702550 magnetization 
+
+ Broyden mixing:
+  rms(total) = 0.17182E+00    rms(broyden)= 0.17182E+00
+  rms(prec ) = 0.25019E+00
+  weight for this iteration     100.00
+
+ eigenvalues of (default mixing * dielectric matrix)
+  average eigenvalue GAMMA=   1.8502
+  1.4554  2.2451
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -342.65671948
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       101.07249016
+  PAW double counting   =      3071.07926879    -3060.28267935
+  entropy T*S    EENTRO =        -0.00362753
+  eigenvalues    EBANDS =      -154.61182892
+  atomic energy  EATOM  =       996.36906735
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -90.55702997 eV
+
+  energy without entropy =      -90.55340244  energy(sigma->0) =      -90.55521621
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   8)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.0095: real time      0.0110
+    SETDIJ:  cpu time      0.0012: real time      0.0012
