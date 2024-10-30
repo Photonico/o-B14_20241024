@@ -7309,3 +7309,50 @@ Automatic generation of k-mesh.
 
     POTLOK:  cpu time      0.0092: real time      0.0103
     SETDIJ:  cpu time      0.0011: real time      0.0011
+     EDDAV:  cpu time     40.9131: real time     42.7964
+       DOS:  cpu time      0.0063: real time      0.0087
+    CHARGE:  cpu time      0.5781: real time      0.6022
+    MIXING:  cpu time      0.0007: real time      0.0007
+    --------------------------------------------
+      LOOP:  cpu time     41.5084: real time     43.4194
+
+ eigenvalue-minimisations  :159888
+ total energy-change (2. order) :-0.1177510E-02  (-0.6837393E-04)
+ number of electron      41.9999999 magnetization 
+ augmentation part       -0.1751477 magnetization 
+
+ Broyden mixing:
+  rms(total) = 0.33687E-02    rms(broyden)= 0.33687E-02
+  rms(prec ) = 0.46437E-02
+  weight for this iteration     100.00
+
+ eigenvalues of (default mixing * dielectric matrix)
+  average eigenvalue GAMMA=   1.8048
+  2.9013  2.5061  1.0064  1.0064  1.8447  1.5637
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -349.01720224
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       101.58633082
+  PAW double counting   =      3744.18817345    -3733.37778945
+  entropy T*S    EENTRO =        -0.00365056
+  eigenvalues    EBANDS =      -148.81020230
+  atomic energy  EATOM  =       996.36906735
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -90.58827392 eV
+
+  energy without entropy =      -90.58462337  energy(sigma->0) =      -90.58644865
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(  12)  ---------------------------------------
+
+
