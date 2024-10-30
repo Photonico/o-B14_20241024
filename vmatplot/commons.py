@@ -34,3 +34,37 @@ def check_vasprun(directory="."):
             except IOError as e:    # Change from Exception to IOError
                 print(f"Error reading {xml_path}: {e}")
     return complete_folders
+
+def identify_kpoints_type(directory="."):
+    """Find folders with KPOINTS and print its type."""
+    # Key words
+    automatic = "Automatic k-point grid"
+    explicit = "Explicit k-points listed"
+    linear = "Linear mode"
+
+    # Check if the user asked for help
+    if directory == "help":
+        print("Please use this function on the project directory.")
+        return "Help provided."
+
+    kpoints_path = os.path.join(directory, "KPOINTS")
+    if not os.path.exists(kpoints_path):
+        return "KPOINTS file not found in the specified directory."
+
+    with open(kpoints_path, "r", encoding="utf-8") as kpoints_file:
+        lines = kpoints_file.readlines()
+        if len(lines) < 3:
+            return "Invalid file format, unable to identify"
+        second_line = lines[1].strip()
+        third_line = lines[2].strip()
+        if second_line == "0":
+            if "Gamma" in third_line or "Monkhorst" in third_line or "Monkhorst-pack" in third_line:
+                return automatic
+            else: return "Invalid file format, unable to identify"
+        elif second_line.isdigit():
+            if "Explicit" in third_line:
+                return explicit
+            elif "Line-mode" in third_line:
+                return linear
+            else: return "Invalid file format, unable to identify"
+        else: return "Invalid file format, unable to identify"
