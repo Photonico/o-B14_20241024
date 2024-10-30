@@ -6911,3 +6911,111 @@ Automatic generation of k-mesh.
 --------------------------------------- Iteration      1(   2)  ---------------------------------------
 
 
+     EDDAV:  cpu time    415.3097: real time    428.6714
+       DOS:  cpu time      1.7505: real time      1.7758
+    --------------------------------------------
+      LOOP:  cpu time    417.0602: real time    430.4470
+
+ eigenvalue-minimisations  :158688
+ total energy-change (2. order) :-0.2594947E+03  (-0.2390739E+03)
+ number of electron      42.0000000 magnetization 
+ augmentation part       42.0000000 magnetization 
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -271.33601302
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =        97.50108125
+  PAW double counting   =       608.99811708     -597.02363782
+  entropy T*S    EENTRO =        -0.00414627
+  eigenvalues    EBANDS =      -220.00337135
+  atomic energy  EATOM  =       996.38283970
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -87.00813143 eV
+
+  energy without entropy =      -87.00398516  energy(sigma->0) =      -87.00605830
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   3)  ---------------------------------------
+
+
+     EDDAV:  cpu time    529.7768: real time    542.7418
+       DOS:  cpu time      1.0291: real time      1.0359
+    --------------------------------------------
+      LOOP:  cpu time    530.8058: real time    543.7777
+
+ eigenvalue-minimisations  :181128
+ total energy-change (2. order) :-0.1057408E+02  (-0.1046741E+02)
+ number of electron      42.0000000 magnetization 
+ augmentation part       42.0000000 magnetization 
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -271.33601302
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =        97.50108125
+  PAW double counting   =       608.99811708     -597.02363782
+  entropy T*S    EENTRO =        -0.00441261
+  eigenvalues    EBANDS =      -230.57718692
+  atomic energy  EATOM  =       996.38283970
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -97.58221334 eV
+
+  energy without entropy =      -97.57780073  energy(sigma->0) =      -97.58000703
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   4)  ---------------------------------------
+
+
+     EDDAV:  cpu time    408.7992: real time    422.3241
+       DOS:  cpu time      1.2280: real time      1.2372
+    --------------------------------------------
+      LOOP:  cpu time    410.0272: real time    423.5613
+
+ eigenvalue-minimisations  :132624
+ total energy-change (2. order) :-0.6815659E-01  (-0.6815098E-01)
+ number of electron      42.0000000 magnetization 
+ augmentation part       42.0000000 magnetization 
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -271.33601302
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =        97.50108125
+  PAW double counting   =       608.99811708     -597.02363782
+  entropy T*S    EENTRO =        -0.00440491
+  eigenvalues    EBANDS =      -230.64535120
+  atomic energy  EATOM  =       996.38283970
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -97.65036992 eV
+
+  energy without entropy =      -97.64596501  energy(sigma->0) =      -97.64816747
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   5)  ---------------------------------------
+
+

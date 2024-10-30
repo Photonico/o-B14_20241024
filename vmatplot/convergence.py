@@ -115,7 +115,6 @@ def identify_parameters(directory="."):
     except (ET.ParseError, ValueError, IndexError) as e:
         print(f"Error parsing files in {directory}: {e}")
         return None
-
 def summarize_energy_parameters(directory=".", lattice_boundary=None):
     result_file = "parameters_energy.dat"
     result_file_path = os.path.join(directory, result_file)
@@ -162,21 +161,18 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
                         if any(keyword in line.lower() for keyword in ["gamma", "monkhorst", "monkhorst-pack", "explicit", "line-mode"]):
                             kpoints_index = index + 1
                             break
-                    else:
-                        raise ValueError("Kpoints type keyword not found in KPOINTS file.")
+                    else: raise ValueError("Kpoints type keyword not found in KPOINTS file.")
 
                     kpoints_values = lines[kpoints_index].split()
                     x_kpoints, y_kpoints, z_kpoints = int(kpoints_values[0]), int(kpoints_values[1]), int(kpoints_values[2])
                     tot_kpoints = x_kpoints * y_kpoints * z_kpoints
                     kpoints_sum = x_kpoints + y_kpoints + z_kpoints  # For sorting
-
                 # Tolerance check for lattice boundary
                 TOLERANCE = 1e-6
                 if lattice_boundary is not None:
                     lattice_start, lattice_end = lattice_boundary
                     lattice_within_start = lattice_start in [None, ""] or lattice_constant >= lattice_start - TOLERANCE
                     lattice_within_end = lattice_end in [None, ""] or lattice_constant <= lattice_end + TOLERANCE
-
                 # Initialize elapsed time variable
                 elapsed_time = None
                 if os.path.isfile(outcar_path):
@@ -185,7 +181,6 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
                             if "Elapsed time (sec):" in line:
                                 elapsed_time = float(line.split(":")[-1].strip())
                                 break
-
                 if lattice_within_start and lattice_within_end:
                     # Collect all required parameters in order
                     params = {
@@ -204,7 +199,6 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
                         "force convergence (EDIFFG)": None,
                         "elapsed time (sec)": elapsed_time
                     }
-
                     # Extract additional parameters from <incar> section
                     for param in root.findall(".//incar/i"):
                         name = param.get("name")
@@ -222,12 +216,10 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
                             params["electronic convergence (EDIFF)"] = float(param.text)
                         elif name == "EDIFFG":
                             params["force convergence (EDIFFG)"] = float(param.text)
-
                     # Extract volume
                     volume_tag = root.find(".//structure[@name='finalpos']/crystal/volume")
                     if volume_tag is not None:
                         params["volume"] = float(volume_tag.text)
-
                     # Append results in the specified order
                     results.append((
                         params["total energy"], params["total kpoints"], kpoints_sum, params["kpoints grid"],
@@ -237,15 +229,12 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
                         params["electronic convergence (EDIFF)"], params["force convergence (EDIFFG)"],
                         params["elapsed time (sec)"]
                     ))
-
             except (ET.ParseError, ValueError, IndexError) as e:
                 print(f"Error parsing files in {work_dir}: {e}")
+        else: print(f"vasprun.xml or KPOINTS is not found in {work_dir}.")
 
-        else:
-            print(f"vasprun.xml or KPOINTS is not found in {work_dir}.")
-
-    # Sort results by the sum of Kpoints
-    results.sort(key=lambda x: x[2])  # Sort by kpoints_sum
+    # Sort results by elapsed time (sec)
+    results.sort(key=lambda x: x[14])  # Sort by elapsed time
 
     # Write the sorted results to the output file
     try:
@@ -495,19 +484,22 @@ def plot_energy_kpoints_encut(kpoints_list, encut_list):
     # Plot K-points data with fixed spacing on x-axis
     ax_kpoints.plot(range(len(kpoints_energy_plot)), kpoints_energy_plot, c=kpoints_colors[1], lw=1.5)
     ax_kpoints.scatter(range(len(kpoints_energy_plot)), kpoints_energy_plot, s=6, c=kpoints_colors[1], zorder=1)
-    ax_kpoints.set_xlabel("K-points Configuration", color=kpoints_colors[0])
+    # ax_kpoints.set_xlabel("K-points Configuration", color=kpoints_colors[0])
+    ax_kpoints.set_xlabel("K-points Configuration")
     ax_kpoints.set_ylabel("Energy (eV)")
     ax_kpoints.set_xticks(range(len(kpoints_labels_plot)))
-    ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right",color=kpoints_colors[0])
+    # ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right", color=kpoints_colors[0])
+    ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right")
 
     # Plot ENCUT data on the top x-axis
     ax_encut.plot(encut_values_plot, encut_energy_plot, c=encut_colors[1], lw=1.5)
     ax_encut.scatter(encut_values_plot, encut_energy_plot, s=6, c=encut_colors[1], zorder=1)
-    ax_encut.set_xlabel("Energy cutoff (eV)", color=encut_colors[0])
+    # ax_encut.set_xlabel("Energy cutoff (eV)", color=encut_colors[0])
+    ax_encut.set_xlabel("Energy cutoff (eV)")
     ax_encut.xaxis.set_label_position("top")
     ax_encut.xaxis.tick_top()
-    for encut_label in ax_encut.get_xticklabels():
-        encut_label.set_color(encut_colors[0])
+    # for encut_label in ax_encut.get_xticklabels():
+    #     encut_label.set_color(encut_colors[0])
 
     # Create unified legend
     kpoints_legend = mlines.Line2D([], [], color=kpoints_colors[1], marker='o', markersize=6, linestyle='-', label=f"energy versus K-points {info_suffix_kpoints}")
