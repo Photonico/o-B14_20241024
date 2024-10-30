@@ -708,3 +708,39 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">    3.97    3.99</time>
+   <time name="total">    3.97    3.99</time>
+   <energy>
+    <i name="e_fr_energy">    -97.56968751 </i>
+    <i name="e_wo_entrp">    -97.56185053 </i>
+    <i name="e_0_energy">    -97.56576902 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">    3.21    3.23</time>
+   <time name="total">    3.21    3.23</time>
+   <energy>
+    <i name="e_fr_energy">    -97.59660290 </i>
+    <i name="e_wo_entrp">    -97.58877102 </i>
+    <i name="e_0_energy">    -97.59268696 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">    3.73    3.75</time>
+   <time name="total">    3.78    3.80</time>
+   <energy>
+    <i name="e_fr_energy">    -97.59690913 </i>
+    <i name="e_wo_entrp">    -97.58907735 </i>
+    <i name="e_0_energy">    -97.59299324 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">    3.71    3.73</time>
+   <time name="total">    3.77    3.80</time>
+   <energy>
+    <i name="e_fr_energy">    -92.19161230 </i>
+    <i name="e_wo_entrp">    -92.18658433 </i>
+    <i name="e_0_energy">    -92.18909832 </i>
+   </energy>
+  </scstep>
+  <scstep>
