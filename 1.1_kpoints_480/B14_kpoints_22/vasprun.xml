@@ -6,7 +6,7 @@
   <i name="subversion" type="string">19Mar24 (build May 31 2024 16:31:43) complex                          parallel </i>
   <i name="platform" type="string">LinuxIFC </i>
   <i name="date" type="string">2024 10 31 </i>
-  <i name="time" type="string">00:22:34 </i>
+  <i name="time" type="string">00:50:33 </i>
  </generator>
  <incar>
   <i type="string" name="SYSTEM">Kpoints</i>
@@ -4009,8 +4009,8 @@
  </structure>
  <calculation>
   <scstep>
-   <time name="dav">  147.27  148.30</time>
-   <time name="total">  147.33  148.38</time>
+   <time name="dav">   52.64   53.15</time>
+   <time name="total">   52.70   53.24</time>
    <energy>
     <i name="alphaZ">     94.24357992 </i>
     <i name="ewald">   -795.76658092 </i>
@@ -4024,51 +4024,6 @@
     <i name="e_fr_energy">     53.91276573 </i>
     <i name="e_wo_entrp">     53.91457635 </i>
     <i name="e_0_energy">     53.91367104 </i>
-   </energy>
-  </scstep>
-  <scstep>
-   <time name="dav">  167.01  167.71</time>
-   <time name="total">  167.02  167.72</time>
-   <energy>
-    <i name="e_fr_energy">    -92.89960604 </i>
-    <i name="e_wo_entrp">    -92.89527768 </i>
-    <i name="e_0_energy">    -92.89744186 </i>
-   </energy>
-  </scstep>
-  <scstep>
-   <time name="dav">  170.73  171.37</time>
-   <time name="total">  170.74  171.38</time>
-   <energy>
-    <i name="e_fr_energy">    -97.58745995 </i>
-    <i name="e_wo_entrp">    -97.58291831 </i>
-    <i name="e_0_energy">    -97.58518913 </i>
-   </energy>
-  </scstep>
-  <scstep>
-   <time name="dav">  158.71  159.29</time>
-   <time name="total">  158.72  159.30</time>
-   <energy>
-    <i name="e_fr_energy">    -97.61463306 </i>
-    <i name="e_wo_entrp">    -97.61008882 </i>
-    <i name="e_0_energy">    -97.61236094 </i>
-   </energy>
-  </scstep>
-  <scstep>
-   <time name="dav">  169.94  170.56</time>
-   <time name="total">  170.84  171.47</time>
-   <energy>
-    <i name="e_fr_energy">    -97.61494417 </i>
-    <i name="e_wo_entrp">    -97.61039986 </i>
-    <i name="e_0_energy">    -97.61267201 </i>
-   </energy>
-  </scstep>
-  <scstep>
-   <time name="dav">  175.79  176.43</time>
-   <time name="total">  176.77  177.42</time>
-   <energy>
-    <i name="e_fr_energy">    -92.20237018 </i>
-    <i name="e_wo_entrp">    -92.19821812 </i>
-    <i name="e_0_energy">    -92.20029415 </i>
    </energy>
   </scstep>
   <scstep>
