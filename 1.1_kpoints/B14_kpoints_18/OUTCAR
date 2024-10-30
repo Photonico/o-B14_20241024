@@ -6323,3 +6323,5 @@ Automatic generation of k-mesh.
 
     POTLOK:  cpu time      0.0090: real time      0.0111
     SETDIJ:  cpu time      0.0012: real time      0.0012
+     EDDAV:  cpu time     33.1597: real time     33.3963
+       DOS:  cpu time      0.0050: real time      0.0070
