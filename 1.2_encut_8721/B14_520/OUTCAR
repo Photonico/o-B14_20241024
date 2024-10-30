@@ -7019,3 +7019,5 @@ Automatic generation of k-mesh.
 --------------------------------------- Iteration      1(   5)  ---------------------------------------
 
 
+     EDDAV:  cpu time     45.0376: real time     45.5459
+       DOS:  cpu time      0.0060: real time      0.0084
