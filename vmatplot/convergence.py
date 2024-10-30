@@ -136,6 +136,7 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
     for work_dir in dirs_to_walk:
         xml_path = os.path.join(work_dir, "vasprun.xml")
         kpoints_path = os.path.join(work_dir, "KPOINTS")
+        outcar_path = os.path.join(work_dir, "OUTCAR")
 
         if os.path.isfile(xml_path) and os.path.isfile(kpoints_path):
             try:
@@ -176,6 +177,15 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
                     lattice_within_start = lattice_start in [None, ""] or lattice_constant >= lattice_start - TOLERANCE
                     lattice_within_end = lattice_end in [None, ""] or lattice_constant <= lattice_end + TOLERANCE
 
+                # Initialize elapsed time variable
+                elapsed_time = None
+                if os.path.isfile(outcar_path):
+                    with open(outcar_path, "r", encoding="utf-8") as outcar_file:
+                        for line in outcar_file:
+                            if "Elapsed time (sec):" in line:
+                                elapsed_time = float(line.split(":")[-1].strip())
+                                break
+
                 if lattice_within_start and lattice_within_end:
                     # Collect all required parameters in order
                     params = {
@@ -191,7 +201,8 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
                         "mixing parameter (AMIX)": None,
                         "mixing parameter (BMIX)": None,
                         "electronic convergence (EDIFF)": None,
-                        "force convergence (EDIFFG)": None
+                        "force convergence (EDIFFG)": None,
+                        "elapsed time (sec)": elapsed_time
                     }
 
                     # Extract additional parameters from <incar> section
@@ -219,11 +230,12 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
 
                     # Append results in the specified order
                     results.append((
-                        params["total energy"], params["total kpoints"], kpoints_sum, params["kpoints grid"], 
+                        params["total energy"], params["total kpoints"], kpoints_sum, params["kpoints grid"],
                         params["lattice constant"], params["symmetry precision (SYMPREC)"], params["energy cutoff (ENCUT)"],
-                        params["k-point spacing (KSPACING)"], params["volume"], params["time step (POTIM)"], 
-                        params["mixing parameter (AMIX)"], params["mixing parameter (BMIX)"], 
-                        params["electronic convergence (EDIFF)"], params["force convergence (EDIFFG)"]
+                        params["k-point spacing (KSPACING)"], params["volume"], params["time step (POTIM)"],
+                        params["mixing parameter (AMIX)"], params["mixing parameter (BMIX)"],
+                        params["electronic convergence (EDIFF)"], params["force convergence (EDIFFG)"],
+                        params["elapsed time (sec)"]
                     ))
 
             except (ET.ParseError, ValueError, IndexError) as e:
@@ -238,7 +250,7 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
     # Write the sorted results to the output file
     try:
         with open(result_file_path, "w", encoding="utf-8") as f:
-            f.write("Total Energy\tTotal Kpoints\tCalculated Kpoints\tKpoints(X Y Z)\tLattice Constant\tSYMPREC\tENCUT\tKSPACING\tVOLUME\tPOTIM\tAMIX\tBMIX\tEDIFF\tEDIFFG\n")
+            f.write("Total Energy\tTotal Kpoints\tCalculated Kpoints\tKpoints(X Y Z)\tLattice Constant\tSYMPREC\tENCUT\tKSPACING\tVOLUME\tPOTIM\tAMIX\tBMIX\tEDIFF\tEDIFFG\tElapsed Time (sec)\n")
             for result in results:
                 f.write("\t".join(map(str, result)) + "\n")
     except IOError as e:
