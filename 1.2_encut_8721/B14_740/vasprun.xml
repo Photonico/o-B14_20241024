@@ -3009,3 +3009,21 @@
  </structure>
  <calculation>
   <scstep>
+   <time name="dav">   57.19   57.71</time>
+   <time name="total">   57.23   57.75</time>
+   <energy>
+    <i name="alphaZ">     94.24357992 </i>
+    <i name="ewald">   -795.76658092 </i>
+    <i name="hartreedc">   -271.33601302 </i>
+    <i name="XCdc">     97.50108071 </i>
+    <i name="pawpsdc">    608.99811708 </i>
+    <i name="pawaedc">   -597.02363782 </i>
+    <i name="eentropy">     -0.00206161 </i>
+    <i name="bandstr">    -27.29615082 </i>
+    <i name="atom">    996.37975538 </i>
+    <i name="e_fr_energy">    105.69808889 </i>
+    <i name="e_wo_entrp">    105.70015051 </i>
+    <i name="e_0_energy">    105.69911970 </i>
+   </energy>
+  </scstep>
+  <scstep>
