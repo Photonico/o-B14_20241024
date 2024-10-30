@@ -3081,3 +3081,21 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">   77.38   77.38</time>
+   <time name="total">   79.28   79.29</time>
+   <energy>
+    <i name="e_fr_energy">    -90.59400267 </i>
+    <i name="e_wo_entrp">    -90.59036150 </i>
+    <i name="e_0_energy">    -90.59218208 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   95.05   95.05</time>
+   <time name="total">   96.86   96.86</time>
+   <energy>
+    <i name="e_fr_energy">    -90.60867371 </i>
+    <i name="e_wo_entrp">    -90.60501802 </i>
+    <i name="e_0_energy">    -90.60684587 </i>
+   </energy>
+  </scstep>
+  <scstep>
