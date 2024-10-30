@@ -3036,3 +3036,12 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">   61.49   61.49</time>
+   <time name="total">   61.49   61.50</time>
+   <energy>
+    <i name="e_fr_energy">    -97.60181249 </i>
+    <i name="e_wo_entrp">    -97.59740699 </i>
+    <i name="e_0_energy">    -97.59960974 </i>
+   </energy>
+  </scstep>
+  <scstep>
