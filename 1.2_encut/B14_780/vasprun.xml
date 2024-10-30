@@ -920,3 +920,30 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">   10.98   10.98</time>
+   <time name="total">   11.22   11.22</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61492724 </i>
+    <i name="e_wo_entrp">    -90.61166340 </i>
+    <i name="e_0_energy">    -90.61329532 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">    9.34    9.34</time>
+   <time name="total">    9.58    9.58</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61898709 </i>
+    <i name="e_wo_entrp">    -90.61576925 </i>
+    <i name="e_0_energy">    -90.61737817 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   10.28   10.28</time>
+   <time name="total">   10.54   10.54</time>
+   <energy>
+    <i name="e_fr_energy">    -90.62005853 </i>
+    <i name="e_wo_entrp">    -90.61685149 </i>
+    <i name="e_0_energy">    -90.61845501 </i>
+   </energy>
+  </scstep>
+  <scstep>
