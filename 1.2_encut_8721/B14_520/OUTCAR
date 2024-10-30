@@ -7356,3 +7356,5 @@ Automatic generation of k-mesh.
 --------------------------------------- Iteration      1(  12)  ---------------------------------------
 
 
+    POTLOK:  cpu time      0.0095: real time      0.0116
+    SETDIJ:  cpu time      0.0012: real time      0.0023
