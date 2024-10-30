@@ -3036,3 +3036,48 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">   49.86   50.20</time>
+   <time name="total">   49.86   50.21</time>
+   <energy>
+    <i name="e_fr_energy">    -97.58918363 </i>
+    <i name="e_wo_entrp">    -97.58546889 </i>
+    <i name="e_0_energy">    -97.58732626 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   41.82   42.12</time>
+   <time name="total">   41.82   42.13</time>
+   <energy>
+    <i name="e_fr_energy">    -97.61641142 </i>
+    <i name="e_wo_entrp">    -97.61269778 </i>
+    <i name="e_0_energy">    -97.61455460 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   49.37   49.72</time>
+   <time name="total">   49.96   50.31</time>
+   <energy>
+    <i name="e_fr_energy">    -97.61672326 </i>
+    <i name="e_wo_entrp">    -97.61300962 </i>
+    <i name="e_0_energy">    -97.61486644 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   48.45   48.81</time>
+   <time name="total">   49.12   49.48</time>
+   <energy>
+    <i name="e_fr_energy">    -92.20253977 </i>
+    <i name="e_wo_entrp">    -92.19891564 </i>
+    <i name="e_0_energy">    -92.20072770 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   50.61   50.99</time>
+   <time name="total">   51.20   51.58</time>
+   <energy>
+    <i name="e_fr_energy">    -90.55274755 </i>
+    <i name="e_wo_entrp">    -90.54956051 </i>
+    <i name="e_0_energy">    -90.55115403 </i>
+   </energy>
+  </scstep>
+  <scstep>

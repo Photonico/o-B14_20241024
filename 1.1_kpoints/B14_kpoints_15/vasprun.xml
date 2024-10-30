@@ -1757,3 +1757,66 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">   31.87   31.87</time>
+   <time name="total">   31.87   31.88</time>
+   <energy>
+    <i name="e_fr_energy">    -97.61813709 </i>
+    <i name="e_wo_entrp">    -97.61474200 </i>
+    <i name="e_0_energy">    -97.61643955 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   34.93   34.93</time>
+   <time name="total">   35.27   35.27</time>
+   <energy>
+    <i name="e_fr_energy">    -97.61844809 </i>
+    <i name="e_wo_entrp">    -97.61505291 </i>
+    <i name="e_0_energy">    -97.61675050 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   34.93   34.93</time>
+   <time name="total">   35.28   35.28</time>
+   <energy>
+    <i name="e_fr_energy">    -92.20424794 </i>
+    <i name="e_wo_entrp">    -92.20087016 </i>
+    <i name="e_0_energy">    -92.20255905 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   35.86   35.86</time>
+   <time name="total">   36.18   36.19</time>
+   <energy>
+    <i name="e_fr_energy">    -90.55434584 </i>
+    <i name="e_wo_entrp">    -90.55118007 </i>
+    <i name="e_0_energy">    -90.55276296 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   29.14   29.14</time>
+   <time name="total">   29.43   29.44</time>
+   <energy>
+    <i name="e_fr_energy">    -90.56497811 </i>
+    <i name="e_wo_entrp">    -90.56180675 </i>
+    <i name="e_0_energy">    -90.56339243 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   34.49   34.50</time>
+   <time name="total">   34.79   34.80</time>
+   <energy>
+    <i name="e_fr_energy">    -90.57953377 </i>
+    <i name="e_wo_entrp">    -90.57636707 </i>
+    <i name="e_0_energy">    -90.57795042 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   29.12   29.12</time>
+   <time name="total">   29.46   29.47</time>
+   <energy>
+    <i name="e_fr_energy">    -90.58389238 </i>
+    <i name="e_wo_entrp">    -90.58072622 </i>
+    <i name="e_0_energy">    -90.58230930 </i>
+   </energy>
+  </scstep>
+  <scstep>
