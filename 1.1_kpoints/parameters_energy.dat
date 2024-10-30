@@ -1,0 +1,25 @@
+Total Energy	Total Kpoints	Calculated Kpoints	Kpoints(X Y Z)	Lattice Constant	SYMPREC	ENCUT	KSPACING	VOLUME	POTIM	AMIX	BMIX	EDIFF	EDIFFG
+-85.5748322	1	3	(1, 1, 1)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.26759838	12	7	(2, 3, 2)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.25883014	36	10	(3, 4, 3)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.5816238	96	14	(4, 6, 4)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.61484421	175	17	(5, 7, 5)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.59501028	288	20	(6, 8, 6)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.56550119	420	23	(7, 10, 6)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.56627753	616	26	(8, 11, 7)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.57856421	936	30	(9, 13, 8)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58706806	1260	33	(10, 14, 9)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58278544	1650	36	(11, 15, 10)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.57832194	2244	40	(12, 17, 11)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.57778735	2808	43	(13, 18, 12)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58054813	3640	47	(14, 20, 13)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58314962	4410	50	(15, 21, 14)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58207491	5520	54	(16, 23, 15)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58006636	6528	57	(17, 24, 16)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.57976483	7650	60	(18, 25, 17)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58079349	8721	63	(19, 27, 17)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58175553	10080	66	(20, 28, 18)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58151832	11970	70	(21, 30, 19)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58075591	13640	73	(22, 31, 20)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.5806787	15456	76	(23, 32, 21)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
+-90.58088341	17952	80	(24, 34, 22)	5.697	1e-05	None	None	None	0.5	None	None	1e-06	-0.001
