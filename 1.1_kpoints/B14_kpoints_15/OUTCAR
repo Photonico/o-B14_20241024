@@ -3633,3 +3633,25 @@ Automatic generation of k-mesh.
 
 
  Maximum index for augmentation-charges          566 (set IRDMAX)
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+ First call to EWALD:  gamma=   0.339
+ Maximum number of real-space cells 3x 3x 2
+ Maximum number of reciprocal cells 3x 2x 3
+
+    FEWALD:  cpu time      0.0027: real time      0.0027
+
+
+--------------------------------------- Ionic step        1  -------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   1)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.0230: real time      0.0237
+    SETDIJ:  cpu time      0.0028: real time      0.0028
