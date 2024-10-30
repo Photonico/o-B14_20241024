@@ -6875,3 +6875,39 @@ Automatic generation of k-mesh.
 
     POTLOK:  cpu time      0.0249: real time      0.0265
     SETDIJ:  cpu time      0.0020: real time      0.0020
+     EDDAV:  cpu time     69.3545: real time     69.3712
+       DOS:  cpu time      0.0133: real time      0.0173
+    --------------------------------------------
+      LOOP:  cpu time     69.3947: real time     69.4170
+
+ eigenvalue-minimisations  :120960
+ total energy-change (2. order) : 0.1162049E+03  (-0.2350264E+04)
+ number of electron      42.0000000 magnetization 
+ augmentation part       42.0000000 magnetization 
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -271.33601302
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =        97.50108148
+  PAW double counting   =       608.99811708     -597.02363782
+  entropy T*S    EENTRO =        -0.00263688
+  eigenvalues    EBANDS =       -16.78977601
+  atomic energy  EATOM  =       996.38075121
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       116.20488504 eV
+
+  energy without entropy =      116.20752192  energy(sigma->0) =      116.20620348
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   2)  ---------------------------------------
+
+
