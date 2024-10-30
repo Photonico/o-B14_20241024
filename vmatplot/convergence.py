@@ -298,7 +298,9 @@ def plot_energy_kpoints(matter, source_data=None, kpoints_boundary=None, color_f
     plt.rcParams.update(params)
     plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
 
+    # Apply ScalarFormatter with scientific notation limits
     formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))      # Set scientific notation limits
     plt.gca().yaxis.set_major_formatter(formatter)
 
     # Color calling
@@ -319,7 +321,7 @@ def plot_energy_kpoints(matter, source_data=None, kpoints_boundary=None, color_f
 
     # Figure title
     plt.title(f"Energy versus K-points {matter}")
-    plt.xlabel("Kpoints Configuration")
+    plt.xlabel("K-points Configuration")
     plt.ylabel(r"Energy (eV)")
 
     # Ensure boundary values are integers
@@ -364,7 +366,9 @@ def plot_energy_encut(matter, source_data=None, encut_boundary=None, color_famil
     plt.rcParams.update(params)
     plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
 
+    # Apply ScalarFormatter with scientific notation limits
     formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))      # Set scientific notation limits
     plt.gca().yaxis.set_major_formatter(formatter)
 
     # Color calling
@@ -390,7 +394,7 @@ def plot_energy_encut(matter, source_data=None, encut_boundary=None, color_famil
 
     # Figure title
     plt.title(f"Energy versus ENCUT {matter}")
-    plt.xlabel("ENCUT (eV)")
+    plt.xlabel("Energy cutoff (eV)")
     plt.ylabel(r"Energy (eV)")
 
     # Set boundaries for ENCUT
