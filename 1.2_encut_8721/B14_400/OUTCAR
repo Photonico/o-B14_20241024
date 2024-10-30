@@ -7064,3 +7064,52 @@ Automatic generation of k-mesh.
 
     POTLOK:  cpu time      0.0077: real time      0.0089
     SETDIJ:  cpu time      0.0011: real time      0.0011
+     EDDAV:  cpu time     35.0724: real time     35.2642
+       DOS:  cpu time      0.0058: real time      0.0080
+    CHARGE:  cpu time      0.3624: real time      0.3638
+    MIXING:  cpu time      0.0007: real time      0.0007
+    --------------------------------------------
+      LOOP:  cpu time     35.4501: real time     35.6466
+
+ eigenvalue-minimisations  :174624
+ total energy-change (2. order) : 0.5412862E+01  (-0.3947952E+00)
+ number of electron      42.0000001 magnetization 
+ augmentation part       -0.1500788 magnetization 
+
+ Broyden mixing:
+  rms(total) = 0.67701E+00    rms(broyden)= 0.67700E+00
+  rms(prec ) = 0.11635E+01
+  weight for this iteration     100.00
+
+ eigenvalues of (default mixing * dielectric matrix)
+  average eigenvalue GAMMA=   2.0677
+  2.0677
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -306.19181864
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =        99.13487798
+  PAW double counting   =      1502.02192763    -1490.67269737
+  entropy T*S    EENTRO =        -0.00365367
+  eigenvalues    EBANDS =      -191.32264773
+  atomic energy  EATOM  =       996.35618401
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -92.20082879 eV
+
+  energy without entropy =      -92.19717512  energy(sigma->0) =      -92.19900195
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   7)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.0073: real time      0.0087
+    SETDIJ:  cpu time      0.0011: real time      0.0011
