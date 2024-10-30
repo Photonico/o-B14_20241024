@@ -4873,3 +4873,61 @@ Automatic generation of k-mesh.
 
 
  Maximum index for augmentation-charges          566 (set IRDMAX)
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+ First call to EWALD:  gamma=   0.339
+ Maximum number of real-space cells 3x 3x 2
+ Maximum number of reciprocal cells 3x 2x 3
+
+    FEWALD:  cpu time      0.0009: real time      0.0010
+
+
+--------------------------------------- Ionic step        1  -------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   1)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.0118: real time      0.0146
+    SETDIJ:  cpu time      0.0025: real time      0.0035
+     EDDAV:  cpu time     24.3281: real time     24.5194
+       DOS:  cpu time      0.0192: real time      0.0271
+    --------------------------------------------
+      LOOP:  cpu time     24.3615: real time     24.5647
+
+ eigenvalue-minimisations  : 82944
+ total energy-change (2. order) : 0.5395559E+02  (-0.1764037E+04)
+ number of electron      42.0000000 magnetization 
+ augmentation part       42.0000000 magnetization 
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -271.33601302
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =        97.50108136
+  PAW double counting   =       608.99811708     -597.02363782
+  entropy T*S    EENTRO =        -0.00208161
+  eigenvalues    EBANDS =       -79.02500771
+  atomic energy  EATOM  =       996.36613177
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =        53.95558905 eV
+
+  energy without entropy =       53.95767066  energy(sigma->0) =       53.95662985
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   2)  ---------------------------------------
+
+
