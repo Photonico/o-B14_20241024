@@ -1,6 +1,6 @@
  vasp.6.4.3 19Mar24 (build May 31 2024 16:31:43) complex                        
   
- executed on             LinuxIFC date 2024.10.30  18:42:29
+ executed on             LinuxIFC date 2024.10.30  18:43:32
  running   24 mpi-ranks, with    1 threads/rank, on    1 nodes
  distrk:  each k-point on   24 cores,    1 groups
  distr:  one band on NCORE=   1 cores,   24 groups
@@ -14,7 +14,7 @@
    ISTART = 0
    ICHARG = 2
    PREC = Accurate
-   ENCUT = 700
+   ENCUT = 800
    LCHARG = .FALSE.
    LWAVE = .FALSE.
    ALGO = Normal
@@ -91,7 +91,7 @@
  
   PAW_PBE B 06Sep2000                   :
  energy of atom  1       EATOM=  -71.1703
- kinetic energy error for atom=    0.0004 (will be added to EATOM!!)
+ kinetic energy error for atom=    0.0002 (will be added to EATOM!!)
  
  
  POSCAR: o-B14
@@ -622,14 +622,14 @@ Automatic generation of k-mesh.
    k-points           NKPTS =    175   k-points in BZ     NKDIM =    175   number of bands    NBANDS=     48
    number of dos      NEDOS =    301   number of ions     NIONS =     14
    non local maximal  LDIM  =      4   non local SUM 2l+1 LMDIM =      8
-   total plane-waves  NPLWV =  97200
-   max r-space proj   IRMAX =      1   max aug-charges    IRDMAX=  10793
-   dimension x,y,z NGX =    50 NGY =   36 NGZ =   54
-   dimension x,y,z NGXF=   100 NGYF=   72 NGZF=  108
-   support grid    NGXF=   100 NGYF=   72 NGZF=  108
+   total plane-waves  NPLWV = 129600
+   max r-space proj   IRMAX =      1   max aug-charges    IRDMAX=  14324
+   dimension x,y,z NGX =    54 NGY =   40 NGZ =   60
+   dimension x,y,z NGXF=   108 NGYF=   80 NGZF=  120
+   support grid    NGXF=   108 NGYF=   80 NGZF=  120
    ions per type =              14
-   NGX,Y,Z   is equivalent  to a cutoff of  14.59, 14.79, 14.47 a.u.
-   NGXF,Y,Z  is equivalent  to a cutoff of  29.18, 29.57, 28.94 a.u.
+   NGX,Y,Z   is equivalent  to a cutoff of  15.76, 16.43, 16.08 a.u.
+   NGXF,Y,Z  is equivalent  to a cutoff of  31.52, 32.86, 32.15 a.u.
 
  SYSTEM =  Kpoints                                 
  POSCAR =  o-B14                                   
@@ -645,8 +645,8 @@ Automatic generation of k-mesh.
    INIWAV =      1    electr: 0-lowe 1-rand  2-diag
    LASPH  =      F    aspherical Exc in radial PAW
  Electronic Relaxation 1
-   ENCUT  =  700.0 eV  51.45 Ry    7.17 a.u.  12.29  8.73 13.38*2*pi/ulx,y,z
-   ENINI  =  700.0     initial cutoff
+   ENCUT  =  800.0 eV  58.80 Ry    7.67 a.u.  13.14  9.34 14.31*2*pi/ulx,y,z
+   ENINI  =  800.0     initial cutoff
    ENAUG  =  535.5 eV  augmentation charge cutoff
    NELM   =    100;   NELMIN=  2; NELMDL= -5     # of ELM steps 
    EDIFF  = 0.1E-05   stopping-criterion for ELM
@@ -810,7 +810,7 @@ Automatic generation of k-mesh.
 --------------------------------------------------------------------------------------------------------
 
 
-  energy-cutoff  :      700.00
+  energy-cutoff  :      800.00
   volume of cell :      143.07
       direct lattice vectors                 reciprocal lattice vectors
      5.697000000  0.000000000  0.000000000     0.175530981  0.000000000  0.000000000
@@ -1213,188 +1213,188 @@ Automatic generation of k-mesh.
 --------------------------------------------------------------------------------------------------------
 
 
- k-point     1 :   0.0500 0.0357 0.0000  plane waves:    6005
- k-point     2 :   0.1500 0.0357 0.0000  plane waves:    6016
- k-point     3 :   0.2500 0.0357 0.0000  plane waves:    6009
- k-point     4 :   0.3500 0.0357 0.0000  plane waves:    6021
- k-point     5 :   0.4500 0.0357 0.0000  plane waves:    6015
- k-point     6 :   0.0500 0.1071 0.0000  plane waves:    6004
- k-point     7 :   0.1500 0.1071 0.0000  plane waves:    6011
- k-point     8 :   0.2500 0.1071 0.0000  plane waves:    6010
- k-point     9 :   0.3500 0.1071 0.0000  plane waves:    6010
- k-point    10 :   0.4500 0.1071 0.0000  plane waves:    6028
- k-point    11 :   0.0500 0.1786 0.0000  plane waves:    6009
- k-point    12 :   0.1500 0.1786 0.0000  plane waves:    6012
- k-point    13 :   0.2500 0.1786 0.0000  plane waves:    6013
- k-point    14 :   0.3500 0.1786 0.0000  plane waves:    6021
- k-point    15 :   0.4500 0.1786 0.0000  plane waves:    6015
- k-point    16 :   0.0500 0.2500 0.0000  plane waves:    6029
- k-point    17 :   0.1500 0.2500 0.0000  plane waves:    6016
- k-point    18 :   0.2500 0.2500 0.0000  plane waves:    6025
- k-point    19 :   0.3500 0.2500 0.0000  plane waves:    6018
- k-point    20 :   0.4500 0.2500 0.0000  plane waves:    6022
- k-point    21 :   0.0500 0.3214 0.0000  plane waves:    6018
- k-point    22 :   0.1500 0.3214 0.0000  plane waves:    6019
- k-point    23 :   0.2500 0.3214 0.0000  plane waves:    6030
- k-point    24 :   0.3500 0.3214 0.0000  plane waves:    6032
- k-point    25 :   0.4500 0.3214 0.0000  plane waves:    6033
- k-point    26 :   0.0500 0.3929 0.0000  plane waves:    6030
- k-point    27 :   0.1500 0.3929 0.0000  plane waves:    6035
- k-point    28 :   0.2500 0.3929 0.0000  plane waves:    6039
- k-point    29 :   0.3500 0.3929 0.0000  plane waves:    6028
- k-point    30 :   0.4500 0.3929 0.0000  plane waves:    6015
- k-point    31 :   0.0500 0.4643 0.0000  plane waves:    6039
- k-point    32 :   0.1500 0.4643 0.0000  plane waves:    6029
- k-point    33 :   0.2500 0.4643 0.0000  plane waves:    6022
- k-point    34 :   0.3500 0.4643 0.0000  plane waves:    6018
- k-point    35 :   0.4500 0.4643 0.0000  plane waves:    6000
- k-point    36 :   0.0500 0.0357 0.1111  plane waves:    5998
- k-point    37 :   0.1500 0.0357 0.1111  plane waves:    6015
- k-point    38 :   0.2500 0.0357 0.1111  plane waves:    6020
- k-point    39 :   0.3500 0.0357 0.1111  plane waves:    6030
- k-point    40 :   0.4500 0.0357 0.1111  plane waves:    6026
- k-point    41 :   0.0500 0.1071 0.1111  plane waves:    6006
- k-point    42 :   0.1500 0.1071 0.1111  plane waves:    6014
- k-point    43 :   0.2500 0.1071 0.1111  plane waves:    6014
- k-point    44 :   0.3500 0.1071 0.1111  plane waves:    6015
- k-point    45 :   0.4500 0.1071 0.1111  plane waves:    6029
- k-point    46 :   0.0500 0.1786 0.1111  plane waves:    6024
- k-point    47 :   0.1500 0.1786 0.1111  plane waves:    6019
- k-point    48 :   0.2500 0.1786 0.1111  plane waves:    6009
- k-point    49 :   0.3500 0.1786 0.1111  plane waves:    6015
- k-point    50 :   0.4500 0.1786 0.1111  plane waves:    6013
- k-point    51 :   0.0500 0.2500 0.1111  plane waves:    6019
- k-point    52 :   0.1500 0.2500 0.1111  plane waves:    6014
- k-point    53 :   0.2500 0.2500 0.1111  plane waves:    6016
- k-point    54 :   0.3500 0.2500 0.1111  plane waves:    6023
- k-point    55 :   0.4500 0.2500 0.1111  plane waves:    6021
- k-point    56 :   0.0500 0.3214 0.1111  plane waves:    6037
- k-point    57 :   0.1500 0.3214 0.1111  plane waves:    6025
- k-point    58 :   0.2500 0.3214 0.1111  plane waves:    6016
- k-point    59 :   0.3500 0.3214 0.1111  plane waves:    6022
- k-point    60 :   0.4500 0.3214 0.1111  plane waves:    6022
- k-point    61 :   0.0500 0.3929 0.1111  plane waves:    6028
- k-point    62 :   0.1500 0.3929 0.1111  plane waves:    6030
- k-point    63 :   0.2500 0.3929 0.1111  plane waves:    6026
- k-point    64 :   0.3500 0.3929 0.1111  plane waves:    6020
- k-point    65 :   0.4500 0.3929 0.1111  plane waves:    6013
- k-point    66 :   0.0500 0.4643 0.1111  plane waves:    6032
- k-point    67 :   0.1500 0.4643 0.1111  plane waves:    6030
- k-point    68 :   0.2500 0.4643 0.1111  plane waves:    6025
- k-point    69 :   0.3500 0.4643 0.1111  plane waves:    6016
- k-point    70 :   0.4500 0.4643 0.1111  plane waves:    6009
- k-point    71 :   0.0500 0.0357 0.2222  plane waves:    6003
- k-point    72 :   0.1500 0.0357 0.2222  plane waves:    6022
- k-point    73 :   0.2500 0.0357 0.2222  plane waves:    6025
- k-point    74 :   0.3500 0.0357 0.2222  plane waves:    6026
- k-point    75 :   0.4500 0.0357 0.2222  plane waves:    6030
- k-point    76 :   0.0500 0.1071 0.2222  plane waves:    6015
- k-point    77 :   0.1500 0.1071 0.2222  plane waves:    6022
- k-point    78 :   0.2500 0.1071 0.2222  plane waves:    6027
- k-point    79 :   0.3500 0.1071 0.2222  plane waves:    6020
- k-point    80 :   0.4500 0.1071 0.2222  plane waves:    6015
- k-point    81 :   0.0500 0.1786 0.2222  plane waves:    6018
- k-point    82 :   0.1500 0.1786 0.2222  plane waves:    6016
- k-point    83 :   0.2500 0.1786 0.2222  plane waves:    6021
- k-point    84 :   0.3500 0.1786 0.2222  plane waves:    6012
- k-point    85 :   0.4500 0.1786 0.2222  plane waves:    6019
- k-point    86 :   0.0500 0.2500 0.2222  plane waves:    6003
- k-point    87 :   0.1500 0.2500 0.2222  plane waves:    6016
- k-point    88 :   0.2500 0.2500 0.2222  plane waves:    6009
- k-point    89 :   0.3500 0.2500 0.2222  plane waves:    6015
- k-point    90 :   0.4500 0.2500 0.2222  plane waves:    6021
- k-point    91 :   0.0500 0.3214 0.2222  plane waves:    6015
- k-point    92 :   0.1500 0.3214 0.2222  plane waves:    6011
- k-point    93 :   0.2500 0.3214 0.2222  plane waves:    6011
- k-point    94 :   0.3500 0.3214 0.2222  plane waves:    6014
- k-point    95 :   0.4500 0.3214 0.2222  plane waves:    6023
- k-point    96 :   0.0500 0.3929 0.2222  plane waves:    6019
- k-point    97 :   0.1500 0.3929 0.2222  plane waves:    6017
- k-point    98 :   0.2500 0.3929 0.2222  plane waves:    6018
- k-point    99 :   0.3500 0.3929 0.2222  plane waves:    6008
- k-point   100 :   0.4500 0.3929 0.2222  plane waves:    6012
- k-point   101 :   0.0500 0.4643 0.2222  plane waves:    6033
- k-point   102 :   0.1500 0.4643 0.2222  plane waves:    6026
- k-point   103 :   0.2500 0.4643 0.2222  plane waves:    6018
- k-point   104 :   0.3500 0.4643 0.2222  plane waves:    6017
- k-point   105 :   0.4500 0.4643 0.2222  plane waves:    6014
- k-point   106 :   0.0500 0.0357 0.3333  plane waves:    6013
- k-point   107 :   0.1500 0.0357 0.3333  plane waves:    6024
- k-point   108 :   0.2500 0.0357 0.3333  plane waves:    6033
- k-point   109 :   0.3500 0.0357 0.3333  plane waves:    6023
- k-point   110 :   0.4500 0.0357 0.3333  plane waves:    6015
- k-point   111 :   0.0500 0.1071 0.3333  plane waves:    6019
- k-point   112 :   0.1500 0.1071 0.3333  plane waves:    6018
- k-point   113 :   0.2500 0.1071 0.3333  plane waves:    6016
- k-point   114 :   0.3500 0.1071 0.3333  plane waves:    6032
- k-point   115 :   0.4500 0.1071 0.3333  plane waves:    6018
- k-point   116 :   0.0500 0.1786 0.3333  plane waves:    6008
- k-point   117 :   0.1500 0.1786 0.3333  plane waves:    6010
- k-point   118 :   0.2500 0.1786 0.3333  plane waves:    6014
- k-point   119 :   0.3500 0.1786 0.3333  plane waves:    6015
- k-point   120 :   0.4500 0.1786 0.3333  plane waves:    6017
- k-point   121 :   0.0500 0.2500 0.3333  plane waves:    6006
- k-point   122 :   0.1500 0.2500 0.3333  plane waves:    6000
- k-point   123 :   0.2500 0.2500 0.3333  plane waves:    6005
- k-point   124 :   0.3500 0.2500 0.3333  plane waves:    6008
- k-point   125 :   0.4500 0.2500 0.3333  plane waves:    6022
- k-point   126 :   0.0500 0.3214 0.3333  plane waves:    6008
- k-point   127 :   0.1500 0.3214 0.3333  plane waves:    6003
- k-point   128 :   0.2500 0.3214 0.3333  plane waves:    6010
- k-point   129 :   0.3500 0.3214 0.3333  plane waves:    6004
- k-point   130 :   0.4500 0.3214 0.3333  plane waves:    6009
- k-point   131 :   0.0500 0.3929 0.3333  plane waves:    6026
- k-point   132 :   0.1500 0.3929 0.3333  plane waves:    6014
- k-point   133 :   0.2500 0.3929 0.3333  plane waves:    6009
- k-point   134 :   0.3500 0.3929 0.3333  plane waves:    6008
- k-point   135 :   0.4500 0.3929 0.3333  plane waves:    6006
- k-point   136 :   0.0500 0.4643 0.3333  plane waves:    6036
- k-point   137 :   0.1500 0.4643 0.3333  plane waves:    6016
- k-point   138 :   0.2500 0.4643 0.3333  plane waves:    6018
- k-point   139 :   0.3500 0.4643 0.3333  plane waves:    6009
- k-point   140 :   0.4500 0.4643 0.3333  plane waves:    6015
- k-point   141 :   0.0500 0.0357 0.4444  plane waves:    6030
- k-point   142 :   0.1500 0.0357 0.4444  plane waves:    6023
- k-point   143 :   0.2500 0.0357 0.4444  plane waves:    6021
- k-point   144 :   0.3500 0.0357 0.4444  plane waves:    6019
- k-point   145 :   0.4500 0.0357 0.4444  plane waves:    6023
- k-point   146 :   0.0500 0.1071 0.4444  plane waves:    6041
- k-point   147 :   0.1500 0.1071 0.4444  plane waves:    6031
- k-point   148 :   0.2500 0.1071 0.4444  plane waves:    6018
- k-point   149 :   0.3500 0.1071 0.4444  plane waves:    6019
- k-point   150 :   0.4500 0.1071 0.4444  plane waves:    6014
- k-point   151 :   0.0500 0.1786 0.4444  plane waves:    6016
- k-point   152 :   0.1500 0.1786 0.4444  plane waves:    6023
- k-point   153 :   0.2500 0.1786 0.4444  plane waves:    6013
- k-point   154 :   0.3500 0.1786 0.4444  plane waves:    6015
- k-point   155 :   0.4500 0.1786 0.4444  plane waves:    6019
- k-point   156 :   0.0500 0.2500 0.4444  plane waves:    6008
- k-point   157 :   0.1500 0.2500 0.4444  plane waves:    6006
- k-point   158 :   0.2500 0.2500 0.4444  plane waves:    6000
- k-point   159 :   0.3500 0.2500 0.4444  plane waves:    6003
- k-point   160 :   0.4500 0.2500 0.4444  plane waves:    6007
- k-point   161 :   0.0500 0.3214 0.4444  plane waves:    6013
- k-point   162 :   0.1500 0.3214 0.4444  plane waves:    6009
- k-point   163 :   0.2500 0.3214 0.4444  plane waves:    6001
- k-point   164 :   0.3500 0.3214 0.4444  plane waves:    6011
- k-point   165 :   0.4500 0.3214 0.4444  plane waves:    6000
- k-point   166 :   0.0500 0.3929 0.4444  plane waves:    6031
- k-point   167 :   0.1500 0.3929 0.4444  plane waves:    6016
- k-point   168 :   0.2500 0.3929 0.4444  plane waves:    6002
- k-point   169 :   0.3500 0.3929 0.4444  plane waves:    6003
- k-point   170 :   0.4500 0.3929 0.4444  plane waves:    6001
- k-point   171 :   0.0500 0.4643 0.4444  plane waves:    6025
- k-point   172 :   0.1500 0.4643 0.4444  plane waves:    6015
- k-point   173 :   0.2500 0.4643 0.4444  plane waves:    5998
- k-point   174 :   0.3500 0.4643 0.4444  plane waves:    6004
- k-point   175 :   0.4500 0.4643 0.4444  plane waves:    6014
+ k-point     1 :   0.0500 0.0357 0.0000  plane waves:    7336
+ k-point     2 :   0.1500 0.0357 0.0000  plane waves:    7342
+ k-point     3 :   0.2500 0.0357 0.0000  plane waves:    7371
+ k-point     4 :   0.3500 0.0357 0.0000  plane waves:    7353
+ k-point     5 :   0.4500 0.0357 0.0000  plane waves:    7349
+ k-point     6 :   0.0500 0.1071 0.0000  plane waves:    7351
+ k-point     7 :   0.1500 0.1071 0.0000  plane waves:    7362
+ k-point     8 :   0.2500 0.1071 0.0000  plane waves:    7366
+ k-point     9 :   0.3500 0.1071 0.0000  plane waves:    7348
+ k-point    10 :   0.4500 0.1071 0.0000  plane waves:    7351
+ k-point    11 :   0.0500 0.1786 0.0000  plane waves:    7374
+ k-point    12 :   0.1500 0.1786 0.0000  plane waves:    7368
+ k-point    13 :   0.2500 0.1786 0.0000  plane waves:    7341
+ k-point    14 :   0.3500 0.1786 0.0000  plane waves:    7340
+ k-point    15 :   0.4500 0.1786 0.0000  plane waves:    7345
+ k-point    16 :   0.0500 0.2500 0.0000  plane waves:    7351
+ k-point    17 :   0.1500 0.2500 0.0000  plane waves:    7345
+ k-point    18 :   0.2500 0.2500 0.0000  plane waves:    7352
+ k-point    19 :   0.3500 0.2500 0.0000  plane waves:    7345
+ k-point    20 :   0.4500 0.2500 0.0000  plane waves:    7342
+ k-point    21 :   0.0500 0.3214 0.0000  plane waves:    7335
+ k-point    22 :   0.1500 0.3214 0.0000  plane waves:    7353
+ k-point    23 :   0.2500 0.3214 0.0000  plane waves:    7359
+ k-point    24 :   0.3500 0.3214 0.0000  plane waves:    7363
+ k-point    25 :   0.4500 0.3214 0.0000  plane waves:    7347
+ k-point    26 :   0.0500 0.3929 0.0000  plane waves:    7372
+ k-point    27 :   0.1500 0.3929 0.0000  plane waves:    7345
+ k-point    28 :   0.2500 0.3929 0.0000  plane waves:    7359
+ k-point    29 :   0.3500 0.3929 0.0000  plane waves:    7366
+ k-point    30 :   0.4500 0.3929 0.0000  plane waves:    7361
+ k-point    31 :   0.0500 0.4643 0.0000  plane waves:    7362
+ k-point    32 :   0.1500 0.4643 0.0000  plane waves:    7351
+ k-point    33 :   0.2500 0.4643 0.0000  plane waves:    7356
+ k-point    34 :   0.3500 0.4643 0.0000  plane waves:    7353
+ k-point    35 :   0.4500 0.4643 0.0000  plane waves:    7354
+ k-point    36 :   0.0500 0.0357 0.1111  plane waves:    7353
+ k-point    37 :   0.1500 0.0357 0.1111  plane waves:    7356
+ k-point    38 :   0.2500 0.0357 0.1111  plane waves:    7360
+ k-point    39 :   0.3500 0.0357 0.1111  plane waves:    7368
+ k-point    40 :   0.4500 0.0357 0.1111  plane waves:    7361
+ k-point    41 :   0.0500 0.1071 0.1111  plane waves:    7351
+ k-point    42 :   0.1500 0.1071 0.1111  plane waves:    7356
+ k-point    43 :   0.2500 0.1071 0.1111  plane waves:    7362
+ k-point    44 :   0.3500 0.1071 0.1111  plane waves:    7353
+ k-point    45 :   0.4500 0.1071 0.1111  plane waves:    7356
+ k-point    46 :   0.0500 0.1786 0.1111  plane waves:    7364
+ k-point    47 :   0.1500 0.1786 0.1111  plane waves:    7357
+ k-point    48 :   0.2500 0.1786 0.1111  plane waves:    7357
+ k-point    49 :   0.3500 0.1786 0.1111  plane waves:    7345
+ k-point    50 :   0.4500 0.1786 0.1111  plane waves:    7342
+ k-point    51 :   0.0500 0.2500 0.1111  plane waves:    7357
+ k-point    52 :   0.1500 0.2500 0.1111  plane waves:    7347
+ k-point    53 :   0.2500 0.2500 0.1111  plane waves:    7340
+ k-point    54 :   0.3500 0.2500 0.1111  plane waves:    7337
+ k-point    55 :   0.4500 0.2500 0.1111  plane waves:    7344
+ k-point    56 :   0.0500 0.3214 0.1111  plane waves:    7350
+ k-point    57 :   0.1500 0.3214 0.1111  plane waves:    7348
+ k-point    58 :   0.2500 0.3214 0.1111  plane waves:    7347
+ k-point    59 :   0.3500 0.3214 0.1111  plane waves:    7346
+ k-point    60 :   0.4500 0.3214 0.1111  plane waves:    7346
+ k-point    61 :   0.0500 0.3929 0.1111  plane waves:    7355
+ k-point    62 :   0.1500 0.3929 0.1111  plane waves:    7350
+ k-point    63 :   0.2500 0.3929 0.1111  plane waves:    7355
+ k-point    64 :   0.3500 0.3929 0.1111  plane waves:    7352
+ k-point    65 :   0.4500 0.3929 0.1111  plane waves:    7351
+ k-point    66 :   0.0500 0.4643 0.1111  plane waves:    7353
+ k-point    67 :   0.1500 0.4643 0.1111  plane waves:    7356
+ k-point    68 :   0.2500 0.4643 0.1111  plane waves:    7356
+ k-point    69 :   0.3500 0.4643 0.1111  plane waves:    7354
+ k-point    70 :   0.4500 0.4643 0.1111  plane waves:    7360
+ k-point    71 :   0.0500 0.0357 0.2222  plane waves:    7355
+ k-point    72 :   0.1500 0.0357 0.2222  plane waves:    7354
+ k-point    73 :   0.2500 0.0357 0.2222  plane waves:    7348
+ k-point    74 :   0.3500 0.0357 0.2222  plane waves:    7368
+ k-point    75 :   0.4500 0.0357 0.2222  plane waves:    7380
+ k-point    76 :   0.0500 0.1071 0.2222  plane waves:    7345
+ k-point    77 :   0.1500 0.1071 0.2222  plane waves:    7346
+ k-point    78 :   0.2500 0.1071 0.2222  plane waves:    7363
+ k-point    79 :   0.3500 0.1071 0.2222  plane waves:    7364
+ k-point    80 :   0.4500 0.1071 0.2222  plane waves:    7362
+ k-point    81 :   0.0500 0.1786 0.2222  plane waves:    7351
+ k-point    82 :   0.1500 0.1786 0.2222  plane waves:    7349
+ k-point    83 :   0.2500 0.1786 0.2222  plane waves:    7348
+ k-point    84 :   0.3500 0.1786 0.2222  plane waves:    7347
+ k-point    85 :   0.4500 0.1786 0.2222  plane waves:    7356
+ k-point    86 :   0.0500 0.2500 0.2222  plane waves:    7348
+ k-point    87 :   0.1500 0.2500 0.2222  plane waves:    7352
+ k-point    88 :   0.2500 0.2500 0.2222  plane waves:    7355
+ k-point    89 :   0.3500 0.2500 0.2222  plane waves:    7346
+ k-point    90 :   0.4500 0.2500 0.2222  plane waves:    7345
+ k-point    91 :   0.0500 0.3214 0.2222  plane waves:    7345
+ k-point    92 :   0.1500 0.3214 0.2222  plane waves:    7336
+ k-point    93 :   0.2500 0.3214 0.2222  plane waves:    7349
+ k-point    94 :   0.3500 0.3214 0.2222  plane waves:    7349
+ k-point    95 :   0.4500 0.3214 0.2222  plane waves:    7345
+ k-point    96 :   0.0500 0.3929 0.2222  plane waves:    7339
+ k-point    97 :   0.1500 0.3929 0.2222  plane waves:    7339
+ k-point    98 :   0.2500 0.3929 0.2222  plane waves:    7341
+ k-point    99 :   0.3500 0.3929 0.2222  plane waves:    7349
+ k-point   100 :   0.4500 0.3929 0.2222  plane waves:    7352
+ k-point   101 :   0.0500 0.4643 0.2222  plane waves:    7338
+ k-point   102 :   0.1500 0.4643 0.2222  plane waves:    7349
+ k-point   103 :   0.2500 0.4643 0.2222  plane waves:    7345
+ k-point   104 :   0.3500 0.4643 0.2222  plane waves:    7352
+ k-point   105 :   0.4500 0.4643 0.2222  plane waves:    7351
+ k-point   106 :   0.0500 0.0357 0.3333  plane waves:    7356
+ k-point   107 :   0.1500 0.0357 0.3333  plane waves:    7338
+ k-point   108 :   0.2500 0.0357 0.3333  plane waves:    7356
+ k-point   109 :   0.3500 0.0357 0.3333  plane waves:    7369
+ k-point   110 :   0.4500 0.0357 0.3333  plane waves:    7376
+ k-point   111 :   0.0500 0.1071 0.3333  plane waves:    7329
+ k-point   112 :   0.1500 0.1071 0.3333  plane waves:    7347
+ k-point   113 :   0.2500 0.1071 0.3333  plane waves:    7356
+ k-point   114 :   0.3500 0.1071 0.3333  plane waves:    7369
+ k-point   115 :   0.4500 0.1071 0.3333  plane waves:    7376
+ k-point   116 :   0.0500 0.1786 0.3333  plane waves:    7334
+ k-point   117 :   0.1500 0.1786 0.3333  plane waves:    7352
+ k-point   118 :   0.2500 0.1786 0.3333  plane waves:    7358
+ k-point   119 :   0.3500 0.1786 0.3333  plane waves:    7362
+ k-point   120 :   0.4500 0.1786 0.3333  plane waves:    7367
+ k-point   121 :   0.0500 0.2500 0.3333  plane waves:    7350
+ k-point   122 :   0.1500 0.2500 0.3333  plane waves:    7345
+ k-point   123 :   0.2500 0.2500 0.3333  plane waves:    7351
+ k-point   124 :   0.3500 0.2500 0.3333  plane waves:    7351
+ k-point   125 :   0.4500 0.2500 0.3333  plane waves:    7354
+ k-point   126 :   0.0500 0.3214 0.3333  plane waves:    7339
+ k-point   127 :   0.1500 0.3214 0.3333  plane waves:    7332
+ k-point   128 :   0.2500 0.3214 0.3333  plane waves:    7346
+ k-point   129 :   0.3500 0.3214 0.3333  plane waves:    7345
+ k-point   130 :   0.4500 0.3214 0.3333  plane waves:    7353
+ k-point   131 :   0.0500 0.3929 0.3333  plane waves:    7344
+ k-point   132 :   0.1500 0.3929 0.3333  plane waves:    7341
+ k-point   133 :   0.2500 0.3929 0.3333  plane waves:    7335
+ k-point   134 :   0.3500 0.3929 0.3333  plane waves:    7338
+ k-point   135 :   0.4500 0.3929 0.3333  plane waves:    7345
+ k-point   136 :   0.0500 0.4643 0.3333  plane waves:    7351
+ k-point   137 :   0.1500 0.4643 0.3333  plane waves:    7342
+ k-point   138 :   0.2500 0.4643 0.3333  plane waves:    7339
+ k-point   139 :   0.3500 0.4643 0.3333  plane waves:    7340
+ k-point   140 :   0.4500 0.4643 0.3333  plane waves:    7339
+ k-point   141 :   0.0500 0.0357 0.4444  plane waves:    7340
+ k-point   142 :   0.1500 0.0357 0.4444  plane waves:    7343
+ k-point   143 :   0.2500 0.0357 0.4444  plane waves:    7362
+ k-point   144 :   0.3500 0.0357 0.4444  plane waves:    7372
+ k-point   145 :   0.4500 0.0357 0.4444  plane waves:    7362
+ k-point   146 :   0.0500 0.1071 0.4444  plane waves:    7340
+ k-point   147 :   0.1500 0.1071 0.4444  plane waves:    7349
+ k-point   148 :   0.2500 0.1071 0.4444  plane waves:    7362
+ k-point   149 :   0.3500 0.1071 0.4444  plane waves:    7379
+ k-point   150 :   0.4500 0.1071 0.4444  plane waves:    7376
+ k-point   151 :   0.0500 0.1786 0.4444  plane waves:    7345
+ k-point   152 :   0.1500 0.1786 0.4444  plane waves:    7349
+ k-point   153 :   0.2500 0.1786 0.4444  plane waves:    7370
+ k-point   154 :   0.3500 0.1786 0.4444  plane waves:    7378
+ k-point   155 :   0.4500 0.1786 0.4444  plane waves:    7368
+ k-point   156 :   0.0500 0.2500 0.4444  plane waves:    7352
+ k-point   157 :   0.1500 0.2500 0.4444  plane waves:    7349
+ k-point   158 :   0.2500 0.2500 0.4444  plane waves:    7350
+ k-point   159 :   0.3500 0.2500 0.4444  plane waves:    7357
+ k-point   160 :   0.4500 0.2500 0.4444  plane waves:    7371
+ k-point   161 :   0.0500 0.3214 0.4444  plane waves:    7343
+ k-point   162 :   0.1500 0.3214 0.4444  plane waves:    7340
+ k-point   163 :   0.2500 0.3214 0.4444  plane waves:    7333
+ k-point   164 :   0.3500 0.3214 0.4444  plane waves:    7342
+ k-point   165 :   0.4500 0.3214 0.4444  plane waves:    7356
+ k-point   166 :   0.0500 0.3929 0.4444  plane waves:    7340
+ k-point   167 :   0.1500 0.3929 0.4444  plane waves:    7347
+ k-point   168 :   0.2500 0.3929 0.4444  plane waves:    7324
+ k-point   169 :   0.3500 0.3929 0.4444  plane waves:    7330
+ k-point   170 :   0.4500 0.3929 0.4444  plane waves:    7341
+ k-point   171 :   0.0500 0.4643 0.4444  plane waves:    7356
+ k-point   172 :   0.1500 0.4643 0.4444  plane waves:    7344
+ k-point   173 :   0.2500 0.4643 0.4444  plane waves:    7337
+ k-point   174 :   0.3500 0.4643 0.4444  plane waves:    7329
+ k-point   175 :   0.4500 0.4643 0.4444  plane waves:    7335
 
- maximum and minimum number of plane-waves per node :      6041     5998
+ maximum and minimum number of plane-waves per node :      7380     7324
 
- maximum number of plane-waves:      6041
+ maximum number of plane-waves:      7380
  maximum index in each direction: 
-   IXMAX=   12   IYMAX=    8   IZMAX=   13
-   IXMIN=  -12   IYMIN=   -9   IZMIN=  -13
+   IXMAX=   13   IYMAX=    9   IZMAX=   14
+   IXMIN=  -13   IYMIN=   -9   IZMIN=  -14
 
 
  serial   3D FFT for wavefunctions
@@ -1402,21 +1402,21 @@ Automatic generation of k-mesh.
     minimum data exchange during FFTs selected (reduces bandwidth)
 
 
- total amount of memory used by VASP MPI-rank0   141161. kBytes
+ total amount of memory used by VASP MPI-rank0   166245. kBytes
 =======================================================================
 
    base      :      30000. kBytes
-   nonl-proj :      69092. kBytes
-   fftplans  :       1680. kBytes
-   grid      :       5806. kBytes
+   nonl-proj :      84446. kBytes
+   fftplans  :       2141. kBytes
+   grid      :       7548. kBytes
    one-center:         43. kBytes
-   wavefun   :      34540. kBytes
+   wavefun   :      42067. kBytes
  
-     INWAV:  cpu time      0.0000: real time      0.0000
+     INWAV:  cpu time      0.0000: real time      0.0001
  Broyden mixing: mesh for mixing (old mesh)
-   NGX = 25   NGY = 17   NGZ = 27
-  (NGX  =100   NGY  = 72   NGZ  =108)
-  gives a total of  11475 points
+   NGX = 27   NGY = 19   NGZ = 29
+  (NGX  =108   NGY  = 80   NGZ  =120)
+  gives a total of  14877 points
 
  initial charge density was supplied:
  charge density of overlapping atoms calculated
@@ -1427,7 +1427,7 @@ Automatic generation of k-mesh.
 --------------------------------------------------------------------------------------------------------
 
 
- Maximum index for augmentation-charges         1114 (set IRDMAX)
+ Maximum index for augmentation-charges         1080 (set IRDMAX)
 
 
 --------------------------------------------------------------------------------------------------------
@@ -1437,7 +1437,7 @@ Automatic generation of k-mesh.
  Maximum number of real-space cells 3x 3x 2
  Maximum number of reciprocal cells 3x 2x 3
 
-    FEWALD:  cpu time      0.0011: real time      0.0029
+    FEWALD:  cpu time      0.0012: real time      0.0012
 
 
 --------------------------------------- Ionic step        1  -------------------------------------------
@@ -1448,15 +1448,15 @@ Automatic generation of k-mesh.
 --------------------------------------- Iteration      1(   1)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.0216: real time      0.2829
-    SETDIJ:  cpu time      0.0018: real time      0.0018
-     EDDAV:  cpu time      7.0190: real time      7.6083
-       DOS:  cpu time      0.0015: real time      0.0166
+    POTLOK:  cpu time      0.0233: real time      0.0265
+    SETDIJ:  cpu time      0.0022: real time      0.0022
+     EDDAV:  cpu time      8.4356: real time      8.5008
+       DOS:  cpu time      0.0019: real time      0.0019
     --------------------------------------------
-      LOOP:  cpu time      7.0438: real time      7.9097
+      LOOP:  cpu time      8.4630: real time      8.5314
 
  eigenvalue-minimisations  : 16800
- total energy-change (2. order) : 0.9819719E+02  (-0.2179196E+04)
+ total energy-change (2. order) : 0.1172956E+03  (-0.2353827E+04)
  number of electron      42.0000000 magnetization 
  augmentation part       42.0000000 magnetization 
 
@@ -1466,16 +1466,16 @@ Automatic generation of k-mesh.
   Ewald energy   TEWEN  =      -795.76658092
   -Hartree energ DENC   =      -271.33601302
   -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =        97.50108032
+  -V(xc)+E(xc)   XCENC  =        97.50108148
   PAW double counting   =       608.99811708     -597.02363782
-  entropy T*S    EENTRO =        -0.00199639
-  eigenvalues    EBANDS =       -34.79602528
-  atomic energy  EATOM  =       996.37866305
+  entropy T*S    EENTRO =        -0.00182968
+  eigenvalues    EBANDS =       -15.69987630
+  atomic energy  EATOM  =       996.38075121
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
-  free energy    TOTEN  =        98.19718694 eV
+  free energy    TOTEN  =       117.29559196 eV
 
-  energy without entropy =       98.19918333  energy(sigma->0) =       98.19818513
+  energy without entropy =      117.29742164  energy(sigma->0) =      117.29650680
 
 
 --------------------------------------------------------------------------------------------------------
@@ -1486,13 +1486,13 @@ Automatic generation of k-mesh.
 --------------------------------------- Iteration      1(   2)  ---------------------------------------
 
 
-     EDDAV:  cpu time      8.9503: real time      9.3655
-       DOS:  cpu time      0.0011: real time      0.0013
+     EDDAV:  cpu time     10.5467: real time     10.6212
+       DOS:  cpu time      0.0013: real time      0.0013
     --------------------------------------------
-      LOOP:  cpu time      8.9515: real time      9.3667
+      LOOP:  cpu time     10.5480: real time     10.6225
 
- eigenvalue-minimisations  : 22584
- total energy-change (2. order) :-0.1891107E+03  (-0.1765575E+03)
+ eigenvalue-minimisations  : 22416
+ total energy-change (2. order) :-0.2073433E+03  (-0.1931037E+03)
  number of electron      42.0000000 magnetization 
  augmentation part       42.0000000 magnetization 
 
@@ -1502,16 +1502,16 @@ Automatic generation of k-mesh.
   Ewald energy   TEWEN  =      -795.76658092
   -Hartree energ DENC   =      -271.33601302
   -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =        97.50108032
+  -V(xc)+E(xc)   XCENC  =        97.50108148
   PAW double counting   =       608.99811708     -597.02363782
-  entropy T*S    EENTRO =        -0.00388959
-  eigenvalues    EBANDS =      -223.90481257
-  atomic energy  EATOM  =       996.37866305
+  entropy T*S    EENTRO =        -0.00378253
+  eigenvalues    EBANDS =      -223.04120891
+  atomic energy  EATOM  =       996.38075121
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
-  free energy    TOTEN  =       -90.91349354 eV
+  free energy    TOTEN  =       -90.04769350 eV
 
-  energy without entropy =      -90.90960396  energy(sigma->0) =      -90.91154875
+  energy without entropy =      -90.04391097  energy(sigma->0) =      -90.04580224
 
 
 --------------------------------------------------------------------------------------------------------
@@ -1522,13 +1522,13 @@ Automatic generation of k-mesh.
 --------------------------------------- Iteration      1(   3)  ---------------------------------------
 
 
-     EDDAV:  cpu time      9.8886: real time     10.0193
-       DOS:  cpu time      0.0012: real time      0.0012
+     EDDAV:  cpu time     11.5945: real time     11.6754
+       DOS:  cpu time      0.0013: real time      0.0013
     --------------------------------------------
-      LOOP:  cpu time      9.8898: real time     10.0204
+      LOOP:  cpu time     11.5957: real time     11.6766
 
- eigenvalue-minimisations  : 24960
- total energy-change (2. order) :-0.6699908E+01  (-0.6649388E+01)
+ eigenvalue-minimisations  : 24840
+ total energy-change (2. order) :-0.7562115E+01  (-0.7504975E+01)
  number of electron      42.0000000 magnetization 
  augmentation part       42.0000000 magnetization 
 
@@ -1538,16 +1538,16 @@ Automatic generation of k-mesh.
   Ewald energy   TEWEN  =      -795.76658092
   -Hartree energ DENC   =      -271.33601302
   -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =        97.50108032
+  -V(xc)+E(xc)   XCENC  =        97.50108148
   PAW double counting   =       608.99811708     -597.02363782
-  entropy T*S    EENTRO =        -0.00365833
-  eigenvalues    EBANDS =      -230.60495186
-  atomic energy  EATOM  =       996.37866305
+  entropy T*S    EENTRO =        -0.00366044
+  eigenvalues    EBANDS =      -230.60344625
+  atomic energy  EATOM  =       996.38075121
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
-  free energy    TOTEN  =       -97.61340157 eV
+  free energy    TOTEN  =       -97.60980876 eV
 
-  energy without entropy =      -97.60974325  energy(sigma->0) =      -97.61157241
+  energy without entropy =      -97.60614832  energy(sigma->0) =      -97.60797854
 
 
 --------------------------------------------------------------------------------------------------------
@@ -1558,329 +1558,3 @@ Automatic generation of k-mesh.
 --------------------------------------- Iteration      1(   4)  ---------------------------------------
 
 
-     EDDAV:  cpu time      7.8851: real time      8.0671
-       DOS:  cpu time      0.0011: real time      0.0011
-    --------------------------------------------
-      LOOP:  cpu time      7.8862: real time      8.0682
-
- eigenvalue-minimisations  : 19368
- total energy-change (2. order) :-0.3990687E-01  (-0.3990456E-01)
- number of electron      42.0000000 magnetization 
- augmentation part       42.0000000 magnetization 
-
- Free energy of the ion-electron system (eV)
-  ---------------------------------------------------
-  alpha Z        PSCENC =        94.24357992
-  Ewald energy   TEWEN  =      -795.76658092
-  -Hartree energ DENC   =      -271.33601302
-  -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =        97.50108032
-  PAW double counting   =       608.99811708     -597.02363782
-  entropy T*S    EENTRO =        -0.00365544
-  eigenvalues    EBANDS =      -230.64486161
-  atomic energy  EATOM  =       996.37866305
-  Solvation  Ediel_sol  =         0.00000000
-  ---------------------------------------------------
-  free energy    TOTEN  =       -97.65330844 eV
-
-  energy without entropy =      -97.64965300  energy(sigma->0) =      -97.65148072
-
-
---------------------------------------------------------------------------------------------------------
-
-
-
-
---------------------------------------- Iteration      1(   5)  ---------------------------------------
-
-
-     EDDAV:  cpu time      9.8416: real time     10.3061
-       DOS:  cpu time      0.0018: real time      0.0042
-    CHARGE:  cpu time      0.1643: real time      0.1741
-    MIXING:  cpu time      0.0013: real time      0.0014
-    --------------------------------------------
-      LOOP:  cpu time     10.0090: real time     10.4859
-
- eigenvalue-minimisations  : 24936
- total energy-change (2. order) :-0.4288256E-03  (-0.4288162E-03)
- number of electron      42.0000000 magnetization 
- augmentation part       -0.1273066 magnetization 
-
- Broyden mixing:
-  rms(total) = 0.12336E+01    rms(broyden)= 0.12336E+01
-  rms(prec ) = 0.22676E+01
-  weight for this iteration     100.00
-
- Free energy of the ion-electron system (eV)
-  ---------------------------------------------------
-  alpha Z        PSCENC =        94.24357992
-  Ewald energy   TEWEN  =      -795.76658092
-  -Hartree energ DENC   =      -271.33601302
-  -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =        97.50108032
-  PAW double counting   =       608.99811708     -597.02363782
-  entropy T*S    EENTRO =        -0.00365549
-  eigenvalues    EBANDS =      -230.64529039
-  atomic energy  EATOM  =       996.37866305
-  Solvation  Ediel_sol  =         0.00000000
-  ---------------------------------------------------
-  free energy    TOTEN  =       -97.65373727 eV
-
-  energy without entropy =      -97.65008178  energy(sigma->0) =      -97.65190952
-
-
---------------------------------------------------------------------------------------------------------
-
-
-
-
---------------------------------------- Iteration      1(   6)  ---------------------------------------
-
-
-    POTLOK:  cpu time      0.0155: real time      0.0173
-    SETDIJ:  cpu time      0.0020: real time      0.0022
-     EDDAV:  cpu time      9.6586: real time      9.8228
-       DOS:  cpu time      0.0024: real time      0.0025
-    CHARGE:  cpu time      0.1553: real time      0.1647
-    MIXING:  cpu time      0.0011: real time      0.0012
-    --------------------------------------------
-      LOOP:  cpu time      9.8350: real time     10.0106
-
- eigenvalue-minimisations  : 24360
- total energy-change (2. order) : 0.5415893E+01  (-0.3949962E+00)
- number of electron      42.0000000 magnetization 
- augmentation part       -0.1530960 magnetization 
-
- Broyden mixing:
-  rms(total) = 0.68006E+00    rms(broyden)= 0.68006E+00
-  rms(prec ) = 0.11660E+01
-  weight for this iteration     100.00
-
- eigenvalues of (default mixing * dielectric matrix)
-  average eigenvalue GAMMA=   2.0769
-  2.0769
-
- Free energy of the ion-electron system (eV)
-  ---------------------------------------------------
-  alpha Z        PSCENC =        94.24357992
-  Ewald energy   TEWEN  =      -795.76658092
-  -Hartree energ DENC   =      -306.20178882
-  -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =        99.13892277
-  PAW double counting   =      1504.94216596    -1493.58890345
-  entropy T*S    EENTRO =        -0.00343163
-  eigenvalues    EBANDS =      -191.38047077
-  atomic energy  EATOM  =       996.37866305
-  Solvation  Ediel_sol  =         0.00000000
-  ---------------------------------------------------
-  free energy    TOTEN  =       -92.23784388 eV
-
-  energy without entropy =      -92.23441226  energy(sigma->0) =      -92.23612807
-
-
---------------------------------------------------------------------------------------------------------
-
-
-
-
---------------------------------------- Iteration      1(   7)  ---------------------------------------
-
-
-    POTLOK:  cpu time      0.0142: real time      0.0152
-    SETDIJ:  cpu time      0.0013: real time      0.0014
-     EDDAV:  cpu time      9.9786: real time     10.1906
-       DOS:  cpu time      0.0011: real time      0.0011
-    CHARGE:  cpu time      0.1559: real time      0.1568
-    MIXING:  cpu time      0.0013: real time      0.0013
-    --------------------------------------------
-      LOOP:  cpu time     10.1525: real time     10.3664
-
- eigenvalue-minimisations  : 25176
- total energy-change (2. order) : 0.1651526E+01  (-0.3219778E+00)
- number of electron      42.0000000 magnetization 
- augmentation part       -0.1724691 magnetization 
-
- Broyden mixing:
-  rms(total) = 0.17086E+00    rms(broyden)= 0.17086E+00
-  rms(prec ) = 0.24922E+00
-  weight for this iteration     100.00
-
- eigenvalues of (default mixing * dielectric matrix)
-  average eigenvalue GAMMA=   1.8912
-  1.5395  2.2430
-
- Free energy of the ion-electron system (eV)
-  ---------------------------------------------------
-  alpha Z        PSCENC =        94.24357992
-  Ewald energy   TEWEN  =      -795.76658092
-  -Hartree energ DENC   =      -342.80261115
-  -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =       101.08500578
-  PAW double counting   =      3076.16946251    -3065.37066918
-  entropy T*S    EENTRO =        -0.00313467
-  eigenvalues    EBANDS =      -154.52003360
-  atomic energy  EATOM  =       996.37866305
-  Solvation  Ediel_sol  =         0.00000000
-  ---------------------------------------------------
-  free energy    TOTEN  =       -90.58631825 eV
-
-  energy without entropy =      -90.58318358  energy(sigma->0) =      -90.58475092
-
-
---------------------------------------------------------------------------------------------------------
-
-
-
-
---------------------------------------- Iteration      1(   8)  ---------------------------------------
-
-
-    POTLOK:  cpu time      0.0151: real time      0.0152
-    SETDIJ:  cpu time      0.0014: real time      0.0014
-     EDDAV:  cpu time      7.6257: real time      7.6833
-       DOS:  cpu time      0.0011: real time      0.0011
-    CHARGE:  cpu time      0.1536: real time      0.1543
-    MIXING:  cpu time      0.0010: real time      0.0010
-    --------------------------------------------
-      LOOP:  cpu time      7.7978: real time      7.8564
-
- eigenvalue-minimisations  : 18528
- total energy-change (2. order) :-0.1239672E-01  (-0.2349521E-01)
- number of electron      42.0000000 magnetization 
- augmentation part       -0.1782189 magnetization 
-
- Broyden mixing:
-  rms(total) = 0.70461E-01    rms(broyden)= 0.70461E-01
-  rms(prec ) = 0.10549E+00
-  weight for this iteration     100.00
-
- eigenvalues of (default mixing * dielectric matrix)
-  average eigenvalue GAMMA=   1.7874
-  1.1132  1.8272  2.4218
-
- Free energy of the ion-electron system (eV)
-  ---------------------------------------------------
-  alpha Z        PSCENC =        94.24357992
-  Ewald energy   TEWEN  =      -795.76658092
-  -Hartree energ DENC   =      -346.28893265
-  -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =       101.37692090
-  PAW double counting   =      3506.80553781    -3496.02388562
-  entropy T*S    EENTRO =        -0.00317776
-  eigenvalues    EBANDS =      -151.32083970
-  atomic energy  EATOM  =       996.37866305
-  Solvation  Ediel_sol  =         0.00000000
-  ---------------------------------------------------
-  free energy    TOTEN  =       -90.59871497 eV
-
-  energy without entropy =      -90.59553721  energy(sigma->0) =      -90.59712609
-
-
---------------------------------------------------------------------------------------------------------
-
-
-
-
---------------------------------------- Iteration      1(   9)  ---------------------------------------
-
-
-    POTLOK:  cpu time      0.0143: real time      0.0146
-    SETDIJ:  cpu time      0.0014: real time      0.0014
-     EDDAV:  cpu time      9.3843: real time      9.4449
-       DOS:  cpu time      0.0013: real time      0.0016
-    CHARGE:  cpu time      0.1596: real time      0.1599
-    MIXING:  cpu time      0.0010: real time      0.0010
-    --------------------------------------------
-      LOOP:  cpu time      9.5618: real time      9.6234
-
- eigenvalue-minimisations  : 23448
- total energy-change (2. order) :-0.1417078E-01  (-0.1693622E-02)
- number of electron      42.0000000 magnetization 
- augmentation part       -0.1777898 magnetization 
-
- Broyden mixing:
-  rms(total) = 0.19837E-01    rms(broyden)= 0.19837E-01
-  rms(prec ) = 0.34949E-01
-  weight for this iteration     100.00
-
- eigenvalues of (default mixing * dielectric matrix)
-  average eigenvalue GAMMA=   1.6943
-  2.3640  2.1112  1.0717  1.2304
-
- Free energy of the ion-electron system (eV)
-  ---------------------------------------------------
-  alpha Z        PSCENC =        94.24357992
-  Ewald energy   TEWEN  =      -795.76658092
-  -Hartree energ DENC   =      -348.31746641
-  -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =       101.54249434
-  PAW double counting   =      3730.23122347    -3719.43805567
-  entropy T*S    EENTRO =        -0.00326358
-  eigenvalues    EBANDS =      -149.48347996
-  atomic energy  EATOM  =       996.37866305
-  Solvation  Ediel_sol  =         0.00000000
-  ---------------------------------------------------
-  free energy    TOTEN  =       -90.61288575 eV
-
-  energy without entropy =      -90.60962217  energy(sigma->0) =      -90.61125396
-
-
---------------------------------------------------------------------------------------------------------
-
-
-
-
---------------------------------------- Iteration      1(  10)  ---------------------------------------
-
-
-    POTLOK:  cpu time      0.0155: real time      0.0160
-    SETDIJ:  cpu time      0.0014: real time      0.0014
-     EDDAV:  cpu time      7.8219: real time      7.8739
-       DOS:  cpu time      0.0010: real time      0.0010
-    CHARGE:  cpu time      0.1537: real time      0.1546
-    MIXING:  cpu time      0.0010: real time      0.0010
-    --------------------------------------------
-      LOOP:  cpu time      7.9945: real time      8.0479
-
- eigenvalue-minimisations  : 19032
- total energy-change (2. order) :-0.4057231E-02  (-0.2103308E-03)
- number of electron      42.0000000 magnetization 
- augmentation part       -0.1772657 magnetization 
-
- Broyden mixing:
-  rms(total) = 0.60964E-02    rms(broyden)= 0.60964E-02
-  rms(prec ) = 0.12780E-01
-  weight for this iteration     100.00
-
- eigenvalues of (default mixing * dielectric matrix)
-  average eigenvalue GAMMA=   1.7280
-  2.5610  2.3650  0.9939  1.2137  1.5064
-
- Free energy of the ion-electron system (eV)
-  ---------------------------------------------------
-  alpha Z        PSCENC =        94.24357992
-  Ewald energy   TEWEN  =      -795.76658092
-  -Hartree energ DENC   =      -348.66528733
-  -exchange      EXHF   =         0.00000000
-  -V(xc)+E(xc)   XCENC  =       101.56707422
-  PAW double counting   =      3737.49667100    -3726.68707686
-  entropy T*S    EENTRO =        -0.00321759
-  eigenvalues    EBANDS =      -149.18076848
-  atomic energy  EATOM  =       996.37866305
-  Solvation  Ediel_sol  =         0.00000000
-  ---------------------------------------------------
-  free energy    TOTEN  =       -90.61694298 eV
-
-  energy without entropy =      -90.61372539  energy(sigma->0) =      -90.61533419
-
-
---------------------------------------------------------------------------------------------------------
-
-
-
-
---------------------------------------- Iteration      1(  11)  ---------------------------------------
-
-
-    POTLOK:  cpu time      0.0142: real time      0.0145
-    SETDIJ:  cpu time      0.0014: real time      0.0014
