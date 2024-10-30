@@ -7456,3 +7456,52 @@ Automatic generation of k-mesh.
 
     POTLOK:  cpu time      0.0108: real time      0.0118
     SETDIJ:  cpu time      0.0012: real time      0.0012
+     EDDAV:  cpu time     47.6134: real time     47.6135
+       DOS:  cpu time      0.0061: real time      0.0079
+    CHARGE:  cpu time      0.5800: real time      0.5800
+    MIXING:  cpu time      0.0008: real time      0.0008
+    --------------------------------------------
+      LOOP:  cpu time     48.2123: real time     48.2151
+
+ eigenvalue-minimisations  :153216
+ total energy-change (2. order) :-0.1074786E-05  (-0.6554952E-07)
+ number of electron      41.9999999 magnetization 
+ augmentation part       -0.1762273 magnetization 
+
+ Broyden mixing:
+  rms(total) = 0.71224E-04    rms(broyden)= 0.71223E-04
+  rms(prec ) = 0.11652E-03
+  weight for this iteration     100.00
+
+ eigenvalues of (default mixing * dielectric matrix)
+  average eigenvalue GAMMA=   1.7772
+  3.3488  2.4272  2.3562  1.8396  1.5979  1.2723  1.0400  1.0400  1.0727
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -349.11357825
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       101.59525017
+  PAW double counting   =      3738.27538189    -3727.46336982
+  entropy T*S    EENTRO =        -0.00365276
+  eigenvalues    EBANDS =      -148.73857819
+  atomic energy  EATOM  =       996.37322174
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -90.59832621 eV
+
+  energy without entropy =      -90.59467345  energy(sigma->0) =      -90.59649983
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(  15)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.0110: real time      0.0120
+    SETDIJ:  cpu time      0.0012: real time      0.0012

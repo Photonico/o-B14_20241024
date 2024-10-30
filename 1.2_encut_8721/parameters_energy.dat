@@ -1,1 +1,5 @@
 Total Energy	Total Kpoints	Calculated Kpoints	Kpoints(X Y Z)	Lattice Constant	SYMPREC	ENCUT	KSPACING	VOLUME	POTIM	AMIX	BMIX	EDIFF	EDIFFG
+-90.5883835	8721	63	(19, 27, 17)	5.697	1e-05	520.0	None	None	0.5	None	None	1e-06	-0.001
+-90.58051843	8721	63	(19, 27, 17)	5.697	1e-05	440.0	None	None	0.5	None	None	1e-06	-0.001
+-90.5818553	8721	63	(19, 27, 17)	5.697	1e-05	400.0	None	None	0.5	None	None	1e-06	-0.001
+-90.58113721	8721	63	(19, 27, 17)	5.697	1e-05	420.0	None	None	0.5	None	None	1e-06	-0.001
