@@ -11038,3 +11038,4 @@ Automatic generation of k-mesh.
 
     CHARGE:  cpu time      0.1526: real time      0.1539
     FORLOC:  cpu time      0.0016: real time      0.0016
+    FORNL :  cpu time      1.0390: real time      1.0436
