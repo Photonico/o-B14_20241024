@@ -21,5 +21,6 @@ Total Energy	Total Kpoints	Calculated Kpoints	Kpoints(X Y Z)	Lattice Constant	SY
 -90.22600369	1260	33	(10, 14, 9)	5.697	1e-05	275.0	None	None	0.5	None	None	1e-06	-0.001
 -90.58813096	1260	33	(10, 14, 9)	5.697	1e-05	400.0	None	None	0.5	None	None	1e-06	-0.001
 -90.61917753	1260	33	(10, 14, 9)	5.697	1e-05	725.0	None	None	0.5	None	None	1e-06	-0.001
+-90.61414039	1260	33	(10, 14, 9)	5.697	1e-05	650.0	None	None	0.5	None	None	1e-06	-0.001
 -89.95092897	1260	33	(10, 14, 9)	5.697	1e-05	250.0	None	None	0.5	None	None	1e-06	-0.001
 -90.40982958	1260	33	(10, 14, 9)	5.697	1e-05	300.0	None	None	0.5	None	None	1e-06	-0.001
