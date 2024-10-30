@@ -3117,3 +3117,47 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">   69.84   70.37</time>
+   <time name="total">   71.09   71.62</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61366829 </i>
+    <i name="e_wo_entrp">    -90.61001583 </i>
+    <i name="e_0_energy">    -90.61184206 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   75.00   75.57</time>
+   <time name="total">   76.28   76.87</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61367805 </i>
+    <i name="e_wo_entrp">    -90.61002463 </i>
+    <i name="e_0_energy">    -90.61185134 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   70.88   71.46</time>
+   <time name="total">   72.12   72.71</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61367913 </i>
+    <i name="e_wo_entrp">    -90.61002586 </i>
+    <i name="e_0_energy">    -90.61185250 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   67.44   67.95</time>
+   <time name="total">   67.47   67.98</time>
+   <energy>
+    <i name="alphaZ">     94.24357992 </i>
+    <i name="ewald">   -795.76658092 </i>
+    <i name="hartreedc">   -349.12917513 </i>
+    <i name="XCdc">    101.59817962 </i>
+    <i name="pawpsdc">   3726.41340291 </i>
+    <i name="pawaedc">  -3715.59917141 </i>
+    <i name="eentropy">     -0.00365333 </i>
+    <i name="bandstr">   -148.75040223 </i>
+    <i name="atom">    996.38014125 </i>
+    <i name="e_fr_energy">    -90.61367932 </i>
+    <i name="e_wo_entrp">    -90.61002599 </i>
+    <i name="e_0_energy">    -90.61185265 </i>
+   </energy>
+  </scstep>

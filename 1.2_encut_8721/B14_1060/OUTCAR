@@ -7064,3 +7064,103 @@ Automatic generation of k-mesh.
 
     POTLOK:  cpu time      0.0321: real time      0.0337
     SETDIJ:  cpu time      0.0020: real time      0.0020
+     EDDAV:  cpu time    150.1152: real time    151.5381
+       DOS:  cpu time      0.0061: real time      0.0079
+    CHARGE:  cpu time      4.7629: real time      4.8044
+    MIXING:  cpu time      0.0022: real time      0.0022
+    --------------------------------------------
+      LOOP:  cpu time    154.9205: real time    156.3884
+
+ eigenvalue-minimisations  :174816
+ total energy-change (2. order) : 0.5414513E+01  (-0.3947580E+00)
+ number of electron      42.0000000 magnetization 
+ augmentation part       -0.1535612 magnetization 
+
+ Broyden mixing:
+  rms(total) = 0.67947E+00    rms(broyden)= 0.67947E+00
+  rms(prec ) = 0.11654E+01
+  weight for this iteration     100.00
+
+ eigenvalues of (default mixing * dielectric matrix)
+  average eigenvalue GAMMA=   2.0706
+  2.0706
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -306.20556599
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =        99.13961713
+  PAW double counting   =      1504.07286806    -1492.71958439
+  entropy T*S    EENTRO =        -0.00365449
+  eigenvalues    EBANDS =      -191.37893973
+  atomic energy  EATOM  =       996.38239008
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -92.23587032 eV
+
+  energy without entropy =      -92.23221583  energy(sigma->0) =      -92.23404308
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   7)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.0316: real time      0.0329
+    SETDIJ:  cpu time      0.0019: real time      0.0019
+     EDDAV:  cpu time    153.2936: real time    155.0306
+       DOS:  cpu time      0.0059: real time      0.0085
+    CHARGE:  cpu time      4.6799: real time      4.7238
+    MIXING:  cpu time      0.0020: real time      0.0020
+    --------------------------------------------
+      LOOP:  cpu time    158.0149: real time    159.7996
+
+ eigenvalue-minimisations  :180456
+ total energy-change (2. order) : 0.1651034E+01  (-0.3209344E+00)
+ number of electron      42.0000000 magnetization 
+ augmentation part       -0.1728804 magnetization 
+
+ Broyden mixing:
+  rms(total) = 0.17173E+00    rms(broyden)= 0.17173E+00
+  rms(prec ) = 0.25018E+00
+  weight for this iteration     100.00
+
+ eigenvalues of (default mixing * dielectric matrix)
+  average eigenvalue GAMMA=   1.8496
+  1.4551  2.2441
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        94.24357992
+  Ewald energy   TEWEN  =      -795.76658092
+  -Hartree energ DENC   =      -342.68196651
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       101.07872348
+  PAW double counting   =      3068.52320018    -3057.72243616
+  entropy T*S    EENTRO =        -0.00362806
+  eigenvalues    EBANDS =      -154.63811787
+  atomic energy  EATOM  =       996.38239008
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       -90.58483585 eV
+
+  energy without entropy =      -90.58120780  energy(sigma->0) =      -90.58302182
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   8)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.0309: real time      0.0328
+    SETDIJ:  cpu time      0.0019: real time      0.0019
+     EDDAV:  cpu time    120.9366: real time    122.1413
+       DOS:  cpu time      0.0071: real time      0.0113
