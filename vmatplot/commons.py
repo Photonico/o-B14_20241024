@@ -31,6 +31,6 @@ def check_vasprun(directory="."):
                             break
                     else:
                         print(f"vasprun.xml in {dirpath} is incomplete.")
-            except IOError as e:                        # Change from Exception to IOError
+            except IOError as e:    # Change from Exception to IOError
                 print(f"Error reading {xml_path}: {e}")
     return complete_folders
