@@ -2,14 +2,14 @@ Loading vasp/6.4.3
   Loading requirement: openmpi/4.1.3
 
 ======================================================================================
-                  Resource Usage on 2024-10-29 14:13:41:
-   Job Id:             127802547.gadi-pbs
+                  Resource Usage on 2024-10-31 00:22:18:
+   Job Id:             127909816.gadi-pbs
    Project:            g46
    Exit Status:        0
-   Service Units:      0.37
+   Service Units:      0.31
    NCPUs Requested:    24                     NCPUs Used: 24              
-                                           CPU Time Used: 00:10:09        
+                                           CPU Time Used: 00:08:10        
    Memory Requested:   95.0GB                Memory Used: 7.48GB          
-   Walltime requested: 47:59:59            Walltime Used: 00:00:28        
+   Walltime requested: 47:59:59            Walltime Used: 00:00:23        
    JobFS requested:    10.0GB                 JobFS used: 0B              
 ======================================================================================
