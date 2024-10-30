@@ -14,3 +14,6 @@
  FFT: planning ... GRID_SOFT
  FFT: planning ... GRID
  WAVECAR not read
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1     0.539555890471E+02    0.53956E+02   -0.17640E+04 82944   0.724E+02
