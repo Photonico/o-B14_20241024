@@ -3090,3 +3090,74 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">  158.44  158.45</time>
+   <time name="total">  163.85  163.88</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61078749 </i>
+    <i name="e_wo_entrp">    -90.60713178 </i>
+    <i name="e_0_energy">    -90.60895963 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">  131.47  131.47</time>
+   <time name="total">  136.92  136.92</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61516444 </i>
+    <i name="e_wo_entrp">    -90.61150746 </i>
+    <i name="e_0_energy">    -90.61333595 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">  149.66  149.67</time>
+   <time name="total">  155.04  155.05</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61634735 </i>
+    <i name="e_wo_entrp">    -90.61269625 </i>
+    <i name="e_0_energy">    -90.61452180 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">  143.52  143.53</time>
+   <time name="total">  148.89  148.90</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61644733 </i>
+    <i name="e_wo_entrp">    -90.61279484 </i>
+    <i name="e_0_energy">    -90.61462109 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">  153.73  153.74</time>
+   <time name="total">  159.14  159.15</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61645713 </i>
+    <i name="e_wo_entrp">    -90.61280369 </i>
+    <i name="e_0_energy">    -90.61463041 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">  144.78  144.79</time>
+   <time name="total">  150.18  150.19</time>
+   <energy>
+    <i name="e_fr_energy">    -90.61645822 </i>
+    <i name="e_wo_entrp">    -90.61280493 </i>
+    <i name="e_0_energy">    -90.61463157 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">  139.68  139.69</time>
+   <time name="total">  139.73  139.73</time>
+   <energy>
+    <i name="alphaZ">     94.24357992 </i>
+    <i name="ewald">   -795.76658092 </i>
+    <i name="hartreedc">   -349.13141659 </i>
+    <i name="XCdc">    101.59846032 </i>
+    <i name="pawpsdc">   3726.49792518 </i>
+    <i name="pawaedc">  -3715.68345727 </i>
+    <i name="eentropy">     -0.00365336 </i>
+    <i name="bandstr">   -148.75379217 </i>
+    <i name="atom">    996.38247648 </i>
+    <i name="e_fr_energy">    -90.61645842 </i>
+    <i name="e_wo_entrp">    -90.61280505 </i>
+    <i name="e_0_energy">    -90.61463174 </i>
+   </energy>
+  </scstep>
