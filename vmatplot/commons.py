@@ -8,6 +8,8 @@ import numpy as np
 
 from typing import Tuple, Union
 
+def is_nested_list(input_list): return isinstance(input_list, list) and isinstance(input_list[0], list)
+
 def check_vasprun(directory="."):
     """Find folders with complete vasprun.xml and print incomplete ones."""
     # Check if the user asked for help

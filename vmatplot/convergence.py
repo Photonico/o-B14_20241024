@@ -9,7 +9,8 @@ import matplotlib.lines as mlines
 import numpy as np
 
 from matplotlib.ticker import ScalarFormatter
-from vmatplot.commons import check_vasprun
+from matplotlib.ticker import MaxNLocator
+from vmatplot.commons import check_vasprun, is_nested_list
 from vmatplot.output_settings import canvas_setting, color_sampling
 
 def identify_parameters(directory="."):
@@ -91,8 +92,7 @@ def identify_parameters(directory="."):
                 if any(keyword in line.lower() for keyword in ["gamma", "monkhorst", "monkhorst-pack", "explicit", "line-mode"]):
                     kpoints_index = index + 1
                     break
-            else:
-                raise ValueError("Kpoints type keyword not found in KPOINTS file.")
+            else: raise ValueError("Kpoints type keyword not found in KPOINTS file.")
 
             kpoints_values = lines[kpoints_index].split()
             x_kpoints, y_kpoints, z_kpoints = int(kpoints_values[0]), int(kpoints_values[1]), int(kpoints_values[2])
@@ -285,7 +285,7 @@ def read_energy_parameters(data_path):
 
     return energy, total_kpoints, cal_kpoints_sum, directs_kpoints, lattice, symprec, encut, kspacing, volume, potim, amix, bmix, ediff, ediffg
 
-def plot_energy_kpoints(*args_list):
+def plot_energy_kpoints_single(*args_list):
     help_info = "Usage: plot_energy_kpoints(args_list)\n" + \
                 "args_list: A list containing [info_suffix, source_data, kpoints_boundary, color_family].\n" + \
                 "Example: plot_energy_kpoints(['Material Info', 'source_data_path', (start, end), 'blue'])\n"
@@ -324,7 +324,7 @@ def plot_energy_kpoints(*args_list):
 
     # Set title with info_suffix
     plt.title(f"Energy versus K-points {info_suffix}")
-    plt.xlabel("K-points Configuration")
+    plt.xlabel("K-points configuration")
     plt.ylabel(r"Energy (eV)")
 
     # Ensure boundary values are integers and handle None boundaries
@@ -340,7 +340,7 @@ def plot_energy_kpoints(*args_list):
     kpoints_labels_plot = [f"({x[0]}, {x[1]}, {x[2]})" for x in [sep_kpoints_sorted[index] for index in kpoints_indices]]
 
     # Plot with fixed spacing based on indices
-    plt.plot(range(len(total_kpoints_plot)), energy_plotting, c=colors[1], lw=1.5, label=f"Energy vs Total K-points ({info_suffix})")
+    plt.plot(range(len(total_kpoints_plot)), energy_plotting, c=colors[1], lw=1.5, label=f"Energy versus K-points ({info_suffix})")
     plt.scatter(range(len(total_kpoints_plot)), energy_plotting, s=6, c=colors[1], zorder=1)
 
     # Set custom tick labels for x-axis to show kpoints configurations
@@ -348,7 +348,108 @@ def plot_energy_kpoints(*args_list):
 
     plt.tight_layout()
 
-def plot_energy_encut(*args_list):
+def plot_energy_kpoints(kpoints_list):
+    """
+    Generalized function to plot energy versus K-points configuration for multiple datasets.
+
+    Parameters:
+    - kpoints_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, kpoints_boundary, color_family].
+    """
+    
+    # Check if input is a single data set (either single list or a list with one sublist)
+    if is_nested_list(kpoints_list) is False:
+        return plot_energy_kpoints_single(kpoints_list)
+    elif isinstance(kpoints_list[0], list) and len(kpoints_list) == 1:
+        return plot_energy_kpoints_single(*kpoints_list)
+    else: pass
+
+    # Check if kpoints_list is a 2D list structure for multiple datasets
+    if not all(isinstance(data, list) and len(data) == 4 for data in kpoints_list):
+        print("Error: Each item in kpoints_list must be a list with [info_suffix, source_data, kpoints_boundary, color_family].")
+        return
+    
+    # Set up figure and styling
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply scientific notation formatter for y-axis
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # List to store legend handles for custom legend creation
+    legend_handles = []
+    global_kpoints_config = []  # List to collect unique kpoints configurations for x-axis labels
+    total_kpoints_set = set()  # Collect unique total_kpoints across all datasets for sorting
+
+    # Iterate over each dataset in kpoints_list to gather total_kpoints and kpoints configurations
+    kpoints_config_map = {}
+    for data in kpoints_list:
+        info_suffix, source_data, kpoints_boundary, color_family = data
+        data_input = read_energy_parameters(source_data)
+        total_kpoints = data_input[1]
+        kpoints_config = data_input[3]  # Extract kpoints configurations in (X, Y, Z) format
+
+        # Apply boundary to filter relevant k-points for each dataset
+        kpoints_start = min(total_kpoints) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
+        kpoints_end = max(total_kpoints) if not kpoints_boundary or kpoints_boundary[1] is None else int(kpoints_boundary[1])
+
+        # Filtered kpoints within boundary and update global sets
+        for idx, total_kp in enumerate(total_kpoints):
+            if kpoints_start <= total_kp <= kpoints_end:
+                total_kpoints_set.add(total_kp)
+                kpoints_config_map[total_kp] = f"({kpoints_config[idx][0]}, {kpoints_config[idx][1]}, {kpoints_config[idx][2]})"
+
+    # Sort the global total_kpoints for unified x-axis
+    sorted_total_kpoints = sorted(total_kpoints_set)
+    global_kpoints_config = [kpoints_config_map[total_kp] for total_kp in sorted_total_kpoints]
+    
+    # Iterate over each dataset to align with global total_kpoints and plot
+    for data in kpoints_list:
+        info_suffix, source_data, kpoints_boundary, color_family = data
+        
+        # Color for the current dataset
+        colors = color_sampling(color_family)
+
+        # Data input
+        data_input = read_energy_parameters(source_data)
+        energy = data_input[0]
+        total_kpoints = data_input[1]
+        kpoints_config = data_input[3]
+
+        # Apply boundary values for the current dataset
+        kpoints_start = min(total_kpoints) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
+        kpoints_end = max(total_kpoints) if not kpoints_boundary or kpoints_boundary[1] is None else int(kpoints_boundary[1])
+        
+        # Filter data within the specified boundary for the current dataset
+        filtered_kpoints = [total_kp for total_kp in total_kpoints if kpoints_start <= total_kp <= kpoints_end]
+        filtered_energy = [energy[idx] for idx, total_kp in enumerate(total_kpoints) if kpoints_start <= total_kp <= kpoints_end]
+        
+        # Align energies with the global sorted total_kpoints
+        energy_aligned = [filtered_energy[filtered_kpoints.index(total_kp)] if total_kp in filtered_kpoints else np.nan for total_kp in sorted_total_kpoints]
+        
+        # Plotting with color and unique label
+        plt.plot(range(len(sorted_total_kpoints)), energy_aligned, c=colors[1], lw=1.5)
+        plt.scatter(range(len(sorted_total_kpoints)), energy_aligned, s=6, c=colors[1], zorder=1)
+
+        # Add legend entry with custom handle
+        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-', 
+                                      label=f"Energy versus K-points {info_suffix}")
+        legend_handles.append(legend_handle)
+
+    # Set labels and legend for multi-dataset
+    plt.xlabel("K-points configurations")
+    plt.ylabel("Energy (eV)")
+    plt.xticks(ticks=range(len(global_kpoints_config)), labels=global_kpoints_config, rotation=45, ha="right")
+    plt.title("Energy versus K-points")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_energy_encut_single(*args_list):
     help_info = "Usage: plot_energy_encut(args_list)\n" + \
                 "args_list: A list containing [info_suffix, source_data, encut_boundary, color_family].\n" + \
                 "Example: plot_energy_encut(['Material Info', 'source_data_path', (start, end), 'violet'])\n"
@@ -415,19 +516,113 @@ def plot_energy_encut(*args_list):
     energy_plotting = energy_sorted[start_index:end_index + 1]
 
     # Plotting
-    plt.scatter(encut_plotting, energy_plotting, s=6, c=colors[1], zorder=1, label=f"Energy vs ENCUT ({info_suffix})")
+    plt.scatter(encut_plotting, energy_plotting, s=6, c=colors[1], zorder=1, label=f"Energy versus energy cutoff ({info_suffix})")
     plt.plot(encut_plotting, energy_plotting, c=colors[1], lw=1.5)
 
     plt.tight_layout()
 
-def plot_energy_kpoints_encut(kpoints_list, encut_list):
+def plot_energy_encut(encut_list):
+    """
+    Generalized function to plot energy versus ENCUT (energy cutoff) for multiple datasets.
+
+    Parameters:
+    - encut_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, encut_boundary, color_family].
+    """
+
+    # Check if input is a single data set (either single list or a list with one sublist)
+    if is_nested_list(encut_list) is False:
+        return plot_energy_encut_single(encut_list)
+    elif isinstance(encut_list[0], list) and len(encut_list) == 1:
+        return plot_energy_encut_single(*encut_list)  # Calls single data plot function directly
+    else: pass
+
+    # Check if encut_list is a 2D list structure for multiple datasets
+    if not all(isinstance(data, list) and len(data) == 4 for data in encut_list):
+        print("Error: Each item in encut_list must be a list with [info_suffix, source_data, encut_boundary, color_family].")
+        return
+
+    # Set up figure and styling
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply scientific notation formatter for y-axis
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # List to store legend handles for custom legend creation
+    legend_handles = []
+    all_encut_set = set()  # Collect unique ENCUT values across all datasets
+
+    # Iterate over each dataset in encut_list to gather ENCUT values
+    for data in encut_list:
+        info_suffix, source_data, encut_boundary, color_family = data
+        data_input = read_energy_parameters(source_data)
+        encut_values = data_input[6]
+
+        # Apply boundary to filter relevant ENCUT values for each dataset
+        encut_start = min(encut_values) if not encut_boundary or encut_boundary[0] is None else float(encut_boundary[0])
+        encut_end = max(encut_values) if not encut_boundary or encut_boundary[1] is None else float(encut_boundary[1])
+        filtered_encut = [enc for enc in encut_values if encut_start <= enc <= encut_end]
+
+        # Add filtered ENCUT values to global set
+        all_encut_set.update(filtered_encut)
+
+    # Sort the global ENCUT values for unified x-axis
+    all_encut_sorted = sorted(all_encut_set)
+
+    # Iterate over each dataset to align with global ENCUT and plot
+    for data in encut_list:
+        info_suffix, source_data, encut_boundary, color_family = data
+
+        # Color for the current dataset
+        colors = color_sampling(color_family)
+
+        # Data input
+        data_input = read_energy_parameters(source_data)
+        energy = data_input[0]
+        encut_values = data_input[6]
+
+        # Apply boundary values for the current dataset
+        encut_start = min(encut_values) if not encut_boundary or encut_boundary[0] is None else float(encut_boundary[0])
+        encut_end = max(encut_values) if not encut_boundary or encut_boundary[1] is None else float(encut_boundary[1])
+        
+        # Filter data within the specified boundary for the current dataset
+        encut_filtered = [enc for enc in encut_values if encut_start <= enc <= encut_end]
+        energy_filtered = [energy[idx] for idx, enc in enumerate(encut_values) if encut_start <= enc <= encut_end]
+        
+        # Create a mapping for the filtered data to align with the global ENCUT
+        energy_aligned = [energy_filtered[encut_filtered.index(enc)] if enc in encut_filtered else np.nan for enc in all_encut_sorted]
+
+        # Plotting with color and unique label
+        plt.plot(all_encut_sorted, energy_aligned, c=colors[1], lw=1.5)
+        plt.scatter(all_encut_sorted, energy_aligned, s=6, c=colors[1], zorder=1)
+
+        # Add legend entry with custom handle
+        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-', 
+                                      label=f"Energy versus energy cutoff {info_suffix}")
+        legend_handles.append(legend_handle)
+
+    # Set labels and legend for multi-dataset
+    plt.xlabel("Energy cutoff (eV)")
+    plt.ylabel("Energy (eV)")
+    plt.title("Energy versus energy cutoff")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_energy_kpoints_encut_single(kpoints_list, encut_list):
     # Unpack lists to retrieve the new info_suffix (materials information)
     info_suffix_kpoints, kpoints_source_data, kpoints_boundary, kpoints_color_family = kpoints_list
     info_suffix_encut, encut_source_data, encut_boundary, encut_color_family = encut_list
 
     # Set up figure and parameters
     fig_setting = canvas_setting()
-    fig, ax_kpoints = plt.subplots(figsize=fig_setting[0], dpi=fig_setting[1])
+    fig_size_adjusted = (fig_setting[0][0], fig_setting[0][1] * 1.25)
+    fig, ax_kpoints = plt.subplots(figsize=fig_size_adjusted, dpi=fig_setting[1])
     ax_encut = ax_kpoints.twiny()  # Create the top x-axis
 
     # Update rcParams globally for plot settings
@@ -485,28 +680,171 @@ def plot_energy_kpoints_encut(kpoints_list, encut_list):
     # Plot K-points data with fixed spacing on x-axis
     ax_kpoints.plot(range(len(kpoints_energy_plot)), kpoints_energy_plot, c=kpoints_colors[1], lw=1.5)
     ax_kpoints.scatter(range(len(kpoints_energy_plot)), kpoints_energy_plot, s=6, c=kpoints_colors[1], zorder=1)
-    # ax_kpoints.set_xlabel("K-points Configuration", color=kpoints_colors[0])
-    ax_kpoints.set_xlabel("K-points Configuration")
+    ax_kpoints.set_xlabel("K-points configuration", color=kpoints_colors[0])
+    # ax_kpoints.set_xlabel("K-points configuration")
     ax_kpoints.set_ylabel("Energy (eV)")
     ax_kpoints.set_xticks(range(len(kpoints_labels_plot)))
-    # ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right", color=kpoints_colors[0])
-    ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right")
+    ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right", color=kpoints_colors[0])
+    # ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right")
 
     # Plot ENCUT data on the top x-axis
     ax_encut.plot(encut_values_plot, encut_energy_plot, c=encut_colors[1], lw=1.5)
     ax_encut.scatter(encut_values_plot, encut_energy_plot, s=6, c=encut_colors[1], zorder=1)
-    # ax_encut.set_xlabel("Energy cutoff (eV)", color=encut_colors[0])
-    ax_encut.set_xlabel("Energy cutoff (eV)")
+    ax_encut.set_xlabel("Energy cutoff (eV)", color=encut_colors[0])
+    # ax_encut.set_xlabel("Energy cutoff (eV)")
     ax_encut.xaxis.set_label_position("top")
     ax_encut.xaxis.tick_top()
-    # for encut_label in ax_encut.get_xticklabels():
-    #     encut_label.set_color(encut_colors[0])
+    for encut_label in ax_encut.get_xticklabels():
+        encut_label.set_color(encut_colors[0])
 
     # Create unified legend
     kpoints_legend = mlines.Line2D([], [], color=kpoints_colors[1], marker='o', markersize=6, linestyle='-', label=f"energy versus K-points {info_suffix_kpoints}")
     encut_legend = mlines.Line2D([], [], color=encut_colors[1], marker='o', markersize=6, linestyle='-', label=f"energy versus energy cutoff {info_suffix_encut}")
     plt.legend(handles=[kpoints_legend, encut_legend], loc="best")
 
+    plt.title("Energy versus K-points and energy cutoff")
+    plt.tight_layout()
+
+def plot_energy_kpoints_encut(kpoints_list_source, encut_list_source):
+    """
+    Generalized function to plot energy versus K-points and ENCUT (energy cutoff) for multiple datasets.
+
+    Parameters:
+    - kpoints_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, kpoints_boundary, color_family] for k-points data.
+    - encut_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, encut_boundary, color_family] for ENCUT data.
+    """
+
+    # Ensure kpoints_list and encut_list are always nested lists
+    kpoints_list = [kpoints_list_source] if not is_nested_list(kpoints_list_source) else kpoints_list_source
+    encut_list = [encut_list_source] if not is_nested_list(encut_list_source) else encut_list_source
+
+    # Downgrade system to handle single data cases
+    kpoints_list_downgrad, encut_list_downgrad = [],[]
+    if is_nested_list(kpoints_list_source) == False:
+        kpoints_list_downgrad = kpoints_list_source
+    elif len(kpoints_list_source) == 1:
+        kpoints_list_downgrad = kpoints_list_source[0]
+    
+    if is_nested_list(encut_list_source) == False:
+        encut_list_downgrad = encut_list_source
+    elif len(encut_list_source) == 1:
+        encut_list_downgrad = encut_list_source[0]
+    
+    if encut_list_downgrad != [] and kpoints_list_downgrad != []:
+        return plot_energy_kpoints_encut_single(kpoints_list_downgrad, encut_list_downgrad)
+    else: pass
+
+    # Set up figure and parameters
+    fig_setting = canvas_setting()
+    fig_size_adjusted = (fig_setting[0][0], fig_setting[0][1] * 1.25)
+    fig, ax_kpoints = plt.subplots(figsize=fig_size_adjusted, dpi=fig_setting[1])
+    ax_encut = ax_kpoints.twiny()  # Create the top x-axis
+
+    # Update rcParams globally for plot settings
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+
+    # Configure tick direction and placement on both axes
+    ax_kpoints.tick_params(direction="in")
+    ax_encut.tick_params(direction="in")
+
+    # Configure scientific notation for y-axis on K-points axis
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    ax_kpoints.yaxis.set_major_formatter(formatter)
+
+    # Initialize legend handles for unified legend creation
+    legend_handles = []
+
+    # Collect all filtered K-points for global alignment
+    global_kpoints = set()
+
+    # Process K-points datasets
+    all_kpoints_labels = []
+    for kpoints_data_item in kpoints_list:
+        info_suffix, kpoints_source_data, kpoints_boundary, kpoints_color_family = kpoints_data_item
+        kpoints_colors = color_sampling(kpoints_color_family)
+
+        # K-points data processing
+        kpoints_data = read_energy_parameters(kpoints_source_data)
+        kpoints_energy = kpoints_data[0]
+        total_kpoints = kpoints_data[1]
+        directs_kpoints = kpoints_data[3]
+        kpoints_labels = {kp: f"({coord[0]}, {coord[1]}, {coord[2]})" for kp, coord in zip(total_kpoints, directs_kpoints)}
+
+        # Apply boundary to filter K-points and energy values
+        kpoints_start = kpoints_boundary[0] if kpoints_boundary[0] is not None else min(total_kpoints)
+        kpoints_end = kpoints_boundary[1] if kpoints_boundary[1] is not None else max(total_kpoints)
+        filtered_data = [
+            (kp, en, kpoints_labels[kp]) for kp, en in zip(total_kpoints, kpoints_energy)
+            if kpoints_start <= kp <= kpoints_end
+        ]
+
+        # Sort filtered data by total_kpoints and unpack
+        filtered_data.sort(key=lambda x: x[0])
+        filtered_kpoints, filtered_energy, filtered_labels = zip(*filtered_data)
+
+        # Update global_kpoints for consistent alignment across datasets
+        global_kpoints.update(filtered_kpoints)
+
+        # Plot K-points data
+        ax_kpoints.plot(range(len(filtered_kpoints)), filtered_energy, c=kpoints_colors[1], lw=1.5)
+        ax_kpoints.scatter(range(len(filtered_kpoints)), filtered_energy, s=6, c=kpoints_colors[1], zorder=1)
+
+        # Add to legend handles
+        legend_handles.append(mlines.Line2D([], [], color=kpoints_colors[1], marker='o', markersize=6, linestyle='-', label=f"Energy versus K-points {info_suffix}"))
+        all_kpoints_labels.extend(filtered_labels)
+
+    # Set x-axis labels for K-points, ensuring unique and ordered labels
+    all_kpoints_labels = sorted(set(all_kpoints_labels), key=all_kpoints_labels.index)
+    ax_kpoints.set_xticks(range(len(all_kpoints_labels)))
+    ax_kpoints.set_xticklabels(all_kpoints_labels, rotation=45, ha="right")
+    ax_kpoints.set_xlabel("K-points configuration")
+    ax_kpoints.set_ylabel("Energy (eV)")
+
+    # Process ENCUT datasets
+    all_encut_values = []
+    for encut_data_item in encut_list:
+        info_suffix, encut_source_data, encut_boundary, encut_color_family = encut_data_item
+        encut_colors = color_sampling(encut_color_family)
+
+        # ENCUT data processing
+        encut_data = read_energy_parameters(encut_source_data)
+        encut_energy = encut_data[0]
+        encut_values = encut_data[6]
+        encut_filtered_data = [(enc, en) for enc, en in zip(encut_values, encut_energy) if enc is not None and en is not None]
+        encut_sorted_data = sorted(encut_filtered_data, key=lambda x: x[0])
+        encut_values_sorted, encut_energy_sorted = zip(*encut_sorted_data)
+
+        # Set ENCUT boundary
+        encut_start = float(encut_boundary[0]) if encut_boundary[0] is not None else min(encut_values_sorted)
+        encut_end = float(encut_boundary[1]) if encut_boundary[1] is not None else max(encut_values_sorted)
+
+        # Filter sorted data within boundary
+        encut_indices = [
+            index for index, val in enumerate(encut_values_sorted) if encut_start <= val <= encut_end
+        ]
+        encut_values_plot = [encut_values_sorted[index] for index in encut_indices]
+        encut_energy_plot = [encut_energy_sorted[index] for index in encut_indices]
+        all_encut_values.extend(encut_values_plot)
+
+        # Plot ENCUT data on the top x-axis
+        ax_encut.plot(encut_values_plot, encut_energy_plot, c=encut_colors[1], lw=1.5)
+        ax_encut.scatter(encut_values_plot, encut_energy_plot, s=6, c=encut_colors[1], zorder=1)
+
+        # Add to legend handles
+        legend_handles.append(mlines.Line2D([], [], color=encut_colors[1], marker='o', markersize=6, linestyle='-', label=f"Energy versus energy cutoff {info_suffix}"))
+
+    # Set top x-axis labels for ENCUT, using MaxNLocator for fewer ticks
+    ax_encut.set_xlabel("Energy cutoff (eV)")
+    ax_encut.xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
+    ax_encut.xaxis.set_label_position("top")
+    ax_encut.xaxis.tick_top()
+
+    # Create unified legend
+    plt.legend(handles=legend_handles, loc="best")
     plt.title("Energy versus K-points and energy cutoff")
     plt.tight_layout()
 
