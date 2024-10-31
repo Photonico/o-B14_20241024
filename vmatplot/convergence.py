@@ -115,6 +115,7 @@ def identify_parameters(directory="."):
     except (ET.ParseError, ValueError, IndexError) as e:
         print(f"Error parsing files in {directory}: {e}")
         return None
+
 def summarize_energy_parameters(directory=".", lattice_boundary=None):
     result_file = "parameters_energy.dat"
     result_file_path = os.path.join(directory, result_file)
