@@ -14,7 +14,10 @@ from vmatplot.commons import check_vasprun, is_nested_list
 from vmatplot.output_settings import canvas_setting, color_sampling
 
 def identify_parameters(directory="."):
-    """Extract energy, total kpoints, calculated kpoints, kpoints (x, y, z), lattice constant, SYMPREC, ENCUT, KSPACING, VOLUME, POTIM, AMIX, BMIX, EDIFF, EDIFFG values."""
+    """
+    Extracts energy, total kpoints, calculated kpoints, kpoints grid (x, y, z), lattice constant, SYMPREC, 
+    ENCUT, KSPACING, VOLUME, POTIM, AMIX, BMIX, EDIFF, EDIFFG values, and elapsed time from VASP output files.
+    """
 
     if directory == "help":
         print("Please use this function on the project directory.")
@@ -22,13 +25,16 @@ def identify_parameters(directory="."):
 
     vasprun_path = os.path.join(directory, "vasprun.xml")
     kpoints_path = os.path.join(directory, "KPOINTS")
+    outcar_path = os.path.join(directory, "OUTCAR")
 
+    # Check file existence
     if not os.path.exists(vasprun_path):
         return "vasprun.xml file not found in the specified directory."
     if not os.path.exists(kpoints_path):
         return "KPOINTS file not found in the specified directory."
 
     try:
+        # Parse XML data from vasprun.xml
         tree = ET.parse(vasprun_path)
         root = tree.getroot()
 
@@ -46,25 +52,26 @@ def identify_parameters(directory="."):
             "mixing parameter (AMIX)": None,
             "mixing parameter (BMIX)": None,
             "electronic convergence (EDIFF)": None,
-            "force convergence (EDIFFG)": None
+            "force convergence (EDIFFG)": None,
+            "elapsed time (sec)": None  # New entry for elapsed time
         }
 
-        # Extract final total energy
+        # Extract total energy
         energy_tag = root.find(".//calculation/energy/i[@name='e_fr_energy']")
         if energy_tag is not None:
             parameters["total energy"] = float(energy_tag.text)
 
-        # Extract lattice constant (assuming it's the length of the "a" vector from the final structure)
+        # Extract lattice constant (using 'a' vector from final structure)
         basis_vectors = root.findall(".//calculation/structure/crystal/varray[@name='basis']")[-1]
         a_vector = basis_vectors[0].text.split()
-        parameters["lattice constant"] = (float(a_vector[0])**2 + float(a_vector[1])**2 + float(a_vector[2])**2)**0.5
+        parameters["lattice constant"] = (float(a_vector[0])**2 + float(a_vector[1])**2 + float(a_vector[2])**2) ** 0.5
 
-        # Extract SYMPREC from the parameters
+        # Extract SYMPREC for symmetry precision
         symprec_tag = root.find(".//parameters/separator/i[@name='SYMPREC']")
         if symprec_tag is not None:
             parameters["symmetry precision (SYMPREC)"] = float(symprec_tag.text)
 
-        # Extract INCAR parameters from the `<incar>` tag directly under the root
+        # Extract INCAR parameters from the <incar> section
         incar_parameters = {
             "ENCUT": "energy cutoff (ENCUT)",
             "KSPACING": "k-point spacing (KSPACING)",
@@ -80,33 +87,41 @@ def identify_parameters(directory="."):
             if name in incar_parameters:
                 parameters[incar_parameters[name]] = float(param.text)
 
-        # Extract volume from the structure information
+        # Extract volume
         volume_tag = root.find(".//structure[@name='finalpos']/crystal/volume")
         if volume_tag is not None:
             parameters["volume"] = float(volume_tag.text)
 
-        # Extract k-points information from KPOINTS file
+        # Extract k-points from KPOINTS file
         with open(kpoints_path, "r", encoding="utf-8") as kpoints_file:
             lines = kpoints_file.readlines()
             for index, line in enumerate(lines):
                 if any(keyword in line.lower() for keyword in ["gamma", "monkhorst", "monkhorst-pack", "explicit", "line-mode"]):
                     kpoints_index = index + 1
                     break
-            else: raise ValueError("Kpoints type keyword not found in KPOINTS file.")
+            else:
+                raise ValueError("Kpoints type keyword not found in KPOINTS file.")
 
             kpoints_values = lines[kpoints_index].split()
             x_kpoints, y_kpoints, z_kpoints = int(kpoints_values[0]), int(kpoints_values[1]), int(kpoints_values[2])
-            tot_kpoints = x_kpoints * y_kpoints * z_kpoints
-            parameters["total kpoints"] = tot_kpoints
+            parameters["total kpoints"] = x_kpoints * y_kpoints * z_kpoints
             parameters["kpoints grid"] = (x_kpoints, y_kpoints, z_kpoints)
 
-        # Calculate calculated kpoints (reduced due to symmetry)
+        # Extract calculated kpoints (reduced due to symmetry)
         cal_kpoints_tag = root.find(".//kpoints/varray[@name='kpointlist']")
         if cal_kpoints_tag is not None:
             parameters["calculated kpoints"] = len(cal_kpoints_tag.findall("v"))
 
-        # Check for missing values
-        missing_params = [k for k, v in parameters.items() if v is None]
+        # Extract elapsed time from OUTCAR file
+        if os.path.isfile(outcar_path):
+            with open(outcar_path, "r", encoding="utf-8") as outcar_file:
+                for line in outcar_file:
+                    if "Elapsed time (sec):" in line:
+                        parameters["elapsed time (sec)"] = float(line.split(":")[-1].strip())
+                        break
+
+        # Check for missing parameters and provide a warning
+        missing_params = [key for key, value in parameters.items() if value is None]
         if missing_params:
             print(f"Warning: Some parameters could not be found in vasprun.xml or KPOINTS file: {', '.join(missing_params)}")
 
