@@ -14,7 +14,7 @@ from vmatplot.commons import check_vasprun, identify_parameters
 from vmatplot.algorithms import is_nested_list
 from vmatplot.output_settings import canvas_setting, color_sampling
 
-def summarize_energy_parameters(directory=".", lattice_boundary=None):
+def summarize_parameters(directory=".", lattice_boundary=None):
     result_file = "parameters_energy.dat"
     result_file_path = os.path.join(directory, result_file)
 
@@ -40,6 +40,10 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
             try:
                 tree = ET.parse(xml_path)
                 root = tree.getroot()
+
+                # Extract total atom count
+                atom_count_tag = root.find(".//atominfo/atoms")
+                total_atom_count = int(atom_count_tag.text) if atom_count_tag is not None else None
 
                 # Extract total energy
                 energy = float(root.findall(".//calculation/energy/i[@name='e_fr_energy']")[-1].text)
@@ -83,9 +87,10 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
                 if lattice_within_start and lattice_within_end:
                     # Collect all required parameters in order
                     params = {
+                        "total atom count": total_atom_count,
                         "total energy": energy,
                         "total kpoints": tot_kpoints,
-                        "kpoints grid": (x_kpoints, y_kpoints, z_kpoints),
+                        "kpoints mesh": (x_kpoints, y_kpoints, z_kpoints),
                         "lattice constant": lattice_constant,
                         "symmetry precision (SYMPREC)": symprec,
                         "energy cutoff (ENCUT)": None,
@@ -119,28 +124,23 @@ def summarize_energy_parameters(directory=".", lattice_boundary=None):
                     volume_tag = root.find(".//structure[@name='finalpos']/crystal/volume")
                     if volume_tag is not None:
                         params["volume"] = float(volume_tag.text)
-                    # Append results in the specified order
-                    results.append((
-                        params["total energy"], params["total kpoints"], kpoints_sum, params["kpoints grid"],
-                        params["lattice constant"], params["symmetry precision (SYMPREC)"], params["energy cutoff (ENCUT)"],
-                        params["k-point spacing (KSPACING)"], params["volume"], params["time step (POTIM)"],
-                        params["mixing parameter (AMIX)"], params["mixing parameter (BMIX)"],
-                        params["electronic convergence (EDIFF)"], params["force convergence (EDIFFG)"],
-                        params["elapsed time (sec)"]
-                    ))
+                    # Append results as dictionary
+                    results.append(params)
             except (ET.ParseError, ValueError, IndexError) as e:
                 print(f"Error parsing files in {work_dir}: {e}")
         else: print(f"vasprun.xml or KPOINTS is not found in {work_dir}.")
 
     # Sort results by elapsed time (sec)
-    results.sort(key=lambda x: x[14])  # Sort by elapsed time
+    results.sort(key=lambda x: x["elapsed time (sec)"])
 
     # Write the sorted results to the output file
     try:
         with open(result_file_path, "w", encoding="utf-8") as f:
-            f.write("Total Energy\tTotal Kpoints\tCalculated Kpoints\tKpoints(X Y Z)\tLattice Constant\tSYMPREC\tENCUT\tKSPACING\tVOLUME\tPOTIM\tAMIX\tBMIX\tEDIFF\tEDIFFG\tElapsed Time (sec)\n")
+            # Write headers based on keys in the first result dictionary
+            headers = "\t".join(results[0].keys())
+            f.write(headers + "\n")
             for result in results:
-                f.write("\t".join(map(str, result)) + "\n")
+                f.write("\t".join(str(result[key]) if result[key] is not None else 'None' for key in result) + "\n")
     except IOError as e:
         print(f"Error writing to file at {result_file_path}:", e)
 
@@ -153,35 +153,54 @@ def read_energy_parameters(data_path):
         print(help_info)
         return
 
-    # Initialize the returns for each parameter
-    energy, total_kpoints, cal_kpoints_sum, directs_kpoints, lattice = [], [], [], [], []
-    symprec, encut, kspacing, volume, potim, amix, bmix, ediff, ediffg = [], [], [], [], [], [], [], [], []
+    # Initialize a list to store the dictionary for each line in the file
+    parameter_dicts = []
 
-    # Read data file and parse each line to extract parameters
+    # Open the data file and process each line as a dictionary entry
     with open(data_path, "r", encoding="utf-8") as data_file:
-        lines = data_file.readlines()[1:]  # Skip the header line
-        for line in lines:
-            split_line = line.strip().split('\t')
-            energy.append(float(split_line[0]))
-            total_kpoints.append(int(split_line[1]))
-            cal_kpoints_sum.append(int(split_line[2]))
+        # Read the header for keys
+        headers = data_file.readline().strip().split("\t")
 
-            # Extract x, y, z from the tuple format (x, y, z)
-            x, y, z = map(int, split_line[3][1:-1].split(','))
-            directs_kpoints.append((x, y, z))
+        # Define mappings for old and new .dat formats
+        field_mappings = {
+            "total atom count": "total atom count",
+            "total energy": "Total Energy",
+            "total kpoints": "Total Kpoints",
+            "kpoints mesh": "Kpoints(X Y Z)",
+            "lattice constant": "Lattice Constant",
+            "symmetry precision (SYMPREC)": "SYMPREC",
+            "energy cutoff (ENCUT)": "ENCUT",
+            "k-point spacing (KSPACING)": "KSPACING",
+            "volume": "VOLUME",
+            "time step (POTIM)": "POTIM",
+            "mixing parameter (AMIX)": "AMIX",
+            "mixing parameter (BMIX)": "BMIX",
+            "electronic convergence (EDIFF)": "EDIFF",
+            "force convergence (EDIFFG)": "EDIFFG",
+            "elapsed time (sec)": "elapsed time (sec)"
+        }
 
-            lattice.append(float(split_line[4]))
-            symprec.append(float(split_line[5]) if split_line[5] != 'None' else None)
-            encut.append(float(split_line[6]) if split_line[6] != 'None' else None)
-            kspacing.append(float(split_line[7]) if split_line[7] != 'None' else None)
-            volume.append(float(split_line[8]) if split_line[8] != 'None' else None)
-            potim.append(float(split_line[9]) if split_line[9] != 'None' else None)
-            amix.append(float(split_line[10]) if split_line[10] != 'None' else None)
-            bmix.append(float(split_line[11]) if split_line[11] != 'None' else None)
-            ediff.append(float(split_line[12]) if split_line[12] != 'None' else None)
-            ediffg.append(float(split_line[13]) if split_line[13] != 'None' else None)
+        # Reverse mapping to accommodate both old and new .dat formats
+        reverse_mapping = {v: k for k, v in field_mappings.items()}
+        standardized_headers = [reverse_mapping.get(header, header) for header in headers]
 
-    return energy, total_kpoints, cal_kpoints_sum, directs_kpoints, lattice, symprec, encut, kspacing, volume, potim, amix, bmix, ediff, ediffg
+        for line in data_file:
+            values = line.strip().split("\t")
+            entry = {}
+            for header, value in zip(standardized_headers, values):
+                # Convert "None" to None, tuples to tuples, and other values to float if possible
+                if value == 'None':
+                    entry[header] = None
+                elif header == "kpoints mesh":  # Check for kpoints mesh in (x, y, z) format
+                    entry[header] = tuple(map(int, value.strip("()").split(", ")))
+                else:
+                    try:
+                        entry[header] = float(value)
+                    except ValueError:
+                        entry[header] = value  # Keep it as string if conversion fails
+            parameter_dicts.append(entry)
+
+    return parameter_dicts
 
 def plot_energy_kpoints_single(*args_list):
     help_info = "Usage: plot_energy_kpoints(args_list)\n" + \
@@ -211,10 +230,12 @@ def plot_energy_kpoints_single(*args_list):
     colors = color_sampling(color_family)
 
     # Data input
-    data_input = read_energy_parameters(source_data)
-    energy = data_input[0]
-    total_kpoints = data_input[1]
-    sep_kpoints = data_input[3]
+    data_dict_list = read_energy_parameters(source_data)  # Now a list of dictionaries
+
+    # Extract values based on keys in the dictionary
+    total_kpoints = [d["total kpoints"] for d in data_dict_list]
+    energy = [d["total energy"] for d in data_dict_list]
+    sep_kpoints = [d["kpoints mesh"] for d in data_dict_list]
 
     # Sort data based on total_kpoints to maintain order
     sorted_data = sorted(zip(total_kpoints, energy, sep_kpoints), key=lambda x: x[0])
@@ -260,7 +281,8 @@ def plot_energy_kpoints(kpoints_list):
         return plot_energy_kpoints_single(kpoints_list)
     elif isinstance(kpoints_list[0], list) and len(kpoints_list) == 1:
         return plot_energy_kpoints_single(*kpoints_list)
-    else: pass
+    else:
+        pass
 
     # Check if kpoints_list is a 2D list structure for multiple datasets
     if not all(isinstance(data, list) and len(data) == 4 for data in kpoints_list):
@@ -288,9 +310,9 @@ def plot_energy_kpoints(kpoints_list):
     kpoints_config_map = {}
     for data in kpoints_list:
         info_suffix, source_data, kpoints_boundary, color_family = data
-        data_input = read_energy_parameters(source_data)
-        total_kpoints = data_input[1]
-        kpoints_config = data_input[3]  # Extract kpoints configurations in (X, Y, Z) format
+        data_dict_list = read_energy_parameters(source_data)  # Now returns list of dicts
+        total_kpoints = [d["total kpoints"] for d in data_dict_list]
+        kpoints_config = [d["kpoints mesh"] for d in data_dict_list]  # Extract kpoints configurations in (X, Y, Z) format
 
         # Apply boundary to filter relevant k-points for each dataset
         kpoints_start = min(total_kpoints) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
@@ -314,10 +336,9 @@ def plot_energy_kpoints(kpoints_list):
         colors = color_sampling(color_family)
 
         # Data input
-        data_input = read_energy_parameters(source_data)
-        energy = data_input[0]
-        total_kpoints = data_input[1]
-        kpoints_config = data_input[3]
+        data_dict_list = read_energy_parameters(source_data)  # Now a list of dictionaries
+        energy = [d["total energy"] for d in data_dict_list]
+        total_kpoints = [d["total kpoints"] for d in data_dict_list]
 
         # Apply boundary values for the current dataset
         kpoints_start = min(total_kpoints) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
