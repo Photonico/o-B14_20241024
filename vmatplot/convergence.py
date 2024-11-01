@@ -896,3 +896,5 @@ def plot_energy_parameters(parameters, *args):
 # Alias for single-parameter usage
 def plot_energy_parameter(*args):
     return plot_energy_parameters(*args)
+
+def plot_cohesive_energy_single(info_suffix, cohesive_list):
