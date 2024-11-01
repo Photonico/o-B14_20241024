@@ -1,0 +1,55 @@
+Loading vasp/6.4.3
+  Loading requirement: openmpi/4.1.3
+
+------------------------------------------------------------------------
+Job 128000674 has exceeded memory allocation on node gadi-cpu-clx-2912.gadi.nci.org.au
+Process "bash", pid 1319357, rss 3473408, vmem 23932928
+Process "128000674.gadi-", pid 1319423, rss 3174400, vmem 10252288
+Process "mpirun", pid 1319443, rss 6836224, vmem 238055424
+Process "vasp_std", pid 1319449, rss 4209291264, vmem 7784333312
+Process "vasp_std", pid 1319450, rss 4211093504, vmem 7766282240
+Process "vasp_std", pid 1319451, rss 4220624896, vmem 7753445376
+Process "vasp_std", pid 1319452, rss 4227325952, vmem 7779311616
+Process "vasp_std", pid 1319453, rss 4211941376, vmem 7787814912
+Process "vasp_std", pid 1319454, rss 4226416640, vmem 7779176448
+Process "vasp_std", pid 1319455, rss 4230471680, vmem 7753494528
+Process "vasp_std", pid 1319456, rss 4219842560, vmem 7783514112
+Process "vasp_std", pid 1319457, rss 4219387904, vmem 7796359168
+Process "vasp_std", pid 1319458, rss 4223688704, vmem 7731990528
+Process "vasp_std", pid 1319459, rss 4116459520, vmem 7762083840
+Process "vasp_std", pid 1319460, rss 4226867200, vmem 7787769856
+Process "vasp_std", pid 1319461, rss 4209332224, vmem 7783518208
+Process "vasp_std", pid 1319462, rss 4216688640, vmem 7753478144
+Process "vasp_std", pid 1319463, rss 4209397760, vmem 7727702016
+Process "vasp_std", pid 1319464, rss 4095635456, vmem 7783473152
+Process "vasp_std", pid 1319465, rss 4214562816, vmem 7805038592
+Process "vasp_std", pid 1319466, rss 4172324864, vmem 7719059456
+Process "vasp_std", pid 1319467, rss 4207452160, vmem 7796346880
+Process "vasp_std", pid 1319468, rss 4214517760, vmem 7727706112
+Process "vasp_std", pid 1319469, rss 4215840768, vmem 7749128192
+Process "vasp_std", pid 1319470, rss 4215037952, vmem 7731949568
+Process "vasp_std", pid 1319471, rss 4204232704, vmem 7757918208
+Process "vasp_std", pid 1319472, rss 5045276672, vmem 7360237568
+------------------------------------------------------------------------
+For more information visit https://opus.nci.org.au/x/SwGRAQ
+------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 23 with PID 0 on node gadi-cpu-clx-2912 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+======================================================================================
+                  Resource Usage on 2024-11-01 17:03:44:
+   Job Id:             128000674.gadi-pbs
+   Project:            g46
+   Exit Status:        137 (Linux Signal 9 SIGKILL Kill, unblockable)
+   Service Units:      0.28
+   NCPUs Requested:    24                     NCPUs Used: 24              
+                                           CPU Time Used: 00:06:58        
+   Memory Requested:   95.0GB                Memory Used: 94.98GB         
+   Walltime requested: 47:59:59            Walltime Used: 00:00:21        
+   JobFS requested:    10.0GB                 JobFS used: 0B              
+======================================================================================

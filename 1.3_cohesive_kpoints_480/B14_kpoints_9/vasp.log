@@ -1,0 +1,22 @@
+ running   24 mpi-ranks, with    1 threads/rank, on    1 nodes
+ distrk:  each k-point on   24 cores,    1 groups
+ distr:  one band on    1 cores,   24 groups
+ vasp.6.4.3 19Mar24 (build May 31 2024 16:31:43) complex                        
+  
+ POSCAR found type information on POSCAR B 
+ POSCAR found :  1 types and       1 ions
+ Reading from existing POTCAR
+ scaLAPACK will be used
+ Reading from existing POTCAR
+ LDA part: xc-table for (Slater+PW92), standard interpolation
+ POSCAR, INCAR and KPOINTS ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ WAVECAR not read
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1     0.753596968637E+01    0.75360E+01   -0.33151E+02  6720   0.336E+01
+DAV:   2     0.709867905796E-01   -0.74650E+01   -0.74406E+01 13392   0.549E+00
+DAV:   3    -0.558636370574E-01   -0.12685E+00   -0.10741E+00  6744   0.126E+00
+DAV:   4    -0.582443873999E-01   -0.23808E-02   -0.23267E-02  7368   0.148E-01
