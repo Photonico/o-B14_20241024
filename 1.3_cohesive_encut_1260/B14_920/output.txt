@@ -1,0 +1,96 @@
+Loading vasp/6.4.3
+  Loading requirement: openmpi/4.1.3
+
+------------------------------------------------------------------------
+Job 127999674 has exceeded memory allocation on node gadi-cpu-clx-0406.gadi.nci.org.au
+Process "bash", pid 1691451, rss 3530752, vmem 23932928
+Process "127999674.gadi-", pid 1691987, rss 3121152, vmem 10252288
+Process "mpirun", pid 1692115, rss 8351744, vmem 238034944
+Process "vasp_std", pid 1692135, rss 2715336704, vmem 6148308992
+Process "vasp_std", pid 1692136, rss 2684268544, vmem 6133190656
+Process "vasp_std", pid 1692137, rss 2686353408, vmem 6204579840
+Process "vasp_std", pid 1692138, rss 2685325312, vmem 6120284160
+Process "vasp_std", pid 1692139, rss 2672742400, vmem 6187917312
+Process "vasp_std", pid 1692140, rss 2677542912, vmem 6192214016
+Process "vasp_std", pid 1692143, rss 2672603136, vmem 6183587840
+Process "vasp_std", pid 1692144, rss 2672820224, vmem 6205063168
+------------------------------------------------------------------------
+For more information visit https://opus.nci.org.au/x/SwGRAQ
+------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000146908642D20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001469082947E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014B4B25ABD20  Unknown               Unknown  Unknown
+vasp_std           0000000001635383  nonl_mp_spher_.q          409  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014B4B21FD7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014FE099A0D20  Unknown               Unknown  Unknown
+vasp_std           0000000001635A12  nonl_mp_spher_.q          435  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014FE095F27E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000146826095D20  Unknown               Unknown  Unknown
+vasp_std           0000000001635404  nonl_mp_spher_.q          415  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000146825CE77E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000151BC30C6D20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000151BC2D187E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000147B461E9D20  Unknown               Unknown  Unknown
+vasp_std           00000000007E3129  asa_mp_setylm_.q          543  asa.F
+vasp_std           0000000001634B8C  nonl_mp_spher_.q          379  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000147B45E3B7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000146E8A212D20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000146E89E647E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 0 on node gadi-cpu-clx-0406 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+======================================================================================
+                  Resource Usage on 2024-11-01 16:33:55:
+   Job Id:             127999674.gadi-pbs
+   Project:            g46
+   Exit Status:        137 (Linux Signal 9 SIGKILL Kill, unblockable)
+   Service Units:      0.06
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:01:38        
+   Memory Requested:   20.0GB                Memory Used: 20.0GB          
+   Walltime requested: 47:59:59            Walltime Used: 00:00:14        
+   JobFS requested:    10.0GB                 JobFS used: 0B              
+======================================================================================

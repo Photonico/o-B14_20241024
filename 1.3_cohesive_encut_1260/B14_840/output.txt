@@ -1,0 +1,79 @@
+Loading vasp/6.4.3
+  Loading requirement: openmpi/4.1.3
+
+------------------------------------------------------------------------
+Job 127999649 has exceeded memory allocation on node gadi-cpu-clx-0406.gadi.nci.org.au
+Process "bash", pid 1690862, rss 3461120, vmem 23932928
+Process "127999649.gadi-", pid 1691578, rss 3223552, vmem 10252288
+Process "mpirun", pid 1691626, rss 8654848, vmem 238022656
+Process "vasp_std", pid 1691662, rss 2708594688, vmem 5711536128
+Process "vasp_std", pid 1691663, rss 2678620160, vmem 5667581952
+Process "vasp_std", pid 1691664, rss 2688761856, vmem 5667553280
+Process "vasp_std", pid 1691665, rss 2683994112, vmem 5689073664
+Process "vasp_std", pid 1691666, rss 2678882304, vmem 5654667264
+Process "vasp_std", pid 1691667, rss 2678775808, vmem 5650395136
+Process "vasp_std", pid 1691668, rss 2675171328, vmem 5680521216
+Process "vasp_std", pid 1691669, rss 2674933760, vmem 5671845888
+------------------------------------------------------------------------
+For more information visit https://opus.nci.org.au/x/SwGRAQ
+------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014E7D5AE2D20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014E7D57347E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001459D132ED20  Unknown               Unknown  Unknown
+vasp_std           0000000001635A12  nonl_mp_spher_.q          435  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001459D0F807E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000150195DF5D20  Unknown               Unknown  Unknown
+vasp_std           0000000001635A12  nonl_mp_spher_.q          435  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000150195A477E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014E9E8BBBD20  Unknown               Unknown  Unknown
+vasp_std           0000000001635A12  nonl_mp_spher_.q          435  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014E9E880D7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014AB84833D20  Unknown               Unknown  Unknown
+vasp_std           0000000001635A12  nonl_mp_spher_.q          435  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014AB844857E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 0 on node gadi-cpu-clx-0406 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+======================================================================================
+                  Resource Usage on 2024-11-01 16:33:53:
+   Job Id:             127999649.gadi-pbs
+   Project:            g46
+   Exit Status:        137 (Linux Signal 9 SIGKILL Kill, unblockable)
+   Service Units:      0.07
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:01:42        
+   Memory Requested:   20.0GB                Memory Used: 20.0GB          
+   Walltime requested: 47:59:59            Walltime Used: 00:00:15        
+   JobFS requested:    10.0GB                 JobFS used: 0B              
+======================================================================================

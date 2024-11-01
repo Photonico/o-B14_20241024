@@ -897,4 +897,4 @@ def plot_energy_parameters(parameters, *args):
 def plot_energy_parameter(*args):
     return plot_energy_parameters(*args)
 
-def plot_cohesive_energy_single(info_suffix, cohesive_list):
+# def plot_cohesive_energy_single(info_suffix, cohesive_list):

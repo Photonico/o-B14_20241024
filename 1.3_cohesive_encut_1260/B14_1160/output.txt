@@ -1,0 +1,137 @@
+Loading vasp/6.4.3
+  Loading requirement: openmpi/4.1.3
+
+------------------------------------------------------------------------
+Job 127999740 has exceeded memory allocation on node gadi-cpu-clx-1287.gadi.nci.org.au
+Process "bash", pid 3155599, rss 3502080, vmem 23932928
+Process "127999740.gadi-", pid 3155673, rss 3108864, vmem 10252288
+Process "mpirun", pid 3155695, rss 7761920, vmem 238022656
+Process "vasp_std", pid 3155701, rss 2692116480, vmem 8183705600
+Process "vasp_std", pid 3155702, rss 2654474240, vmem 8088805376
+Process "vasp_std", pid 3155703, rss 2664349696, vmem 8105979904
+Process "vasp_std", pid 3155704, rss 2681372672, vmem 8080510976
+Process "vasp_std", pid 3155705, rss 2666815488, vmem 8080494592
+Process "vasp_std", pid 3155706, rss 2664665088, vmem 8084774912
+Process "vasp_std", pid 3155707, rss 2667331584, vmem 8093376512
+Process "vasp_std", pid 3155708, rss 2660749312, vmem 8075874304
+------------------------------------------------------------------------
+For more information visit https://opus.nci.org.au/x/SwGRAQ
+------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001546CB657D20  Unknown               Unknown  Unknown
+hmca_bcol_basesmu  00001546A807A6B9  hmca_bcol_basesmu     Unknown  Unknown
+libhcoll.so.1.0.1  00001546C7287737  Unknown               Unknown  Unknown
+libmpi.so.40.30.3  00001546CBA2678B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  00001546CBA8BBC0  PMPI_Allreduce        Unknown  Unknown
+libmpi_mpifh.so    00001546CBDD85EB  Unknown               Unknown  Unknown
+vasp_std           0000000000541471  m_max_i_.q               2141  mpi.F
+vasp_std           00000000025DD43D  broyden_mp_brgrid        1458  broyden.F
+vasp_std           00000000063065AA  MAIN__                   2627  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001546CB2A97E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000155288FCAD20  Unknown               Unknown  Unknown
+hmca_bcol_basesmu  00001552650DD6B4  hmca_bcol_basesmu     Unknown  Unknown
+libhcoll.so.1.0.1  0000155284BFA737  Unknown               Unknown  Unknown
+libmpi.so.40.30.3  000015528939978B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  00001552893FEBC0  PMPI_Allreduce        Unknown  Unknown
+libmpi_mpifh.so    000015528974B5EB  Unknown               Unknown  Unknown
+vasp_std           0000000000541471  m_max_i_.q               2141  mpi.F
+vasp_std           00000000025DD43D  broyden_mp_brgrid        1458  broyden.F
+vasp_std           00000000063065AA  MAIN__                   2627  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000155288C1C7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000152B701F7D20  Unknown               Unknown  Unknown
+hmca_bcol_basesmu  0000152B4C4C36B4  hmca_bcol_basesmu     Unknown  Unknown
+libhcoll.so.1.0.1  0000152B6BE27737  Unknown               Unknown  Unknown
+libmpi.so.40.30.3  0000152B705C678B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  0000152B7062BBC0  PMPI_Allreduce        Unknown  Unknown
+libmpi_mpifh.so    0000152B709785EB  Unknown               Unknown  Unknown
+vasp_std           0000000000541471  m_max_i_.q               2141  mpi.F
+vasp_std           00000000025DD43D  broyden_mp_brgrid        1458  broyden.F
+vasp_std           00000000063065AA  MAIN__                   2627  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000152B6FE497E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014D8052B9D20  Unknown               Unknown  Unknown
+hmca_bcol_basesmu  000014D7E13DC6B9  hmca_bcol_basesmu     Unknown  Unknown
+libhcoll.so.1.0.1  000014D800EE9737  Unknown               Unknown  Unknown
+libmpi.so.40.30.3  000014D80568878B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014D8056EDBC0  PMPI_Allreduce        Unknown  Unknown
+libmpi_mpifh.so    000014D805A3A5EB  Unknown               Unknown  Unknown
+vasp_std           0000000000541471  m_max_i_.q               2141  mpi.F
+vasp_std           00000000025DD43D  broyden_mp_brgrid        1458  broyden.F
+vasp_std           00000000063065AA  MAIN__                   2627  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014D804F0B7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001523D1506D20  Unknown               Unknown  Unknown
+hmca_bcol_basesmu  00001523AD7E76B9  hmca_bcol_basesmu     Unknown  Unknown
+libhcoll.so.1.0.1  00001523CD136737  Unknown               Unknown  Unknown
+libmpi.so.40.30.3  00001523D18D578B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  00001523D193ABC0  PMPI_Allreduce        Unknown  Unknown
+libmpi_mpifh.so    00001523D1C875EB  Unknown               Unknown  Unknown
+vasp_std           0000000000541471  m_max_i_.q               2141  mpi.F
+vasp_std           00000000025DD43D  broyden_mp_brgrid        1458  broyden.F
+vasp_std           00000000063065AA  MAIN__                   2627  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001523D11587E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014E95D962D20  Unknown               Unknown  Unknown
+hmca_bcol_basesmu  000014E94427F6B9  hmca_bcol_basesmu     Unknown  Unknown
+libhcoll.so.1.0.1  000014E959592737  Unknown               Unknown  Unknown
+libmpi.so.40.30.3  000014E95DD3178B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014E95DD96BC0  PMPI_Allreduce        Unknown  Unknown
+libmpi_mpifh.so    000014E95E0E35EB  Unknown               Unknown  Unknown
+vasp_std           0000000000541471  m_max_i_.q               2141  mpi.F
+vasp_std           00000000025DD43D  broyden_mp_brgrid        1458  broyden.F
+vasp_std           00000000063065AA  MAIN__                   2627  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014E95D5B47E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001537A28DBD20  Unknown               Unknown  Unknown
+hmca_bcol_basesmu  000015377EBEF6B4  hmca_bcol_basesmu     Unknown  Unknown
+libhcoll.so.1.0.1  000015379E50B737  Unknown               Unknown  Unknown
+libmpi.so.40.30.3  00001537A2CAA78B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  00001537A2D0FBC0  PMPI_Allreduce        Unknown  Unknown
+libmpi_mpifh.so    00001537A305C5EB  Unknown               Unknown  Unknown
+vasp_std           0000000000541471  m_max_i_.q               2141  mpi.F
+vasp_std           00000000025DD43D  broyden_mp_brgrid        1458  broyden.F
+vasp_std           00000000063065AA  MAIN__                   2627  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001537A252D7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 0 on node gadi-cpu-clx-1287 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+======================================================================================
+                  Resource Usage on 2024-11-01 16:34:35:
+   Job Id:             127999740.gadi-pbs
+   Project:            g46
+   Exit Status:        137 (Linux Signal 9 SIGKILL Kill, unblockable)
+   Service Units:      0.08
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:02:09        
+   Memory Requested:   20.0GB                Memory Used: 20.0GB          
+   Walltime requested: 47:59:59            Walltime Used: 00:00:18        
+   JobFS requested:    10.0GB                 JobFS used: 0B              
+======================================================================================
