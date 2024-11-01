@@ -15,7 +15,7 @@ from vmatplot.algorithms import is_nested_list
 from vmatplot.output_settings import canvas_setting, color_sampling
 
 def summarize_parameters(directory=".", lattice_boundary=None):
-    result_file = "parameters_energy.dat"
+    result_file = "energy_parameters.dat"
     result_file_path = os.path.join(directory, result_file)
 
     if directory == "help":
