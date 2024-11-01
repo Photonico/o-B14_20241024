@@ -396,9 +396,11 @@ def plot_energy_encut_single(*args_list):
     colors = color_sampling(color_family)
 
     # Data input
-    data_input = read_energy_parameters(source_data)
-    energy = data_input[0]
-    encut_values = data_input[6]
+    data_dict_list = read_energy_parameters(source_data)  # Now returns list of dicts
+
+    # Extract values based on keys in the dictionary
+    energy = [d.get("total energy", d.get("Total Energy")) for d in data_dict_list]
+    encut_values = [d.get("energy cutoff (ENCUT)", d.get("ENCUT")) for d in data_dict_list]
 
     # Filter out None values from energy and ENCUT values
     filtered_data = [(enc, e) for enc, e in zip(encut_values, energy) if enc is not None and e is not None]
@@ -454,7 +456,8 @@ def plot_energy_encut(encut_list):
         return plot_energy_encut_single(encut_list)
     elif isinstance(encut_list[0], list) and len(encut_list) == 1:
         return plot_energy_encut_single(*encut_list)  # Calls single data plot function directly
-    else: pass
+    else:
+        pass
 
     # Check if encut_list is a 2D list structure for multiple datasets
     if not all(isinstance(data, list) and len(data) == 4 for data in encut_list):
@@ -480,8 +483,8 @@ def plot_energy_encut(encut_list):
     # Iterate over each dataset in encut_list to gather ENCUT values
     for data in encut_list:
         info_suffix, source_data, encut_boundary, color_family = data
-        data_input = read_energy_parameters(source_data)
-        encut_values = data_input[6]
+        data_dict_list = read_energy_parameters(source_data)  # Now returns list of dicts
+        encut_values = [d.get("energy cutoff (ENCUT)", d.get("ENCUT")) for d in data_dict_list]
 
         # Apply boundary to filter relevant ENCUT values for each dataset
         encut_start = min(encut_values) if not encut_boundary or encut_boundary[0] is None else float(encut_boundary[0])
@@ -502,9 +505,9 @@ def plot_energy_encut(encut_list):
         colors = color_sampling(color_family)
 
         # Data input
-        data_input = read_energy_parameters(source_data)
-        energy = data_input[0]
-        encut_values = data_input[6]
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy", d.get("Total Energy")) for d in data_dict_list]
+        encut_values = [d.get("energy cutoff (ENCUT)", d.get("ENCUT")) for d in data_dict_list]
 
         # Apply boundary values for the current dataset
         encut_start = min(encut_values) if not encut_boundary or encut_boundary[0] is None else float(encut_boundary[0])
