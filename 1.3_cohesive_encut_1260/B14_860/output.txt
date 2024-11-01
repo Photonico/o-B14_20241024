@@ -1,0 +1,39 @@
+Loading vasp/6.4.3
+  Loading requirement: openmpi/4.1.3
+
+------------------------------------------------------------------------
+Job 127999658 has exceeded memory allocation on node gadi-cpu-clx-0406.gadi.nci.org.au
+Process "bash", pid 1690998, rss 3543040, vmem 23932928
+Process "127999658.gadi-", pid 1691817, rss 3096576, vmem 10252288
+Process "mpirun", pid 1691917, rss 8445952, vmem 238034944
+Process "vasp_std", pid 1691960, rss 2704609280, vmem 6164676608
+Process "vasp_std", pid 1691963, rss 2679951360, vmem 6137950208
+Process "vasp_std", pid 1691964, rss 2678538240, vmem 6142230528
+Process "vasp_std", pid 1691968, rss 2678566912, vmem 6155141120
+Process "vasp_std", pid 1691969, rss 2686578688, vmem 6137929728
+Process "vasp_std", pid 1691970, rss 2679738368, vmem 6142246912
+Process "vasp_std", pid 1691972, rss 2674700288, vmem 6133637120
+Process "vasp_std", pid 1691975, rss 2684149760, vmem 6142214144
+------------------------------------------------------------------------
+For more information visit https://opus.nci.org.au/x/SwGRAQ
+------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 0 on node gadi-cpu-clx-0406 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+======================================================================================
+                  Resource Usage on 2024-11-01 16:33:54:
+   Job Id:             127999658.gadi-pbs
+   Project:            g46
+   Exit Status:        137 (Linux Signal 9 SIGKILL Kill, unblockable)
+   Service Units:      0.07
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:01:39        
+   Memory Requested:   20.0GB                Memory Used: 20.0GB          
+   Walltime requested: 47:59:59            Walltime Used: 00:00:16        
+   JobFS requested:    10.0GB                 JobFS used: 0B              
+======================================================================================
