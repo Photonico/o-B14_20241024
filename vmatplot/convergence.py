@@ -566,15 +566,15 @@ def plot_energy_kpoints_encut_single(kpoints_list, encut_list):
 
     # K-points data processing
     kpoints_data = read_energy_parameters(kpoints_source_data)
-    kpoints_energy = kpoints_data[0]
-    total_kpoints = kpoints_data[1]
-    directs_kpoints = kpoints_data[3]
+    kpoints_energy = [d.get("total energy", d.get("Total Energy")) for d in kpoints_data]
+    total_kpoints = [d.get("total kpoints", d.get("Total Kpoints")) for d in kpoints_data]
+    directs_kpoints = [d.get("kpoints mesh", d.get("Kpoints(X Y Z)")) for d in kpoints_data]
     kpoints_labels = [f"({kp[0]}, {kp[1]}, {kp[2]})" for kp in directs_kpoints]
 
     # ENCUT data processing
     encut_data = read_energy_parameters(encut_source_data)
-    encut_energy = encut_data[0]
-    encut_values = encut_data[6]
+    encut_energy = [d.get("total energy", d.get("Total Energy")) for d in encut_data]
+    encut_values = [d.get("energy cutoff (ENCUT)", d.get("ENCUT")) for d in encut_data]
     encut_filtered_data = [(enc, en) for enc, en in zip(encut_values, encut_energy) if enc is not None and en is not None]
     encut_sorted_data = sorted(encut_filtered_data, key=lambda x: x[0])
     encut_values_sorted, encut_energy_sorted = zip(*encut_sorted_data)
@@ -603,25 +603,24 @@ def plot_energy_kpoints_encut_single(kpoints_list, encut_list):
     ax_kpoints.plot(range(len(kpoints_energy_plot)), kpoints_energy_plot, c=kpoints_colors[1], lw=1.5)
     ax_kpoints.scatter(range(len(kpoints_energy_plot)), kpoints_energy_plot, s=6, c=kpoints_colors[1], zorder=1)
     ax_kpoints.set_xlabel("K-points configuration", color=kpoints_colors[0])
-    # ax_kpoints.set_xlabel("K-points configuration")
     ax_kpoints.set_ylabel("Energy (eV)")
     ax_kpoints.set_xticks(range(len(kpoints_labels_plot)))
     ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right", color=kpoints_colors[0])
-    # ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right")
 
     # Plot ENCUT data on the top x-axis
     ax_encut.plot(encut_values_plot, encut_energy_plot, c=encut_colors[1], lw=1.5)
     ax_encut.scatter(encut_values_plot, encut_energy_plot, s=6, c=encut_colors[1], zorder=1)
     ax_encut.set_xlabel("Energy cutoff (eV)", color=encut_colors[0])
-    # ax_encut.set_xlabel("Energy cutoff (eV)")
     ax_encut.xaxis.set_label_position("top")
     ax_encut.xaxis.tick_top()
     for encut_label in ax_encut.get_xticklabels():
         encut_label.set_color(encut_colors[0])
 
     # Create unified legend
-    kpoints_legend = mlines.Line2D([], [], color=kpoints_colors[1], marker='o', markersize=6, linestyle='-', label=f"energy versus K-points {info_suffix_kpoints}")
-    encut_legend = mlines.Line2D([], [], color=encut_colors[1], marker='o', markersize=6, linestyle='-', label=f"energy versus energy cutoff {info_suffix_encut}")
+    kpoints_legend = mlines.Line2D([], [], color=kpoints_colors[1], marker='o', markersize=6, linestyle='-', 
+                                   label=f"energy versus K-points {info_suffix_kpoints}")
+    encut_legend = mlines.Line2D([], [], color=encut_colors[1], marker='o', markersize=6, linestyle='-', 
+                                 label=f"energy versus energy cutoff {info_suffix_encut}")
     plt.legend(handles=[kpoints_legend, encut_legend], loc="best")
 
     plt.title("Energy versus K-points and energy cutoff")
@@ -643,7 +642,7 @@ def plot_energy_kpoints_encut(kpoints_list_source, encut_list_source):
     encut_list = [encut_list_source] if not is_nested_list(encut_list_source) else encut_list_source
 
     # Downgrade system to handle single data cases
-    kpoints_list_downgrad, encut_list_downgrad = [],[]
+    kpoints_list_downgrad, encut_list_downgrad = [], []
     if is_nested_list(kpoints_list_source) == False:
         kpoints_list_downgrad = kpoints_list_source
     elif len(kpoints_list_source) == 1:
@@ -656,7 +655,8 @@ def plot_energy_kpoints_encut(kpoints_list_source, encut_list_source):
     
     if encut_list_downgrad != [] and kpoints_list_downgrad != []:
         return plot_energy_kpoints_encut_single(kpoints_list_downgrad, encut_list_downgrad)
-    else: pass
+    else:
+        pass
 
     # Set up figure and parameters
     fig_setting = canvas_setting()
@@ -689,11 +689,11 @@ def plot_energy_kpoints_encut(kpoints_list_source, encut_list_source):
         info_suffix, kpoints_source_data, kpoints_boundary, kpoints_color_family = kpoints_data_item
         kpoints_colors = color_sampling(kpoints_color_family)
 
-        # K-points data processing
+        # K-points data processing with dynamic column names
         kpoints_data = read_energy_parameters(kpoints_source_data)
-        kpoints_energy = kpoints_data[0]
-        total_kpoints = kpoints_data[1]
-        directs_kpoints = kpoints_data[3]
+        kpoints_energy = [d.get("total energy", d.get("Total Energy")) for d in kpoints_data]
+        total_kpoints = [d.get("total kpoints", d.get("Total Kpoints")) for d in kpoints_data]
+        directs_kpoints = [d.get("kpoints mesh", d.get("Kpoints(X Y Z)")) for d in kpoints_data]
         kpoints_labels = {kp: f"({coord[0]}, {coord[1]}, {coord[2]})" for kp, coord in zip(total_kpoints, directs_kpoints)}
 
         # Apply boundary to filter K-points and energy values
@@ -732,10 +732,10 @@ def plot_energy_kpoints_encut(kpoints_list_source, encut_list_source):
         info_suffix, encut_source_data, encut_boundary, encut_color_family = encut_data_item
         encut_colors = color_sampling(encut_color_family)
 
-        # ENCUT data processing
+        # ENCUT data processing with dynamic column names
         encut_data = read_energy_parameters(encut_source_data)
-        encut_energy = encut_data[0]
-        encut_values = encut_data[6]
+        encut_energy = [d.get("total energy", d.get("Total Energy")) for d in encut_data]
+        encut_values = [d.get("energy cutoff (ENCUT)", d.get("ENCUT")) for d in encut_data]
         encut_filtered_data = [(enc, en) for enc, en in zip(encut_values, encut_energy) if enc is not None and en is not None]
         encut_sorted_data = sorted(encut_filtered_data, key=lambda x: x[0])
         encut_values_sorted, encut_energy_sorted = zip(*encut_sorted_data)
