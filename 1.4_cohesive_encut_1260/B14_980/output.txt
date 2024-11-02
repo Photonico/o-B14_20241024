@@ -1,0 +1,79 @@
+Loading vasp/6.4.3
+  Loading requirement: openmpi/4.1.3
+
+------------------------------------------------------------------------
+Job 128049029 has exceeded memory allocation on node gadi-cpu-clx-1174.gadi.nci.org.au
+Process "bash", pid 3168973, rss 2822144, vmem 23932928
+Process "128049029.gadi-", pid 3169109, rss 2625536, vmem 10252288
+Process "mpirun", pid 3169134, rss 3489792, vmem 238055424
+Process "vasp_std", pid 3169166, rss 4263960576, vmem 7022206976
+Process "vasp_std", pid 3169168, rss 4205932544, vmem 6880083968
+Process "vasp_std", pid 3169169, rss 4115025920, vmem 6897197056
+Process "vasp_std", pid 3169170, rss 4152811520, vmem 6910251008
+Process "vasp_std", pid 3169171, rss 4075683840, vmem 6935961600
+Process "vasp_std", pid 3169172, rss 4093460480, vmem 6974754816
+Process "vasp_std", pid 3169173, rss 4138209280, vmem 6965972992
+Process "vasp_std", pid 3169174, rss 4433498112, vmem 6871511040
+Process "vasp_std", pid 3169175, rss 4120739840, vmem 6914039808
+Process "vasp_std", pid 3169176, rss 4270022656, vmem 6909796352
+Process "vasp_std", pid 3169177, rss 4291604480, vmem 6926921728
+Process "vasp_std", pid 3169178, rss 4249800704, vmem 6879809536
+Process "vasp_std", pid 3169179, rss 4116045824, vmem 6918475776
+Process "vasp_std", pid 3169180, rss 4114444288, vmem 6901141504
+Process "vasp_std", pid 3169181, rss 4095000576, vmem 6845349888
+Process "vasp_std", pid 3169182, rss 4129075200, vmem 6914080768
+Process "vasp_std", pid 3169183, rss 4115009536, vmem 6887329792
+Process "vasp_std", pid 3169184, rss 4218208256, vmem 6857371648
+Process "vasp_std", pid 3169185, rss 4131422208, vmem 6865952768
+Process "vasp_std", pid 3169186, rss 4100911104, vmem 6926118912
+Process "vasp_std", pid 3169187, rss 4182360064, vmem 6896025600
+Process "vasp_std", pid 3169188, rss 4220424192, vmem 6943301632
+Process "vasp_std", pid 3169189, rss 4084461568, vmem 6947655680
+Process "vasp_std", pid 3169190, rss 4202029056, vmem 6896029696
+------------------------------------------------------------------------
+For more information visit https://opus.nci.org.au/x/SwGRAQ
+------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014AF5D2DBD20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014AF5CF2D7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000015035133AD20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000150350F8C7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014EBFDA7ED20  Unknown               Unknown  Unknown
+vasp_std           0000000001635A12  nonl_mp_spher_.q          435  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014EBFD6D07E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+--------------------------------------------------------------------------
+mpirun noticed that process rank 7 with PID 0 on node gadi-cpu-clx-1174 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+======================================================================================
+                  Resource Usage on 2024-11-03 02:07:16:
+   Job Id:             128049029.gadi-pbs
+   Project:            g46
+   Exit Status:        137 (Linux Signal 9 SIGKILL Kill, unblockable)
+   Service Units:      0.45
+   NCPUs Requested:    24                     NCPUs Used: 24              
+                                           CPU Time Used: 00:08:38        
+   Memory Requested:   95.0GB                Memory Used: 93.78GB         
+   Walltime requested: 47:59:59            Walltime Used: 00:00:34        
+   JobFS requested:    10.0GB                 JobFS used: 0B              
+======================================================================================

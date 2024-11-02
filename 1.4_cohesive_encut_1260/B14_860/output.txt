@@ -1,0 +1,68 @@
+Loading vasp/6.4.3
+  Loading requirement: openmpi/4.1.3
+
+------------------------------------------------------------------------
+Job 128049023 has exceeded memory allocation on node gadi-cpu-clx-0002.gadi.nci.org.au
+Process "bash", pid 167616, rss 3018752, vmem 23932928
+Process "128049023.gadi-", pid 167682, rss 2756608, vmem 10252288
+Process "mpirun", pid 167702, rss 2617344, vmem 238055424
+Process "vasp_std", pid 167708, rss 4159234048, vmem 7118229504
+Process "vasp_std", pid 167709, rss 4115238912, vmem 7052709888
+Process "vasp_std", pid 167710, rss 4119105536, vmem 7078268928
+Process "vasp_std", pid 167711, rss 4122890240, vmem 7056015360
+Process "vasp_std", pid 167712, rss 4123541504, vmem 7035514880
+Process "vasp_std", pid 167713, rss 4122718208, vmem 7025799168
+Process "vasp_std", pid 167714, rss 4123918336, vmem 7068811264
+Process "vasp_std", pid 167715, rss 4122472448, vmem 7056961536
+Process "vasp_std", pid 167716, rss 4122845184, vmem 7068864512
+Process "vasp_std", pid 167717, rss 4107866112, vmem 7087091712
+Process "vasp_std", pid 167718, rss 4123697152, vmem 7065341952
+Process "vasp_std", pid 167719, rss 4122386432, vmem 7008661504
+Process "vasp_std", pid 167720, rss 4111216640, vmem 7022645248
+Process "vasp_std", pid 167721, rss 4103708672, vmem 7030288384
+Process "vasp_std", pid 167722, rss 4104523776, vmem 7042949120
+Process "vasp_std", pid 167723, rss 4110520320, vmem 7035482112
+Process "vasp_std", pid 167724, rss 4103659520, vmem 7081611264
+Process "vasp_std", pid 167725, rss 4111638528, vmem 7022641152
+Process "vasp_std", pid 167726, rss 4091600896, vmem 7078473728
+Process "vasp_std", pid 167728, rss 4103929856, vmem 7034540032
+Process "vasp_std", pid 167729, rss 4110356480, vmem 7069736960
+Process "vasp_std", pid 167730, rss 4096471040, vmem 7000121344
+Process "vasp_std", pid 167731, rss 4101443584, vmem 6995812352
+Process "vasp_std", pid 167732, rss 4108423168, vmem 7005196288
+------------------------------------------------------------------------
+For more information visit https://opus.nci.org.au/x/SwGRAQ
+------------------------------------------------------------------------
+[gadi-cpu-clx-0002:167716:0:167716] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167725:0:167725] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167710:0:167710] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167728:0:167728] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167709:0:167709] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167721:0:167721] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167724:0:167724] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167731:0:167731] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167722:0:167722] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167717:0:167717] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167730:0:167730] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167726:0:167726] Caught signal 7 (Bus error: nonexistent physical address)
+[gadi-cpu-clx-0002:167732:0:167732] Caught signal 7 (Bus error: nonexistent physical address)
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 0 on node gadi-cpu-clx-0002 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+======================================================================================
+                  Resource Usage on 2024-11-03 02:08:00:
+   Job Id:             128049023.gadi-pbs
+   Project:            g46
+   Exit Status:        137 (Linux Signal 9 SIGKILL Kill, unblockable)
+   Service Units:      1.28
+   NCPUs Requested:    24                     NCPUs Used: 24              
+                                           CPU Time Used: 00:30:53        
+   Memory Requested:   95.0GB                Memory Used: 93.62GB         
+   Walltime requested: 47:59:59            Walltime Used: 00:01:36        
+   JobFS requested:    10.0GB                 JobFS used: 8.1MB           
+======================================================================================
