@@ -78,17 +78,16 @@ def identify_parameters(directory="."):
 
     if directory == "help":
         print("Please use this function on the project directory.")
-        return "Help provided."
+        return None
 
     vasprun_path = os.path.join(directory, "vasprun.xml")
     kpoints_path = os.path.join(directory, "KPOINTS")
     outcar_path = os.path.join(directory, "OUTCAR")
 
     # Check file existence
-    if not os.path.exists(vasprun_path):
-        return "vasprun.xml file not found in the specified directory."
-    if not os.path.exists(kpoints_path):
-        return "KPOINTS file not found in the specified directory."
+    if not os.path.exists(vasprun_path) or not os.path.exists(kpoints_path):
+        print(f"Required files not found in {directory}. Skipping this directory.")
+        return None
 
     try:
         # Parse XML data from vasprun.xml
@@ -169,7 +168,8 @@ def identify_parameters(directory="."):
                     kpoints_index = index + 1
                     break
             else:
-                raise ValueError("Kpoints type keyword not found in KPOINTS file.")
+                print(f"Kpoints type keyword not found in KPOINTS file at {directory}.")
+                return None
 
             kpoints_values = lines[kpoints_index].split()
             x_kpoints, y_kpoints, z_kpoints = int(kpoints_values[0]), int(kpoints_values[1]), int(kpoints_values[2])
