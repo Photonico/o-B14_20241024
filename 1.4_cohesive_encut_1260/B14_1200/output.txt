@@ -1,0 +1,233 @@
+Loading vasp/6.4.3
+  Loading requirement: openmpi/4.1.3
+
+------------------------------------------------------------------------
+Job 128049030 has exceeded memory allocation on node gadi-cpu-clx-0556.gadi.nci.org.au
+Process "bash", pid 2245492, rss 3457024, vmem 23932928
+Process "128049030.gadi-", pid 2245558, rss 3022848, vmem 10252288
+Process "mpirun", pid 2245578, rss 7069696, vmem 238055424
+Process "vasp_std", pid 2245584, rss 4209733632, vmem 8929480704
+Process "vasp_std", pid 2245585, rss 4248739840, vmem 8838782976
+Process "vasp_std", pid 2245586, rss 4229029888, vmem 8894636032
+Process "vasp_std", pid 2245587, rss 4233347072, vmem 8881844224
+Process "vasp_std", pid 2245588, rss 4254109696, vmem 8860184576
+Process "vasp_std", pid 2245589, rss 4253921280, vmem 8911831040
+Process "vasp_std", pid 2245590, rss 4230631424, vmem 8834588672
+Process "vasp_std", pid 2245591, rss 4248899584, vmem 8821694464
+Process "vasp_std", pid 2245592, rss 4248780800, vmem 8851865600
+Process "vasp_std", pid 2245593, rss 4241387520, vmem 8868945920
+Process "vasp_std", pid 2245594, rss 4244525056, vmem 8873160704
+Process "vasp_std", pid 2245595, rss 4149432320, vmem 8903319552
+Process "vasp_std", pid 2245596, rss 4261183488, vmem 8894398464
+Process "vasp_std", pid 2245597, rss 4268609536, vmem 8851341312
+Process "vasp_std", pid 2245598, rss 4268658688, vmem 8885817344
+Process "vasp_std", pid 2245599, rss 4261167104, vmem 8885805056
+Process "vasp_std", pid 2245600, rss 4268498944, vmem 8868392960
+Process "vasp_std", pid 2245601, rss 4268294144, vmem 8791277568
+Process "vasp_std", pid 2245602, rss 4253335552, vmem 8890200064
+Process "vasp_std", pid 2245603, rss 4253544448, vmem 8877211648
+Process "vasp_std", pid 2245604, rss 4250595328, vmem 8830029824
+Process "vasp_std", pid 2245605, rss 4110303232, vmem 8804036608
+Process "vasp_std", pid 2245606, rss 4261113856, vmem 8864473088
+Process "vasp_std", pid 2245607, rss 4260954112, vmem 8911605760
+------------------------------------------------------------------------
+For more information visit https://opus.nci.org.au/x/SwGRAQ
+------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014CDF6856D20  Unknown               Unknown  Unknown
+vasp_std           00000000016361D5  nonl_mp_spher_.q          467  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014CDF64A87E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000153D3F72CD20  Unknown               Unknown  Unknown
+vasp_std           0000000001635383  nonl_mp_spher_.q          409  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000153D3F37E7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014E059F99D20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014E059BEB7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000149004357D20  Unknown               Unknown  Unknown
+vasp_std           0000000001635394  nonl_mp_spher_.q          415  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000149003FA97E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014F1C44FCD20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014F1C414E7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000146EA6923D20  Unknown               Unknown  Unknown
+vasp_std           000000000163B985  nonl_mp_spher_.q          340  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000146EA65757E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000150FE358AD20  Unknown               Unknown  Unknown
+vasp_std           000000000163544A  nonl_mp_spher_.q          420  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000150FE31DC7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001530BA9C6D20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001530BA6187E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001534F1F8BD20  Unknown               Unknown  Unknown
+vasp_std           0000000001635394  nonl_mp_spher_.q          415  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001534F1BDD7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014801B9B4D20  Unknown               Unknown  Unknown
+vasp_std           0000000001635394  nonl_mp_spher_.q          415  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014801B6067E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000148978762D20  Unknown               Unknown  Unknown
+vasp_std           0000000001635462  nonl_mp_spher_.q          421  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001489783B47E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014BF7AC7BD20  Unknown               Unknown  Unknown
+vasp_std           000000000163540A  nonl_mp_spher_.q          418  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014BF7A8CD7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001489E1BCDD20  Unknown               Unknown  Unknown
+vasp_std           000000000163536C  nonl_mp_spher_.q          410  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001489E181F7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000147110D51D20  Unknown               Unknown  Unknown
+vasp_std           00000000007E3106  asa_mp_setylm_.q          544  asa.F
+vasp_std           0000000001634B8C  nonl_mp_spher_.q          379  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001471109A37E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014E89AB07D20  Unknown               Unknown  Unknown
+vasp_std           000000000163BA89  nonl_mp_spher_.q          360  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014E89A7597E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014BE4F166D20  Unknown               Unknown  Unknown
+vasp_std           00000000016361F4  nonl_mp_spher_.q          467  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014BE4EDB87E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000155233958D20  Unknown               Unknown  Unknown
+vasp_std           00000000007E3129  asa_mp_setylm_.q          543  asa.F
+vasp_std           0000000001634B8C  nonl_mp_spher_.q          379  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001552335AA7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001481710E8D20  Unknown               Unknown  Unknown
+vasp_std           00000000016361E5  nonl_mp_spher_.q          467  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000148170D3A7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014B10DA14D20  Unknown               Unknown  Unknown
+vasp_std           000000000163622E  nonl_mp_spher_.q          466  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014B10D6667E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014D384D44D20  Unknown               Unknown  Unknown
+vasp_std           00000000016359FC  nonl_mp_spher_.q          434  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014D3849967E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000147D83B1FD20  Unknown               Unknown  Unknown
+vasp_std           000000000163544A  nonl_mp_spher_.q          420  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000147D837717E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014BD147F8D20  Unknown               Unknown  Unknown
+vasp_std           0000000001636218  nonl_mp_spher_.q          466  nonl.F
+vasp_std           0000000006309A11  MAIN__                   2848  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014BD1444A7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+--------------------------------------------------------------------------
+mpirun noticed that process rank 13 with PID 0 on node gadi-cpu-clx-0556 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+======================================================================================
+                  Resource Usage on 2024-11-03 02:07:13:
+   Job Id:             128049030.gadi-pbs
+   Project:            g46
+   Exit Status:        137 (Linux Signal 9 SIGKILL Kill, unblockable)
+   Service Units:      0.44
+   NCPUs Requested:    24                     NCPUs Used: 24              
+                                           CPU Time Used: 00:10:26        
+   Memory Requested:   95.0GB                Memory Used: 94.91GB         
+   Walltime requested: 47:59:59            Walltime Used: 00:00:33        
+   JobFS requested:    10.0GB                 JobFS used: 8.1MB           
+======================================================================================
