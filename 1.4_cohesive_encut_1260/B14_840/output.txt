@@ -1,0 +1,522 @@
+Loading vasp/6.4.3
+  Loading requirement: openmpi/4.1.3
+
+------------------------------------------------------------------------
+Job 128049022 has exceeded memory allocation on node gadi-cpu-clx-2795.gadi.nci.org.au
+Process "bash", pid 3164204, rss 3432448, vmem 23932928
+Process "128049022.gadi-", pid 3164270, rss 3198976, vmem 10252288
+Process "mpirun", pid 3164292, rss 7577600, vmem 238055424
+Process "vasp_std", pid 3164298, rss 4306952192, vmem 6478925824
+Process "vasp_std", pid 3164299, rss 4247109632, vmem 6356930560
+Process "vasp_std", pid 3164300, rss 4247474176, vmem 6396272640
+Process "vasp_std", pid 3164301, rss 4247076864, vmem 6335885312
+Process "vasp_std", pid 3164302, rss 4247539712, vmem 6387781632
+Process "vasp_std", pid 3164303, rss 4246822912, vmem 6331170816
+Process "vasp_std", pid 3164304, rss 4247724032, vmem 6353559552
+Process "vasp_std", pid 3164305, rss 4247248896, vmem 6326616064
+Process "vasp_std", pid 3164306, rss 4247822336, vmem 6564114432
+Process "vasp_std", pid 3164307, rss 4246581248, vmem 6507819008
+Process "vasp_std", pid 3164308, rss 4246417408, vmem 6546673664
+Process "vasp_std", pid 3164309, rss 4246712320, vmem 6512168960
+Process "vasp_std", pid 3164310, rss 4247703552, vmem 6555389952
+Process "vasp_std", pid 3164311, rss 4247625728, vmem 6559391744
+Process "vasp_std", pid 3164312, rss 4246470656, vmem 6508257280
+Process "vasp_std", pid 3164313, rss 4247429120, vmem 6503272448
+Process "vasp_std", pid 3164314, rss 4247797760, vmem 6516666368
+Process "vasp_std", pid 3164315, rss 4247810048, vmem 6568366080
+Process "vasp_std", pid 3164316, rss 4247650304, vmem 6525145088
+Process "vasp_std", pid 3164317, rss 4247060480, vmem 6534086656
+Process "vasp_std", pid 3164318, rss 4247642112, vmem 6533353472
+Process "vasp_std", pid 3164319, rss 4248076288, vmem 6555615232
+Process "vasp_std", pid 3164320, rss 4247789568, vmem 6542131200
+Process "vasp_std", pid 3164321, rss 4247691264, vmem 6550712320
+------------------------------------------------------------------------
+For more information visit https://opus.nci.org.au/x/SwGRAQ
+------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001492CDFE7D20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  00001492B7DA3A2A  Unknown               Unknown  Unknown
+libucp.so.0.0.0    00001492C84E9E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  00001492A1BA20D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  00001492A1BE8366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  00001492A1BE472D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  00001492C9C606B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  00001492CE3B623B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  00001492CE41B932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    00001492CE76869F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001492CDC397E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014632C1B5D20  Unknown               Unknown  Unknown
+libuct.so.0.0.0    000014632644E39B  Unknown               Unknown  Unknown
+libucp.so.0.0.0    00001463266B7E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  00001463013700D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  00001463013B6366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  00001463013B272D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  0000146327E2E6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014632C58423B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014632C5E9932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014632C93669F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014632BE077E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000015279B135D20  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  00001527754380E0  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000015277547E366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000015277547A72D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  0000152796DAE6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000015279B50423B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000015279B569932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000015279B8B669F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000015279AD877E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000154A92319D20  Unknown               Unknown  Unknown
+libucp.so.0.0.0    0000154A8C81BE52  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000154A6D1340D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  0000154A6D17A366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000154A6D17672D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  0000154A8DF926B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  0000154A926E823B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  0000154A9274D932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    0000154A92A9A69F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000154A91F6B7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014D4AF7F6D20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  000014D49D54D01D  Unknown               Unknown  Unknown
+libucp.so.0.0.0    000014D4A9CF8E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014D48AB660D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014D48ABAC366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014D48ABA872D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000014D4AB46F6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014D4AFBC523B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014D4AFC2A932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014D4AFF7769F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014D4AF4487E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001460B86B4D20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  00001460A654CA02  Unknown               Unknown  Unknown
+libucp.so.0.0.0    00001460B2BB6E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014608FD720D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014608FDB8366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014608FDB472D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  00001460B432D6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  00001460B8A8323B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  00001460B8AE8932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    00001460B8E3569F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001460B83067E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014FB91204D20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  000014FB80135A02  Unknown               Unknown  Unknown
+libucp.so.0.0.0    000014FB8B706E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014FB6ACDC0D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014FB6AD22366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014FB6AD1E72D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000014FB8CE7D6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014FB915D323B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014FB91638932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014FB9198569F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014FB90E567E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  00001543E433AD20  Unknown               Unknown  Unknown
+libuct.so.0.0.0    00001543DE5D323A  Unknown               Unknown  Unknown
+libucp.so.0.0.0    00001543DE83CE9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  00001543BBD720D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  00001543BBDB8366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  00001543BBDB472D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  00001543DFFB36B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  00001543E470923B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  00001543E476E932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    00001543E4ABB69F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001543E3F8C7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000015153B03AD20  Unknown               Unknown  Unknown
+libucp.so.0.0.0    000015153553CE94  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  00001515142D80D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000015151431E366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000015151431A72D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  0000151536CB36B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000015153B40923B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000015153B46E932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000015153B7BB69F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000015153AC8C7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014FBE8660D20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  000014FBD654CA2A  Unknown               Unknown  Unknown
+libucp.so.0.0.0    000014FBE2B62E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014FBBFB6C0D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014FBBFBB2366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014FBBFBAE72D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000014FBE42D96B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014FBE8A2F23B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014FBE8A94932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014FBE8DE169F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014FBE82B27E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000151C49477D20  Unknown               Unknown  Unknown
+libucp.so.0.0.0    0000151C43979E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000151C221220D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  0000151C22168366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000151C2216472D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  0000151C450F06B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  0000151C4984623B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  0000151C498AB932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    0000151C49BF869F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000151C490C97E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014D800B5DD20  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014D7DA9CB385  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014D7DA9C772D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000014D7FC7D66B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014D800F2C23B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014D800F91932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014D8012DE69F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014D8007AF7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000015229FDE1D20  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000015227377D389  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000015227377972D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000015229BA5A6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  00001522A01B023B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  00001522A0215932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    00001522A056269F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000015229FA337E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000146F8C437D20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  0000146F7A336A42  Unknown               Unknown  Unknown
+libucp.so.0.0.0    0000146F86939E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000146F5F5A70D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  0000146F5F5ED366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000146F5F5E972D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  0000146F880B06B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  0000146F8C80623B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  0000146F8C86B932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    0000146F8CBB869F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000146F8C0897E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000150E87ADBD20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  0000150E759F4A42  Unknown               Unknown  Unknown
+libucp.so.0.0.0    0000150E81FDDE9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000150E621FD0D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  0000150E62243366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000150E6223F72D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  0000150E837546B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  0000150E87EAA23B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  0000150E87F0F932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    0000150E8825C69F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000150E8772D7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000147617A5AD20  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  00001475F364137C  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  00001475F363D72D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  00001476136D36B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  0000147617E2923B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  0000147617E8E932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    00001476181DB69F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       00001476176AC7E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014F0824B4D20  Unknown               Unknown  Unknown
+libuct.so.0.0.0    000014F07C74D23A  Unknown               Unknown  Unknown
+libucp.so.0.0.0    000014F07C9B6E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014F05C7BC0D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014F05C802366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014F05C7FE72D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000014F07E12D6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014F08288323B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014F0828E8932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014F082C3569F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014F0821067E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014D172F93D20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  000014D160E49A24  Unknown               Unknown  Unknown
+libucp.so.0.0.0    000014D16D495E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014D147B6C0D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014D147BB2366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014D147BAE72D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000014D16EC0C6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014D17336223B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014D1733C7932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014D17371469F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014D172BE57E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014B83DAE1D20  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014B8171860E7  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014B8171CC366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014B8171C872D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000014B83975A6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014B83DEB023B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014B83DF15932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014B83E26269F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014B83D7337E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014DCA64F4D20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  000014DC9C171A24  Unknown               Unknown  Unknown
+libucp.so.0.0.0    000014DCA09F6E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014DC820910D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014DC820D7366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014DC820D372D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000014DCA216D6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014DCA68C323B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014DCA6928932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014DCA6C7569F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014DCA61467E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000146BED3E7D20  Unknown               Unknown  Unknown
+libuct.so.0.0.0    0000146BE768039B  Unknown               Unknown  Unknown
+libucp.so.0.0.0    0000146BE78E9E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000146BC8E350D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  0000146BC8E7B366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000146BC8E7772D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  0000146BE90606B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  0000146BED7B623B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  0000146BED81B932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    0000146BEDB6869F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000146BED0397E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  0000145ECB443D20  Unknown               Unknown  Unknown
+libuct.so.0.0.0    0000145EC56DC208  Unknown               Unknown  Unknown
+libucp.so.0.0.0    0000145EC5945E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000145EA326A0D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  0000145EA32B0366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  0000145EA32AC72D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  0000145EC70BC6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  0000145ECB81223B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  0000145ECB877932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    0000145ECBBC469F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       0000145ECB0957E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libpthread-2.28.s  000014E5D1814D20  Unknown               Unknown  Unknown
+libuct_ib.so.0.0.  000014E5C0834A06  Unknown               Unknown  Unknown
+libucp.so.0.0.0    000014E5CBD16E9A  ucp_worker_progre     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014E5A98F00D6  Unknown               Unknown  Unknown
+hmca_bcol_ucx_p2p  000014E5A9936366  hmca_bcol_ucx_p2p     Unknown  Unknown
+hmca_bcol_ucx_p2p  000014E5A993272D  hmca_bcol_ucx_p2p     Unknown  Unknown
+libhcoll.so.1.0.1  000014E5CD48D6B7  hmca_coll_ml_allt     Unknown  Unknown
+libmpi.so.40.30.3  000014E5D1BE323B  mca_coll_hcoll_al     Unknown  Unknown
+libmpi.so.40.30.3  000014E5D1C48932  PMPI_Alltoall         Unknown  Unknown
+libmpi_mpifh.so    000014E5D1F9569F  Unknown               Unknown  Unknown
+vasp_std           0000000000549183  m_alltoall_z_            4172  mpi.F
+vasp_std           0000000001467ED4  redis_pw_                 935  wave_mpi.F
+vasp_std           000000000368956A  david_mp_eddav_.q         550  davidson.F
+vasp_std           0000000003980778  elmin_.q                  504  electron.F
+vasp_std           000000000633911B  vamp_IP_electroni        5531  main.F
+vasp_std           00000000063107BC  MAIN__                   3283  main.F
+vasp_std           000000000041E54D  Unknown               Unknown  Unknown
+libc-2.28.so       000014E5D14667E5  __libc_start_main     Unknown  Unknown
+vasp_std           000000000041E46E  Unknown               Unknown  Unknown
+--------------------------------------------------------------------------
+mpirun noticed that process rank 0 with PID 0 on node gadi-cpu-clx-2795 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+======================================================================================
+                  Resource Usage on 2024-11-03 02:09:02:
+   Job Id:             128049022.gadi-pbs
+   Project:            g46
+   Exit Status:        137 (Linux Signal 9 SIGKILL Kill, unblockable)
+   Service Units:      2.13
+   NCPUs Requested:    24                     NCPUs Used: 24              
+                                           CPU Time Used: 00:59:24        
+   Memory Requested:   95.0GB                Memory Used: 95.0GB          
+   Walltime requested: 47:59:59            Walltime Used: 00:02:40        
+   JobFS requested:    10.0GB                 JobFS used: 0B              
+======================================================================================
