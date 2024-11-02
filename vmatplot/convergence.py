@@ -85,34 +85,56 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
         params = identify_parameters(work_dir)
         if params:
             full_cal_data.append(params)
+        else:
+            print(f"Skipping incomplete or invalid calculation in {work_dir} from full_cal_dir.")
 
     for work_dir in check_vasprun(atom_cal_dir):
         params = identify_parameters(work_dir)
-        if params and params['total atom count'] == 1:  # Ensure it's a single atom calculation
-            atom_cal_data.append(params)
+        if params:
+            if params.get('total atom count') == 1:
+                atom_cal_data.append(params)
+            else:
+                print(f"Skipping {work_dir} in atom_cal_dir: total atom count is not 1.")
+        else:
+            print(f"Skipping incomplete or invalid calculation in {work_dir} from atom_cal_dir.")
 
     # Match and calculate cohesive energy
     results = []
     for full_params in full_cal_data:
+        matched = False  # Flag to check if a match is found
         for atom_params in atom_cal_data:
             # Matching conditions now include energy cutoff
-            if (full_params['kpoints mesh'] == atom_params['kpoints mesh'] and
-                full_params['total kpoints'] == atom_params['total kpoints'] and
+            if (full_params.get('kpoints mesh') == atom_params.get('kpoints mesh') and
+                full_params.get('total kpoints') == atom_params.get('total kpoints') and
                 full_params.get("energy cutoff (ENCUT)") == atom_params.get("energy cutoff (ENCUT)")):
-                
+
                 # Calculate cohesive energy correctly
-                atom_energy = atom_params['total energy']
-                cohesive_energy = full_params['total energy'] - full_params['total atom count'] * atom_energy
+                atom_energy = atom_params.get('total energy')
+                if atom_energy is None:
+                    print(f"Atom energy missing in {atom_params}, skipping this match.")
+                    continue
+
+                cohesive_energy = full_params.get('total energy') - full_params.get('total atom count') * atom_energy
+
+                if None in (full_params.get('total energy'), full_params.get('total atom count'), atom_energy):
+                    print(f"Missing energy data in {full_params} or {atom_params}, skipping this match.")
+                    continue
+
                 result = {
-                    "total atom count": full_params['total atom count'],
-                    "total energy": full_params['total energy'],
+                    "total atom count": full_params.get('total atom count'),
+                    "total energy": full_params.get('total energy'),
                     "atom energy": atom_energy,
                     "cohesive energy": cohesive_energy,
-                    "total kpoints": full_params['total kpoints'],
-                    "kpoints mesh": full_params['kpoints mesh'],
+                    "total kpoints": full_params.get('total kpoints'),
+                    "kpoints mesh": full_params.get('kpoints mesh'),
                     "energy cutoff (ENCUT)": full_params.get("energy cutoff (ENCUT)")
                 }
                 results.append(result)
+                matched = True  # A match is found
+                break  # No need to check other atom_params for this full_params
+
+        if not matched:
+            print(f"No matching atom calculation found for {full_params}, skipping.")
 
     # Check if results are empty before proceeding to write the output
     if not results:
@@ -793,8 +815,8 @@ def plot_energy_parameters(parameters, *args):
         else: print("Error: Only one or two parameters are allowed for plot types.")
     else: print("Invalid input type for parameters.")
 
-# Alias for single-parameter usage
 def plot_energy_parameter(*args):
+    # Alias for single-parameter usage
     return plot_energy_parameters(*args)
 
 ## Cohesive energy versus parameters
@@ -1035,7 +1057,6 @@ def plot_cohesive_energy_encut_single(*args_list):
 
     plt.tight_layout()
 
-
 def plot_cohesive_energy_encut(encut_list):
     """
     Generalized function to plot cohesive energy versus ENCUT (energy cutoff) for multiple datasets.
@@ -1129,3 +1150,272 @@ def plot_cohesive_energy_encut(encut_list):
     plt.title("Cohesive energy versus energy cutoff")
     plt.legend(handles=legend_handles, loc="best")
     plt.tight_layout()
+
+def plot_cohesive_energy_kpoints_encut_single(kpoints_list, encut_list):
+    # Unpack lists to retrieve the new info_suffix (materials information)
+    info_suffix_kpoints, kpoints_source_data, kpoints_boundary, kpoints_color_family = kpoints_list
+    info_suffix_encut, encut_source_data, encut_boundary, encut_color_family = encut_list
+
+    # Set up figure and parameters
+    fig_setting = canvas_setting()
+    fig_size_adjusted = (fig_setting[0][0], fig_setting[0][1] * 1.25)
+    fig, ax_kpoints = plt.subplots(figsize=fig_size_adjusted, dpi=fig_setting[1])
+    ax_encut = ax_kpoints.twiny()  # Create the top x-axis
+
+    # Update rcParams globally for plot settings
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+
+    # Configure tick direction and placement on both axes
+    ax_kpoints.tick_params(direction="in")
+    ax_encut.tick_params(direction="in")
+
+    # Configure scientific notation for y-axis on K-points axis
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    ax_kpoints.yaxis.set_major_formatter(formatter)
+
+    # Color sampling for K-points and ENCUT lines
+    kpoints_colors = color_sampling(kpoints_color_family)
+    encut_colors = color_sampling(encut_color_family)
+
+    # K-points data processing for cohesive energy
+    kpoints_data = read_energy_parameters(kpoints_source_data)
+    cohesive_energy_kpoints = [d.get("cohesive energy") for d in kpoints_data]
+    total_kpoints = [d.get("total kpoints") for d in kpoints_data]
+    directs_kpoints = [d.get("kpoints mesh") for d in kpoints_data]
+    kpoints_labels = [f"({kp[0]}, {kp[1]}, {kp[2]})" for kp in directs_kpoints]
+
+    # ENCUT data processing for cohesive energy
+    encut_data = read_energy_parameters(encut_source_data)
+    cohesive_energy_encut = [d.get("cohesive energy") for d in encut_data]
+    encut_values = [d.get("energy cutoff (ENCUT)") for d in encut_data]
+    encut_filtered_data = [(enc, en) for enc, en in zip(encut_values, cohesive_energy_encut) if enc is not None and en is not None]
+    encut_sorted_data = sorted(encut_filtered_data, key=lambda x: x[0])
+    encut_values_sorted, cohesive_energy_encut_sorted = zip(*encut_sorted_data)
+
+    # Set K-points boundary
+    kpoints_start = int(kpoints_boundary[0]) if kpoints_boundary[0] is not None else min(total_kpoints)
+    kpoints_end = int(kpoints_boundary[1]) if kpoints_boundary[1] is not None else max(total_kpoints)
+
+    kpoints_indices = [
+        index for index, val in enumerate(total_kpoints) if kpoints_start <= val <= kpoints_end
+    ]
+    cohesive_energy_kpoints_plot = [cohesive_energy_kpoints[index] for index in kpoints_indices]
+    kpoints_labels_plot = [kpoints_labels[index] for index in kpoints_indices]
+
+    # Set ENCUT boundary
+    encut_start = float(encut_boundary[0]) if encut_boundary[0] is not None else min(encut_values_sorted)
+    encut_end = float(encut_boundary[1]) if encut_boundary[1] is not None else max(encut_values_sorted)
+
+    encut_indices = [
+        index for index, val in enumerate(encut_values_sorted) if encut_start <= val <= encut_end
+    ]
+    encut_values_plot = [encut_values_sorted[index] for index in encut_indices]
+    cohesive_energy_encut_plot = [cohesive_energy_encut_sorted[index] for index in encut_indices]
+
+    # Plot K-points data with fixed spacing on x-axis
+    ax_kpoints.plot(range(len(cohesive_energy_kpoints_plot)), cohesive_energy_kpoints_plot, c=kpoints_colors[1], lw=1.5)
+    ax_kpoints.scatter(range(len(cohesive_energy_kpoints_plot)), cohesive_energy_kpoints_plot, s=6, c=kpoints_colors[1], zorder=1)
+    ax_kpoints.set_xlabel("K-points configuration", color=kpoints_colors[0])
+    ax_kpoints.set_ylabel("Cohesive energy (eV)")
+    ax_kpoints.set_xticks(range(len(kpoints_labels_plot)))
+    ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right", color=kpoints_colors[0])
+
+    # Plot ENCUT data on the top x-axis
+    ax_encut.plot(encut_values_plot, cohesive_energy_encut_plot, c=encut_colors[1], lw=1.5)
+    ax_encut.scatter(encut_values_plot, cohesive_energy_encut_plot, s=6, c=encut_colors[1], zorder=1)
+    ax_encut.set_xlabel("Energy cutoff (eV)", color=encut_colors[0])
+    ax_encut.xaxis.set_label_position("top")
+    ax_encut.xaxis.tick_top()
+    for encut_label in ax_encut.get_xticklabels():
+        encut_label.set_color(encut_colors[0])
+
+    # Create unified legend
+    kpoints_legend = mlines.Line2D([], [], color=kpoints_colors[1], marker='o', markersize=6, linestyle='-', 
+                                   label=f"Cohesive energy versus K-points {info_suffix_kpoints}")
+    encut_legend = mlines.Line2D([], [], color=encut_colors[1], marker='o', markersize=6, linestyle='-', 
+                                 label=f"Cohesive energy versus energy cutoff {info_suffix_encut}")
+    plt.legend(handles=[kpoints_legend, encut_legend], loc="best")
+
+    plt.title("Cohesive energy versus K-points and energy cutoff")
+    plt.tight_layout()
+
+def plot_cohesive_energy_kpoints_encut(kpoints_list_source, encut_list_source):
+    """
+    Generalized function to plot cohesive energy versus K-points and ENCUT (energy cutoff) for multiple datasets.
+
+    Parameters:
+    - kpoints_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, kpoints_boundary, color_family] for k-points data.
+    - encut_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, encut_boundary, color_family] for ENCUT data.
+    """
+
+    # Ensure kpoints_list and encut_list are always nested lists
+    kpoints_list = [kpoints_list_source] if not is_nested_list(kpoints_list_source) else kpoints_list_source
+    encut_list = [encut_list_source] if not is_nested_list(encut_list_source) else encut_list_source
+
+    # Downgrade system to handle single data cases
+    kpoints_list_downgrad, encut_list_downgrad = [], []
+    if not is_nested_list(kpoints_list_source):
+        kpoints_list_downgrad = kpoints_list_source
+    elif len(kpoints_list_source) == 1:
+        kpoints_list_downgrad = kpoints_list_source[0]
+    
+    if not is_nested_list(encut_list_source):
+        encut_list_downgrad = encut_list_source
+    elif len(encut_list_source) == 1:
+        encut_list_downgrad = encut_list_source[0]
+    
+    if encut_list_downgrad and kpoints_list_downgrad:
+        return plot_cohesive_energy_kpoints_encut_single(kpoints_list_downgrad, encut_list_downgrad)
+
+    # Set up figure and parameters
+    fig_setting = canvas_setting()
+    fig_size_adjusted = (fig_setting[0][0], fig_setting[0][1] * 1.25)
+    fig, ax_kpoints = plt.subplots(figsize=fig_size_adjusted, dpi=fig_setting[1])
+    ax_encut = ax_kpoints.twiny()  # Create the top x-axis
+
+    # Update rcParams globally for plot settings
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+
+    # Configure tick direction and placement on both axes
+    ax_kpoints.tick_params(direction="in")
+    ax_encut.tick_params(direction="in")
+
+    # Configure scientific notation for y-axis on K-points axis
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    ax_kpoints.yaxis.set_major_formatter(formatter)
+
+    # Initialize legend handles for unified legend creation
+    legend_handles = []
+
+    # Collect all filtered K-points for global alignment
+    global_kpoints = set()
+
+    # Process K-points datasets for cohesive energy
+    all_kpoints_labels = []
+    for kpoints_data_item in kpoints_list:
+        info_suffix, kpoints_source_data, kpoints_boundary, kpoints_color_family = kpoints_data_item
+        kpoints_colors = color_sampling(kpoints_color_family)
+
+        # K-points data processing for cohesive energy
+        kpoints_data = read_energy_parameters(kpoints_source_data)
+        cohesive_energy_kpoints = [d.get("cohesive energy") for d in kpoints_data]
+        total_kpoints = [d.get("total kpoints") for d in kpoints_data]
+        directs_kpoints = [d.get("kpoints mesh") for d in kpoints_data]
+        kpoints_labels = {kp: f"({coord[0]}, {coord[1]}, {coord[2]})" for kp, coord in zip(total_kpoints, directs_kpoints)}
+
+        # Apply boundary to filter K-points and cohesive energy values
+        kpoints_start = kpoints_boundary[0] if kpoints_boundary[0] is not None else min(total_kpoints)
+        kpoints_end = kpoints_boundary[1] if kpoints_boundary[1] is not None else max(total_kpoints)
+        filtered_data = [
+            (kp, en, kpoints_labels[kp]) for kp, en in zip(total_kpoints, cohesive_energy_kpoints)
+            if kpoints_start <= kp <= kpoints_end
+        ]
+
+        # Sort filtered data by total_kpoints and unpack
+        filtered_data.sort(key=lambda x: x[0])
+        filtered_kpoints, filtered_energy, filtered_labels = zip(*filtered_data)
+
+        # Update global_kpoints for consistent alignment across datasets
+        global_kpoints.update(filtered_kpoints)
+
+        # Plot K-points data
+        ax_kpoints.plot(range(len(filtered_kpoints)), filtered_energy, c=kpoints_colors[1], lw=1.5)
+        ax_kpoints.scatter(range(len(filtered_kpoints)), filtered_energy, s=6, c=kpoints_colors[1], zorder=1)
+
+        # Add to legend handles
+        legend_handles.append(mlines.Line2D([], [], color=kpoints_colors[1], marker='o', markersize=6, linestyle='-', label=f"Cohesive energy versus K-points {info_suffix}"))
+        all_kpoints_labels.extend(filtered_labels)
+
+    # Set x-axis labels for K-points, ensuring unique and ordered labels
+    all_kpoints_labels = sorted(set(all_kpoints_labels), key=all_kpoints_labels.index)
+    ax_kpoints.set_xticks(range(len(all_kpoints_labels)))
+    ax_kpoints.set_xticklabels(all_kpoints_labels, rotation=45, ha="right")
+    ax_kpoints.set_xlabel("K-points configuration")
+    ax_kpoints.set_ylabel("Cohesive energy (eV)")
+
+    # Process ENCUT datasets for cohesive energy
+    all_encut_values = []
+    for encut_data_item in encut_list:
+        info_suffix, encut_source_data, encut_boundary, encut_color_family = encut_data_item
+        encut_colors = color_sampling(encut_color_family)
+
+        # ENCUT data processing for cohesive energy
+        encut_data = read_energy_parameters(encut_source_data)
+        cohesive_energy_encut = [d.get("cohesive energy") for d in encut_data]
+        encut_values = [d.get("energy cutoff (ENCUT)") for d in encut_data]
+        encut_filtered_data = [(enc, en) for enc, en in zip(encut_values, cohesive_energy_encut) if enc is not None and en is not None]
+        encut_sorted_data = sorted(encut_filtered_data, key=lambda x: x[0])
+        encut_values_sorted, cohesive_energy_encut_sorted = zip(*encut_sorted_data)
+
+        # Set ENCUT boundary
+        encut_start = float(encut_boundary[0]) if encut_boundary[0] is not None else min(encut_values_sorted)
+        encut_end = float(encut_boundary[1]) if encut_boundary[1] is not None else max(encut_values_sorted)
+
+        # Filter sorted data within boundary
+        encut_indices = [
+            index for index, val in enumerate(encut_values_sorted) if encut_start <= val <= encut_end
+        ]
+        encut_values_plot = [encut_values_sorted[index] for index in encut_indices]
+        cohesive_energy_encut_plot = [cohesive_energy_encut_sorted[index] for index in encut_indices]
+        all_encut_values.extend(encut_values_plot)
+
+        # Plot ENCUT data on the top x-axis
+        ax_encut.plot(encut_values_plot, cohesive_energy_encut_plot, c=encut_colors[1], lw=1.5)
+        ax_encut.scatter(encut_values_plot, cohesive_energy_encut_plot, s=6, c=encut_colors[1], zorder=1)
+
+        # Add to legend handles
+        legend_handles.append(mlines.Line2D([], [], color=encut_colors[1], marker='o', markersize=6, linestyle='-', label=f"Cohesive energy versus Energy cutoff {info_suffix}"))
+
+    # Set top x-axis labels for ENCUT, using MaxNLocator for fewer ticks
+    ax_encut.set_xlabel("Energy cutoff (eV)")
+    ax_encut.xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
+    ax_encut.xaxis.set_label_position("top")
+    ax_encut.xaxis.tick_top()
+
+    # Create unified legend
+    plt.legend(handles=legend_handles, loc="best")
+    plt.title("Cohesive energy versus K-points and energy cutoff")
+    plt.tight_layout()
+
+def plot_cohesive_energy_parameters(parameters, *args):
+    if isinstance(parameters, str):
+        param = parameters.lower()
+        args_list = args[0] if len(args) == 1 and isinstance(args[0], list) else list(args)
+        if param in ["kpoint", "kpoints", "k-point", "k-points"]:
+            return plot_cohesive_energy_kpoints(args_list)
+        elif param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"]:
+            return plot_cohesive_energy_encut(args_list)
+        else:
+            print("Parameter type not recognized or incorrect arguments. To be continued.")
+    elif isinstance(parameters, (tuple, list)):
+        # If the list or tuple length is 1, treat it as a single string case
+        if len(parameters) == 1:
+            return plot_cohesive_energy_parameters(parameters[0], *args)
+        # Handle combination of two parameters
+        elif len(parameters) == 2:
+            first_param, second_param = parameters
+            # Standardize parameter names for easy comparison
+            first_param = first_param.lower()
+            second_param = second_param.lower()
+            if first_param in ["kpoints", "k-point", "kpoints configuration"] and second_param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"]:
+                return plot_cohesive_energy_kpoints_encut(*args)
+            elif first_param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"] and second_param in ["kpoints", "k-point", "kpoints configuration"]:
+                print("Reordering parameters to [\"kpoints\", \"encut\"] and plotting.")
+                # Reorder parameters to call plot_cohesive_energy_kpoints_encut
+                return plot_cohesive_energy_kpoints_encut(args[1], args[0])
+            else:
+                print("Combination of parameters not recognized.")
+        else:
+            print("Error: Only one or two parameters are allowed for plot types.")
+    else:
+        print("Invalid input type for parameters.")
+
+def plot_cohesive_energy_parameter(*args):
+    # Alias for single-parameter usage
+    return plot_cohesive_energy_parameters(*args)
