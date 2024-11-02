@@ -805,3 +805,12 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">  158.68  161.53</time>
+   <time name="total">  158.69  161.55</time>
+   <energy>
+    <i name="e_fr_energy">      0.15686151 </i>
+    <i name="e_wo_entrp">      0.18298136 </i>
+    <i name="e_0_energy">      0.16992144 </i>
+   </energy>
+  </scstep>
+  <scstep>
