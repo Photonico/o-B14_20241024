@@ -88,7 +88,7 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
 
     for work_dir in check_vasprun(atom_cal_dir):
         params = identify_parameters(work_dir)
-        if params:
+        if params and params['total atom count'] == 1:  # Ensure it's a single atom calculation
             atom_cal_data.append(params)
 
     # Match and calculate cohesive energy
@@ -100,11 +100,13 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
                 full_params['total kpoints'] == atom_params['total kpoints'] and
                 full_params.get("energy cutoff (ENCUT)") == atom_params.get("energy cutoff (ENCUT)")):
                 
-                cohesive_energy = full_params['total energy'] - full_params['total atom count'] * atom_params['total energy']
+                # Calculate cohesive energy correctly
+                atom_energy = atom_params['total energy']
+                cohesive_energy = full_params['total energy'] - full_params['total atom count'] * atom_energy
                 result = {
                     "total atom count": full_params['total atom count'],
                     "total energy": full_params['total energy'],
-                    "atom energy": atom_params['total energy'],
+                    "atom energy": atom_energy,
                     "cohesive energy": cohesive_energy,
                     "total kpoints": full_params['total kpoints'],
                     "kpoints mesh": full_params['kpoints mesh'],

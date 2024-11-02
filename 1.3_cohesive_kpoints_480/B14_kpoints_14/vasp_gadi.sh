@@ -1,17 +1,17 @@
 #!/bin/bash
-#PBS -N Convergence
+#PBS -N job_name
 #PBS -P g46
 #PBS -q normal
 #PBS -o output.txt
 #PBS -j oe
-#PBS -l mem=95GB
-#PBS -l ncpus=24
+#PBS -l mem=190GB
+#PBS -l ncpus=48
 #PBS -l walltime=47:59:59
 #PBS -l wd
 #PBS -l jobfs=10GB
 #PBS -l software=vasp
-#PBS -l storage=scratch/g46+gdata/g46
+#PBS -m ea
 
-module load vasp/6.4.3
+module load vasp/6.4.2
 
 mpirun vasp_std >vasp.log
