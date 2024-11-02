@@ -1,6 +1,6 @@
  vasp.6.4.3 19Mar24 (build May 31 2024 16:31:43) complex                        
   
- executed on             LinuxIFC date 2024.11.01  17:03:24
+ executed on             LinuxIFC date 2024.11.02  06:15:19
  running   24 mpi-ranks, with    1 threads/rank, on    1 nodes
  distrk:  each k-point on   24 cores,    1 groups
  distr:  one band on NCORE=   1 cores,   24 groups
@@ -2922,7 +2922,7 @@ Automatic generation of k-mesh.
    one-center:          3. kBytes
    wavefun   :     632782. kBytes
  
-     INWAV:  cpu time      0.0000: real time      0.0000
+     INWAV:  cpu time      0.0001: real time      0.0002
  Broyden mixing: mesh for mixing (old mesh)
    NGX = 53   NGY = 45   NGZ = 65
   (NGX  =216   NGY  =180   NGZ  =280)

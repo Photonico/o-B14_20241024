@@ -14,9 +14,11 @@ from vmatplot.commons import check_vasprun, identify_parameters
 from vmatplot.algorithms import is_nested_list
 from vmatplot.output_settings import canvas_setting, color_sampling
 
-def cal_cohensive_energy(atom_count, atom_energy, total_energy):
-    cohensive_energy = total_energy - atom_count * atom_energy
-    return cohensive_energy
+## Process and calculate data
+
+def cal_cohesive_energy(atom_count, atom_energy, total_energy):
+    cohesive_energy = total_energy - atom_count * atom_energy
+    return cohesive_energy
 
 def summarize_parameters(directory=".", lattice_boundary=None):
     result_file = "energy_parameters.dat"
@@ -31,111 +33,32 @@ def summarize_parameters(directory=".", lattice_boundary=None):
 
     dirs_to_walk = check_vasprun(directory)
     results = []
-
-    lattice_within_start = True
-    lattice_within_end = True
+    TOLERANCE = 1e-6
 
     for work_dir in dirs_to_walk:
-        xml_path = os.path.join(work_dir, "vasprun.xml")
-        kpoints_path = os.path.join(work_dir, "KPOINTS")
-        outcar_path = os.path.join(work_dir, "OUTCAR")
+        params = identify_parameters(work_dir)
+        if params:
+            # Debugging output for extracted parameters
+            # print(f"Extracted parameters from {work_dir}: {params}")
+            # Lattice boundary check
+            lattice_constant = params.get("lattice constant")
+            if lattice_boundary is not None:
+                lattice_start, lattice_end = lattice_boundary
+                within_start = lattice_start in [None, ""] or lattice_constant >= lattice_start - TOLERANCE
+                within_end = lattice_end in [None, ""] or lattice_constant <= lattice_end + TOLERANCE
+                if not (within_start and within_end):
+                    print(f"Skipping {work_dir} due to lattice boundary constraints.")
+                    continue
 
-        if os.path.isfile(xml_path) and os.path.isfile(kpoints_path):
-            try:
-                tree = ET.parse(xml_path)
-                root = tree.getroot()
+            results.append(params)
 
-                # Extract total atom count
-                atom_count_tag = root.find(".//atominfo/atoms")
-                total_atom_count = int(atom_count_tag.text) if atom_count_tag is not None else None
+    # Check if results are empty before proceeding to write the output
+    if not results:
+        print("No data extracted. Please check your directory and lattice boundary settings.")
+        return results
 
-                # Extract total energy
-                energy = float(root.findall(".//calculation/energy/i[@name='e_fr_energy']")[-1].text)
-
-                # Extract lattice constant
-                basis_vectors = root.findall(".//calculation/structure/crystal/varray[@name='basis']")[-1]
-                a_vector = basis_vectors[0].text.split()
-                lattice_constant = (float(a_vector[0])**2 + float(a_vector[1])**2 + float(a_vector[2])**2)**0.5
-
-                # Extract SYMPREC for symmetry precision
-                symprec_tag = root.find(".//parameters/separator/i[@name='SYMPREC']")
-                symprec = float(symprec_tag.text) if symprec_tag is not None else None
-
-                # Extract kpoints information from KPOINTS file
-                with open(kpoints_path, "r", encoding="utf-8") as kpoints_file:
-                    lines = kpoints_file.readlines()
-                    for index, line in enumerate(lines):
-                        if any(keyword in line.lower() for keyword in ["gamma", "monkhorst", "monkhorst-pack", "explicit", "line-mode"]):
-                            kpoints_index = index + 1
-                            break
-                    else: raise ValueError("Kpoints type keyword not found in KPOINTS file.")
-
-                    kpoints_values = lines[kpoints_index].split()
-                    x_kpoints, y_kpoints, z_kpoints = int(kpoints_values[0]), int(kpoints_values[1]), int(kpoints_values[2])
-                    tot_kpoints = x_kpoints * y_kpoints * z_kpoints
-                    kpoints_sum = x_kpoints + y_kpoints + z_kpoints  # For sorting
-                # Tolerance check for lattice boundary
-                TOLERANCE = 1e-6
-                if lattice_boundary is not None:
-                    lattice_start, lattice_end = lattice_boundary
-                    lattice_within_start = lattice_start in [None, ""] or lattice_constant >= lattice_start - TOLERANCE
-                    lattice_within_end = lattice_end in [None, ""] or lattice_constant <= lattice_end + TOLERANCE
-                # Initialize elapsed time variable
-                elapsed_time = None
-                if os.path.isfile(outcar_path):
-                    with open(outcar_path, "r", encoding="utf-8") as outcar_file:
-                        for line in outcar_file:
-                            if "Elapsed time (sec):" in line:
-                                elapsed_time = float(line.split(":")[-1].strip())
-                                break
-                if lattice_within_start and lattice_within_end:
-                    # Collect all required parameters in order
-                    params = {
-                        "total atom count": total_atom_count,
-                        "total energy": energy,
-                        "total kpoints": tot_kpoints,
-                        "kpoints mesh": (x_kpoints, y_kpoints, z_kpoints),
-                        "lattice constant": lattice_constant,
-                        "symmetry precision (SYMPREC)": symprec,
-                        "energy cutoff (ENCUT)": None,
-                        "k-point spacing (KSPACING)": None,
-                        "volume": None,
-                        "time step (POTIM)": None,
-                        "mixing parameter (AMIX)": None,
-                        "mixing parameter (BMIX)": None,
-                        "electronic convergence (EDIFF)": None,
-                        "force convergence (EDIFFG)": None,
-                        "elapsed time (sec)": elapsed_time
-                    }
-                    # Extract additional parameters from <incar> section
-                    for param in root.findall(".//incar/i"):
-                        name = param.get("name")
-                        if name == "ENCUT":
-                            params["energy cutoff (ENCUT)"] = float(param.text)
-                        elif name == "KSPACING":
-                            params["k-point spacing (KSPACING)"] = float(param.text)
-                        elif name == "POTIM":
-                            params["time step (POTIM)"] = float(param.text)
-                        elif name == "AMIX":
-                            params["mixing parameter (AMIX)"] = float(param.text)
-                        elif name == "BMIX":
-                            params["mixing parameter (BMIX)"] = float(param.text)
-                        elif name == "EDIFF":
-                            params["electronic convergence (EDIFF)"] = float(param.text)
-                        elif name == "EDIFFG":
-                            params["force convergence (EDIFFG)"] = float(param.text)
-                    # Extract volume
-                    volume_tag = root.find(".//structure[@name='finalpos']/crystal/volume")
-                    if volume_tag is not None:
-                        params["volume"] = float(volume_tag.text)
-                    # Append results as dictionary
-                    results.append(params)
-            except (ET.ParseError, ValueError, IndexError) as e:
-                print(f"Error parsing files in {work_dir}: {e}")
-        else: print(f"vasprun.xml or KPOINTS is not found in {work_dir}.")
-
-    # Sort results by elapsed time (sec)
-    results.sort(key=lambda x: x["elapsed time (sec)"])
+    # Sort results by elapsed time (sec) if available
+    results.sort(key=lambda x: x.get("elapsed time (sec)", float('inf')))
 
     # Write the sorted results to the output file
     try:
@@ -146,7 +69,69 @@ def summarize_parameters(directory=".", lattice_boundary=None):
             for result in results:
                 f.write("\t".join(str(result[key]) if result[key] is not None else 'None' for key in result) + "\n")
     except IOError as e:
-        print(f"Error writing to file at {result_file_path}:", e)
+        print(f"Error writing to file at {result_file_path}: {e}")
+
+    return results
+
+def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
+    result_file = "cohesive_energy.dat"
+    result_file_path = os.path.join(atom_cal_dir, result_file)
+
+    # Extract data from both directories
+    full_cal_data = []
+    atom_cal_data = []
+
+    for work_dir in check_vasprun(full_cal_dir):
+        params = identify_parameters(work_dir)
+        if params:
+            full_cal_data.append(params)
+
+    for work_dir in check_vasprun(atom_cal_dir):
+        params = identify_parameters(work_dir)
+        if params:
+            atom_cal_data.append(params)
+
+    # Match and calculate cohesive energy
+    results = []
+    for full_params in full_cal_data:
+        for atom_params in atom_cal_data:
+            # Matching conditions now include energy cutoff
+            if (full_params['kpoints mesh'] == atom_params['kpoints mesh'] and
+                full_params['total kpoints'] == atom_params['total kpoints'] and
+                full_params.get("energy cutoff (ENCUT)") == atom_params.get("energy cutoff (ENCUT)")):
+                
+                cohesive_energy = full_params['total energy'] - full_params['total atom count'] * atom_params['total energy']
+                result = {
+                    "total atom count": full_params['total atom count'],
+                    "total energy": full_params['total energy'],
+                    "atom energy": atom_params['total energy'],
+                    "cohesive energy": cohesive_energy,
+                    "total kpoints": full_params['total kpoints'],
+                    "kpoints mesh": full_params['kpoints mesh'],
+                    "energy cutoff (ENCUT)": full_params.get("energy cutoff (ENCUT)")
+                }
+                results.append(result)
+
+    # Check if results are empty before proceeding to write the output
+    if not results:
+        print("No matching data found. Please check your directories.")
+        return results
+
+    # Sort results by total kpoints first, then by energy cutoff (ENCUT)
+    results.sort(key=lambda x: (x['total kpoints'], x['energy cutoff (ENCUT)']))
+
+    # Write results to cohesive_energy.dat file
+    try:
+        with open(result_file_path, "w", encoding="utf-8") as f:
+            # Write headers based on keys in the first result dictionary
+            headers = "\t".join(results[0].keys())
+            f.write(headers + "\n")
+            for result in results:
+                f.write("\t".join(str(result[key]) if result[key] is not None else 'None' for key in result) + "\n")
+    except IOError as e:
+        print(f"Error writing to file at {result_file_path}: {e}")
+
+    return results
 
 def read_energy_parameters(data_path):
     help_info = "Usage: read_energy_parameters(data_path)\n" + \
@@ -206,6 +191,8 @@ def read_energy_parameters(data_path):
 
     return parameter_dicts
 
+## Energy versus parameters
+
 def plot_energy_kpoints_single(*args_list):
     help_info = "Usage: plot_energy_kpoints(args_list)\n" + \
                 "args_list: A list containing [info_suffix, source_data, kpoints_boundary, color_family].\n" + \
@@ -237,9 +224,9 @@ def plot_energy_kpoints_single(*args_list):
     data_dict_list = read_energy_parameters(source_data)  # Now a list of dictionaries
 
     # Extract values based on keys in the dictionary
-    total_kpoints = [d["total kpoints"] for d in data_dict_list]
-    energy = [d["total energy"] for d in data_dict_list]
-    sep_kpoints = [d["kpoints mesh"] for d in data_dict_list]
+    total_kpoints = [d.get("total kpoints") for d in data_dict_list]
+    energy = [d.get("total energy") for d in data_dict_list]
+    sep_kpoints = [d.get("kpoints mesh") for d in data_dict_list]
 
     # Sort data based on total_kpoints to maintain order
     sorted_data = sorted(zip(total_kpoints, energy, sep_kpoints), key=lambda x: x[0])
@@ -248,7 +235,7 @@ def plot_energy_kpoints_single(*args_list):
     # Set title with info_suffix
     plt.title(f"Energy versus K-points {info_suffix}")
     plt.xlabel("K-points configuration")
-    plt.ylabel(r"Energy (eV)")
+    plt.ylabel("Energy (eV)")
 
     # Ensure boundary values are integers and handle None boundaries
     kpoints_start = min(total_kpoints_sorted) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
@@ -315,8 +302,8 @@ def plot_energy_kpoints(kpoints_list):
     for data in kpoints_list:
         info_suffix, source_data, kpoints_boundary, color_family = data
         data_dict_list = read_energy_parameters(source_data)  # Now returns list of dicts
-        total_kpoints = [d["total kpoints"] for d in data_dict_list]
-        kpoints_config = [d["kpoints mesh"] for d in data_dict_list]  # Extract kpoints configurations in (X, Y, Z) format
+        total_kpoints = [d.get("total kpoints") for d in data_dict_list]
+        kpoints_config = [d.get("kpoints mesh") for d in data_dict_list]  # Extract kpoints configurations in (X, Y, Z) format
 
         # Apply boundary to filter relevant k-points for each dataset
         kpoints_start = min(total_kpoints) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
@@ -341,8 +328,8 @@ def plot_energy_kpoints(kpoints_list):
 
         # Data input
         data_dict_list = read_energy_parameters(source_data)  # Now a list of dictionaries
-        energy = [d["total energy"] for d in data_dict_list]
-        total_kpoints = [d["total kpoints"] for d in data_dict_list]
+        energy = [d.get("total energy") for d in data_dict_list]
+        total_kpoints = [d.get("total kpoints") for d in data_dict_list]
 
         # Apply boundary values for the current dataset
         kpoints_start = min(total_kpoints) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
@@ -420,9 +407,9 @@ def plot_energy_encut_single(*args_list):
     encut_sorted, energy_sorted = zip(*sorted_data)
 
     # Set title with info_suffix
-    plt.title(f"Energy versus Energy Cutoff {info_suffix}")
+    plt.title(f"Energy versus energy cutoff {info_suffix}")
     plt.xlabel("Energy cutoff (eV)")
-    plt.ylabel(r"Energy (eV)")
+    plt.ylabel("Energy (eV)")
 
     # Set boundaries for ENCUT
     if encut_boundary in [None, ""]:
@@ -808,4 +795,335 @@ def plot_energy_parameters(parameters, *args):
 def plot_energy_parameter(*args):
     return plot_energy_parameters(*args)
 
-# def plot_cohesive_energy_single(info_suffix, cohesive_list):
+## Cohesive energy versus parameters
+
+def plot_cohesive_energy_kpoints_single(*args_list):
+    help_info = "Usage: plot_cohesive_energy_kpoints(args_list)\n" + \
+                "args_list: A list containing [info_suffix, source_data, kpoints_boundary, color_family].\n" + \
+                "Example: plot_cohesive_energy_kpoints(['Material Info', 'source_data_path', (start, end), 'blue'])\n"
+
+    if not args_list or args_list[0] == "help":
+        print(help_info)
+        return
+
+    # Unpack args_list
+    info_suffix, source_data, kpoints_boundary, color_family = args_list[0]
+
+    # Figure Settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color calling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)  # Now a list of dictionaries
+
+    # Extract values based on keys in the dictionary
+    total_kpoints = [d.get("total kpoints") for d in data_dict_list]
+    cohesive_energy = [d.get("cohesive energy") for d in data_dict_list]
+    sep_kpoints = [d.get("kpoints mesh") for d in data_dict_list]
+
+    # Sort data based on total_kpoints to maintain order
+    sorted_data = sorted(zip(total_kpoints, cohesive_energy, sep_kpoints), key=lambda x: x[0])
+    total_kpoints_sorted, cohesive_energy_sorted, sep_kpoints_sorted = zip(*sorted_data)
+
+    # Set title with info_suffix
+    plt.title(f"Cohesive energy versus K-points {info_suffix}")
+    plt.xlabel("K-points configuration")
+    plt.ylabel("Cohesive energy (eV)")
+
+    # Ensure boundary values are integers and handle None boundaries
+    kpoints_start = min(total_kpoints_sorted) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
+    kpoints_end = max(total_kpoints_sorted) if not kpoints_boundary or kpoints_boundary[1] is None else int(kpoints_boundary[1])
+
+    # Filter data within the specified boundary
+    kpoints_indices = [
+        index for index, val in enumerate(total_kpoints_sorted) if kpoints_start <= val <= kpoints_end
+    ]
+    total_kpoints_plot = [total_kpoints_sorted[index] for index in kpoints_indices]
+    cohesive_energy_plotting = [cohesive_energy_sorted[index] for index in kpoints_indices]
+    kpoints_labels_plot = [f"({x[0]}, {x[1]}, {x[2]})" for x in [sep_kpoints_sorted[index] for index in kpoints_indices]]
+
+    # Plot with fixed spacing based on indices
+    plt.plot(range(len(total_kpoints_plot)), cohesive_energy_plotting, c=colors[1], lw=1.5, label=f"Cohesive energy versus K-points ({info_suffix})")
+    plt.scatter(range(len(total_kpoints_plot)), cohesive_energy_plotting, s=6, c=colors[1], zorder=1)
+
+    # Set custom tick labels for x-axis to show kpoints configurations
+    plt.xticks(ticks=range(len(kpoints_labels_plot)), labels=kpoints_labels_plot, rotation=45, ha="right")
+
+    plt.tight_layout()
+
+def plot_cohesive_energy_kpoints(kpoints_list):
+    """
+    Generalized function to plot cohesive energy versus K-points configuration for multiple datasets.
+
+    Parameters:
+    - kpoints_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, kpoints_boundary, color_family].
+    """
+    
+    # Check if input is a single data set (either single list or a list with one sublist)
+    if is_nested_list(kpoints_list) is False:
+        return plot_cohesive_energy_kpoints_single(kpoints_list)
+    elif isinstance(kpoints_list[0], list) and len(kpoints_list) == 1:
+        return plot_cohesive_energy_kpoints_single(*kpoints_list)
+    else:
+        pass
+
+    # Check if kpoints_list is a 2D list structure for multiple datasets
+    if not all(isinstance(data, list) and len(data) == 4 for data in kpoints_list):
+        print("Error: Each item in kpoints_list must be a list with [info_suffix, source_data, kpoints_boundary, color_family].")
+        return
+    
+    # Set up figure and styling
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply scientific notation formatter for y-axis
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # List to store legend handles for custom legend creation
+    legend_handles = []
+    global_kpoints_config = []  # List to collect unique kpoints configurations for x-axis labels
+    total_kpoints_set = set()  # Collect unique total_kpoints across all datasets for sorting
+
+    # Iterate over each dataset in kpoints_list to gather total_kpoints and kpoints configurations
+    kpoints_config_map = {}
+    for data in kpoints_list:
+        info_suffix, source_data, kpoints_boundary, color_family = data
+        data_dict_list = read_energy_parameters(source_data)  # Now returns list of dicts
+        total_kpoints = [d.get("total kpoints") for d in data_dict_list]
+        kpoints_config = [d.get("kpoints mesh") for d in data_dict_list]  # Extract kpoints configurations in (X, Y, Z) format
+
+        # Apply boundary to filter relevant k-points for each dataset
+        kpoints_start = min(total_kpoints) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
+        kpoints_end = max(total_kpoints) if not kpoints_boundary or kpoints_boundary[1] is None else int(kpoints_boundary[1])
+
+        # Filtered kpoints within boundary and update global sets
+        for idx, total_kp in enumerate(total_kpoints):
+            if kpoints_start <= total_kp <= kpoints_end:
+                total_kpoints_set.add(total_kp)
+                kpoints_config_map[total_kp] = f"({kpoints_config[idx][0]}, {kpoints_config[idx][1]}, {kpoints_config[idx][2]})"
+
+    # Sort the global total_kpoints for unified x-axis
+    sorted_total_kpoints = sorted(total_kpoints_set)
+    global_kpoints_config = [kpoints_config_map[total_kp] for total_kp in sorted_total_kpoints]
+    
+    # Iterate over each dataset to align with global total_kpoints and plot
+    for data in kpoints_list:
+        info_suffix, source_data, kpoints_boundary, color_family = data
+        
+        # Color for the current dataset
+        colors = color_sampling(color_family)
+
+        # Data input
+        data_dict_list = read_energy_parameters(source_data)  # Now a list of dictionaries
+        cohesive_energy = [d.get("cohesive energy") for d in data_dict_list]
+        total_kpoints = [d.get("total kpoints") for d in data_dict_list]
+
+        # Apply boundary values for the current dataset
+        kpoints_start = min(total_kpoints) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
+        kpoints_end = max(total_kpoints) if not kpoints_boundary or kpoints_boundary[1] is None else int(kpoints_boundary[1])
+        
+        # Filter data within the specified boundary for the current dataset
+        filtered_kpoints = [total_kp for total_kp in total_kpoints if kpoints_start <= total_kp <= kpoints_end]
+        filtered_cohesive_energy = [cohesive_energy[idx] for idx, total_kp in enumerate(total_kpoints) if kpoints_start <= total_kp <= kpoints_end]
+        
+        # Align cohesive energies with the global sorted total_kpoints
+        cohesive_energy_aligned = [filtered_cohesive_energy[filtered_kpoints.index(total_kp)] if total_kp in filtered_kpoints else np.nan for total_kp in sorted_total_kpoints]
+        
+        # Plotting with color and unique label
+        plt.plot(range(len(sorted_total_kpoints)), cohesive_energy_aligned, c=colors[1], lw=1.5)
+        plt.scatter(range(len(sorted_total_kpoints)), cohesive_energy_aligned, s=6, c=colors[1], zorder=1)
+
+        # Add legend entry with custom handle
+        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-', 
+                                      label=f"Cohesive energy versus K-points {info_suffix}")
+        legend_handles.append(legend_handle)
+
+    # Set labels and legend for multi-dataset
+    plt.xlabel("K-points configurations")
+    plt.ylabel("Cohesive energy (eV)")
+    plt.xticks(ticks=range(len(global_kpoints_config)), labels=global_kpoints_config, rotation=45, ha="right")
+    plt.title("Cohesive energy versus K-points")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_cohesive_energy_encut_single(*args_list):
+    help_info = "Usage: plot_cohesive_energy_encut(args_list)\n" + \
+                "args_list: A list containing [info_suffix, source_data, encut_boundary, color_family].\n" + \
+                "Example: plot_cohesive_energy_encut(['Material Info', 'source_data_path', (start, end), 'violet'])\n"
+
+    if not args_list or args_list[0] == "help":
+        print(help_info)
+        return
+
+    # Unpack args_list
+    info_suffix, source_data, encut_boundary, color_family = args_list[0]
+
+    # Figure Settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color calling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+
+    # Extract cohesive energy and ENCUT values
+    cohesive_energy = [d.get("cohesive energy") for d in data_dict_list]
+    encut_values = [d.get("energy cutoff (ENCUT)") for d in data_dict_list]
+
+    # Filter out None values from cohesive energy and ENCUT values
+    filtered_data = [(enc, e) for enc, e in zip(encut_values, cohesive_energy) if enc is not None and e is not None]
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip filtered data for ENCUT and cohesive energy
+    encut_values, cohesive_energy = zip(*filtered_data)
+
+    # Sort data based on ENCUT values
+    sorted_data = sorted(zip(encut_values, cohesive_energy), key=lambda x: x[0])
+    encut_sorted, cohesive_energy_sorted = zip(*sorted_data)
+
+    # Set title with info_suffix
+    plt.title(f"Cohesive energy versus energy cutoff {info_suffix}")
+    plt.xlabel("Energy cutoff (eV)")
+    plt.ylabel("Cohesive energy (eV)")
+
+    # Set boundaries for ENCUT
+    encut_start = min(encut_sorted) if encut_boundary is None or encut_boundary[0] is None else float(encut_boundary[0])
+    encut_end = max(encut_sorted) if encut_boundary is None or encut_boundary[1] is None else float(encut_boundary[1])
+
+    # Filter data within the specified boundary
+    start_index = next((i for i, val in enumerate(encut_sorted) if val >= encut_start), 0)
+    end_index = next((i for i, val in enumerate(encut_sorted) if val > encut_end), len(encut_sorted)) - 1
+
+    # Prepare ENCUT values and cohesive energy values for plotting within specified boundary
+    encut_plotting = encut_sorted[start_index:end_index + 1]
+    cohesive_energy_plotting = cohesive_energy_sorted[start_index:end_index + 1]
+
+    # Plotting
+    plt.scatter(encut_plotting, cohesive_energy_plotting, s=6, c=colors[1], zorder=1, label=f"Cohesive energy versus energy cutoff ({info_suffix})")
+    plt.plot(encut_plotting, cohesive_energy_plotting, c=colors[1], lw=1.5)
+
+    plt.tight_layout()
+
+
+def plot_cohesive_energy_encut(encut_list):
+    """
+    Generalized function to plot cohesive energy versus ENCUT (energy cutoff) for multiple datasets.
+
+    Parameters:
+    - encut_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, encut_boundary, color_family].
+    """
+
+    # Check if input is a single data set (either single list or a list with one sublist)
+    if is_nested_list(encut_list) is False:
+        return plot_cohesive_energy_encut_single(encut_list)
+    elif isinstance(encut_list[0], list) and len(encut_list) == 1:
+        return plot_cohesive_energy_encut_single(*encut_list)
+    else:
+        pass
+
+    # Check if encut_list is a 2D list structure for multiple datasets
+    if not all(isinstance(data, list) and len(data) == 4 for data in encut_list):
+        print("Error: Each item in encut_list must be a list with [info_suffix, source_data, encut_boundary, color_family].")
+        return
+
+    # Set up figure and styling
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply scientific notation formatter for y-axis
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # List to store legend handles for custom legend creation
+    legend_handles = []
+    all_encut_set = set()  # Collect unique ENCUT values across all datasets
+
+    # Iterate over each dataset in encut_list to gather ENCUT values
+    for data in encut_list:
+        info_suffix, source_data, encut_boundary, color_family = data
+        data_dict_list = read_energy_parameters(source_data)
+        encut_values = [d.get("energy cutoff (ENCUT)") for d in data_dict_list]
+
+        # Apply boundary to filter relevant ENCUT values for each dataset
+        encut_start = min(encut_values) if encut_boundary is None or encut_boundary[0] is None else float(encut_boundary[0])
+        encut_end = max(encut_values) if encut_boundary is None or encut_boundary[1] is None else float(encut_boundary[1])
+        filtered_encut = [enc for enc in encut_values if encut_start <= enc <= encut_end]
+
+        # Add filtered ENCUT values to global set
+        all_encut_set.update(filtered_encut)
+
+    # Sort the global ENCUT values for unified x-axis
+    all_encut_sorted = sorted(all_encut_set)
+
+    # Iterate over each dataset to align with global ENCUT and plot
+    for data in encut_list:
+        info_suffix, source_data, encut_boundary, color_family = data
+
+        # Color for the current dataset
+        colors = color_sampling(color_family)
+
+        # Data input
+        data_dict_list = read_energy_parameters(source_data)
+        cohesive_energy = [d.get("cohesive energy") for d in data_dict_list]
+        encut_values = [d.get("energy cutoff (ENCUT)") for d in data_dict_list]
+
+        # Apply boundary values for the current dataset
+        encut_start = min(encut_values) if encut_boundary is None or encut_boundary[0] is None else float(encut_boundary[0])
+        encut_end = max(encut_values) if encut_boundary is None or encut_boundary[1] is None else float(encut_boundary[1])
+
+        # Filter data within the specified boundary for the current dataset
+        encut_filtered = [enc for enc in encut_values if encut_start <= enc <= encut_end]
+        cohesive_energy_filtered = [cohesive_energy[idx] for idx, enc in enumerate(encut_values) if encut_start <= enc <= encut_end]
+
+        # Align cohesive energies with the global sorted ENCUT values
+        cohesive_energy_aligned = [cohesive_energy_filtered[encut_filtered.index(enc)] if enc in encut_filtered else np.nan for enc in all_encut_sorted]
+
+        # Plotting with color and unique label
+        plt.plot(all_encut_sorted, cohesive_energy_aligned, c=colors[1], lw=1.5)
+        plt.scatter(all_encut_sorted, cohesive_energy_aligned, s=6, c=colors[1], zorder=1)
+
+        # Add legend entry with custom handle
+        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-', 
+                                      label=f"Cohesive energy versus energy cutoff {info_suffix}")
+        legend_handles.append(legend_handle)
+
+    # Set labels and legend for multi-dataset
+    plt.xlabel("Energy cutoff (eV)")
+    plt.ylabel("Cohesive energy (eV)")
+    plt.title("Cohesive energy versus energy cutoff")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()

@@ -72,7 +72,7 @@ def identify_kpoints_type(directory="."):
 def identify_parameters(directory="."):
     """
     Extracts total atom count, total energy, Fermi energy, total kpoints, calculated kpoints, 
-    kpoints grid (x, y, z), lattice constant, SYMPREC, ENCUT, KSPACING, VOLUME, POTIM, AMIX, 
+    kpoints mesh (x, y, z), lattice constant, SYMPREC, ENCUT, KSPACING, VOLUME, POTIM, AMIX, 
     BMIX, EDIFF, EDIFFG values, and elapsed time from VASP output files.
     """
 
@@ -101,7 +101,7 @@ def identify_parameters(directory="."):
             "fermi energy": None,  # New entry for Fermi energy
             "total kpoints": None,
             "calculated kpoints": None,
-            "kpoints grid": (None, None, None),
+            "kpoints mesh": (None, None, None),
             "lattice constant": None,
             "symmetry precision (SYMPREC)": None,
             "energy cutoff (ENCUT)": None,
@@ -174,7 +174,7 @@ def identify_parameters(directory="."):
             kpoints_values = lines[kpoints_index].split()
             x_kpoints, y_kpoints, z_kpoints = int(kpoints_values[0]), int(kpoints_values[1]), int(kpoints_values[2])
             parameters["total kpoints"] = x_kpoints * y_kpoints * z_kpoints
-            parameters["kpoints grid"] = (x_kpoints, y_kpoints, z_kpoints)
+            parameters["kpoints mesh"] = (x_kpoints, y_kpoints, z_kpoints)
 
         # Extract calculated kpoints (reduced due to symmetry)
         cal_kpoints_tag = root.find(".//kpoints/varray[@name='kpointlist']")
