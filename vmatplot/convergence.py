@@ -17,7 +17,7 @@ from vmatplot.output_settings import canvas_setting, color_sampling
 ## Process and calculate data
 
 def cal_cohesive_energy(atom_count, atom_energy, total_energy):
-    cohesive_energy = total_energy - atom_count * atom_energy
+    cohesive_energy = (total_energy - atom_count * atom_energy)/atom_count
     return cohesive_energy
 
 def summarize_parameters(directory=".", lattice_boundary=None):
@@ -114,7 +114,7 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
                     print(f"Atom energy missing in {atom_params}, skipping this match.")
                     continue
 
-                cohesive_energy = full_params.get('total energy') - full_params.get('total atom count') * atom_energy
+                cohesive_energy = (full_params.get('total energy') - full_params.get('total atom count') * atom_energy) / full_params.get('total atom count')
 
                 if None in (full_params.get('total energy'), full_params.get('total atom count'), atom_energy):
                     print(f"Missing energy data in {full_params} or {atom_params}, skipping this match.")
