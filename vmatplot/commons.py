@@ -70,14 +70,46 @@ def identify_kpoints_type(directory="."):
         else: return "Invalid file format, unable to identify"
 
 def identify_parameters(directory="."):
-    """
-    Extracts total atom count, total energy, Fermi energy, total kpoints, calculated kpoints, 
-    kpoints mesh (x, y, z), lattice constant, SYMPREC, ENCUT, KSPACING, VOLUME, POTIM, AMIX, 
-    BMIX, EDIFF, EDIFFG values, and elapsed time from VASP output files.
-    """
+    help_info = (
+        "Usage Guide for identify_parameters:\n\n"
+        "This function extracts important VASP calculation parameters from output files in a specified directory.\n\n"
+        "Parameters:\n"
+        "  directory : str, optional\n"
+        "    Path to the directory containing VASP output files (default is current directory).\n"
+        "    Set to 'help' to display this usage guide.\n\n"
+        "Returned Values:\n"
+        "  A dictionary with the extracted parameters if successful.\n"
+        "  Returns None if required files are missing, an error occurs, or 'help' is passed.\n\n"
+        "Extracted Parameters:\n"
+        "  - Total atom count: Number of atoms in the system.\n"
+        "  - Total energy: Total energy of the system.\n"
+        "  - Fermi energy: Fermi level.\n"
+        "  - Total kpoints: Number of k-points defined in the KPOINTS file.\n"
+        "  - Calculated kpoints: Reduced k-points count after symmetry reduction.\n"
+        "  - Kpoints mesh: (x, y, z) k-points grid dimensions.\n"
+        "  - Lattice constant: Length of the 'a' lattice vector.\n"
+        "  - SYMPREC: Symmetry precision parameter.\n"
+        "  - ENCUT: Energy cutoff (from INCAR).\n"
+        "  - KSPACING: K-point spacing for automatic mesh.\n"
+        "  - VOLUME: Final crystal volume.\n"
+        "  - POTIM: Time step for ionic motion.\n"
+        "  - AMIX: Mixing parameter for electronic density.\n"
+        "  - BMIX: Mixing parameter for charge density.\n"
+        "  - EDIFF: Electronic convergence criterion.\n"
+        "  - EDIFFG: Force convergence criterion.\n"
+        "  - Elapsed time (sec): Total simulation time (from OUTCAR).\n\n"
+        "Required Files:\n"
+        "  - vasprun.xml\n"
+        "  - KPOINTS\n"
+        "  - OUTCAR (optional, for elapsed time)\n\n"
+        "Example Usage:\n"
+        "  identify_parameters()  # Use current directory\n"
+        "  identify_parameters('/path/to/vasp_project')  # Specify a custom directory\n"
+        "  identify_parameters('help')  # Display this usage guide\n"
+    )
 
-    if directory == "help":
-        print("Please use this function on the project directory.")
+    if directory.lower in  ["help"]:
+        print(help_info)
         return None
 
     vasprun_path = os.path.join(directory, "vasprun.xml")

@@ -24,7 +24,7 @@ def summarize_parameters(directory=".", lattice_boundary=None):
     result_file = "energy_parameters.dat"
     result_file_path = os.path.join(directory, result_file)
 
-    if directory == "help":
+    if directory.lower in ["help"]:
         print("Please use this function on the parent directory of the project's main folder.")
         return []
 
@@ -161,7 +161,7 @@ def read_energy_parameters(data_path):
                 "data_path: Path to the data file containing energy and various VASP parameters.\n"
 
     # Check if the user asked for help
-    if data_path == "help":
+    if data_path.lower in ["help"]:
         print(help_info)
         return
 
@@ -214,7 +214,6 @@ def read_energy_parameters(data_path):
 
     return parameter_dicts
 
-
 ## Energy versus parameters
 
 def plot_energy_kpoints_single(*args_list):
@@ -222,7 +221,7 @@ def plot_energy_kpoints_single(*args_list):
                 "args_list: A list containing [info_suffix, source_data, kpoints_boundary, color_family].\n" + \
                 "Example: plot_energy_kpoints(['Material Info', 'source_data_path', (start, end), 'blue'])\n"
 
-    if not args_list or args_list[0] == "help":
+    if not args_list.lower or args_list[0].lower in ["help"]:
         print(help_info)
         return
 
@@ -388,7 +387,7 @@ def plot_energy_encut_single(*args_list):
                 "args_list: A list containing [info_suffix, source_data, encut_boundary, color_family].\n" + \
                 "Example: plot_energy_encut(['Material Info', 'source_data_path', (start, end), 'violet'])\n"
 
-    if not args_list or args_list[0] == "help":
+    if not args_list.lower or args_list[0].lower in ["help"]:
         print(help_info)
         return
 
@@ -826,7 +825,7 @@ def plot_cohesive_energy_kpoints_single(*args_list):
                 "args_list: A list containing [info_suffix, source_data, kpoints_boundary, color_family].\n" + \
                 "Example: plot_cohesive_energy_kpoints(['Material Info', 'source_data_path', (start, end), 'blue'])\n"
 
-    if not args_list or args_list[0] == "help":
+    if not args_list.lower or args_list[0].lower in ["help"]:
         print(help_info)
         return
 
@@ -992,7 +991,7 @@ def plot_cohesive_energy_encut_single(*args_list):
                 "args_list: A list containing [info_suffix, source_data, encut_boundary, color_family].\n" + \
                 "Example: plot_cohesive_energy_encut(['Material Info', 'source_data_path', (start, end), 'violet'])\n"
 
-    if not args_list or args_list[0] == "help":
+    if not args_list.lower or args_list[0].lower in ["help"]:
         print(help_info)
         return
 
