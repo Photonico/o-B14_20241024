@@ -214,6 +214,7 @@ def read_energy_parameters(data_path):
 
     return parameter_dicts
 
+
 ## Energy versus parameters
 
 def plot_energy_kpoints_single(*args_list):
