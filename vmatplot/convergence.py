@@ -101,28 +101,28 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
     # Match and calculate cohesive energy
     results = []
     for full_params in full_cal_data:
-        matched = False  # Flag to check if a match is found
+        matched = False
         for atom_params in atom_cal_data:
-            # Matching conditions now include energy cutoff
+            # Matching conditions including energy cutoff
             if (full_params.get('kpoints mesh') == atom_params.get('kpoints mesh') and
                 full_params.get('total kpoints') == atom_params.get('total kpoints') and
                 full_params.get("energy cutoff (ENCUT)") == atom_params.get("energy cutoff (ENCUT)")):
 
-                # Calculate cohesive energy correctly
+                # Check if necessary data is available
+                total_energy = full_params.get('total energy')
                 atom_energy = atom_params.get('total energy')
-                if atom_energy is None:
-                    print(f"Atom energy missing in {atom_params}, skipping this match.")
-                    continue
+                atom_count = full_params.get('total atom count')
 
-                cohesive_energy = (full_params.get('total energy') - full_params.get('total atom count') * atom_energy) / full_params.get('total atom count')
-
-                if None in (full_params.get('total energy'), full_params.get('total atom count'), atom_energy):
+                if None in (total_energy, atom_energy, atom_count):
                     print(f"Missing energy data in {full_params} or {atom_params}, skipping this match.")
                     continue
 
+                # Use cal_cohesive_energy function to calculate cohesive energy
+                cohesive_energy = cal_cohesive_energy(atom_count, atom_energy, total_energy)
+
                 result = {
-                    "total atom count": full_params.get('total atom count'),
-                    "total energy": full_params.get('total energy'),
+                    "total atom count": atom_count,
+                    "total energy": total_energy,
                     "atom energy": atom_energy,
                     "cohesive energy": cohesive_energy,
                     "total kpoints": full_params.get('total kpoints'),
@@ -130,24 +130,23 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
                     "energy cutoff (ENCUT)": full_params.get("energy cutoff (ENCUT)")
                 }
                 results.append(result)
-                matched = True  # A match is found
-                break  # No need to check other atom_params for this full_params
+                matched = True
+                break
 
         if not matched:
             print(f"No matching atom calculation found for {full_params}, skipping.")
 
-    # Check if results are empty before proceeding to write the output
+    # Check if results are empty before writing the output
     if not results:
         print("No matching data found. Please check your directories.")
         return results
 
-    # Sort results by total kpoints first, then by energy cutoff (ENCUT)
+    # Sort results by total kpoints, then by energy cutoff (ENCUT)
     results.sort(key=lambda x: (x['total kpoints'], x['energy cutoff (ENCUT)']))
 
     # Write results to cohesive_energy.dat file
     try:
         with open(result_file_path, "w", encoding="utf-8") as f:
-            # Write headers based on keys in the first result dictionary
             headers = "\t".join(results[0].keys())
             f.write(headers + "\n")
             for result in results:
