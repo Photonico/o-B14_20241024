@@ -11,7 +11,7 @@ import numpy as np
 from matplotlib.ticker import ScalarFormatter
 from matplotlib.ticker import MaxNLocator
 from vmatplot.commons import check_vasprun, identify_parameters
-from vmatplot.algorithms import is_nested_list
+from vmatplot.algorithms import is_nested_list, birch_murnaghan_equation_of_state, fit_birch_murnaghan
 from vmatplot.output_settings import canvas_setting, color_sampling
 
 ## Process and calculate data
@@ -106,6 +106,7 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
             # Matching conditions including energy cutoff
             if (full_params.get('kpoints mesh') == atom_params.get('kpoints mesh') and
                 full_params.get('total kpoints') == atom_params.get('total kpoints') and
+                full_params.get('lattice constant') == atom_params.get('lattice constant') and
                 full_params.get("energy cutoff (ENCUT)") == atom_params.get("energy cutoff (ENCUT)")):
 
                 # Check if necessary data is available
@@ -221,7 +222,7 @@ def plot_energy_kpoints_single(*args_list):
                 "args_list: A list containing [info_suffix, source_data, kpoints_boundary, color_family].\n" + \
                 "Example: plot_energy_kpoints(['Material Info', 'source_data_path', (start, end), 'blue'])\n"
 
-    if not args_list.lower or args_list[0].lower in ["help"]:
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
         print(help_info)
         return
 
@@ -387,7 +388,7 @@ def plot_energy_encut_single(*args_list):
                 "args_list: A list containing [info_suffix, source_data, encut_boundary, color_family].\n" + \
                 "Example: plot_energy_encut(['Material Info', 'source_data_path', (start, end), 'violet'])\n"
 
-    if not args_list.lower or args_list[0].lower in ["help"]:
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
         print(help_info)
         return
 
@@ -549,6 +550,83 @@ def plot_energy_encut(encut_list):
     plt.title("Energy versus energy cutoff")
     plt.legend(handles=legend_handles, loc="best")
     plt.tight_layout()
+
+def plot_energy_lattice_single(*args_list):
+    help_info = (
+        "Usage: plot_energy_lattice_single(args_list)\n"
+        "args_list: A list containing [info_suffix, source_data, lattice_boundary, color_family, num_samples].\n"
+        "Example: plot_energy_lattice_single(['Material Info', 'source_data_path', (start, end), 'green', 11])\n"
+    )
+
+    # Check if the user requested help
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
+        print(help_info)
+        return
+
+    # Unpack args_list
+    info_suffix, source_data, lattice_boundary, color_family, num_samples = args_list[0]
+    num_samples = num_samples if num_samples else len(read_energy_parameters(source_data))
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Color selection
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+    energy_values = [d.get("total energy", d.get("Total Energy")) for d in data_dict_list]
+    lattice_constants = [d.get("lattice constant", d.get("Lattice Constant")) for d in data_dict_list]
+
+    # Filter out None values
+    filtered_data = [(lattice, energy) for lattice, energy in zip(lattice_constants, energy_values)
+                     if lattice is not None and energy is not None]
+
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip filtered data and sort
+    lattice_constants, energy_values = zip(*filtered_data)
+    sorted_data = sorted(zip(lattice_constants, energy_values), key=lambda x: x[0])
+    lattice_sorted, energy_sorted = zip(*sorted_data)
+
+    # Define boundaries for lattice constants
+    if lattice_boundary in [None, ""]:
+        lattice_start = min(lattice_sorted)
+        lattice_end = max(lattice_sorted)
+    else:
+        lattice_start = float(lattice_boundary[0]) if lattice_boundary[0] else min(lattice_sorted)
+        lattice_end = float(lattice_boundary[1]) if lattice_boundary[1] else max(lattice_sorted)
+
+    # Generate evenly spaced lattice samples within the boundary
+    lattice_sample_points = np.linspace(lattice_start, lattice_end, num_samples)
+
+    # Estimate EOS parameters and fitted energy values using Birch-Murnaghan equation
+    eos_params, resampled_lattice, fitted_energy = fit_birch_murnaghan(lattice_sorted, energy_sorted, sample_count=num_samples)
+
+    # Plot the fitted EOS curve
+    plt.plot(resampled_lattice, fitted_energy, color=colors[1], lw=1.5, label=f"Fitted EOS Curve ({info_suffix})")
+
+    # Scatter original data points
+    plt.scatter(lattice_sorted, energy_sorted, s=48, fc="#FFFFFF", ec=colors[1], label=f"Source data {info_suffix}", zorder=2)
+
+    # Find and mark the minimum energy point from the original data
+    min_energy_idx = np.argmin(energy_sorted)
+    plt.scatter(lattice_sorted[min_energy_idx], energy_sorted[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
+
+    # Set labels, title, and legend
+    plt.xlabel(r"Lattice constant (Å)")
+    plt.ylabel(r"Energy (eV)")
+    plt.title(f"Energy versus lattice constant {info_suffix}")
+    plt.legend()
+    plt.tight_layout()
+
+# def plot_energy_lattice
 
 def plot_energy_kpoints_encut_single(kpoints_list, encut_list):
     # Unpack lists to retrieve the new info_suffix (materials information)
@@ -784,40 +862,6 @@ def plot_energy_kpoints_encut(kpoints_list_source, encut_list_source):
     plt.title("Energy versus K-points and energy cutoff")
     plt.tight_layout()
 
-def plot_energy_parameters(parameters, *args):
-    if isinstance(parameters, str):
-        param = parameters.lower()
-        args_list = args[0] if len(args) == 1 and isinstance(args[0], list) else list(args)
-        if param in ["kpoint", "kpoints", "k-point", "k-points"]:
-            return plot_energy_kpoints(args_list)
-        elif param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"]:
-            return plot_energy_encut(args_list)
-        else:
-            print("Parameter type not recognized or incorrect arguments. To be continued.")
-    elif isinstance(parameters, (tuple, list)):
-        # If the list or tuple length is 1, treat it as a single string case
-        if len(parameters) == 1:
-            return plot_energy_parameters(parameters[0], *args)
-        # Handle combination of two parameters
-        elif len(parameters) == 2:
-            first_param, second_param = parameters
-            # Standardize parameter names for easy comparison
-            first_param = first_param.lower()
-            second_param = second_param.lower()
-            if first_param in ["kpoints", "k-point", "kpoints configuration"] and second_param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"]:
-                return plot_energy_kpoints_encut(*args)
-            elif first_param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"] and second_param in ["kpoints", "k-point", "kpoints configuration"]:
-                print("Reordering parameters to [\"kpoints\", \"encut\"] and plotting.")
-                # Reorder parameters to call plot_energy_kpoints_encut
-                return plot_energy_kpoints_encut(args[1], args[0])
-            else: print("Combination of parameters not recognized.")
-        else: print("Error: Only one or two parameters are allowed for plot types.")
-    else: print("Invalid input type for parameters.")
-
-def plot_energy_parameter(*args):
-    # Alias for single-parameter usage
-    return plot_energy_parameters(*args)
-
 ## Cohesive energy versus parameters
 
 def plot_cohesive_energy_kpoints_single(*args_list):
@@ -825,7 +869,7 @@ def plot_cohesive_energy_kpoints_single(*args_list):
                 "args_list: A list containing [info_suffix, source_data, kpoints_boundary, color_family].\n" + \
                 "Example: plot_cohesive_energy_kpoints(['Material Info', 'source_data_path', (start, end), 'blue'])\n"
 
-    if not args_list.lower or args_list[0].lower in ["help"]:
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
         print(help_info)
         return
 
@@ -991,7 +1035,7 @@ def plot_cohesive_energy_encut_single(*args_list):
                 "args_list: A list containing [info_suffix, source_data, encut_boundary, color_family].\n" + \
                 "Example: plot_cohesive_energy_encut(['Material Info', 'source_data_path', (start, end), 'violet'])\n"
 
-    if not args_list.lower or args_list[0].lower in ["help"]:
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
         print(help_info)
         return
 
@@ -1381,6 +1425,42 @@ def plot_cohesive_energy_kpoints_encut(kpoints_list_source, encut_list_source):
     plt.legend(handles=legend_handles, loc="best")
     plt.title("Cohesive energy versus K-points and energy cutoff")
     plt.tight_layout()
+
+# Scheduling functions
+
+def plot_energy_parameters(parameters, *args):
+    if isinstance(parameters, str):
+        param = parameters.lower()
+        args_list = args[0] if len(args) == 1 and isinstance(args[0], list) else list(args)
+        if param in ["kpoint", "kpoints", "k-point", "k-points"]:
+            return plot_energy_kpoints(args_list)
+        elif param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"]:
+            return plot_energy_encut(args_list)
+        else:
+            print("Parameter type not recognized or incorrect arguments. To be continued.")
+    elif isinstance(parameters, (tuple, list)):
+        # If the list or tuple length is 1, treat it as a single string case
+        if len(parameters) == 1:
+            return plot_energy_parameters(parameters[0], *args)
+        # Handle combination of two parameters
+        elif len(parameters) == 2:
+            first_param, second_param = parameters
+            # Standardize parameter names for easy comparison
+            first_param = first_param.lower()
+            second_param = second_param.lower()
+            if first_param in ["kpoints", "k-point", "kpoints configuration"] and second_param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"]:
+                return plot_energy_kpoints_encut(*args)
+            elif first_param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"] and second_param in ["kpoints", "k-point", "kpoints configuration"]:
+                print("Reordering parameters to [\"kpoints\", \"encut\"] and plotting.")
+                # Reorder parameters to call plot_energy_kpoints_encut
+                return plot_energy_kpoints_encut(args[1], args[0])
+            else: print("Combination of parameters not recognized.")
+        else: print("Error: Only one or two parameters are allowed for plot types.")
+    else: print("Invalid input type for parameters.")
+
+def plot_energy_parameter(*args):
+    # Alias for single-parameter usage
+    return plot_energy_parameters(*args)
 
 def plot_cohesive_energy_parameters(parameters, *args):
     if isinstance(parameters, str):

@@ -1,0 +1,33 @@
+ running   24 mpi-ranks, with    1 threads/rank, on    1 nodes
+ distrk:  each k-point on   24 cores,    1 groups
+ distr:  one band on    1 cores,   24 groups
+ vasp.6.4.3 19Mar24 (build May 31 2024 16:31:43) complex                        
+  
+ POSCAR found type information on POSCAR B 
+ POSCAR found :  1 types and      14 ions
+ Reading from existing POTCAR
+ scaLAPACK will be used
+ Reading from existing POTCAR
+ LDA part: xc-table for (Slater+PW92), standard interpolation
+ POSCAR, INCAR and KPOINTS ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ WAVECAR not read
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1     0.789170269248E+02    0.78917E+02   -0.19974E+04 16800   0.861E+02
+DAV:   2    -0.917064896076E+02   -0.17062E+03   -0.15994E+03 22944   0.167E+02
+DAV:   3    -0.974962582314E+02   -0.57898E+01   -0.57547E+01 24912   0.274E+01
+DAV:   4    -0.975304720254E+02   -0.34214E-01   -0.34212E-01 19560   0.244E+00
+DAV:   5    -0.975308550148E+02   -0.38299E-03   -0.38298E-03 24840   0.246E-01    0.123E+01
+DAV:   6    -0.922032063194E+02    0.53276E+01   -0.38875E+00 24336   0.652E+00    0.676E+00
+DAV:   7    -0.905751021451E+02    0.16281E+01   -0.31781E+00 25176   0.581E+00    0.170E+00
+DAV:   8    -0.905875844312E+02   -0.12482E-01   -0.23122E-01 18768   0.166E+00    0.703E-01
+DAV:   9    -0.906017776685E+02   -0.14193E-01   -0.16794E-02 23376   0.438E-01    0.197E-01
+DAV:  10    -0.906058183263E+02   -0.40407E-02   -0.20983E-03 19200   0.161E-01    0.608E-02
+DAV:  11    -0.906068874416E+02   -0.10691E-02   -0.62918E-04 21576   0.870E-02    0.319E-02
+DAV:  12    -0.906070011522E+02   -0.11371E-03   -0.91207E-05 20880   0.369E-02    0.427E-03
+DAV:  13    -0.906070060169E+02   -0.48647E-05   -0.40724E-06 23424   0.876E-03    0.178E-03
+DAV:  14    -0.906070066921E+02   -0.67525E-06   -0.27985E-07 20616   0.228E-03
+   1 F= -.90607007E+02 E0= -.90605398E+02  d E =-.321724E-02
