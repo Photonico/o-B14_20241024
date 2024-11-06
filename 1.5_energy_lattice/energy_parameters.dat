@@ -1,0 +1,12 @@
+total atom count	total energy	fermi energy	total kpoints	calculated kpoints	kpoints mesh	lattice constant	symmetry precision (SYMPREC)	energy cutoff (ENCUT)	k-point spacing (KSPACING)	volume	time step (POTIM)	mixing parameter (AMIX)	mixing parameter (BMIX)	electronic convergence (EDIFF)	force convergence (EDIFFG)	elapsed time (sec)
+14	-90.60766081	1.85798952	1260	175	(10, 14, 9)	5.7055455	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	94.618
+14	-90.60700669	1.84931601	1260	175	(10, 14, 9)	5.708394	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	94.957
+14	-90.60804018	1.87363454	1260	175	(10, 14, 9)	5.7004182	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	95.056
+14	-90.60710905	1.89282137	1260	175	(10, 14, 9)	5.6941515	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	107.263
+14	-90.60772594	1.88409331	1260	175	(10, 14, 9)	5.697	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	107.849
+14	-90.60804901	1.87189327	1260	175	(10, 14, 9)	5.7009879	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	108.792
+14	-90.60617684	1.90156319	1260	175	(10, 14, 9)	5.691303	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	109.281
+14	-90.60804551	1.87015343	1260	175	(10, 14, 9)	5.7015576	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	110.146
+14	-90.60799891	1.86667509	1260	175	(10, 14, 9)	5.702697	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	110.285
+14	-90.60802286	1.87537613	1260	175	(10, 14, 9)	5.6998485	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	110.604
+14	-90.6080286	1.86841399	1260	175	(10, 14, 9)	5.7021273	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	112.329
