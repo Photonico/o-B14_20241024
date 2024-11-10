@@ -11,7 +11,7 @@ import numpy as np
 from matplotlib.ticker import ScalarFormatter
 from matplotlib.ticker import MaxNLocator
 from vmatplot.commons import check_vasprun, identify_parameters
-from vmatplot.algorithms import is_nested_list, birch_murnaghan_equation_of_state, fit_birch_murnaghan
+from vmatplot.algorithms import is_nested_list, fit_birch_murnaghan
 from vmatplot.output_settings import canvas_setting, color_sampling
 
 ## Process and calculate data
