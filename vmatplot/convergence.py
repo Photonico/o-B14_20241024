@@ -626,8 +626,6 @@ def plot_energy_lattice_single(*args_list):
     plt.legend()
     plt.tight_layout()
 
-# def plot_energy_lattice
-
 def plot_energy_kpoints_encut_single(kpoints_list, encut_list):
     # Unpack lists to retrieve the new info_suffix (materials information)
     info_suffix_kpoints, kpoints_source_data, kpoints_boundary, kpoints_color_family = kpoints_list
@@ -906,7 +904,7 @@ def plot_cohesive_energy_kpoints_single(*args_list):
     # Set title with info_suffix
     plt.title(f"Cohesive energy versus K-points {info_suffix}")
     plt.xlabel("K-points configuration")
-    plt.ylabel("Cohesive energy (eV)")
+    plt.ylabel("Cohesive energy (eV/atom)")
 
     # Ensure boundary values are integers and handle None boundaries
     kpoints_start = min(total_kpoints_sorted) if not kpoints_boundary or kpoints_boundary[0] is None else int(kpoints_boundary[0])
@@ -1024,7 +1022,7 @@ def plot_cohesive_energy_kpoints(kpoints_list):
 
     # Set labels and legend for multi-dataset
     plt.xlabel("K-points configurations")
-    plt.ylabel("Cohesive energy (eV)")
+    plt.ylabel("Cohesive energy (eV/atom)")
     plt.xticks(ticks=range(len(global_kpoints_config)), labels=global_kpoints_config, rotation=45, ha="right")
     plt.title("Cohesive energy versus K-points")
     plt.legend(handles=legend_handles, loc="best")
@@ -1080,7 +1078,7 @@ def plot_cohesive_energy_encut_single(*args_list):
     # Set title with info_suffix
     plt.title(f"Cohesive energy versus energy cutoff {info_suffix}")
     plt.xlabel("Energy cutoff (eV)")
-    plt.ylabel("Cohesive energy (eV)")
+    plt.ylabel("Cohesive energy (eV/atom)")
 
     # Set boundaries for ENCUT
     encut_start = min(encut_sorted) if encut_boundary is None or encut_boundary[0] is None else float(encut_boundary[0])
@@ -1189,7 +1187,7 @@ def plot_cohesive_energy_encut(encut_list):
 
     # Set labels and legend for multi-dataset
     plt.xlabel("Energy cutoff (eV)")
-    plt.ylabel("Cohesive energy (eV)")
+    plt.ylabel("Cohesive energy (eV/atom)")
     plt.title("Cohesive energy versus energy cutoff")
     plt.legend(handles=legend_handles, loc="best")
     plt.tight_layout()
@@ -1261,7 +1259,7 @@ def plot_cohesive_energy_kpoints_encut_single(kpoints_list, encut_list):
     ax_kpoints.plot(range(len(cohesive_energy_kpoints_plot)), cohesive_energy_kpoints_plot, c=kpoints_colors[1], lw=1.5)
     ax_kpoints.scatter(range(len(cohesive_energy_kpoints_plot)), cohesive_energy_kpoints_plot, s=6, c=kpoints_colors[1], zorder=1)
     ax_kpoints.set_xlabel("K-points configuration", color=kpoints_colors[0])
-    ax_kpoints.set_ylabel("Cohesive energy (eV)")
+    ax_kpoints.set_ylabel("Cohesive energy (eV/atom)")
     ax_kpoints.set_xticks(range(len(kpoints_labels_plot)))
     ax_kpoints.set_xticklabels(kpoints_labels_plot, rotation=45, ha="right", color=kpoints_colors[0])
 
@@ -1380,7 +1378,7 @@ def plot_cohesive_energy_kpoints_encut(kpoints_list_source, encut_list_source):
     ax_kpoints.set_xticks(range(len(all_kpoints_labels)))
     ax_kpoints.set_xticklabels(all_kpoints_labels, rotation=45, ha="right")
     ax_kpoints.set_xlabel("K-points configuration")
-    ax_kpoints.set_ylabel("Cohesive energy (eV)")
+    ax_kpoints.set_ylabel("Cohesive energy (eV/atom)")
 
     # Process ENCUT datasets for cohesive energy
     all_encut_values = []
