@@ -607,27 +607,51 @@ def plot_energy_lattice_single(*args_list):
         lattice_start = float(lattice_boundary[0]) if lattice_boundary[0] else min(lattice_sorted)
         lattice_end = float(lattice_boundary[1]) if lattice_boundary[1] else max(lattice_sorted)
 
-    # Select scatter sample points based on num_samples
-    if num_samples is None or num_samples >= len(lattice_sorted):
-        scatter_lattice = lattice_sorted
-        scatter_energy = energy_sorted
-    else:
-        indices = np.linspace(0, len(lattice_sorted) - 1, num_samples, dtype=int)
-        scatter_lattice = [lattice_sorted[i] for i in indices]
-        scatter_energy = [energy_sorted[i] for i in indices]
+    # Filter data within the specified boundary
+    lattice_filtered = []
+    energy_filtered = []
+    for lattice, energy in zip(lattice_sorted, energy_sorted):
+        if lattice_start <= lattice <= lattice_end:
+            lattice_filtered.append(lattice)
+            energy_filtered.append(energy)
 
     # Estimate EOS parameters and fitted energy values using all data
-    eos_params, resampled_lattice, fitted_energy = fit_birch_murnaghan(lattice_sorted, energy_sorted, sample_count=len(lattice_sorted))
+    eos_params, resampled_lattice, fitted_energy = fit_birch_murnaghan(lattice_filtered, energy_filtered, sample_count=100)
 
     # Plot the fitted EOS curve
     ax_kpoints.plot(resampled_lattice, fitted_energy, color=colors[1], lw=1.5, label=f"Fitted EOS Curve {info_suffix}")
 
-    # Scatter sample data points
-    ax_kpoints.scatter(scatter_lattice, scatter_energy, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
+    # Select scatter sample points based on approximately equal intervals in x-axis values
+    if num_samples is None or num_samples >= len(lattice_filtered):
+        scatter_lattice = lattice_filtered
+        scatter_energy = energy_filtered
+    else:
+        # Define equally spaced x-axis values within the lattice boundary
+        x_samples = np.linspace(lattice_start, lattice_end, num_samples)
+        scatter_lattice = []
+        scatter_energy = []
+        for x in x_samples:
+            # Find the data point closest to the x sample
+            idx = (np.abs(np.array(lattice_filtered) - x)).argmin()
+            scatter_lattice.append(lattice_filtered[idx])
+            scatter_energy.append(energy_filtered[idx])
 
-    # Find and mark the minimum energy point from the original data
-    min_energy_idx = np.argmin(energy_sorted)
-    ax_kpoints.scatter(lattice_sorted[min_energy_idx], energy_sorted[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
+    # Remove duplicate points (if any)
+    unique_points = set()
+    scatter_lattice_unique = []
+    scatter_energy_unique = []
+    for x, y in zip(scatter_lattice, scatter_energy):
+        if x not in unique_points:
+            unique_points.add(x)
+            scatter_lattice_unique.append(x)
+            scatter_energy_unique.append(y)
+
+    # Scatter sample data points
+    ax_kpoints.scatter(scatter_lattice_unique, scatter_energy_unique, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
+
+    # Find and mark the minimum energy point from the filtered data
+    min_energy_idx = np.argmin(energy_filtered)
+    ax_kpoints.scatter(lattice_filtered[min_energy_idx], energy_filtered[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
 
     # Set labels, title, and legend
     ax_kpoints.set_xlabel(r"Lattice constant (Å)")
@@ -667,50 +691,90 @@ def plot_energy_lattice(lattice_list):
     ax.yaxis.set_major_formatter(formatter)
 
     legend_handles = []
-    all_lattice_set = set()
-
-    # Collect all lattice constants from all datasets
-    for data in lattice_list:
-        info_suffix, source_data, lattice_boundary, color_family, num_samples = data
-        data_dict_list = read_energy_parameters(source_data)
-        lattice_values = [d.get("lattice constant", d.get("Lattice Constant")) for d in data_dict_list]
-
-        # Apply boundary
-        lattice_start = min(lattice_values) if not lattice_boundary or lattice_boundary[0] is None else float(lattice_boundary[0])
-        lattice_end = max(lattice_values) if not lattice_boundary or lattice_boundary[1] is None else float(lattice_boundary[1])
-        filtered_lattice = [lattice for lattice in lattice_values if lattice_start <= lattice <= lattice_end]
-
-        # Collect lattice points for unified x-axis
-        all_lattice_set.update(filtered_lattice)
-
-    all_lattice_sorted = sorted(all_lattice_set)
 
     for data in lattice_list:
         info_suffix, source_data, lattice_boundary, color_family, num_samples = data
         colors = color_sampling(color_family)
 
+        # Data input
         data_dict_list = read_energy_parameters(source_data)
-        energy = [d.get("total energy", d.get("Total Energy")) for d in data_dict_list]
-        lattice_values = [d.get("lattice constant", d.get("Lattice Constant")) for d in data_dict_list]
+        energy_values = [d.get("total energy", d.get("Total Energy")) for d in data_dict_list]
+        lattice_constants = [d.get("lattice constant", d.get("Lattice Constant")) for d in data_dict_list]
 
-        # Apply boundary values for the current dataset
-        lattice_start = min(lattice_values) if not lattice_boundary or lattice_boundary[0] is None else float(lattice_boundary[0])
-        lattice_end = max(lattice_values) if not lattice_boundary or lattice_boundary[1] is None else float(lattice_boundary[1])
-        
-        # Filter data within the specified boundary for the current dataset
-        lattice_filtered = [lattice for lattice in lattice_values if lattice_start <= lattice <= lattice_end]
-        energy_filtered = [energy[idx] for idx, lattice in enumerate(lattice_values) if lattice_start <= lattice <= lattice_end]
+        # Filter out None values
+        filtered_data = [(lattice, energy) for lattice, energy in zip(lattice_constants, energy_values)
+                         if lattice is not None and energy is not None]
 
-        # Create a mapping for the filtered data to align with the global lattice
-        energy_aligned = [energy_filtered[lattice_filtered.index(lattice)] if lattice in lattice_filtered else np.nan for lattice in all_lattice_sorted]
+        if not filtered_data:
+            print(f"No valid data found for plotting for dataset {info_suffix}.")
+            continue
 
-        # Plotting with color and unique label
-        ax.plot(all_lattice_sorted, energy_aligned, c=colors[1], lw=1.5)
-        ax.scatter(all_lattice_sorted, energy_aligned, s=6, c=colors[1], zorder=1)
+        # Unzip filtered data and sort
+        lattice_constants, energy_values = zip(*filtered_data)
+        sorted_data = sorted(zip(lattice_constants, energy_values), key=lambda x: x[0])
+        lattice_sorted, energy_sorted = zip(*sorted_data)
 
-        # Add legend entry with custom handle
-        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-', 
-                                      label=f"Energy versus lattice constant {info_suffix}")
+        # Define boundaries for lattice constants
+        if lattice_boundary in [None, ""]:
+            lattice_start = min(lattice_sorted)
+            lattice_end = max(lattice_sorted)
+        else:
+            lattice_start = float(lattice_boundary[0]) if lattice_boundary[0] else min(lattice_sorted)
+            lattice_end = float(lattice_boundary[1]) if lattice_boundary[1] else max(lattice_sorted)
+
+        # Filter data within the specified boundary
+        lattice_filtered = []
+        energy_filtered = []
+        for lattice, energy in zip(lattice_sorted, energy_sorted):
+            if lattice_start <= lattice <= lattice_end:
+                lattice_filtered.append(lattice)
+                energy_filtered.append(energy)
+
+        if not lattice_filtered:
+            print(f"No data within the specified lattice boundary for dataset {info_suffix}.")
+            continue
+
+        # Estimate EOS parameters and fitted energy values using all data
+        eos_params, resampled_lattice, fitted_energy = fit_birch_murnaghan(lattice_filtered, energy_filtered, sample_count=100)
+
+        # Plot the fitted EOS curve
+        ax.plot(resampled_lattice, fitted_energy, color=colors[1], lw=1.5, label=f"Fitted EOS Curve {info_suffix}")
+
+        # Select scatter sample points based on approximately equal intervals in x-axis values
+        if num_samples is None or num_samples >= len(lattice_filtered):
+            scatter_lattice = lattice_filtered
+            scatter_energy = energy_filtered
+        else:
+            # Define equally spaced x-axis values within the lattice boundary
+            x_samples = np.linspace(lattice_start, lattice_end, num_samples)
+            scatter_lattice = []
+            scatter_energy = []
+            for x in x_samples:
+                # Find the data point closest to the x sample
+                idx = (np.abs(np.array(lattice_filtered) - x)).argmin()
+                scatter_lattice.append(lattice_filtered[idx])
+                scatter_energy.append(energy_filtered[idx])
+
+        # Remove duplicate points (if any)
+        unique_points = set()
+        scatter_lattice_unique = []
+        scatter_energy_unique = []
+        for x, y in zip(scatter_lattice, scatter_energy):
+            if x not in unique_points:
+                unique_points.add(x)
+                scatter_lattice_unique.append(x)
+                scatter_energy_unique.append(y)
+
+        # Scatter sample data points
+        ax.scatter(scatter_lattice_unique, scatter_energy_unique, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
+
+        # Find and mark the minimum energy point from the filtered data
+        min_energy_idx = np.argmin(energy_filtered)
+        ax.scatter(lattice_filtered[min_energy_idx], energy_filtered[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
+
+        # Add legend entry
+        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-',
+                                      label=f"Dataset {info_suffix}")
         legend_handles.append(legend_handle)
 
     # Set labels and legend for multi-dataset
