@@ -95,10 +95,11 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
     results = []
     for full_params in full_cal_data:
         for atom_params in atom_cal_data:
-            # Matching conditions now include energy cutoff
+            # Matching conditions now include energy cutoff and Scaling
             if (full_params['kpoints mesh'] == atom_params['kpoints mesh'] and
                 full_params['total kpoints'] == atom_params['total kpoints'] and
-                full_params.get("energy cutoff (ENCUT)") == atom_params.get("energy cutoff (ENCUT)")):
+                full_params.get("energy cutoff (ENCUT)") == atom_params.get("energy cutoff (ENCUT)") and
+                full_params.get("Scaling") == atom_params.get("Scaling")):
                 
                 cohesive_energy = full_params['total energy'] - full_params['total atom count'] * atom_params['total energy']
                 result = {
@@ -108,7 +109,9 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
                     "cohesive energy": cohesive_energy,
                     "total kpoints": full_params['total kpoints'],
                     "kpoints mesh": full_params['kpoints mesh'],
-                    "energy cutoff (ENCUT)": full_params.get("energy cutoff (ENCUT)")
+                    "energy cutoff (ENCUT)": full_params.get("energy cutoff (ENCUT)"),
+                    "Scaling": full_params.get("Scaling"),  # Include Scaling in the result output
+                    "lattice constant": full_params.get("lattice constant")
                 }
                 results.append(result)
 
@@ -127,7 +130,9 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
             headers = "\t".join(results[0].keys())
             f.write(headers + "\n")
             for result in results:
-                f.write("\t".join(str(result[key]) if result[key] is not None else 'None' for key in result) + "\n")
+                f.write("\t".join(
+                    str(result[key]) if result[key] is not None else 'None' for key in results[0].keys()
+                ) + "\n")
     except IOError as e:
         print(f"Error writing to file at {result_file_path}: {e}")
 
@@ -1359,7 +1364,7 @@ def plot_cohesive_energy_lattice_single(*args_list):
     # Data input
     data_dict_list = read_energy_parameters(source_data)
     cohesive_energy_values = [d.get("cohesive energy") for d in data_dict_list]
-    lattice_constants = [d.get("lattice constant", d.get("Lattice Constant")) for d in data_dict_list]
+    lattice_constants = [d.get("lattice constant") for d in data_dict_list]
 
     # Filter out None values
     filtered_data = [(lattice, energy) for lattice, energy in zip(lattice_constants, cohesive_energy_values)
@@ -1375,64 +1380,40 @@ def plot_cohesive_energy_lattice_single(*args_list):
     lattice_sorted, cohesive_energy_sorted = zip(*sorted_data)
 
     # Define boundaries for lattice constants
-    if lattice_boundary in [None, ""]:
-        lattice_start = min(lattice_sorted)
-        lattice_end = max(lattice_sorted)
-    else:
-        lattice_start = float(lattice_boundary[0]) if lattice_boundary[0] else min(lattice_sorted)
-        lattice_end = float(lattice_boundary[1]) if lattice_boundary[1] else max(lattice_sorted)
+    lattice_start = min(lattice_sorted) if lattice_boundary in [None, ""] else float(lattice_boundary[0])
+    lattice_end = max(lattice_sorted) if lattice_boundary in [None, ""] else float(lattice_boundary[1])
 
     # Filter data within the specified boundary
-    lattice_filtered = []
-    cohesive_energy_filtered = []
-    for lattice, energy in zip(lattice_sorted, cohesive_energy_sorted):
-        if lattice_start <= lattice <= lattice_end:
-            lattice_filtered.append(lattice)
-            cohesive_energy_filtered.append(energy)
+    lattice_filtered = [l for l in lattice_sorted if lattice_start <= l <= lattice_end]
+    cohesive_energy_filtered = [cohesive_energy_sorted[idx] for idx, l in enumerate(lattice_sorted) if lattice_start <= l <= lattice_end]
 
-    if not lattice_filtered:
-        print("No data within the specified lattice boundary.")
-        return
-
-    # Plotting the data curve
+    # Plot cohesive energy curve
     ax.plot(lattice_filtered, cohesive_energy_filtered, color=colors[1], lw=1.5, label=f"Cohesive energy curve {info_suffix}")
 
-    # Select scatter sample points based on approximately equal intervals in x-axis values
+    # Scatter sample points
     if num_samples is None or num_samples >= len(lattice_filtered):
         scatter_lattice = lattice_filtered
-        scatter_cohesive_energy = cohesive_energy_filtered
+        scatter_energy = cohesive_energy_filtered
     else:
-        # Define equally spaced x-axis values within the lattice boundary
         x_samples = np.linspace(lattice_start, lattice_end, num_samples)
         scatter_lattice = []
-        scatter_cohesive_energy = []
+        scatter_energy = []
         for x in x_samples:
-            # Find the data point closest to the x sample
             idx = (np.abs(np.array(lattice_filtered) - x)).argmin()
             scatter_lattice.append(lattice_filtered[idx])
-            scatter_cohesive_energy.append(cohesive_energy_filtered[idx])
-
-    # Remove duplicate points (if any)
-    unique_points = set()
-    scatter_lattice_unique = []
-    scatter_cohesive_energy_unique = []
-    for x, y in zip(scatter_lattice, scatter_cohesive_energy):
-        if x not in unique_points:
-            unique_points.add(x)
-            scatter_lattice_unique.append(x)
-            scatter_cohesive_energy_unique.append(y)
+            scatter_energy.append(cohesive_energy_filtered[idx])
 
     # Scatter sample data points
-    ax.scatter(scatter_lattice_unique, scatter_cohesive_energy_unique, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
+    ax.scatter(scatter_lattice, scatter_energy, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
 
-    # Find and mark the minimum cohesive energy point from the filtered data
+    # Mark minimum cohesive energy
     min_energy_idx = np.argmin(cohesive_energy_filtered)
-    ax.scatter(lattice_filtered[min_energy_idx], cohesive_energy_filtered[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum cohesive energy {info_suffix}", zorder=3)
+    ax.scatter(lattice_filtered[min_energy_idx], cohesive_energy_filtered[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
 
     # Set labels, title, and legend
     ax.set_xlabel("Lattice constant (Å)")
     ax.set_ylabel("Cohesive energy (eV/atom)")
-    ax.set_title(f"Cohesive energy versus lattice constant {info_suffix}")
+    ax.set_title(f"Cohesive energy vs lattice constant {info_suffix}")
     ax.legend()
     plt.tight_layout()
 
@@ -1475,7 +1456,7 @@ def plot_cohesive_energy_lattice(lattice_list):
         # Data input
         data_dict_list = read_energy_parameters(source_data)
         cohesive_energy_values = [d.get("cohesive energy") for d in data_dict_list]
-        lattice_constants = [d.get("lattice constant", d.get("Lattice Constant")) for d in data_dict_list]
+        lattice_constants = [d.get("lattice constant") for d in data_dict_list]
 
         # Filter out None values
         filtered_data = [(lattice, energy) for lattice, energy in zip(lattice_constants, cohesive_energy_values)
@@ -1491,69 +1472,44 @@ def plot_cohesive_energy_lattice(lattice_list):
         lattice_sorted, cohesive_energy_sorted = zip(*sorted_data)
 
         # Define boundaries for lattice constants
-        if lattice_boundary in [None, ""]:
-            lattice_start = min(lattice_sorted)
-            lattice_end = max(lattice_sorted)
-        else:
-            lattice_start = float(lattice_boundary[0]) if lattice_boundary[0] else min(lattice_sorted)
-            lattice_end = float(lattice_boundary[1]) if lattice_boundary[1] else max(lattice_sorted)
+        lattice_start = min(lattice_sorted) if lattice_boundary in [None, ""] else float(lattice_boundary[0])
+        lattice_end = max(lattice_sorted) if lattice_boundary in [None, ""] else float(lattice_boundary[1])
 
         # Filter data within the specified boundary
-        lattice_filtered = []
-        cohesive_energy_filtered = []
-        for lattice, energy in zip(lattice_sorted, cohesive_energy_sorted):
-            if lattice_start <= lattice <= lattice_end:
-                lattice_filtered.append(lattice)
-                cohesive_energy_filtered.append(energy)
+        lattice_filtered = [l for l in lattice_sorted if lattice_start <= l <= lattice_end]
+        cohesive_energy_filtered = [cohesive_energy_sorted[idx] for idx, l in enumerate(lattice_sorted) if lattice_start <= l <= lattice_end]
 
-        if not lattice_filtered:
-            print(f"No data within the specified lattice boundary for dataset {info_suffix}.")
-            continue
-
-        # Plotting the data curve
+        # Plot cohesive energy curve
         ax.plot(lattice_filtered, cohesive_energy_filtered, color=colors[1], lw=1.5, label=f"Cohesive energy curve {info_suffix}")
 
-        # Select scatter sample points based on approximately equal intervals in x-axis values
+        # Scatter sample points
         if num_samples is None or num_samples >= len(lattice_filtered):
             scatter_lattice = lattice_filtered
-            scatter_cohesive_energy = cohesive_energy_filtered
+            scatter_energy = cohesive_energy_filtered
         else:
-            # Define equally spaced x-axis values within the lattice boundary
             x_samples = np.linspace(lattice_start, lattice_end, num_samples)
             scatter_lattice = []
-            scatter_cohesive_energy = []
+            scatter_energy = []
             for x in x_samples:
-                # Find the data point closest to the x sample
                 idx = (np.abs(np.array(lattice_filtered) - x)).argmin()
                 scatter_lattice.append(lattice_filtered[idx])
-                scatter_cohesive_energy.append(cohesive_energy_filtered[idx])
-
-        # Remove duplicate points (if any)
-        unique_points = set()
-        scatter_lattice_unique = []
-        scatter_cohesive_energy_unique = []
-        for x, y in zip(scatter_lattice, scatter_cohesive_energy):
-            if x not in unique_points:
-                unique_points.add(x)
-                scatter_lattice_unique.append(x)
-                scatter_cohesive_energy_unique.append(y)
+                scatter_energy.append(cohesive_energy_filtered[idx])
 
         # Scatter sample data points
-        ax.scatter(scatter_lattice_unique, scatter_cohesive_energy_unique, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
+        ax.scatter(scatter_lattice, scatter_energy, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
 
-        # Find and mark the minimum cohesive energy point from the filtered data
+        # Mark minimum cohesive energy
         min_energy_idx = np.argmin(cohesive_energy_filtered)
-        ax.scatter(lattice_filtered[min_energy_idx], cohesive_energy_filtered[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum cohesive energy {info_suffix}", zorder=3)
+        ax.scatter(lattice_filtered[min_energy_idx], cohesive_energy_filtered[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
 
         # Add legend entry
-        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-',
-                                      label=f"Dataset {info_suffix}")
+        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-', label=f"{info_suffix}")
         legend_handles.append(legend_handle)
 
     # Set labels and legend for multi-dataset
     ax.set_xlabel("Lattice constant (Å)")
     ax.set_ylabel("Cohesive energy (eV/atom)")
-    ax.set_title("Cohesive energy versus lattice constant")
+    ax.set_title("Cohesive energy vs lattice constant")
     ax.legend(handles=legend_handles, loc="best")
     plt.tight_layout()
 
