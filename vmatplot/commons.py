@@ -97,7 +97,8 @@ def identify_parameters(directory="."):
         "  - BMIX: Mixing parameter for charge density.\n"
         "  - EDIFF: Electronic convergence criterion.\n"
         "  - EDIFFG: Force convergence criterion.\n"
-        "  - Elapsed time (sec): Total simulation time (from OUTCAR).\n\n"
+        "  - Elapsed time (sec): Total simulation time (from OUTCAR).\n"
+        "  - Scaling: Scaling factor from the second line of POSCAR.\n\n"
         "Required Files:\n"
         "  - vasprun.xml\n"
         "  - KPOINTS\n"
@@ -108,28 +109,26 @@ def identify_parameters(directory="."):
         "  identify_parameters('help')  # Display this usage guide\n"
     )
 
-    if directory.lower in  ["help"]:
+    if directory.lower() in ["help"]:
         print(help_info)
         return None
 
     vasprun_path = os.path.join(directory, "vasprun.xml")
     kpoints_path = os.path.join(directory, "KPOINTS")
     outcar_path = os.path.join(directory, "OUTCAR")
+    poscar_path = os.path.join(directory, "POSCAR")
 
     # Check file existence
-    if not os.path.exists(vasprun_path) or not os.path.exists(kpoints_path):
+    if not os.path.exists(vasprun_path) or not os.path.exists(kpoints_path) or not os.path.exists(poscar_path):
         print(f"Required files not found in {directory}. Skipping this directory.")
         return None
 
     try:
-        # Parse XML data from vasprun.xml
-        tree = ET.parse(vasprun_path)
-        root = tree.getroot()
-
+        # Initialize the parameters dictionary
         parameters = {
             "total atom count": None,
             "total energy": None,
-            "fermi energy": None,  # New entry for Fermi energy
+            "fermi energy": None,
             "total kpoints": None,
             "calculated kpoints": None,
             "kpoints mesh": (None, None, None),
@@ -143,8 +142,21 @@ def identify_parameters(directory="."):
             "mixing parameter (BMIX)": None,
             "electronic convergence (EDIFF)": None,
             "force convergence (EDIFFG)": None,
-            "elapsed time (sec)": None
+            "elapsed time (sec)": None,
+            "Scaling": None  # New entry for Scaling
         }
+
+        # Extract Scaling factor from POSCAR (second line)
+        try:
+            with open(poscar_path, "r", encoding="utf-8") as poscar_file:
+                lines = poscar_file.readlines()
+                parameters["Scaling"] = float(lines[1].strip())
+        except (IndexError, ValueError) as e:
+            print(f"Error reading Scaling from POSCAR in {directory}: {e}")
+
+        # Parse XML data from vasprun.xml
+        tree = ET.parse(vasprun_path)
+        root = tree.getroot()
 
         # Extract total atom count
         atom_count_tag = root.find(".//atominfo/atoms")
