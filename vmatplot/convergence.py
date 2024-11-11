@@ -565,17 +565,21 @@ def plot_energy_lattice_single(*args_list):
 
     # Unpack args_list
     info_suffix, source_data, lattice_boundary, color_family, num_samples = args_list[0]
-    num_samples = num_samples if num_samples else len(read_energy_parameters(source_data))
 
     # Figure settings
     fig_setting = canvas_setting()
-    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    fig, ax_kpoints = plt.subplots(figsize=fig_setting[0], dpi=fig_setting[1])
     params = fig_setting[2]
     plt.rcParams.update(params)
     plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
 
     # Color selection
     colors = color_sampling(color_family)
+
+    # Configure scientific notation for y-axis
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    ax_kpoints.yaxis.set_major_formatter(formatter)
 
     # Data input
     data_dict_list = read_energy_parameters(source_data)
@@ -603,27 +607,122 @@ def plot_energy_lattice_single(*args_list):
         lattice_start = float(lattice_boundary[0]) if lattice_boundary[0] else min(lattice_sorted)
         lattice_end = float(lattice_boundary[1]) if lattice_boundary[1] else max(lattice_sorted)
 
-    # Generate evenly spaced lattice samples within the boundary
-    lattice_sample_points = np.linspace(lattice_start, lattice_end, num_samples)
+    # Select scatter sample points based on num_samples
+    if num_samples is None or num_samples >= len(lattice_sorted):
+        scatter_lattice = lattice_sorted
+        scatter_energy = energy_sorted
+    else:
+        indices = np.linspace(0, len(lattice_sorted) - 1, num_samples, dtype=int)
+        scatter_lattice = [lattice_sorted[i] for i in indices]
+        scatter_energy = [energy_sorted[i] for i in indices]
 
-    # Estimate EOS parameters and fitted energy values using Birch-Murnaghan equation
-    eos_params, resampled_lattice, fitted_energy = fit_birch_murnaghan(lattice_sorted, energy_sorted, sample_count=num_samples)
+    # Estimate EOS parameters and fitted energy values using all data
+    eos_params, resampled_lattice, fitted_energy = fit_birch_murnaghan(lattice_sorted, energy_sorted, sample_count=len(lattice_sorted))
 
     # Plot the fitted EOS curve
-    plt.plot(resampled_lattice, fitted_energy, color=colors[1], lw=1.5, label=f"Fitted EOS Curve ({info_suffix})")
+    ax_kpoints.plot(resampled_lattice, fitted_energy, color=colors[1], lw=1.5, label=f"Fitted EOS Curve {info_suffix}")
 
-    # Scatter original data points
-    plt.scatter(lattice_sorted, energy_sorted, s=48, fc="#FFFFFF", ec=colors[1], label=f"Source data {info_suffix}", zorder=2)
+    # Scatter sample data points
+    ax_kpoints.scatter(scatter_lattice, scatter_energy, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
 
     # Find and mark the minimum energy point from the original data
     min_energy_idx = np.argmin(energy_sorted)
-    plt.scatter(lattice_sorted[min_energy_idx], energy_sorted[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
+    ax_kpoints.scatter(lattice_sorted[min_energy_idx], energy_sorted[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
 
     # Set labels, title, and legend
-    plt.xlabel(r"Lattice constant (Å)")
-    plt.ylabel(r"Energy (eV)")
-    plt.title(f"Energy versus lattice constant {info_suffix}")
-    plt.legend()
+    ax_kpoints.set_xlabel(r"Lattice constant (Å)")
+    ax_kpoints.set_ylabel(r"Energy (eV)")
+    ax_kpoints.set_title(f"Energy versus lattice constant {info_suffix}")
+    ax_kpoints.legend()
+    plt.tight_layout()
+
+import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
+import matplotlib.lines as mlines
+import numpy as np
+
+def plot_energy_lattice(lattice_list):
+    """
+    Generalized function to plot energy versus lattice constant for multiple datasets.
+
+    Parameters:
+    - lattice_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, lattice_boundary, color_family, num_samples].
+    """
+    # Single dataset case
+    if not isinstance(lattice_list[0], list):
+        return plot_energy_lattice_single(lattice_list)
+    elif len(lattice_list) == 1:
+        return plot_energy_lattice_single(*lattice_list)
+
+    # Multi-dataset case: Verify each inner list has the correct format
+    if not all(isinstance(data, list) and len(data) == 5 for data in lattice_list):
+        print("Error: Each item in lattice_list must be a list with [info_suffix, source_data, lattice_boundary, color_family, num_samples].")
+        return
+
+    fig_setting = canvas_setting()
+    fig, ax = plt.subplots(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Scientific notation for y-axis
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    ax.yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    all_lattice_set = set()
+
+    # Collect all lattice constants from all datasets
+    for data in lattice_list:
+        info_suffix, source_data, lattice_boundary, color_family, num_samples = data
+        data_dict_list = read_energy_parameters(source_data)
+        lattice_values = [d.get("lattice constant", d.get("Lattice Constant")) for d in data_dict_list]
+
+        # Apply boundary
+        lattice_start = min(lattice_values) if not lattice_boundary or lattice_boundary[0] is None else float(lattice_boundary[0])
+        lattice_end = max(lattice_values) if not lattice_boundary or lattice_boundary[1] is None else float(lattice_boundary[1])
+        filtered_lattice = [lattice for lattice in lattice_values if lattice_start <= lattice <= lattice_end]
+
+        # Collect lattice points for unified x-axis
+        all_lattice_set.update(filtered_lattice)
+
+    all_lattice_sorted = sorted(all_lattice_set)
+
+    for data in lattice_list:
+        info_suffix, source_data, lattice_boundary, color_family, num_samples = data
+        colors = color_sampling(color_family)
+
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy", d.get("Total Energy")) for d in data_dict_list]
+        lattice_values = [d.get("lattice constant", d.get("Lattice Constant")) for d in data_dict_list]
+
+        # Apply boundary values for the current dataset
+        lattice_start = min(lattice_values) if not lattice_boundary or lattice_boundary[0] is None else float(lattice_boundary[0])
+        lattice_end = max(lattice_values) if not lattice_boundary or lattice_boundary[1] is None else float(lattice_boundary[1])
+        
+        # Filter data within the specified boundary for the current dataset
+        lattice_filtered = [lattice for lattice in lattice_values if lattice_start <= lattice <= lattice_end]
+        energy_filtered = [energy[idx] for idx, lattice in enumerate(lattice_values) if lattice_start <= lattice <= lattice_end]
+
+        # Create a mapping for the filtered data to align with the global lattice
+        energy_aligned = [energy_filtered[lattice_filtered.index(lattice)] if lattice in lattice_filtered else np.nan for lattice in all_lattice_sorted]
+
+        # Plotting with color and unique label
+        ax.plot(all_lattice_sorted, energy_aligned, c=colors[1], lw=1.5)
+        ax.scatter(all_lattice_sorted, energy_aligned, s=6, c=colors[1], zorder=1)
+
+        # Add legend entry with custom handle
+        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-', 
+                                      label=f"Energy versus lattice constant {info_suffix}")
+        legend_handles.append(legend_handle)
+
+    # Set labels and legend for multi-dataset
+    ax.set_xlabel("Lattice constant (Å)")
+    ax.set_ylabel("Energy (eV)")
+    ax.set_title("Energy versus lattice constant")
+    ax.legend(handles=legend_handles, loc="best")
     plt.tight_layout()
 
 def plot_energy_kpoints_encut_single(kpoints_list, encut_list):
@@ -1434,6 +1533,8 @@ def plot_energy_parameters(parameters, *args):
             return plot_energy_kpoints(args_list)
         elif param in ["encut", "energy cutoff", "energy_cutoff", "energy-cutoff"]:
             return plot_energy_encut(args_list)
+        elif param in ["lattice", "lattice constant"]:
+            return plot_energy_lattice(args_list)
         else:
             print("Parameter type not recognized or incorrect arguments. To be continued.")
     elif isinstance(parameters, (tuple, list)):

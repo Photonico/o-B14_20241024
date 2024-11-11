@@ -1,0 +1,33 @@
+ running   24 mpi-ranks, with    1 threads/rank, on    1 nodes
+ distrk:  each k-point on   24 cores,    1 groups
+ distr:  one band on    1 cores,   24 groups
+ vasp.6.4.3 19Mar24 (build May 31 2024 16:31:43) complex                        
+  
+ POSCAR found type information on POSCAR B 
+ POSCAR found :  1 types and      14 ions
+ Reading from existing POTCAR
+ scaLAPACK will be used
+ Reading from existing POTCAR
+ LDA part: xc-table for (Slater+PW92), standard interpolation
+ POSCAR, INCAR and KPOINTS ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ WAVECAR not read
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1     0.791227572495E+02    0.79123E+02   -0.20046E+04 16800   0.863E+02
+DAV:   2    -0.919181359343E+02   -0.17104E+03   -0.16030E+03 23064   0.168E+02
+DAV:   3    -0.976963592708E+02   -0.57782E+01   -0.57456E+01 24744   0.274E+01
+DAV:   4    -0.977300045260E+02   -0.33645E-01   -0.33644E-01 20184   0.243E+00
+DAV:   5    -0.977303781764E+02   -0.37365E-03   -0.37364E-03 24720   0.244E-01    0.124E+01
+DAV:   6    -0.922432599028E+02    0.54871E+01   -0.39983E+00 24384   0.664E+00    0.684E+00
+DAV:   7    -0.905729203055E+02    0.16703E+01   -0.32557E+00 25176   0.591E+00    0.172E+00
+DAV:   8    -0.905852351547E+02   -0.12315E-01   -0.23770E-01 18624   0.169E+00    0.707E-01
+DAV:   9    -0.905993795275E+02   -0.14144E-01   -0.17030E-02 23424   0.440E-01    0.200E-01
+DAV:  10    -0.906034393103E+02   -0.40598E-02   -0.21006E-03 19032   0.162E-01    0.610E-02
+DAV:  11    -0.906045051774E+02   -0.10659E-02   -0.62420E-04 21792   0.867E-02    0.322E-02
+DAV:  12    -0.906046225669E+02   -0.11739E-03   -0.94443E-05 20568   0.374E-02    0.430E-03
+DAV:  13    -0.906046274278E+02   -0.48608E-05   -0.41578E-06 23664   0.887E-03    0.185E-03
+DAV:  14    -0.906046281225E+02   -0.69470E-06   -0.29661E-07 20520   0.234E-03
+   1 F= -.90604628E+02 E0= -.90603022E+02  d E =-.321137E-02
