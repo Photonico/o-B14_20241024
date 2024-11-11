@@ -1387,14 +1387,18 @@ def plot_cohesive_energy_lattice_single(*args_list):
     lattice_filtered = [l for l in lattice_sorted if lattice_start <= l <= lattice_end]
     cohesive_energy_filtered = [cohesive_energy_sorted[idx] for idx, l in enumerate(lattice_sorted) if lattice_start <= l <= lattice_end]
 
-    # Plot cohesive energy curve
-    ax.plot(lattice_filtered, cohesive_energy_filtered, color=colors[1], lw=1.5, label=f"Cohesive energy curve {info_suffix}")
+    # Estimate EOS parameters and fitted energy values using all data
+    eos_params, resampled_lattice, fitted_energy = fit_birch_murnaghan(lattice_filtered, cohesive_energy_filtered, sample_count=100)
 
-    # Scatter sample points
+    # Plot the fitted EOS curve
+    ax.plot(resampled_lattice, fitted_energy, color=colors[1], lw=1.5, label=f"Fitted EOS Curve {info_suffix}")
+
+    # Select scatter sample points based on approximately equal intervals in x-axis values
     if num_samples is None or num_samples >= len(lattice_filtered):
         scatter_lattice = lattice_filtered
         scatter_energy = cohesive_energy_filtered
     else:
+        # Define equally spaced x-axis values within the lattice boundary
         x_samples = np.linspace(lattice_start, lattice_end, num_samples)
         scatter_lattice = []
         scatter_energy = []
@@ -1406,7 +1410,7 @@ def plot_cohesive_energy_lattice_single(*args_list):
     # Scatter sample data points
     ax.scatter(scatter_lattice, scatter_energy, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
 
-    # Mark minimum cohesive energy
+    # Find and mark the minimum cohesive energy point from the filtered data
     min_energy_idx = np.argmin(cohesive_energy_filtered)
     ax.scatter(lattice_filtered[min_energy_idx], cohesive_energy_filtered[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
 
@@ -1479,14 +1483,18 @@ def plot_cohesive_energy_lattice(lattice_list):
         lattice_filtered = [l for l in lattice_sorted if lattice_start <= l <= lattice_end]
         cohesive_energy_filtered = [cohesive_energy_sorted[idx] for idx, l in enumerate(lattice_sorted) if lattice_start <= l <= lattice_end]
 
-        # Plot cohesive energy curve
-        ax.plot(lattice_filtered, cohesive_energy_filtered, color=colors[1], lw=1.5, label=f"Cohesive energy curve {info_suffix}")
+        # Estimate EOS parameters and fitted energy values using all data
+        eos_params, resampled_lattice, fitted_energy = fit_birch_murnaghan(lattice_filtered, cohesive_energy_filtered, sample_count=100)
 
-        # Scatter sample points
+        # Plot the fitted EOS curve
+        ax.plot(resampled_lattice, fitted_energy, color=colors[1], lw=1.5, label=f"Fitted EOS Curve {info_suffix}")
+
+        # Select scatter sample points based on approximately equal intervals in x-axis values
         if num_samples is None or num_samples >= len(lattice_filtered):
             scatter_lattice = lattice_filtered
             scatter_energy = cohesive_energy_filtered
         else:
+            # Define equally spaced x-axis values within the lattice boundary
             x_samples = np.linspace(lattice_start, lattice_end, num_samples)
             scatter_lattice = []
             scatter_energy = []
@@ -1498,12 +1506,12 @@ def plot_cohesive_energy_lattice(lattice_list):
         # Scatter sample data points
         ax.scatter(scatter_lattice, scatter_energy, s=48, fc="#FFFFFF", ec=colors[1], label=f"Sampled data {info_suffix}", zorder=2)
 
-        # Mark minimum cohesive energy
+        # Find and mark the minimum cohesive energy point from the filtered data
         min_energy_idx = np.argmin(cohesive_energy_filtered)
         ax.scatter(lattice_filtered[min_energy_idx], cohesive_energy_filtered[min_energy_idx], s=48, fc=colors[2], ec=colors[2], label=f"Minimum Energy {info_suffix}", zorder=3)
 
         # Add legend entry
-        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-', label=f"{info_suffix}")
+        legend_handle = mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle='-', label=f"Dataset {info_suffix}")
         legend_handles.append(legend_handle)
 
     # Set labels and legend for multi-dataset
