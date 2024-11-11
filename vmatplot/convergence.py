@@ -636,11 +636,6 @@ def plot_energy_lattice_single(*args_list):
     ax_kpoints.legend()
     plt.tight_layout()
 
-import matplotlib.pyplot as plt
-from matplotlib.ticker import ScalarFormatter
-import matplotlib.lines as mlines
-import numpy as np
-
 def plot_energy_lattice(lattice_list):
     """
     Generalized function to plot energy versus lattice constant for multiple datasets.
