@@ -10,64 +10,82 @@ import matplotlib.gridspec as gridspec
 
 # from vmatplot.commons import identify_parameters
 
-def extract_bandgap(directory="."):
+def extract_bandgap_OUTCAR(directory="."):
     """
-    Extract the bandgap (in eV) from a VASP band structure calculation directory.
-    
+    Extract the bandgap, LUMO, and HOMO values from the OUTCAR file and return as a dictionary.
+
     Parameters:
-        directory (str): Path to the directory containing VASP output files (default is current directory).
-    
+        directory (str): Path to the directory containing the VASP output files (default is current directory).
+
     Returns:
-        float: Bandgap value in eV if successful.
+        dict: A dictionary containing:
+            - "bandgap": The bandgap value in eV.
+            - "HOMO index": The index of the HOMO band.
+            - "HOMO energy": The energy of the HOMO band in eV.
+            - "LUMO index": The index of the LUMO band.
+            - "LUMO energy": The energy of the LUMO band in eV.
         str: Error message if required data is missing or cannot be processed.
     """
-    vasprun_path = os.path.join(directory, "vasprun.xml")
+    outcar_path = os.path.join(directory, "OUTCAR")
 
-    # Check if vasprun.xml exists
-    if not os.path.exists(vasprun_path):
-        return "Error: vasprun.xml not found in the specified directory."
+    # Check if OUTCAR exists
+    if not os.path.exists(outcar_path):
+        return "Error: OUTCAR not found in the specified directory."
 
     try:
-        # Parse XML data from vasprun.xml
-        tree = ET.parse(vasprun_path)
-        root = tree.getroot()
+        with open(outcar_path, "r") as file:
+            lines = file.readlines()
 
-        # Find the Fermi energy
-        fermi_energy_tag = root.find(".//dos/i[@name='efermi']")
-        if fermi_energy_tag is None:
-            return "Error: Fermi energy not found in vasprun.xml."
-        fermi_energy = float(fermi_energy_tag.text)
+        # Extract NELECT and NKPTS
+        nelect = None
+        nkpts = None
+        for line in lines:
+            if "NELECT" in line:
+                nelect = float(line.split()[2]) / 2  # HOMO band index
+            elif "NKPTS" in line:
+                nkpts = int(line.split()[3])  # Total k-points
 
-        # Extract band energies for each k-point
-        eigenvalues = []
-        for eigenvalue_set in root.findall(".//calculation/eigenvalues/array/set/set/set"):
-            eigenvalues.append([
-                float(entry.text.split()[0])  # Only take the first value (energy)
-                for entry in eigenvalue_set.findall("r")
-            ])
+        if nelect is None or nkpts is None:
+            return "Error: Could not extract NELECT or NKPTS from OUTCAR."
 
-        if not eigenvalues:
-            return "Error: Band eigenvalues not found in vasprun.xml."
+        # Calculate HOMO and LUMO band indices
+        homo_band = int(nelect)
+        lumo_band = homo_band + 1
 
-        # Determine the highest valence band and lowest conduction band
-        valence_band_max = float("-inf")
-        conduction_band_min = float("inf")
+        # Extract HOMO and LUMO energies
+        homo_energies = []
+        lumo_energies = []
+        for line in lines:
+            if f"{homo_band:5d}" in line:  # Strictly match HOMO band
+                try:
+                    homo_energies.append(float(line.split()[1]))
+                except (ValueError, IndexError):
+                    pass
+            elif f"{lumo_band:5d}" in line:  # Strictly match LUMO band
+                try:
+                    lumo_energies.append(float(line.split()[1]))
+                except (ValueError, IndexError):
+                    pass
 
-        for band in eigenvalues:
-            for energy in band:
-                if energy <= fermi_energy:  # Valence band
-                    valence_band_max = max(valence_band_max, energy)
-                else:  # Conduction band
-                    conduction_band_min = min(conduction_band_min, energy)
+        if not homo_energies or not lumo_energies:
+            return "Error: Could not extract HOMO or LUMO energies from OUTCAR."
 
-        # Calculate the bandgap
-        if conduction_band_min > valence_band_max:
-            bandgap = conduction_band_min - valence_band_max
-            return bandgap
-        else:
-            return "Error: No bandgap found (metallic system)."
+        # Sort HOMO energies and take the last (maximum)
+        homo_energy = sorted(homo_energies)[-1]
 
-    except ET.ParseError:
-        return "Error: Failed to parse vasprun.xml."
+        # Sort LUMO energies and take the first (minimum)
+        lumo_energy = sorted(lumo_energies)[0]
+
+        # Calculate bandgap
+        bandgap = lumo_energy - homo_energy
+
+        return {
+            "bandgap": bandgap,
+            "HOMO index": homo_band,
+            "HOMO energy": homo_energy,
+            "LUMO index": lumo_band,
+            "LUMO energy": lumo_energy,
+        }
+
     except Exception as e:
         return f"Error: {str(e)}"
