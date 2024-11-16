@@ -83,8 +83,10 @@ def extract_bandgap_OUTCAR(directory="."):
             "bandgap": bandgap,
             "HOMO index": homo_band,
             "HOMO energy": homo_energy,
+            "HOMO": homo_energy,
             "LUMO index": lumo_band,
             "LUMO energy": lumo_energy,
+            "LUMO": lumo_energy,
         }
 
     except Exception as e:
