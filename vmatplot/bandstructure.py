@@ -10,7 +10,7 @@ import matplotlib.gridspec as gridspec
 
 # from vmatplot.commons import identify_parameters
 
-def extract_bandgap_OUTCAR(directory="."):
+def extract_bandgap_outcar(directory="."):
     """
     Extract the bandgap, LUMO, and HOMO values from the OUTCAR file and return as a dictionary.
 
@@ -83,9 +83,14 @@ def extract_bandgap_OUTCAR(directory="."):
             "bandgap": bandgap,
             "HOMO index": homo_band,
             "HOMO energy": homo_energy,
+            "HOMO": homo_energy,
             "LUMO index": lumo_band,
             "LUMO energy": lumo_energy,
+            "LUMO": lumo_energy,
         }
 
     except Exception as e:
         return f"Error: {str(e)}"
+
+def extract_bandgap_OUTCAR(*args):
+    return extract_bandgap_outcar(*args)
