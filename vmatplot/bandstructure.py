@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
 # from vmatplot.commons import identify_parameters
+from vmatplot.algorithms import transpose_matrix
 
 def extract_bandgap_outcar(directory="."):
     """

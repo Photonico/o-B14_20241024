@@ -5,6 +5,23 @@ import numpy as np
 
 from scipy.optimize import leastsq
 
+def get_matrix_shape(matrix):
+    rows = len(matrix)
+    cols = len(matrix[0]) if rows > 0 else 0
+    return (rows, cols)
+
+def transpose_matrix(matrix):
+    return [list(row) for row in zip(*matrix)]
+
+def compute_average(data_lines):
+    """Define the function to compute the average of the last value in each line."""
+    total = 0
+    for line in data_lines:
+        values = line.split()       # Split the line into individual values
+        total += float(values[-1])  # Add the last value to the total
+        print(line)
+    return total / len(data_lines)  # Return the average
+
 def is_nested_list(input_list): return isinstance(input_list, list) and isinstance(input_list[0], list)
 
 def birch_murnaghan_equation_of_state(parameters, volume):
