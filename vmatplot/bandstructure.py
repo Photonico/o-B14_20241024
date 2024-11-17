@@ -8,8 +8,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
+from vmatplot.output_settings import color_sampling, canvas_setting
 from vmatplot.algorithms import transpose_matrix
 from vmatplot.commons import extract_fermi
+
+global_tolerance = 1e-4
 
 def extract_bandgap_outcar(directory="."):
     """
@@ -123,7 +126,7 @@ def extract_high_sym(directory):
     sets = high_symmetry_points
     return list(sets)
 
-def extract_highsym(directory):
+def extract_high_sym_details(directory):
     """
     Extracts the list of k-point coordinates from the vasprun.xml file of a VASP calculation.
 
@@ -167,6 +170,36 @@ def extract_highsym(directory):
             kpoints.append(coords)
     # Return the list of k-point coordinates
     return kpoints
+
+def extract_kpath(directory):
+    """
+    Calculates the cumulative distances along a path through k-points in reciprocal space.
+
+    Args:
+    directory (str): The directory path that contains the VASP vasprun.xml file.
+
+    Returns:
+    list: A list of cumulative distances for the path through the k-points.
+
+    This function uses the list of k-point coordinates extracted from the vasprun.xml file
+    and computes the Euclidean distance between successive k-points. These distances are
+    then summed cumulatively to provide a measure of the total path length traversed up to
+    each k-point in the list.
+
+    The resulting cumulative distances serve as the x-axis values (k-points) in a bandstructure plot.
+    """
+    # Extract the list of k-point coordinates
+    kpoints = extract_high_sym_details(directory)
+    # Initialize the list for cumulative distances with the starting point (0 distance)
+    cumulative_distances = [0]
+    # Iterate over the list of k-points to calculate the path distances
+    for i in range(1, len(kpoints)):
+        # Calculate the Euclidean distance between successive k-points
+        distance = np.linalg.norm(np.array(kpoints[i]) - np.array(kpoints[i-1]))
+        # Add the distance from the previous total to get the new cumulative distance
+        cumulative_distances.append(cumulative_distances[-1] + distance)
+    # Return the list of cumulative distances
+    return cumulative_distances
 
 def extract_high_symlines(directory):
     """
@@ -331,7 +364,7 @@ def kpoints_index(directory):
     # Retrieve the coordinates of the high symmetry points
     high_symmetry_points = kpoints_coordinate(directory)
     # Retrieve the list of kpoints
-    kpoints_list = extract_highsym(directory)
+    kpoints_list = extract_high_sym_details(directory)
     # Initialize a dictionary to store the indices of the high symmetry points
     high_symmetry_indices = {}
     # For each high symmetry point, find the closest kpoint
@@ -524,47 +557,43 @@ def extract_eigenvalues_bands_spinUp(directory):
 def extract_eigenvalues_bands_spinDown(directory):
     return extract_eigenvalues_bands(directory, "spin 2")
 
-global_tolerance = 0.8
-
-def extract_eigenvalues_conductionBands(directory, spin_label):
+def extract_eigenvalues_conductionBands(directory, spin_label, TOLERANCE = global_tolerance):
     eigenvalues_matrix = extract_eigenvalues_bands(directory, spin_label)
     conduction_bands = []
-    TOLERANCE = global_tolerance
-    current_LUMO = extract_bandgap_outcar(directory)[2]
-    current_HOMO = extract_bandgap_outcar(directory)[1]
+    current_LUMO = extract_bandgap_outcar(directory)["LUMO energy"]
+    current_HOMO = extract_bandgap_outcar(directory)["HOMO energy"]
     for eigenvalues_bands in eigenvalues_matrix:
         if np.min(eigenvalues_bands) >= current_LUMO-TOLERANCE:
             conduction_bands.append(eigenvalues_bands)
     return conduction_bands
 
-def extract_eigenvalues_valenceBands(directory, spin_label):
+def extract_eigenvalues_valenceBands(directory, spin_label, TOLERANCE = global_tolerance):
     eigenvalues_matrix = extract_eigenvalues_bands(directory, spin_label)
     valence_bands = []
-    TOLERANCE = global_tolerance
-    current_LUMO = extract_bandgap_outcar(directory)[2]
-    current_HOMO = extract_bandgap_outcar(directory)[1]
+    current_LUMO = extract_bandgap_outcar(directory)["LUMO energy"]
+    current_HOMO = extract_bandgap_outcar(directory)["HOMO energy"]
     for eigenvalues_bands in eigenvalues_matrix:
         if np.max(eigenvalues_bands) <= current_HOMO+TOLERANCE:
             valence_bands.append(eigenvalues_bands)
     return valence_bands
 
-def extract_eigenvalues_conductionBands_nonpolarized(directory):
-    return extract_eigenvalues_conductionBands(directory, "spin 1")
+def extract_eigenvalues_conductionBands_nonpolarized(directory, TOLERANCE):
+    return extract_eigenvalues_conductionBands(directory, "spin 1", TOLERANCE)
 
-def extract_eigenvalues_valenceBands_nonpolarized(directory):
-    return extract_eigenvalues_valenceBands(directory, "spin 1")
+def extract_eigenvalues_valenceBands_nonpolarized(directory, TOLERANCE):
+    return extract_eigenvalues_valenceBands(directory, "spin 1", TOLERANCE)
 
-def extract_eigenvalues_conductionBands_spinUp(directory):
-    return extract_eigenvalues_conductionBands(directory, "spin 1")
+def extract_eigenvalues_conductionBands_spinUp(directory, TOLERANCE):
+    return extract_eigenvalues_conductionBands(directory, "spin 1", TOLERANCE)
 
-def extract_eigenvalues_valenceBands_spinUp(directory):
-    return extract_eigenvalues_valenceBands(directory, "spin 1")
+def extract_eigenvalues_valenceBands_spinUp(directory, TOLERANCE):
+    return extract_eigenvalues_valenceBands(directory, "spin 1", TOLERANCE)
 
-def extract_eigenvalues_conductionBands_spinDown(directory):
-    return extract_eigenvalues_conductionBands(directory, "spin 2")
+def extract_eigenvalues_conductionBands_spinDown(directory, TOLERANCE):
+    return extract_eigenvalues_conductionBands(directory, "spin 2", TOLERANCE)
 
-def extract_eigenvalues_valenceBands_spinDown(directory):
-    return extract_eigenvalues_valenceBands(directory, "spin 2")
+def extract_eigenvalues_valenceBands_spinDown(directory, TOLERANCE):
+    return extract_eigenvalues_valenceBands(directory, "spin 2", TOLERANCE)
 
 def extract_high_sym_intersections(directory, spin_label):
     """
@@ -750,3 +779,160 @@ def extract_high_sym_max_valence_intersections(directory, spin_label):
             max_valence_intersections[label] = max_point
 
     return max_valence_intersections
+
+# plot bandstructure in single figure
+
+def create_matters_bs(matters_list):
+    matters = []
+    for current_matter in matters_list:
+        bstype, label, directory, *optional = current_matter
+        if not optional:
+            color = "orbital"
+            lstyle = "solid"
+            alpha = 1.0
+            current_tolerance = 0
+        elif len(optional) == 1:
+            color = optional[0]
+            lstyle = "solid"
+            alpha = 1.0
+            current_tolerance = 0
+        elif len(optional) == 2:
+            color = optional[0]
+            lstyle =optional[1]
+            alpha = 1.0
+            current_tolerance = 0
+        elif len(optional) == 3:
+            color = optional[0]
+            lstyle =optional[1]
+            alpha = optional[2]
+            current_tolerance = 0
+        else:
+            color, lstyle, alpha, current_tolerance = optional[0], optional[1], optional[2], optional[3]
+        # Bandstructure plotting style: monocolor
+        if bstype.lower() in ["monocolor", "monocolor nonpolarized"]:
+            fermi_energy = extract_fermi(directory)
+            kpath = extract_kpath(directory)
+            bands = extract_eigenvalues_bands_nonpolarized(directory)
+            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, alpha, current_tolerance])
+        elif bstype.lower() in ["monocolor spin up", "spin up monocolor"]:
+            fermi_energy = extract_fermi(directory)
+            kpath = extract_kpath(directory)
+            bands = extract_eigenvalues_bands_spinUp(directory)
+            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, alpha, current_tolerance])
+        elif bstype.lower() in ["monocolor spin down", "spin down monocolor"]:
+            fermi_energy = extract_fermi(directory)
+            kpath = extract_kpath(directory)
+            bands = extract_eigenvalues_bands_spinDown(directory)
+            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, alpha, current_tolerance])
+        # Bandstructure plotting style: bands
+        elif bstype.lower() in ["bands", "bands nonpolarized"]:
+            fermi_energy = extract_fermi(directory)
+            kpath = extract_kpath(directory)
+            conduction_bands = extract_eigenvalues_conductionBands_nonpolarized(directory, current_tolerance)
+            valence_bands = extract_eigenvalues_valenceBands_nonpolarized(directory, current_tolerance)
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, alpha, current_tolerance])
+        elif bstype.lower() in ["bands spin up", "spin up bands"]:
+            fermi_energy = extract_fermi(directory)
+            kpath = extract_kpath(directory)
+            conduction_bands = extract_eigenvalues_conductionBands_spinUp(directory, current_tolerance)
+            valence_bands = extract_eigenvalues_valenceBands_spinUp(directory, current_tolerance)
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, alpha, current_tolerance])
+        elif bstype.lower() in ["bands spin down", "spin down bands"]:
+            fermi_energy = extract_fermi(directory)
+            kpath = extract_kpath(directory)
+            conduction_bands = extract_eigenvalues_conductionBands_spinDown(directory, current_tolerance)
+            valence_bands = extract_eigenvalues_valenceBands_spinDown(directory, current_tolerance)
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, alpha, current_tolerance])
+    return matters
+
+def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc="False"):
+    # Help information
+    help_info = """
+    Usage: plot_bandstructure
+        arg[0]: title;
+        arg[1]: the range of eigenvalues, from -arg[1] to arg[1];
+        arg[2]: matters list;
+        arg[3]: legend location;
+    """
+    if title in ["help", "Help"]:
+        print(help_info)
+        return
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi = fig_setting[1])
+    params = fig_setting[2]; plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Colors calling
+    fermi_color = color_sampling("Violet")
+    annotate_color = color_sampling("Grey")
+
+    # Data calling and plotting
+    matters = create_matters_bs(matters_list)
+    for matter in matters:
+        current_label = matter[1]
+        if matter[0].lower() in ["monocolor"]:
+            fermi = matter[2]
+            for bands_index in range(0, len(matter[4])):
+                current_band = [eigenvalue - fermi for eigenvalue in matter[4][bands_index]]
+                if bands_index == 0:
+                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], alpha=matter[7], label=f"Bandstructure {current_label}", zorder=4)
+                else:
+                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], alpha=matter[7], zorder=4)
+        elif matter[0] in ["bands"]:
+            fermi = matter[2]
+            for bands_index in range(0, len(matter[4])):
+                current_conduction_band = [eigenvalue - fermi for eigenvalue in matter[4][bands_index]]
+                if bands_index == 0:
+                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], alpha=matter[8], label=f"Conduction bands {current_label}", zorder=4)
+                else:
+                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], alpha=matter[8], zorder=4)
+            for bands_index in range(0, len(matter[5])):
+                current_valence_band = [eigenvalue - fermi for eigenvalue in matter[5][bands_index]]
+                if bands_index == 0:
+                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], alpha=matter[8], label=f"Valence bands {current_label}", zorder=4)
+                else:
+                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], alpha=matter[8], zorder=4)
+        kpath_start = matter[3][0]
+        kpath_end = matter[3][-1]
+        fermi_last = matter[2]
+
+    # Fermi energy as a horizon line
+    plt.axhline(y = 0, color=fermi_color[0], alpha=1.00, linestyle="--", label="Fermi energy", zorder=2)
+    efermi = fermi_last
+    kpath_range = kpath_end-kpath_start
+    # fermi_energy_text = f"Fermi energy\n{efermi:.3f} (eV)"
+    # plt.text(kpath_start+kpath_range*0.98, eigen_range*0.02, fermi_energy_text, fontsize=10, c=fermi_color[0], rotation=0, va = "bottom", ha="right", zorder=5)
+
+    # Title
+    plt.title(f"Bandstructure {title}")
+    plt.ylabel("Energy (eV)")
+    # plt.ylabel("$E-E_\text{F}$ (eV)")
+
+    # y-axis range
+    plt.ylim(eigen_range*(-1), eigen_range)
+    # x-axis range
+    plt.xlim(kpath_start, kpath_end)
+
+    high_symmetry_paths = kpoints_path(matters_list[-1][2])
+    high_symmetry_positions = list(high_symmetry_paths.values())
+    # high_symmetry_positions = list(kpoints_path(matters_list[-1][2]).values())
+
+    high_symmetry_positions.append(kpath_end)
+    high_symmetry_labels = list(high_symmetry_paths.keys())
+    # high_symmetry_labels = list(kpoints_path(matters_list[-1][2]).keys())
+
+    high_symmetry_labels.append(high_symmetry_labels[0])
+    plt.xticks(high_symmetry_positions, high_symmetry_labels)
+    for k_loc in high_symmetry_positions[1:-1]:
+        plt.axvline(x=k_loc, color=annotate_color[1], linestyle="--", zorder=1)
+
+    # Legend
+    if legend_loc is None:
+        legend = plt.legend()
+        legend.set_visible(False)
+    else:
+        legend = plt.legend(loc=legend_loc)
+
+    plt.tight_layout()

@@ -264,3 +264,34 @@ def identify_parameters(directory="."):
     except (ET.ParseError, ValueError, IndexError) as e:
         print(f"Error parsing files in {directory}: {e}")
         return None
+
+def process_boundaries_rescaling(boundary):
+    boundary_type = check_range_type(boundary)
+    scale_flag = False
+    source_start, source_end, scaled_start, scaled_end = None, None, None, None
+
+    if boundary_type == "Simple end":
+        source_range = (None, boundary)
+        source_start, source_end = process_boundary(source_range)
+    elif boundary_type == "Simple range":
+        source_range = boundary[0]
+        source_start, source_end = process_boundary(source_range)
+    elif boundary_type == "Double ends":
+        scale_flag = True
+        source_range = (None, boundary[0])
+        scaled_range = (None, boundary[1])
+        source_start, source_end = process_boundary(source_range)
+        scaled_start, scaled_end = process_boundary(scaled_range)
+    elif boundary_type == "Simple range with a rate":
+        scale_flag = True
+        source_range = boundary[0]
+        scaled_range = tuple(bounds * boundary[1] for bounds in boundary[0])
+        source_start, source_end = process_boundary(source_range)
+        scaled_start, scaled_end = process_boundary(scaled_range)
+    elif boundary_type == "Double ranges":
+        scale_flag = True
+        source_range = boundary[0]
+        scaled_range = boundary[1]
+        source_start, source_end = process_boundary(source_range)
+        scaled_start, scaled_end = process_boundary(scaled_range)
+    return scale_flag, source_start, source_end, scaled_start, scaled_end
