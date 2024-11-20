@@ -265,6 +265,53 @@ def identify_parameters(directory="."):
         print(f"Error parsing files in {directory}: {e}")
         return None
 
+def check_range_type(data: Union[Tuple, Tuple[Tuple, ...], int, float]) -> str:
+    """
+    Determine the type of the provided range data.
+    Args:
+        data (Union[Tuple, Tuple[Tuple, ...], int, float]): The range data to check.
+        It can be a simple number, a tuple with one or more elements, or nested tuples.
+    Returns:
+        str: A description of whether the input is a "Simple end",
+             "Double ends", "Simple range", "Simple range with a rate", or "Double ranges".
+    """
+    # Check if the input is a single number (not a tuple)
+    if isinstance(data, (int, float)):
+        return "Simple end"
+    # Check if the input is a tuple with one element
+    elif isinstance(data, tuple) and len(data) == 1:
+        if isinstance(data[0], tuple):
+            return "Simple range"
+        else:
+            return "Simple end"
+    # Check if the input is a tuple with two elements
+    elif isinstance(data, tuple) and len(data) == 2:
+        if isinstance(data[0], tuple) and isinstance(data[1], tuple):
+            return "Double ranges"
+        elif isinstance(data[0], tuple) and isinstance(data[1], (int, float)):
+            return "Simple range with a rate"
+        elif isinstance(data[0], (int, float)) and isinstance(data[1], (int, float)):
+            return "Double ends"
+    return "Unknown type"
+
+def process_boundary(boundary, default=(None, None)):
+    # Enhanced to handle single values as well as tuples/lists
+    # If boundary is None or empty, return the default
+    if not boundary:
+        return default
+    # If boundary is a single value (not a container), treat it as the end value
+    if isinstance(boundary, (int, float)):
+        return (None, boundary)
+    # If boundary is a container with a single item, unpack it
+    if isinstance(boundary, (list, tuple)) and len(boundary) == 1:
+        return (None, boundary[0])
+    # If boundary is a container with two items, return them as start and end
+    elif isinstance(boundary, (list, tuple)) and len(boundary) == 2:
+        return (boundary[0], boundary[1])
+    # In case boundary doesn't match any expected pattern, return default
+    else:
+        return default
+
 def process_boundaries_rescaling(boundary):
     boundary_type = check_range_type(boundary)
     scale_flag = False
