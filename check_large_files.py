@@ -16,10 +16,8 @@ def find_large_files(start_path='.', size_threshold_mb=50):
             except (FileNotFoundError, PermissionError):
                 continue
 
+#%%
 if __name__ == "__main__":
     find_large_files()
-
-#%%
-find_large_files()
 
 # %%
