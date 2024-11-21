@@ -100,9 +100,54 @@ def extract_bandgap_outcar(directory="."):
 def extract_bandgap_OUTCAR(*args):
     return extract_bandgap_outcar(*args)
 
+def is_kpoints_returning(directory):
+    """
+    Check if the last high symmetry point in the KPOINTS or KPOINTS_OPT file
+    returns to the starting point.
+
+    Args:
+        directory (str): The directory path containing the KPOINTS or KPOINTS_OPT file.
+
+    Returns:
+        bool: True if the last high symmetry point returns to the starting point, False otherwise.
+    """
+    kpoints_file_path = os.path.join(directory, "KPOINTS")
+    kpoints_opt_path = os.path.join(directory, "KPOINTS_OPT")
+    kpoints_file = None
+
+    # Determine which file to use
+    if os.path.exists(kpoints_opt_path):
+        kpoints_file = kpoints_opt_path
+    elif os.path.exists(kpoints_file_path):
+        kpoints_file = kpoints_file_path
+    else:
+        return False
+
+    try:
+        with open(kpoints_file, "r", encoding="utf-8") as file:
+            lines = file.readlines()
+
+        # Ensure it's a line-mode KPOINTS file
+        if lines[2][0].lower() != "l":
+            return False
+
+        # Extract high symmetry points
+        high_symmetry_points = []
+        for line in lines[4:]:
+            tokens = line.strip().split()
+            if tokens and tokens[-1].isalpha():  # Check if the last token is a label
+                high_symmetry_points.append(tokens[-1])
+
+        # Check if the first and last points are the same
+        return high_symmetry_points and high_symmetry_points[0] == high_symmetry_points[-1]
+
+    except Exception:
+        return False
+
 def extract_high_sym(directory):
     """
-    Extracts the high symmetry lines from the KPOINTS file in a VASP calculation directory.
+    Extracts the high symmetry lines from the KPOINTS file in a VASP calculation directory,
+    removing duplicate points except for the first and last.
     """
     # Open and read the KPOINTS file
     kpoints_file_path = os.path.join(directory, "KPOINTS")
@@ -111,21 +156,32 @@ def extract_high_sym(directory):
         kpoints_file = kpoints_opt_path
     elif os.path.exists(kpoints_file_path):
         kpoints_file = kpoints_file_path
+    else:
+        raise FileNotFoundError("KPOINTS file not found in the directory.")
     with open(kpoints_file, "r", encoding="utf-8") as file:
         KPOINTS = file.readlines()
     # Check if the KPOINTS file is in line-mode
     if KPOINTS[2][0] not in ("l", "L"):
         raise ValueError(f"Expected 'L' on the third line of KPOINTS file, got: {KPOINTS[2]}")
-    # Initialize a set to store unique high symmetry points
-    high_symmetry_points = set()
+    # Initialize a list to store high symmetry points
+    high_symmetry_points = []
     # Read the high symmetry points from the KPOINTS file
     for i in range(4, len(KPOINTS)):
         tokens = KPOINTS[i].strip().split()
         if tokens and tokens[-1].isalpha():
-            high_symmetry_points.add(tokens[-1])
-    # The set of high symmetry points
-    sets = high_symmetry_points
-    return list(sets)
+            high_symmetry_points.append(tokens[-1])
+    # Remove duplicates except for the first and last points
+    if len(high_symmetry_points) > 2:
+        unique_points = [high_symmetry_points[0]]   # Keep the first point
+        seen = set(unique_points)
+        for point in high_symmetry_points[1:-1]:        # Process middle points
+            if point not in seen:
+                unique_points.append(point)
+                seen.add(point)
+        unique_points.append(high_symmetry_points[-1])  # Keep the last point
+    else:
+        unique_points = high_symmetry_points            # If only two points, return as is
+    return unique_points
 
 def extract_high_sym_details(directory):
     """
@@ -846,7 +902,7 @@ def create_matters_bs(matters_list):
             matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, alpha, current_tolerance])
     return matters
 
-def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc="False"):
+def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc=False):
     # Help information
     help_info = """
     Usage: plot_bandstructure
@@ -878,7 +934,7 @@ def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc="F
             for bands_index in range(0, len(matter[4])):
                 current_band = [eigenvalue - fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], alpha=matter[7], label=f"Bandstructure {current_label}", zorder=4)
+                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], alpha=matter[7], label=f"Bands {current_label}", zorder=4)
                 else:
                     plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], alpha=matter[7], zorder=4)
         elif matter[0] in ["bands"]:
@@ -916,24 +972,28 @@ def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc="F
     # x-axis range
     plt.xlim(kpath_start, kpath_end)
 
-    high_symmetry_paths = kpoints_path(matters_list[-1][2])
+    # High symmetry path
+    directory = matters_list[-1][2]
+    high_symmetry_paths = kpoints_path(directory)
     high_symmetry_positions = list(high_symmetry_paths.values())
-    # high_symmetry_positions = list(kpoints_path(matters_list[-1][2]).values())
-
-    high_symmetry_positions.append(kpath_end)
     high_symmetry_labels = list(high_symmetry_paths.keys())
-    # high_symmetry_labels = list(kpoints_path(matters_list[-1][2]).keys())
 
-    high_symmetry_labels.append(high_symmetry_labels[0])
+    # Check if the KPOINTS file returns to the starting point
+    if is_kpoints_returning(directory) is True:
+        high_symmetry_positions.append(kpath_end)
+        high_symmetry_labels.append(high_symmetry_labels[0])
+    else: pass
+
     plt.xticks(high_symmetry_positions, high_symmetry_labels)
+
     for k_loc in high_symmetry_positions[1:-1]:
-        plt.axvline(x=k_loc, color=annotate_color[1], linestyle="--", zorder=1)
+        plt.axvline(x=k_loc, color=annotate_color[1], linestyle="--", alpha=0.8, zorder=1)
 
     # Legend
-    if legend_loc is None:
-        legend = plt.legend()
-        legend.set_visible(False)
-    else:
-        legend = plt.legend(loc=legend_loc)
+    if legend_loc:
+        plt.legend(loc=legend_loc)
+    elif legend_loc is None or legend_loc is False:
+        # Do not display the legend
+        pass
 
     plt.tight_layout()
