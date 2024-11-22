@@ -1164,10 +1164,16 @@ def create_matters_bsDos(matters_list):
             color = optional[0]
             lstyle = "solid"
             alpha = 1.0
+            current_tolerance = 0
         elif len(optional) == 2:
             color = optional[0]
             lstyle =optional[1]
             alpha = 1.0
+            current_tolerance = 0
+        elif len(optional) == 3:
+            color = optional[0]
+            lstyle =optional[1]
+            alpha = optional[2]
             current_tolerance = 0
         else:
             color, lstyle, alpha, current_tolerance = optional[0], optional[1], optional[2], optional[3]
@@ -1326,7 +1332,8 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
     ax2.set_ylim(eigen_range*(-1), eigen_range)
     ax2.set_xlim(0, dos_range)
 
-    ax2.set_xticks([])
+    ax2.set_xticks([0, dos_range/2, dos_range])
+    ax2.set_xticklabels(["0", f"{dos_range/2:.1f}", f"{dos_range:.1f}"])
     ax2.set_yticks([])
 
     shift = dos_efermi
