@@ -11,7 +11,7 @@ import matplotlib.gridspec as gridspec
 
 from vmatplot.output_settings import color_sampling, canvas_setting
 from vmatplot.algorithms import transpose_matrix
-from vmatplot.commons import extract_fermi
+from vmatplot.commons import extract_fermi, get_atoms_count
 from vmatplot.dos import extract_dos
 
 global_tolerance = 1e-4
@@ -21,10 +21,8 @@ global_tolerance = 1e-4
 def extract_bandgap_outcar(directory="."):
     """
     Extract the bandgap, LUMO, and HOMO values from the OUTCAR file and return as a dictionary.
-
     Parameters:
         directory (str): Path to the directory containing the VASP output files (default is current directory).
-
     Returns:
         dict: A dictionary containing:
             - "bandgap": The bandgap value in eV.
@@ -1143,7 +1141,7 @@ def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc=Fa
         plt.axvline(x=k_loc, color=annotate_color[1], linestyle="--", alpha=0.8, zorder=1)
 
     # Legend
-    if legend_loc:
+    if legend_loc is True:
         plt.legend(loc=legend_loc)
     elif legend_loc is None or legend_loc is False:
         # Do not display the legend
@@ -1161,6 +1159,7 @@ def create_matters_bsDos(matters_list):
             color = "orbital"
             lstyle = "solid"
             alpha = 1.0
+            current_tolerance = 0
         elif len(optional) == 1:
             color = optional[0]
             lstyle = "solid"
@@ -1169,47 +1168,48 @@ def create_matters_bsDos(matters_list):
             color = optional[0]
             lstyle =optional[1]
             alpha = 1.0
+            current_tolerance = 0
         else:
-            color, lstyle, alpha = optional[0], optional[1], optional[2]
+            color, lstyle, alpha, current_tolerance = optional[0], optional[1], optional[2], optional[3]
         # Bandstructure plotting style: monocolor
         if bstype.lower() in ["monocolor", "monocolor nonpolarized"]:
             fermi_energy = extract_fermi(bs_dir)
             kpath = extract_kpath(bs_dir)
             bands = extract_eigenvalues_bands_nonpolarized(bs_dir)
             dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, alpha])
+            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, alpha, current_tolerance])
         elif bstype.lower() in ["monocolor spin up", "spin up monocolor"]:
             fermi_energy = extract_fermi(bs_dir)
             kpath = extract_kpath(bs_dir)
             bands = extract_eigenvalues_bands_spinUp(bs_dir)
             dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, alpha])
+            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, alpha, current_tolerance])
         elif bstype.lower() in ["monocolor spin down", "spin down monocolor"]:
             fermi_energy = extract_fermi(bs_dir)
             kpath = extract_kpath(bs_dir)
             bands = extract_eigenvalues_bands_spinDown(bs_dir)
             dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, alpha])
+            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, alpha, current_tolerance])
         # Bandstructure plotting style: bands
         elif bstype.lower() in ["bands", "bands nonpolarized"]:
             fermi_energy = extract_fermi(bs_dir)
             kpath = extract_kpath(bs_dir)
-            conduction_bands = extract_eigenvalues_conductionBands_nonpolarized(bs_dir)
-            valence_bands = extract_eigenvalues_valenceBands_nonpolarized(bs_dir)
+            conduction_bands = extract_eigenvalues_conductionBands_nonpolarized(bs_dir, current_tolerance)
+            valence_bands = extract_eigenvalues_valenceBands_nonpolarized(bs_dir, current_tolerance)
             dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha])
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha, current_tolerance])
         elif bstype.lower() in ["bands spin up", "spin up bands"]:
             fermi_energy = extract_fermi(bs_dir)
             kpath = extract_kpath(bs_dir)
-            conduction_bands = extract_eigenvalues_conductionBands_spinUp(bs_dir)
-            valence_bands = extract_eigenvalues_valenceBands_spinUp(bs_dir)
+            conduction_bands = extract_eigenvalues_conductionBands_spinUp(bs_dir, current_tolerance)
+            valence_bands = extract_eigenvalues_valenceBands_spinUp(bs_dir, current_tolerance)
             dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha])
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha, current_tolerance])
         elif bstype.lower() in ["bands spin down", "spin down bands"]:
             fermi_energy = extract_fermi(bs_dir)
             kpath = extract_kpath(bs_dir)
-            conduction_bands = extract_eigenvalues_conductionBands_spinDown(bs_dir)
-            valence_bands = extract_eigenvalues_valenceBands_spinDown(bs_dir)
+            conduction_bands = extract_eigenvalues_conductionBands_spinDown(bs_dir, current_tolerance)
+            valence_bands = extract_eigenvalues_valenceBands_spinDown(bs_dir, current_tolerance)
             dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha])
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha, current_tolerance])
     return matters
