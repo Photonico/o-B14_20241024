@@ -1513,7 +1513,7 @@ Automatic generation of k-mesh.
    NGXF,Y,Z  is equivalent  to a cutoff of  27.99, 26.31, 26.81 a.u.
 
  SYSTEM =  PDoS                                    
- POSCAR =  o-B14                                   
+ POSCAR =  o-B14
 
  Startparameter for this run:
    NWRITE =      2    write-flag & timer

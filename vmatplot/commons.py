@@ -265,6 +265,29 @@ def identify_parameters(directory="."):
         print(f"Error parsing files in {directory}: {e}")
         return None
 
+def get_atoms_count(directory):
+    """
+    Extracts the total number of atoms from a VASP vasprun.xml file.
+
+    Args:
+    directory (str): The directory path that contains the VASP vasprun.xml file.
+
+    Returns:
+    int: The total number of atoms in the calculation.
+    """
+    # Construct the path to the vasprun.xml file and parse it
+    xml_file = os.path.join(directory, "vasprun.xml")
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+
+    # Find the atominfo section and extract the total number of atoms
+    atominfo_section = root.find(".//atominfo/atoms")
+    if atominfo_section is not None:
+        return int(atominfo_section.text)
+    else:
+        print("Atominfo section not found in the XML file.")
+        return None
+
 def check_range_type(data: Union[Tuple, Tuple[Tuple, ...], int, float]) -> str:
     """
     Determine the type of the provided range data.
