@@ -1214,7 +1214,7 @@ def create_matters_bsDos(matters_list):
             matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha, current_tolerance])
     return matters
 
-def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legend_loc="False"):
+def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legend_loc=False):
     # Figure setting
     fig_setting = canvas_setting(12, 6)
     params = fig_setting[2]; plt.rcParams.update(params)
@@ -1329,8 +1329,11 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
     shift = dos_efermi
     ax2.axhline(y = dos_efermi-shift, color=bs_fermi_color[0], alpha=1.00, linestyle="--", label="Fermi energy", zorder=2)
 
-    if legend_loc not in [None, "False", False]:
+    # legend
+    if legend_loc is True:
         ax1.legend(loc=legend_loc)
-        # ax2.legend(loc=legend_loc)
-    
+        ax2.legend(loc=legend_loc)
+    elif legend_loc is None or legend_loc is False:
+        pass
+
     plt.tight_layout()
