@@ -632,7 +632,7 @@ Automatic generation of k-mesh.
    NGXF,Y,Z  is equivalent  to a cutoff of  28.01, 29.57, 28.94 a.u.
 
  SYSTEM =  Kpoints                                 
- POSCAR =  o-B14                                   
+ POSCAR =  o-B14
 
  Startparameter for this run:
    NWRITE =      2    write-flag & timer

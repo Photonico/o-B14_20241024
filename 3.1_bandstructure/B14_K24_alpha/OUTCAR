@@ -610,7 +610,7 @@ Interpolating k-points between supplied coordinates.
    NGXF,Y,Z  is equivalent  to a cutoff of  27.99, 26.31, 26.81 a.u.
 
  SYSTEM =  BS                                      
- POSCAR =  o-B14                                   
+ POSCAR =  o-B14
 
  Startparameter for this run:
    NWRITE =      2    write-flag & timer
