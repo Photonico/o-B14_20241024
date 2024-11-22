@@ -1279,15 +1279,18 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
     # x-axis
     ax1.set_xlim(kpath_start, kpath_end)
 
-    high_symmetry_paths = kpoints_path(matters_list[-1][2])
+    bs_direction = (matters_list[-1])[2]
+    high_symmetry_paths = kpoints_path(bs_direction)
     high_symmetry_positions = list(high_symmetry_paths.values())
-    # high_symmetry_positions = list(kpoints_path(matters_list[-1][2]).values())
+    # high_symmetry_positions = list(kpoints_path(bs_direction).values())
 
-    high_symmetry_positions.append(kpath_end)
     high_symmetry_labels = list(high_symmetry_paths.keys())
-    # high_symmetry_labels = list(kpoints_path(matters_list[-1][2]).keys())
+    # high_symmetry_labels = list(kpoints_path(bs_direction).keys())
 
-    high_symmetry_labels.append(high_symmetry_labels[0])
+    if is_kpoints_returning(bs_direction) is True:
+        high_symmetry_positions.append(kpath_end)
+        high_symmetry_labels.append(high_symmetry_labels[0])
+    else: pass
 
     ax1.set_xticks(high_symmetry_positions)
     ax1.set_xticklabels(high_symmetry_labels)
