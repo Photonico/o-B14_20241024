@@ -1213,3 +1213,124 @@ def create_matters_bsDos(matters_list):
             dos = extract_dos(dos_dir)
             matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha, current_tolerance])
     return matters
+
+def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legend_loc="False"):
+    # Figure setting
+    fig_setting = canvas_setting(12, 6)
+    params = fig_setting[2]; plt.rcParams.update(params)
+
+    fig = plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])
+    ax1 = fig.add_subplot(gs[0])
+    ax2 = fig.add_subplot(gs[1])
+
+    # Colors calling
+    bs_fermi_color = color_sampling("Violet")
+    annotate_color = color_sampling("Grey")
+
+    # Data calling and plotting
+    matters = create_matters_bsDos(matters_list)
+
+    # Title
+    fig.suptitle(f"Bandstructure and DoS {title}", fontsize=fig_setting[3][0], y=1.00)
+
+    # ax1 Bandstructure
+    ax1.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    ax1.set_title("Bandstructure", fontsize=fig_setting[3][1])
+
+    for matter in matters:
+        bs_current_label = matter[1]
+        if matter[0].lower() in ["monocolor"]:
+            bs_fermi = matter[2]
+            for bands_index in range(0, len(matter[4])):
+                current_band = [eigenvalue - bs_fermi for eigenvalue in matter[4][bands_index]]
+                if bands_index == 0:
+                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], alpha=matter[8], label=f"Bandstructure {bs_current_label}", zorder=4)
+                else:
+                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], alpha=matter[8], zorder=4)
+        elif matter[0].lower() in ["bands"]:
+            bs_fermi = matter[2]
+            for bands_index in range(0, len(matter[4])):
+                current_conduction_band = [eigenvalue - bs_fermi for eigenvalue in matter[4][bands_index]]
+                if bands_index == 0:
+                    ax1.plot(matter[3], current_conduction_band, c=color_sampling(matter[7])[2], linestyle=matter[8], alpha=matter[9], label=f"Conduction bands {bs_current_label}", zorder=4)
+                else:
+                    ax1.plot(matter[3], current_conduction_band, c=color_sampling(matter[7])[2], linestyle=matter[8], alpha=matter[9], zorder=4)
+            for bands_index in range(0, len(matter[5])):
+                current_valence_band = [eigenvalue - bs_fermi for eigenvalue in matter[5][bands_index]]
+                if bands_index == 0:
+                    ax1.plot(matter[3], current_valence_band, c=color_sampling(matter[7])[0], linestyle=matter[8], alpha=matter[9], label=f"Valence bands {bs_current_label}", zorder=4)
+                else:
+                    ax1.plot(matter[3], current_valence_band, c=color_sampling(matter[7])[0], linestyle=matter[8], alpha=matter[9], zorder=4)
+        kpath_start = matter[3][0]
+        kpath_end = matter[3][-1]
+        bs_fermi_last = matter[2]
+
+    # Fermi energy as a horizon line
+    ax1.axhline(y = 0, color=bs_fermi_color[0], alpha=1.00, linestyle="--", label="Fermi energy", zorder=2)
+    bs_efermi = bs_fermi_last
+    kpath_range = kpath_end-kpath_start
+    # bs_fermi_energy_text = f"Fermi energy\n{bs_efermi:.3f} (eV)"
+    # ax1.text(kpath_start+kpath_range*0.98, eigen_range*0.02, bs_fermi_energy_text, fontsize=10, c=bs_fermi_color[0], rotation=0, va = "bottom", ha="right", zorder=5)
+
+    # y-axis
+    ax1.set_ylabel("Energy (eV)")
+    ax1.set_ylim(eigen_range*(-1), eigen_range)
+    # x-axis
+    ax1.set_xlim(kpath_start, kpath_end)
+
+    high_symmetry_paths = kpoints_path(matters_list[-1][2])
+    high_symmetry_positions = list(high_symmetry_paths.values())
+    # high_symmetry_positions = list(kpoints_path(matters_list[-1][2]).values())
+
+    high_symmetry_positions.append(kpath_end)
+    high_symmetry_labels = list(high_symmetry_paths.keys())
+    # high_symmetry_labels = list(kpoints_path(matters_list[-1][2]).keys())
+
+    high_symmetry_labels.append(high_symmetry_labels[0])
+
+    ax1.set_xticks(high_symmetry_positions)
+    ax1.set_xticklabels(high_symmetry_labels)
+
+    for k_loc in high_symmetry_positions[1:-1]:
+        ax1.axvline(x=k_loc, color=annotate_color[1], linestyle="--", zorder=1)
+
+    # ax2 DoS
+    ax2.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    ax2.set_title("DOS (a.u.)", fontsize=fig_setting[3][1])
+    for matter in matters:
+        DoS_current_label = matter[1]
+        if matter[0].lower() in ["monocolor"]:
+            dos_efermi = matter[5][0]
+            plt.plot(matter[5][6], matter[5][5], c=color_sampling(matter[6])[1], label=f"Total DoS {DoS_current_label}", zorder = 2)
+
+        elif matter[0].lower() in ["bands"]:
+            dos_efermi = matter[6][0]
+            # plt.plot(matter[6][6], matter[6][5], c=color_sampling(matter[7])[1], label=f"Total DoS {current_label}", zorder = 2)
+            dos_data = matter[6][6]
+            energy_data = matter[6][5]
+
+            conduction_dos = [dos for dos, energy in zip(dos_data, energy_data) if energy > 0]
+            conduction_energy = [energy for energy in energy_data if energy > 0]
+            valence_dos = [dos for dos, energy in zip(dos_data, energy_data) if energy < 0]
+            valence_energy = [energy for energy in energy_data if energy < 0]
+
+            if conduction_dos and conduction_energy:
+                ax2.plot(conduction_dos, conduction_energy, c=color_sampling(matter[7])[2])
+            if valence_dos and valence_energy:
+                ax2.plot(valence_dos, valence_energy, c=color_sampling(matter[7])[0])
+
+    ax2.set_ylim(eigen_range*(-1), eigen_range)
+    ax2.set_xlim(0, dos_range)
+
+    ax2.set_xticks([])
+    ax2.set_yticks([])
+
+    shift = dos_efermi
+    ax2.axhline(y = dos_efermi-shift, color=bs_fermi_color[0], alpha=1.00, linestyle="--", label="Fermi energy", zorder=2)
+
+    if legend_loc not in [None, "False", False]:
+        ax1.legend(loc=legend_loc)
+        # ax2.legend(loc=legend_loc)
+    
+    plt.tight_layout()
