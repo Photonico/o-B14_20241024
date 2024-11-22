@@ -1164,10 +1164,16 @@ def create_matters_bsDos(matters_list):
             color = optional[0]
             lstyle = "solid"
             alpha = 1.0
+            current_tolerance = 0
         elif len(optional) == 2:
             color = optional[0]
             lstyle =optional[1]
             alpha = 1.0
+            current_tolerance = 0
+        elif len(optional) == 3:
+            color = optional[0]
+            lstyle =optional[1]
+            alpha = optional[2]
             current_tolerance = 0
         else:
             color, lstyle, alpha, current_tolerance = optional[0], optional[1], optional[2], optional[3]
@@ -1214,7 +1220,7 @@ def create_matters_bsDos(matters_list):
             matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha, current_tolerance])
     return matters
 
-def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legend_loc="False"):
+def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legend_loc=False):
     # Figure setting
     fig_setting = canvas_setting(12, 6)
     params = fig_setting[2]; plt.rcParams.update(params)
@@ -1279,15 +1285,18 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
     # x-axis
     ax1.set_xlim(kpath_start, kpath_end)
 
-    high_symmetry_paths = kpoints_path(matters_list[-1][2])
+    bs_direction = (matters_list[-1])[2]
+    high_symmetry_paths = kpoints_path(bs_direction)
     high_symmetry_positions = list(high_symmetry_paths.values())
-    # high_symmetry_positions = list(kpoints_path(matters_list[-1][2]).values())
+    # high_symmetry_positions = list(kpoints_path(bs_direction).values())
 
-    high_symmetry_positions.append(kpath_end)
     high_symmetry_labels = list(high_symmetry_paths.keys())
-    # high_symmetry_labels = list(kpoints_path(matters_list[-1][2]).keys())
+    # high_symmetry_labels = list(kpoints_path(bs_direction).keys())
 
-    high_symmetry_labels.append(high_symmetry_labels[0])
+    if is_kpoints_returning(bs_direction) is True:
+        high_symmetry_positions.append(kpath_end)
+        high_symmetry_labels.append(high_symmetry_labels[0])
+    else: pass
 
     ax1.set_xticks(high_symmetry_positions)
     ax1.set_xticklabels(high_symmetry_labels)
@@ -1323,14 +1332,18 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
     ax2.set_ylim(eigen_range*(-1), eigen_range)
     ax2.set_xlim(0, dos_range)
 
-    ax2.set_xticks([])
+    ax2.set_xticks([0, dos_range/2, dos_range])
+    ax2.set_xticklabels(["0", f"{dos_range/2:.1f}", f"{dos_range:.1f}"])
     ax2.set_yticks([])
 
     shift = dos_efermi
     ax2.axhline(y = dos_efermi-shift, color=bs_fermi_color[0], alpha=1.00, linestyle="--", label="Fermi energy", zorder=2)
 
-    if legend_loc not in [None, "False", False]:
+    # legend
+    if legend_loc is True:
         ax1.legend(loc=legend_loc)
-        # ax2.legend(loc=legend_loc)
-    
+        ax2.legend(loc=legend_loc)
+    elif legend_loc is None or legend_loc is False:
+        pass
+
     plt.tight_layout()
