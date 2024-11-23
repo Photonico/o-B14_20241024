@@ -445,13 +445,13 @@ def kpoints_index(directory):
 def kpoints_path(directory):
     """
     This function calculates the path distances for high symmetry points in the Brillouin zone.
-    
+
     Args:
     directory (str): The directory path that contains the VASP output files.
-    
+
     Returns:
     dict: A dictionary mapping high symmetry points to their cumulative path distances.
-    
+
     The function works by first finding the indices of the high symmetry points in the k-point list.
     Then, it calculates the cumulative path distance for each k-point. Finally, it creates a dictionary
     that maps each high symmetry point label to its corresponding path distance.
