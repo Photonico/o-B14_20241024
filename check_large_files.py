@@ -4,7 +4,7 @@
 
 import os
 
-def find_large_files(start_path='.', size_threshold_mb=50):
+def find_large_files(start_path='.', size_threshold_mb=96):
     size_threshold = size_threshold_mb * 1024 * 1024
     for dirpath, dirnames, filenames in os.walk(start_path):
         for filename in filenames:
@@ -16,7 +16,6 @@ def find_large_files(start_path='.', size_threshold_mb=50):
             except (FileNotFoundError, PermissionError):
                 continue
 
-#%%
 if __name__ == "__main__":
     find_large_files()
 

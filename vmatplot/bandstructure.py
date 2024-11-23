@@ -236,7 +236,7 @@ def extract_high_sym_details(directory):
     # Return the list of k-point coordinates
     return kpoints
 
-def extract_kpath(directory):
+def extract_kpath_no_weight(directory):
     """
     Calculates the cumulative distances along a path through k-points in reciprocal space.
 
@@ -264,6 +264,29 @@ def extract_kpath(directory):
         # Add the distance from the previous total to get the new cumulative distance
         cumulative_distances.append(cumulative_distances[-1] + distance)
     # Return the list of cumulative distances
+    return cumulative_distances
+
+def extract_kpath(directory):
+    """
+    Calculates cumulative distances for k-points with reciprocal lattice weights.
+    Args:
+    directory (str): Path to the directory containing the VASP files.
+    Returns:
+    list: A list of cumulative distances reflecting true path proportions.
+    """
+    # Extract k-points and reciprocal weights
+    kpoints = extract_high_sym_details(directory)
+    reciprocal_weights = extract_reciprocal_weights(directory)
+    # Initialize cumulative distances
+    cumulative_distances = [0]
+    for i in range(1, len(kpoints)):
+        # Compute the vector difference between two k-points
+        delta_k = np.array(kpoints[i]) - np.array(kpoints[i-1])
+        # Apply the reciprocal lattice weight
+        weighted_distance = np.sqrt(
+            sum((delta_k[j] * reciprocal_weights[j]) ** 2 for j in range(3))
+        )
+        cumulative_distances.append(cumulative_distances[-1] + weighted_distance)
     return cumulative_distances
 
 def extract_high_symlines(directory):
@@ -451,29 +474,19 @@ def kpoints_index(directory):
 
 def kpoints_path(directory):
     """
-    This function calculates the path distances for high symmetry points in the Brillouin zone.
-
+    Maps high symmetry points to cumulative distances along the k-points path.
     Args:
-    directory (str): The directory path that contains the VASP output files.
-
+    directory (str): Path to the directory containing the VASP files.
     Returns:
-    dict: A dictionary mapping high symmetry points to their cumulative path distances.
-
-    The function works by first finding the indices of the high symmetry points in the k-point list.
-    Then, it calculates the cumulative path distance for each k-point. Finally, it creates a dictionary
-    that maps each high symmetry point label to its corresponding path distance.
+    dict: A dictionary mapping high symmetry point labels to path distances.
     """
-    # Get the indices of high symmetry points in the k-point list
+    # Extract high symmetry point indices and cumulative distances
     high_symmetry_indices = kpoints_index(directory)
-    # Calculate the cumulative path distances for the k-points
-    path = extract_kpath(directory)
-    # Initialize a dictionary to store the high symmetry points and their path distances
-    high_symmetry_paths = {}
-    # Iterate over the high symmetry points and their indices
-    for label, index in high_symmetry_indices.items():
-        # Map the high symmetry point label to its path distance
-        high_symmetry_paths[label] = path[index]
-    # Return the dictionary of high symmetry points and their path distances
+    path_distances = extract_kpath(directory)
+    # Map high symmetry points to their cumulative distances
+    high_symmetry_paths = {
+        label: path_distances[index] for label, index in high_symmetry_indices.items()
+    }
     return high_symmetry_paths
 
 def high_symmetry_coordinates(directory):
@@ -499,7 +512,6 @@ def high_symmetry_path(directory):
 
     Args:
     directory (str): The directory path that contains the VASP output files.
-    
     Returns:
     list: A list of x-axis values for the high symmetry points in the bandstructure plot.
     """
@@ -523,14 +535,11 @@ def clean_kpoints(kpoints_list, tol=1e-10):
 def extract_eigenvalues_kpoints(directory, spin_label):
     """
     Extracts the eigenvalues for each k-point from a VASP vasprun.xml file considering spin polarization.
-
     Args:
         directory (str): The directory path that contains the VASP vasprun.xml file.
         spin_label (str): The spin channel label ('spin1' or 'spin2').
-
     Returns:
         list of lists: A matrix where each sublist contains the eigenvalues for a specific k-point and spin channel.
-
     This function parses the vasprun.xml file to extract the electronic energy levels (eigenvalues)
     at each k-point in the reciprocal lattice for the material being studied, considering the specified spin channel.
     These eigenvalues are crucial for analyzing the material's electronic structure, such as plotting band structures.
@@ -589,16 +598,13 @@ def extract_eigenvalues_bands(directory, spin_label):
     This function is designed to work with data from VASP (Vienna Ab initio Simulation Package) calculations. 
     It extracts the eigenvalues associated with each k-point for a given spin orientation (either 'spin1' or 'spin2'), 
     and then transposes the matrix so that each row represents a band and each column represents a k-point.
-
     Args:
         directory (str): The directory path that contains the VASP vasprun.xml file.
         spin_label (str): The spin label ('spin 1' or 'spin 2') for which the eigenvalues are to be extracted. 
                           'spin 1' typically refers to spin-up and 'spin 2' to spin-down in spin-polarized calculations.
-
     Returns:
         list of lists: A transposed matrix of eigenvalues where each row represents a band and each column represents a k-point. 
                        This format is useful for plotting band structures and analyzing the electronic properties of materials.
-
     Example:
         # Extract eigenvalues for 'spin 1' (spin-up) orientation
         directory = "/path/to/vasp/output"
@@ -664,11 +670,9 @@ def extract_high_sym_intersections(directory, spin_label):
     """
     Extracts the eigenvalues at high symmetry points for each band in a VASP bandstructure calculation,
     using the path value (x) in the bandstructure plot and the corresponding eigenvalue (y).
-
     Args:
         directory (str): The directory path that contains the VASP output files.
         spin_label (str): The spin label ('spin1' or 'spin2') for which the eigenvalues are to be extracted.
-
     Returns:
         dict: A dictionary where the keys are high symmetry points (e.g., 'Gamma', 'K', 'M'), and the values 
               are lists of tuples, where each tuple represents (path, eigenvalue) coordinates of intersection 
@@ -778,7 +782,6 @@ def extract_high_sym_conduction_intersections(directory, spin_label):
     Args:
         directory (str): The directory path that contains the VASP output files.
         spin_label (str): The spin label ('spin1' or 'spin2') for which the eigenvalues are to be extracted.
-
     Returns:
         dict: A dictionary where the keys are high symmetry points (e.g., 'Gamma', 'K', 'M'), and the values 
               are lists of tuples, where each tuple represents (path, eigenvalue - Fermi) coordinates of conduction 
@@ -802,7 +805,6 @@ def extract_high_sym_min_conduction_intersections(directory, spin_label):
     Args:
         directory (str): The directory path that contains the VASP output files.
         spin_label (str): The spin label ('spin1' or 'spin2') for which the eigenvalues are to be extracted.
-
     Returns:
         dict: A dictionary where the keys are high symmetry points (e.g., 'Gamma', 'K', 'M'), and the values 
               are tuples representing (path, min_eigenvalue - Fermi) for the lowest conduction band intersection 
@@ -828,7 +830,6 @@ def extract_high_sym_max_valence_intersections(directory, spin_label):
     Args:
         directory (str): The directory path that contains the VASP output files.
         spin_label (str): The spin label ('spin1' or 'spin2') for which the eigenvalues are to be extracted.
-
     Returns:
         dict: A dictionary where the keys are high symmetry points (e.g., 'Gamma', 'K', 'M'), and the values 
               are tuples representing (path, max_eigenvalue - Fermi) for the highest valence band intersection 
@@ -860,7 +861,6 @@ def extract_weights_kpoints(directory, spin_label, start_label=None, end_label=N
     spin_label (str): The label of spin ('spin1' for spin-up, 'spin2' for spin-down).
     start_label (int, optional): The starting index of atoms to be included in the sum. Defaults to the first atom.
     end_label (int, optional): The ending index of atoms to be included in the sum. Defaults to the last atom.
-
     Returns:
     tuple of lists: Contains multiple lists, each representing the weight of eigenvalues for a specific orbital type
     across all k-points. The order is s, py, pz, px, dxy, dyz, dz2, dx2y2, total d, and total p orbitals.
@@ -949,7 +949,6 @@ def extract_weights_bands(directory, spin_label, start_label=None, end_label=Non
     - spin_label (str): Specifies the spin state. Use "spin1" for spin-up and "spin2" for spin-down.
     - start_label (int, optional): The starting index of atoms to consider for weight extraction. Defaults to None, which considers the first atom.
     - end_label (int, optional): The ending index of atoms to consider for weight extraction. Defaults to None, which considers up to the last atom.
-
     Returns:
     - tuple of lists: Each list within the tuple represents the transposed weight of eigenvalues for a specific orbital type across all bands. The order is:
         0: s orbital
