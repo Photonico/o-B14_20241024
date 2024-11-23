@@ -33,15 +33,12 @@ def extract_bandgap_outcar(directory="."):
         str: Error message if required data is missing or cannot be processed.
     """
     outcar_path = os.path.join(directory, "OUTCAR")
-
     # Check if OUTCAR exists
     if not os.path.exists(outcar_path):
         return "Error: OUTCAR not found in the specified directory."
-
     try:
         with open(outcar_path, "r") as file:
             lines = file.readlines()
-
         # Extract NELECT and NKPTS
         nelect = None
         nkpts = None
@@ -50,14 +47,11 @@ def extract_bandgap_outcar(directory="."):
                 nelect = float(line.split()[2]) / 2  # HOMO band index
             elif "NKPTS" in line:
                 nkpts = int(line.split()[3])  # Total k-points
-
         if nelect is None or nkpts is None:
             return "Error: Could not extract NELECT or NKPTS from OUTCAR."
-
         # Calculate HOMO and LUMO band indices
         homo_band = int(nelect)
         lumo_band = homo_band + 1
-
         # Extract HOMO and LUMO energies
         homo_energies = []
         lumo_energies = []
@@ -72,19 +66,14 @@ def extract_bandgap_outcar(directory="."):
                     lumo_energies.append(float(line.split()[1]))
                 except (ValueError, IndexError):
                     pass
-
         if not homo_energies or not lumo_energies:
             return "Error: Could not extract HOMO or LUMO energies from OUTCAR."
-
         # Sort HOMO energies and take the last (maximum)
         homo_energy = sorted(homo_energies)[-1]
-
         # Sort LUMO energies and take the first (minimum)
         lumo_energy = sorted(lumo_energies)[0]
-
         # Calculate bandgap
         bandgap = lumo_energy - homo_energy
-
         return {
             "bandgap": bandgap,
             "HOMO index": homo_band,
@@ -94,7 +83,6 @@ def extract_bandgap_outcar(directory="."):
             "LUMO energy": lumo_energy,
             "LUMO": lumo_energy,
         }
-
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -121,29 +109,48 @@ def is_kpoints_returning(directory):
         kpoints_file = kpoints_opt_path
     elif os.path.exists(kpoints_file_path):
         kpoints_file = kpoints_file_path
-    else:
-        return False
-
+    else: return False
     try:
         with open(kpoints_file, "r", encoding="utf-8") as file:
             lines = file.readlines()
-
         # Ensure it's a line-mode KPOINTS file
         if lines[2][0].lower() != "l":
             return False
-
         # Extract high symmetry points
         high_symmetry_points = []
         for line in lines[4:]:
             tokens = line.strip().split()
             if tokens and tokens[-1].isalpha():  # Check if the last token is a label
                 high_symmetry_points.append(tokens[-1])
-
         # Check if the first and last points are the same
         return high_symmetry_points and high_symmetry_points[0] == high_symmetry_points[-1]
-
     except Exception:
         return False
+
+def extract_reciprocal_weights(directory):
+    """
+    Extract reciprocal lattice weights from the POSCAR file in the given directory.
+    Args:
+    directory (str): The directory containing the POSCAR file.
+    Returns:
+    list: A list of weights representing the relative lengths of the reciprocal lattice vectors.
+    """
+    # Read POSCAR file
+    poscar_path = f"{directory}/POSCAR"
+    with open(poscar_path, "r") as file:
+        lines = file.readlines()
+    # Extract lattice vectors
+    lattice_vectors = np.array([list(map(float, line.split())) for line in lines[2:5]])
+    # Calculate reciprocal lattice vectors
+    volume = np.dot(lattice_vectors[0], np.cross(lattice_vectors[1], lattice_vectors[2]))
+    reciprocal_lattice_vectors = 2 * np.pi * np.array([
+        np.cross(lattice_vectors[1], lattice_vectors[2]) / volume,
+        np.cross(lattice_vectors[2], lattice_vectors[0]) / volume,
+        np.cross(lattice_vectors[0], lattice_vectors[1]) / volume
+    ])
+    # Compute the lengths of the reciprocal lattice vectors
+    reciprocal_lengths = [np.linalg.norm(vec) for vec in reciprocal_lattice_vectors]
+    return reciprocal_lengths
 
 def extract_high_sym(directory):
     """
