@@ -127,12 +127,12 @@ def extract_dos(directory_path):
 # DoS Plotting
 def create_matters_dos(matters_list):
     """
-    Create a list of matter dictionaries for DoS (Density of States) plotting.
+    Create a list of structured lists for DoS (Density of States) plotting.
     Parameters:
     - matters_list: A list of lists, where each inner list can contain:
       [label, directory, line_color, line_style, line_weight, line_alpha].
     Returns:
-    - A list of dictionaries, where each dictionary contains:
+    - A list of lists, where each list contains:
       - label: Matter label.
       - dos_data: Extracted DoS data.
       - line_color: Color family for plotting.
@@ -159,15 +159,8 @@ def create_matters_dos(matters_list):
         # Extract DoS data
         dos_data = extract_dos(directory)
 
-        # Append structured matter dictionary
-        matters.append({
-            "label": label,
-            "dos_data": dos_data,
-            "line_color": line_color,
-            "line_style": line_style,
-            "line_weight": line_weight,
-            "line_alpha": line_alpha,
-        })
+        # Append structured matter list
+        matters.append([label, dos_data, line_color, line_style, line_weight, line_alpha])
     return matters
 
 # Universal DoS Plotting
