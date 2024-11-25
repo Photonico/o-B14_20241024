@@ -10,7 +10,7 @@ import numpy as np
 
 from matplotlib.ticker import ScalarFormatter
 from matplotlib.ticker import MaxNLocator
-from vmatplot.commons import check_vasprun, identify_parameters
+from vmatplot.commons import check_vasprun, identify_parameters, get_or_default
 from vmatplot.algorithms import is_nested_list, fit_birch_murnaghan
 from vmatplot.output_settings import canvas_setting, color_sampling
 
@@ -208,7 +208,17 @@ def plot_energy_kpoints_single(*args_list):
         return
 
     # Unpack args_list
-    info_suffix, source_data, kpoints_boundary, color_family = args_list[0]
+    # info_suffix, source_data, kpoints_boundary, color_family = args_list[0]
+    args_info = args_list[0] + [None] * (7 - len(args_list[0]))
+
+    # Unpack with ensured length
+    info_suffix, source_data, kpoints_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+    # Apply default values using get_or_default
+    color_family = get_or_default(color_family, "default")
+    line_style = get_or_default(line_style, "solid")
+    line_weight = get_or_default(line_weight, 1.5)
+    line_alpha = get_or_default(line_alpha, 1.0)
 
     # Figure Settings
     fig_setting = canvas_setting()

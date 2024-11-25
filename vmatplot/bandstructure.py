@@ -11,7 +11,7 @@ import matplotlib.gridspec as gridspec
 
 from vmatplot.output_settings import color_sampling, canvas_setting
 from vmatplot.algorithms import transpose_matrix
-from vmatplot.commons import extract_fermi, get_atoms_count, process_boundary
+from vmatplot.commons import extract_fermi, get_atoms_count, process_boundary, get_or_default
 from vmatplot.dos import extract_dos
 
 global_tolerance = 1e-4
@@ -1000,63 +1000,48 @@ def create_matters_bs(matters_list):
     matters = []
     for current_matter in matters_list:
         bstype, label, directory, *optional = current_matter
-        if not optional:
-            color = "orbital"
-            lstyle = "solid"
-            alpha = 1.0
-            current_tolerance = 0
-        elif len(optional) == 1:
-            color = optional[0]
-            lstyle = "solid"
-            alpha = 1.0
-            current_tolerance = 0
-        elif len(optional) == 2:
-            color = optional[0]
-            lstyle =optional[1]
-            alpha = 1.0
-            current_tolerance = 0
-        elif len(optional) == 3:
-            color = optional[0]
-            lstyle =optional[1]
-            alpha = optional[2]
-            current_tolerance = 0
-        else:
-            color, lstyle, alpha, current_tolerance = optional[0], optional[1], optional[2], optional[3]
+        # Set default values using get_or_default
+        color = get_or_default(optional[0] if len(optional) > 0 else None, "default")
+        lstyle = get_or_default(optional[1] if len(optional) > 1 else None, "solid")
+        weight = get_or_default(optional[2] if len(optional) > 2 else None, 1.5)
+        alpha = get_or_default(optional[3] if len(optional) > 3 else None, 1.0)
+        current_tolerance = get_or_default(optional[4] if len(optional) > 4 else None, 0)
+
         # Bandstructure plotting style: monocolor
         if bstype.lower() in ["monocolor", "monocolor nonpolarized"]:
             fermi_energy = extract_fermi(directory)
             kpath = extract_kpath(directory)
             bands = extract_eigenvalues_bands_nonpolarized(directory)
-            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["monocolor spin up", "spin up monocolor"]:
             fermi_energy = extract_fermi(directory)
             kpath = extract_kpath(directory)
             bands = extract_eigenvalues_bands_spinUp(directory)
-            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["monocolor spin down", "spin down monocolor"]:
             fermi_energy = extract_fermi(directory)
             kpath = extract_kpath(directory)
             bands = extract_eigenvalues_bands_spinDown(directory)
-            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, weight, alpha, current_tolerance])
         # Bandstructure plotting style: bands
         elif bstype.lower() in ["bands", "bands nonpolarized"]:
             fermi_energy = extract_fermi(directory)
             kpath = extract_kpath(directory)
             conduction_bands = extract_eigenvalues_conductionBands_nonpolarized(directory, current_tolerance)
             valence_bands = extract_eigenvalues_valenceBands_nonpolarized(directory, current_tolerance)
-            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["bands spin up", "spin up bands"]:
             fermi_energy = extract_fermi(directory)
             kpath = extract_kpath(directory)
             conduction_bands = extract_eigenvalues_conductionBands_spinUp(directory, current_tolerance)
             valence_bands = extract_eigenvalues_valenceBands_spinUp(directory, current_tolerance)
-            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["bands spin down", "spin down bands"]:
             fermi_energy = extract_fermi(directory)
             kpath = extract_kpath(directory)
             conduction_bands = extract_eigenvalues_conductionBands_spinDown(directory, current_tolerance)
             valence_bands = extract_eigenvalues_valenceBands_spinDown(directory, current_tolerance)
-            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, weight, alpha, current_tolerance])
     return matters
 
 def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc=False):
@@ -1091,29 +1076,29 @@ def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc=Fa
             for bands_index in range(0, len(matter[4])):
                 current_band = [eigenvalue - fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], alpha=matter[7], label=f"Bands {current_label}", zorder=4)
+                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], label=f"Bands {current_label}", zorder=4)
                 else:
-                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], alpha=matter[7], zorder=4)
+                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], zorder=4)
         elif matter[0] in ["bands"]:
             fermi = matter[2]
             for bands_index in range(0, len(matter[4])):
                 current_conduction_band = [eigenvalue - fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], alpha=matter[8], label=f"Conduction bands {current_label}", zorder=4)
+                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Conduction bands {current_label}", zorder=4)
                 else:
-                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], alpha=matter[8], zorder=4)
+                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
             for bands_index in range(0, len(matter[5])):
                 current_valence_band = [eigenvalue - fermi for eigenvalue in matter[5][bands_index]]
                 if bands_index == 0:
-                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], alpha=matter[8], label=f"Valence bands {current_label}", zorder=4)
+                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Valence bands {current_label}", zorder=4)
                 else:
-                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], alpha=matter[8], zorder=4)
+                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
         kpath_start = matter[3][0]
         kpath_end = matter[3][-1]
         fermi_last = matter[2]
 
     # Fermi energy as a horizon line
-    plt.axhline(y = 0, color=fermi_color[0], alpha=1.00, linestyle="--", label="Fermi energy", zorder=2)
+    plt.axhline(y = 0, color=fermi_color[0], alpha=0.8, linestyle="--", label="Fermi energy", zorder=2)
     efermi = fermi_last
     kpath_range = kpath_end-kpath_start
     # fermi_energy_text = f"Fermi energy\n{efermi:.3f} (eV)"
@@ -1164,70 +1149,43 @@ def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc=Fa
 def create_matters_bsDos(matters_list):
     matters = []
     for current_matter in matters_list:
+        # Unpack inputs and optional values
         bstype, label, bs_dir, dos_dir, *optional = current_matter
-        if not optional:
-            color = "orbital"
-            lstyle = "solid"
-            alpha = 1.0
-            current_tolerance = 0
-        elif len(optional) == 1:
-            color = optional[0]
-            lstyle = "solid"
-            alpha = 1.0
-            current_tolerance = 0
-        elif len(optional) == 2:
-            color = optional[0]
-            lstyle =optional[1]
-            alpha = 1.0
-            current_tolerance = 0
-        elif len(optional) == 3:
-            color = optional[0]
-            lstyle =optional[1]
-            alpha = optional[2]
-            current_tolerance = 0
-        else:
-            color, lstyle, alpha, current_tolerance = optional[0], optional[1], optional[2], optional[3]
-        # Bandstructure plotting style: monocolor
+        
+        # Set defaults using get_or_default
+        color = get_or_default(optional[0] if len(optional) > 0 else None, "default")
+        lstyle = get_or_default(optional[1] if len(optional) > 1 else None, "solid")
+        weight = get_or_default(optional[2] if len(optional) > 2 else None, 1.5)
+        alpha = get_or_default(optional[3] if len(optional) > 3 else None, 1.0)
+        current_tolerance = get_or_default(optional[4] if len(optional) > 4 else None, 0)
+        
+        # Common operations for extracting data
+        fermi_energy = extract_fermi(bs_dir)
+        kpath = extract_kpath(bs_dir)
+        dos = extract_dos(dos_dir)
+        
+        # Handle different bandstructure types
         if bstype.lower() in ["monocolor", "monocolor nonpolarized"]:
-            fermi_energy = extract_fermi(bs_dir)
-            kpath = extract_kpath(bs_dir)
             bands = extract_eigenvalues_bands_nonpolarized(bs_dir)
-            dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["monocolor spin up", "spin up monocolor"]:
-            fermi_energy = extract_fermi(bs_dir)
-            kpath = extract_kpath(bs_dir)
             bands = extract_eigenvalues_bands_spinUp(bs_dir)
-            dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["monocolor spin down", "spin down monocolor"]:
-            fermi_energy = extract_fermi(bs_dir)
-            kpath = extract_kpath(bs_dir)
             bands = extract_eigenvalues_bands_spinDown(bs_dir)
-            dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, alpha, current_tolerance])
-        # Bandstructure plotting style: bands
+            matters.append([bstype, label, fermi_energy, kpath, bands, dos, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["bands", "bands nonpolarized"]:
-            fermi_energy = extract_fermi(bs_dir)
-            kpath = extract_kpath(bs_dir)
             conduction_bands = extract_eigenvalues_conductionBands_nonpolarized(bs_dir, current_tolerance)
             valence_bands = extract_eigenvalues_valenceBands_nonpolarized(bs_dir, current_tolerance)
-            dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["bands spin up", "spin up bands"]:
-            fermi_energy = extract_fermi(bs_dir)
-            kpath = extract_kpath(bs_dir)
             conduction_bands = extract_eigenvalues_conductionBands_spinUp(bs_dir, current_tolerance)
             valence_bands = extract_eigenvalues_valenceBands_spinUp(bs_dir, current_tolerance)
-            dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["bands spin down", "spin down bands"]:
-            fermi_energy = extract_fermi(bs_dir)
-            kpath = extract_kpath(bs_dir)
             conduction_bands = extract_eigenvalues_conductionBands_spinDown(bs_dir, current_tolerance)
             valence_bands = extract_eigenvalues_valenceBands_spinDown(bs_dir, current_tolerance)
-            dos = extract_dos(dos_dir)
-            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, alpha, current_tolerance])
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, weight, alpha, current_tolerance])
     return matters
 
 def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legend_loc=False):
@@ -1255,35 +1213,38 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
     ax1.set_title("Bandstructure", fontsize=fig_setting[3][1])
 
     for matter in matters:
+        # print(matter[7], matter[8], matter[9],matter[10])
         bs_current_label = matter[1]
         if matter[0].lower() in ["monocolor"]:
+            bs_label = "mono"
             bs_fermi = matter[2]
             for bands_index in range(0, len(matter[4])):
                 current_band = [eigenvalue - bs_fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], alpha=matter[8], label=f"Bandstructure {bs_current_label}", zorder=4)
+                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Bandstructure {bs_current_label}", zorder=4)
                 else:
-                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], alpha=matter[8], zorder=4)
+                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
         elif matter[0].lower() in ["bands"]:
             bs_fermi = matter[2]
+            bs_label = "bands"
             for bands_index in range(0, len(matter[4])):
                 current_conduction_band = [eigenvalue - bs_fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    ax1.plot(matter[3], current_conduction_band, c=color_sampling(matter[7])[2], linestyle=matter[8], alpha=matter[9], label=f"Conduction bands {bs_current_label}", zorder=4)
+                    ax1.plot(matter[3], current_conduction_band, c=color_sampling(matter[7])[2], linestyle=matter[8], lw=matter[9], alpha=matter[10], label=f"Conduction bands {bs_current_label}", zorder=4)
                 else:
-                    ax1.plot(matter[3], current_conduction_band, c=color_sampling(matter[7])[2], linestyle=matter[8], alpha=matter[9], zorder=4)
+                    ax1.plot(matter[3], current_conduction_band, c=color_sampling(matter[7])[2], linestyle=matter[8], lw=matter[9], alpha=matter[10], zorder=4)
             for bands_index in range(0, len(matter[5])):
                 current_valence_band = [eigenvalue - bs_fermi for eigenvalue in matter[5][bands_index]]
                 if bands_index == 0:
-                    ax1.plot(matter[3], current_valence_band, c=color_sampling(matter[7])[0], linestyle=matter[8], alpha=matter[9], label=f"Valence bands {bs_current_label}", zorder=4)
+                    ax1.plot(matter[3], current_valence_band, c=color_sampling(matter[7])[0], linestyle=matter[8], lw=matter[9], alpha=matter[10], label=f"Valence bands {bs_current_label}", zorder=4)
                 else:
-                    ax1.plot(matter[3], current_valence_band, c=color_sampling(matter[7])[0], linestyle=matter[8], alpha=matter[9], zorder=4)
+                    ax1.plot(matter[3], current_valence_band, c=color_sampling(matter[7])[0], linestyle=matter[8], lw=matter[9], alpha=matter[10], zorder=4)
         kpath_start = matter[3][0]
         kpath_end = matter[3][-1]
         bs_fermi_last = matter[2]
 
     # Fermi energy as a horizon line
-    ax1.axhline(y = 0, color=bs_fermi_color[0], alpha=1.00, linestyle="--", label="Fermi energy", zorder=2)
+    ax1.axhline(y = 0, color=bs_fermi_color[0], alpha=0.8, linestyle="--", label="Fermi energy", zorder=2)
     bs_efermi = bs_fermi_last
     kpath_range = kpath_end-kpath_start
     # bs_fermi_energy_text = f"Fermi energy\n{bs_efermi:.3f} (eV)"
@@ -1316,7 +1277,7 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
     ax1.set_xticklabels(high_symmetry_labels)
 
     for k_loc in high_symmetry_positions[1:-1]:
-        ax1.axvline(x=k_loc, color=annotate_color[1], linestyle="--", zorder=1)
+        ax1.axvline(x=k_loc, color=annotate_color[1], linestyle="--", alpha=0.8, zorder=1)
 
     # ax2 DoS
     ax2.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
@@ -1325,7 +1286,7 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
         DoS_current_label = matter[1]
         if matter[0].lower() in ["monocolor"]:
             dos_efermi = matter[5][0]
-            plt.plot(matter[5][6], matter[5][5], c=color_sampling(matter[6])[1], label=f"Total DoS {DoS_current_label}", zorder = 2)
+            plt.plot(matter[5][6], matter[5][5], c=color_sampling(matter[6])[1], lw=matter[8], alpha=matter[9], label=f"Total DoS {DoS_current_label}", zorder = 2)
 
         elif matter[0].lower() in ["bands"]:
             dos_efermi = matter[6][0]
@@ -1339,9 +1300,9 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
             valence_energy = [energy for energy in energy_data if energy < 0]
 
             if conduction_dos and conduction_energy:
-                ax2.plot(conduction_dos, conduction_energy, c=color_sampling(matter[7])[2])
+                ax2.plot(conduction_dos, conduction_energy, c=color_sampling(matter[7])[2], lw=matter[9], alpha=matter[10])
             if valence_dos and valence_energy:
-                ax2.plot(valence_dos, valence_energy, c=color_sampling(matter[7])[0])
+                ax2.plot(valence_dos, valence_energy, c=color_sampling(matter[7])[0], lw=matter[9], alpha=matter[10])
 
     ax2.set_ylim(eigen_range*(-1), eigen_range)
     ax2.set_xlim(0, dos_range)
@@ -1351,7 +1312,7 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
     ax2.set_yticks([])
 
     shift = dos_efermi
-    ax2.axhline(y = dos_efermi-shift, color=bs_fermi_color[0], alpha=1.00, linestyle="--", label="Fermi energy", zorder=2)
+    ax2.axhline(y = dos_efermi-shift, color=bs_fermi_color[0], alpha=0.8, linestyle="--", label="Fermi energy", zorder=2)
 
     # legend
     if legend_loc is True:

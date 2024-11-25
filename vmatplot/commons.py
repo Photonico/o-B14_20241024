@@ -8,6 +8,10 @@ import numpy as np
 
 from typing import Tuple, Union
 
+def get_or_default(value, default):
+    """Return the value if it's not None or an empty string, otherwise return the default."""
+    return default if value in [None, ""] else value
+
 def check_vasprun(directory="."):
     """Find folders with complete vasprun.xml and print incomplete ones."""
     # Check if the user asked for help
