@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-from vmatplot.commons import extract_fermi
+from vmatplot.commons import extract_fermi, get_or_default
 from vmatplot.output_settings import color_sampling, canvas_setting
 
 def cal_type(directory_path):
@@ -126,39 +126,41 @@ def extract_dos(directory_path):
 
 # DoS Plotting
 def create_matters_dos(matters_list):
-    # matters = create_matters_dos(matters_list)
-    # matters[0] = label
-    # matters[1][0] = energy: x-axis
-    # matters[1][6] = Total DoS
-    # matters[1][7] = integral dos
-    # matters[2] = color family
-    # matters[3] = line style
-    # matters[4] = line weight
-    # matters[5] = alpha
+    """
+    Create a list of structured lists for DoS (Density of States) plotting.
+    Parameters:
+    - matters_list: A list of lists, where each inner list can contain:
+      [label, directory, line_color, line_style, line_weight, line_alpha].
+    Returns:
+    - A list of lists, where each list contains:
+      - label: Matter label.
+      - dos_data: Extracted DoS data.
+      - line_color: Color family for plotting.
+      - line_style: Line style for plotting.
+      - line_weight: Line width for plotting.
+      - line_alpha: Line transparency (alpha value) for plotting.
+    """
+    # Default values for optional parameters
+    default_values = {
+        "line_color": "default",
+        "line_style": "solid",
+        "line_weight": 1.5,
+        "line_alpha": 1.0,
+    }
     matters = []
     for matter_dir in matters_list:
-        if len(matter_dir) == 2:
-            label, directory = matter_dir
-            line_color = "default"
-            line_style = "solid"
-            line_weight = 1.5
-            line_alpha = 1.0
-        elif len(matter_dir) == 3:
-            label, directory, line_color = matter_dir
-            line_style = "solid"
-            line_weight = 1.5
-            line_alpha = 1.0
-        elif len(matter_dir) == 4:
-            label, directory, line_color, line_style = matter_dir
-            line_weight = 1.5
-            line_alpha = 1.0
-        elif len(matter_dir) == 5:
-            label, directory, line_color, line_style, line_weight = matter_dir
-            line_alpha = 1.0
-        else:
-            label, directory, line_color, line_style, line_weight, line_alpha = matter_dir
+        # Unpack the list with optional parameters
+        label, directory, *optional_params = matter_dir
+        line_color = get_or_default(optional_params[0] if len(optional_params) > 0 else None, default_values["line_color"])
+        line_style = get_or_default(optional_params[1] if len(optional_params) > 1 else None, default_values["line_style"])
+        line_weight = get_or_default(optional_params[2] if len(optional_params) > 2 else None, default_values["line_weight"])
+        line_alpha = get_or_default(optional_params[3] if len(optional_params) > 3 else None, default_values["line_alpha"])
+
+        # Extract DoS data
         dos_data = extract_dos(directory)
-        matters.append([label, dos_data,  line_color, line_style, line_weight, line_alpha])
+
+        # Append structured matter list
+        matters.append([label, dos_data, line_color, line_style, line_weight, line_alpha])
     return matters
 
 # Universal DoS Plotting
@@ -187,24 +189,24 @@ def plot_dos(title, x_range = None, y_top = None, dos_type = None, matters_list 
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], label=f"Total DoS {current_label}", alpha=matter[3], linestyle=matter[4], zorder = 3)
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], label=f"Integrated DoS {current_label}", alpha=matter[3], linestyle=matter[4], zorder = 2)
+                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Total DoS {current_label}", zorder=3)
+                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Integrated DoS {current_label}", zorder=2)
                 efermi = matter[1][0]
         if dos_type in ["Total", "total"]:
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], label=f"Total DoS {current_label}", alpha=matter[3], linestyle=matter[4], zorder = 2)
+                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Total DoS {current_label}", zorder=2)
                 efermi = matter[1][0]
         if dos_type in ["Integrated", "integrated"]:
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], label=f"Integrated DoS {current_label}", alpha=matter[3], linestyle=matter[4], zorder = 2)
+                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Integrated DoS {current_label}", zorder=2)
                 efermi = matter[1][0]
         # Plot Fermi energy as a vertical line
         shift = efermi
-        plt.axvline(x = efermi-shift, linestyle="--", c=fermi_color[0], alpha=1.00, label="Fermi energy", zorder = 1)
+        plt.axvline(x = efermi-shift, linestyle="--", c=fermi_color[0], alpha=0.80, label="Fermi energy", zorder = 1)
         fermi_energy_text = f"Fermi energy\n{efermi:.3f} (eV)"
         plt.text(efermi-shift-x_range*0.02, y_top*0.98, fermi_energy_text, fontsize =1.0*12, c=fermi_color[0], rotation=0, va = "top", ha="right")
 
