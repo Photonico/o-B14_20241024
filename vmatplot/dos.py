@@ -187,24 +187,24 @@ def plot_dos(title, x_range = None, y_top = None, dos_type = None, matters_list 
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], label=f"Total DoS {current_label}", alpha=matter[3], linestyle=matter[4], zorder = 3)
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], label=f"Integrated DoS {current_label}", alpha=matter[3], linestyle=matter[4], zorder = 2)
+                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Total DoS {current_label}", zorder=3)
+                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Integrated DoS {current_label}", zorder=2)
                 efermi = matter[1][0]
         if dos_type in ["Total", "total"]:
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], label=f"Total DoS {current_label}", alpha=matter[3], linestyle=matter[4], zorder = 2)
+                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Total DoS {current_label}", zorder=2)
                 efermi = matter[1][0]
         if dos_type in ["Integrated", "integrated"]:
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], label=f"Integrated DoS {current_label}", alpha=matter[3], linestyle=matter[4], zorder = 2)
+                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Integrated DoS {current_label}", zorder=2)
                 efermi = matter[1][0]
         # Plot Fermi energy as a vertical line
         shift = efermi
-        plt.axvline(x = efermi-shift, linestyle="--", c=fermi_color[0], alpha=1.00, label="Fermi energy", zorder = 1)
+        plt.axvline(x = efermi-shift, linestyle="--", c=fermi_color[0], alpha=0.80, label="Fermi energy", zorder = 1)
         fermi_energy_text = f"Fermi energy\n{efermi:.3f} (eV)"
         plt.text(efermi-shift-x_range*0.02, y_top*0.98, fermi_energy_text, fontsize =1.0*12, c=fermi_color[0], rotation=0, va = "top", ha="right")
 
