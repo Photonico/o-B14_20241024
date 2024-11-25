@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N Geometry
+#PBS -N Bandstructure
 #PBS -P g46
 #PBS -q normal
 #PBS -o output.txt
