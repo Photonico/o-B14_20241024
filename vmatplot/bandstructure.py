@@ -11,7 +11,7 @@ import matplotlib.gridspec as gridspec
 
 from vmatplot.output_settings import color_sampling, canvas_setting
 from vmatplot.algorithms import transpose_matrix
-from vmatplot.commons import extract_fermi, get_atoms_count
+from vmatplot.commons import extract_fermi, get_atoms_count, process_boundary
 from vmatplot.dos import extract_dos
 
 global_tolerance = 1e-4
@@ -1125,7 +1125,11 @@ def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc=Fa
     # plt.ylabel("$E-E_\text{F}$ (eV)")
 
     # y-axis range
-    plt.ylim(eigen_range*(-1), eigen_range)
+    demo_boundary = process_boundary(eigen_range)
+    if demo_boundary[0] is None:
+        plt.ylim(demo_boundary[1]*(-1), demo_boundary[1])
+    else: plt.ylim(demo_boundary[0], demo_boundary[1])
+
     # x-axis range
     plt.xlim(kpath_start, kpath_end)
 
@@ -1287,7 +1291,11 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
 
     # y-axis
     ax1.set_ylabel("Energy (eV)")
-    ax1.set_ylim(eigen_range*(-1), eigen_range)
+    demo_boundary = process_boundary(eigen_range)
+    if demo_boundary[0] is None:
+        ax1.set_ylim(demo_boundary[1]*(-1), demo_boundary[1])
+    else: ax1.set_ylim(demo_boundary[0], demo_boundary[1])
+
     # x-axis
     ax1.set_xlim(kpath_start, kpath_end)
 
