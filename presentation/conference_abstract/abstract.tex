@@ -1,1 +1,60 @@
 % abstract for conference
+
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath} 
+\usepackage{authblk}
+\usepackage{caption}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{mhchem}
+\usepackage{subcaption}
+\geometry{a4paper, margin=40px}
+
+\title{Electronic and Optical Properties of newly Predicted, Metallic Penta-Bipyramid Boron}
+\author[1]{Lu Niu}
+\author[1]{Oliver J. Conquest}
+\author[1,2]{Carla Verdi}
+\author[1*]{Catherine Stampfl}
+\affil[1]{School of Physics, The University of Sydney, Sydney 2006, NSW, Australia}
+\affil[2]{School of Mathematics and Physics, The University of Queensland, Brisbane, Queensland 4072, Australia}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\par Bulk orthorhombic boron (\ce{o-B14}) is a recently predicted, three-dimensional boron allotrope which has fascinating properties\cite{bulk_boron}. 
+Its structure is characterized by edge-sharing pentagonal bipyramids with diverse bond lengths ranging from $1.644$ to $1.966$ \AA as shown in the Figure below.
+These structural motifs facilitate the formation of unusual seven-centre-two-electron $\pi$-bonds, which are identified for the first time in three-dimensional boron allotropes.
+The presence of these bonds highlights the complexity and versatility of boron chemistry under ambient conditions.
+Moreover, this material is predicted to be a superconductor with a Tc value of 29.1 K.
+
+\par The present work employs the first-principles calculations based on the GGA-PBE functional to explore the atomic and electronic properties of \ce{o-B14}
+The result would provide insight into the electronic band structure, density of states, and bonding characteristics.
+Moreover, we further investigate the optical and plasma dispersion properties of \ce{o-B14}.
+These calculations would reveal distinctive anisotropic behaviors, boradening its potential applications in plasmonics and beyond.
+
+\par The calculation of bandstructure exhibits its metallic behavior with three bands crossing the Fermi level.
+These bands consist of steep bands and flat bands near the Fermi level.
+The steep bands promote high electron velocities, while the flat bands enhance the density of states and favor electronic interactions.
+
+\par Such electronic features suggest the potential for unique transport and quantum properties.
+Furthermore, within the structural iunits, we observed a strong orbital hybridization between the B 2p orbitals.
+It reinforces the stability of the bonding framework.
+The anticipated plasmonic and optical responses, driven by the anisotropic bonding network, offer promising opportunities for advanced optoelectronic and quantum devices.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.50\textwidth]{../../0.0_structure/structure_b_mac.png}\hfill
+    \includegraphics[width=0.50\textwidth]{../../0.0_structure/structure_c_mac.png}
+    \caption{Top view (left) and side view (right) of o-B14 pentagonal bipyramid bulk.}
+    \label{fig:o-b14_views}
+\end{figure}
+
+\begin{thebibliography}{01}
+    \bibitem{bulk_boron} S. Han, Y. Liu, C. Wang, W. Yi, X. Chen, Y. Zhang, and X. Liu, 
+    \textit{Superconducting boron allotrope featuring pentagonal bipyramid at ambient pressure}, Phys. Chem. Chem. Phys., \textbf{25}, 15400 (2023).
+\end{thebibliography}
+
+\end{document}
