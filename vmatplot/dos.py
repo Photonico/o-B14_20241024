@@ -1,4 +1,4 @@
-#### Declarations of process functions for PDoS with vectorized programming
+#### Declarations of process functions for DoS with vectorized programming
 # pylint: disable = C0103, C0114, C0116, C0301, C0321, R0913, R0914, R0915, W0612
 
 # Necessary packages invoking
@@ -163,66 +163,34 @@ def create_matters_dos(matters_list):
         matters.append([label, dos_data, line_color, line_style, line_weight, line_alpha])
     return matters
 
-# overview DoS Plotting
+def create_matters_dos_orbitals(matters_list):
+    # Default values for optional parameters
+    default_values = {
+        "orbital_label": "total",
+        "line_color": "default",
+        "line_style": "solid",
+        "line_weight": 1.5,
+        "line_alpha": 1.0,
+    }
+    matters = []
+    for matter_dir in matters_list:
+        # Unpack the list with optional parameters
+        label, directory, *optional_params = matter_dir
+        orbital_label = get_or_default(optional_params[0] if len(optional_params) > 0 else None, default_values["orbital_label"])
+        line_color = get_or_default(optional_params[1] if len(optional_params) > 0 else None, default_values["line_color"])
+        line_style = get_or_default(optional_params[2] if len(optional_params) > 1 else None, default_values["line_style"])
+        line_weight = get_or_default(optional_params[3] if len(optional_params) > 2 else None, default_values["line_weight"])
+        line_alpha = get_or_default(optional_params[4] if len(optional_params) > 3 else None, default_values["line_alpha"])
+
+        # Extract DoS data
+        dos_data = extract_dos(directory)
+
+        # Append structured matter list
+        matters.append([label, dos_data, line_color, line_style, line_weight, line_alpha])
+    return matters
+
+# Universal DoS Plotting
 def plot_dos(title, x_range = None, y_top = None, dos_type = None, matters_list = None):
-    # Help information
-    help_info = "Usage: plot_dos \n" + \
-                "Use extract_dos to extract the DoS data into a two-dimensional list firstly.\n"
-
-    if title in ["help", "Help"]:
-        print(help_info)
-        return
-
-    # Figure Settings
-    fig_setting = canvas_setting()
-    plt.figure(figsize=fig_setting[0], dpi = fig_setting[1])
-    params = fig_setting[2]; plt.rcParams.update(params)
-    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
-
-    # Color calling
-    fermi_color = color_sampling("Violet")
-
-    matters = create_matters_dos(matters_list)
-    if all(term is not None for term in [x_range, y_top]):
-        # Data plotting
-        if dos_type in ["All", "all"]:
-            for _, matter in enumerate(matters):
-                # Labels
-                current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Total DoS {current_label}", zorder=3)
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Integrated DoS {current_label}", zorder=2)
-                efermi = matter[1][0]
-        if dos_type in ["Total", "total"]:
-            for _, matter in enumerate(matters):
-                # Labels
-                current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Total DoS {current_label}", zorder=2)
-                efermi = matter[1][0]
-        if dos_type in ["Integrated", "integrated"]:
-            for _, matter in enumerate(matters):
-                # Labels
-                current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"Integrated DoS {current_label}", zorder=2)
-                efermi = matter[1][0]
-        # Plot Fermi energy as a vertical line
-        shift = efermi
-        plt.axvline(x = efermi-shift, linestyle="--", c=fermi_color[0], alpha=0.80, label="Fermi energy", zorder = 1)
-        fermi_energy_text = f"Fermi energy\n{efermi:.3f} (eV)"
-        plt.text(efermi-shift-x_range*0.02, y_top*0.98, fermi_energy_text, fontsize =1.0*12, c=fermi_color[0], rotation=0, va = "top", ha="right")
-
-        # Title
-        # plt.title(f"Electronic density of state for {title} ({supplement})")
-        plt.title(f"DoS {title}")
-        plt.ylabel(r"Density of States"); plt.xlabel(r"Energy (eV)")
-
-        plt.ylim(0, y_top)
-        plt.xlim(x_range*(-1), x_range)
-        # plt.legend(loc="best")
-        plt.legend(loc="upper right")
-        plt.tight_layout()
-
-# DoS Plotting for orbitals
-def plot_dos_orbitals(title, x_range = None, y_top = None, dos_type = None, matters_list = None, orbitals_list = None):
     # Help information
     help_info = "Usage: plot_dos \n" + \
                 "Use extract_dos to extract the DoS data into a two-dimensional list firstly.\n"
