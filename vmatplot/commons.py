@@ -292,6 +292,75 @@ def get_atoms_count(directory):
         print("Atominfo section not found in the XML file.")
         return None
 
+def get_elements(directory_path):
+    ## Construct the full path to the vasprun.xml file
+    file_path = os.path.join(directory_path, "vasprun.xml")
+    # Check if the vasprun.xml file exists in the given directory
+    if not os.path.isfile(file_path):
+        print(f"Error: The file vasprun.xml does not exist in the directory {directory_path}.")
+        return
+
+    # Parse the XML file
+    tree = ET.parse(file_path)
+    root = tree.getroot()
+
+    # Initialize an empty dictionary to store the element-ion pairs
+    element_ions = {}
+
+    # Use XPath to locate the <rc><c> tags under the path "atominfo/array[@name="atoms"]/set"
+    for i, atom in enumerate(root.findall(".//atominfo//array[@name='atoms']//set//rc"), start=1):
+        element = atom.find("c").text.strip()
+        if element in element_ions:
+            # Update the maximum index for the element
+            element_ions[element][1] = i
+        else:
+            # Add a new entry for the element, with the minimum and maximum index being the same
+            element_ions[element] = [i, i]
+
+    # Convert the lists to tuples
+    for element in element_ions:
+        element_ions[element] = tuple(element_ions[element])
+
+    return element_ions
+
+import os
+import xml.etree.ElementTree as ET
+
+def get_elements_coordinates(directory_path):
+    # Construct the full path to the vasprun.xml file
+    file_path = os.path.join(directory_path, "vasprun.xml")
+    # Check if the vasprun.xml file exists in the given directory
+    if not os.path.isfile(file_path):
+        print(f"Error: The file vasprun.xml does not exist in the directory {directory_path}.")
+        return
+
+    # Parse the XML file
+    tree = ET.parse(file_path)
+    root = tree.getroot()
+
+    # Initialize a list to store detailed ion data
+    ions_data = []
+
+    # Use XPath to locate the <rc><c> tags under the path "atominfo/array[@name='atoms']/set"
+    element_list = root.findall(".//atominfo//array[@name='atoms']//set//rc")
+    coordinate_sets = root.findall(".//structure[@name='finalpos']//varray[@name='positions']//v")
+
+    if not element_list or not coordinate_sets:
+        print("Error: Unable to find atomic elements or coordinates in vasprun.xml.")
+        return
+
+    # Loop through elements and their coordinates
+    for idx, (atom, coord) in enumerate(zip(element_list, coordinate_sets), start=1):
+        element = atom.find("c").text.strip()  # Extract the element type
+        coord_values = tuple(map(float, coord.text.split()))  # Extract the coordinates
+        ions_data.append({
+            "index": idx,
+            "element": element,
+            "coordinates": coord_values
+        })
+
+    return ions_data
+
 def check_range_type(data: Union[Tuple, Tuple[Tuple, ...], int, float]) -> str:
     """
     Determine the type of the provided range data.
