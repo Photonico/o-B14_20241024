@@ -147,6 +147,11 @@ def create_matters_dos(matters_list):
         "line_weight": 1.5,
         "line_alpha": 1.0,
     }
+    # Ensure input is a list of lists
+    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
+        source_data = matters_list[:]
+        matters_list.clear()
+        matters_list.append(source_data)
     matters = []
     for matter_dir in matters_list:
         # Unpack the list with optional parameters
@@ -172,6 +177,11 @@ def create_matters_dos_orbitals(matters_list):
         "line_weight": 1.5,
         "line_alpha": 1.0,
     }
+    # Ensure input is a list of lists
+    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
+        source_data = matters_list[:]
+        matters_list.clear()
+        matters_list.append(source_data)
     matters = []
     for matter_dir in matters_list:
         # Unpack the list with optional parameters
@@ -181,16 +191,14 @@ def create_matters_dos_orbitals(matters_list):
         line_style = get_or_default(optional_params[2] if len(optional_params) > 1 else None, default_values["line_style"])
         line_weight = get_or_default(optional_params[3] if len(optional_params) > 2 else None, default_values["line_weight"])
         line_alpha = get_or_default(optional_params[4] if len(optional_params) > 3 else None, default_values["line_alpha"])
-
         # Extract DoS data
         dos_data = extract_dos(directory)
-
         # Append structured matter list
         matters.append([label, dos_data, line_color, line_style, line_weight, line_alpha])
     return matters
 
 # Universal DoS Plotting
-def plot_dos(title, x_range = None, y_top = None, dos_type = None, matters_list = None):
+def plot_dos(title, matters_list = None, x_range = None, y_top = None, dos_type = None):
     # Help information
     help_info = "Usage: plot_dos \n" + \
                 "Use extract_dos to extract the DoS data into a two-dimensional list firstly.\n"
@@ -238,7 +246,7 @@ def plot_dos(title, x_range = None, y_top = None, dos_type = None, matters_list 
 
         # Title
         # plt.title(f"Electronic density of state for {title} ({supplement})")
-        plt.title(f"DoS {title}")
+        plt.title(f"{title}")
         plt.ylabel(r"Density of States"); plt.xlabel(r"Energy (eV)")
 
         plt.ylim(0, y_top)

@@ -1,0 +1,29 @@
+ running   24 mpi-ranks, with    1 threads/rank, on    1 nodes
+ distrk:  each k-point on   24 cores,    1 groups
+ distr:  one band on    1 cores,   24 groups
+ vasp.6.4.3 19Mar24 (build May 31 2024 16:31:43) complex                        
+  
+ POSCAR found type information on POSCAR B 
+ POSCAR found :  1 types and      14 ions
+ Reading from existing POTCAR
+ scaLAPACK will be used
+ Reading from existing POTCAR
+ LDA part: xc-table for (Slater+PW92), standard interpolation
+ WARNING: stress and forces are not correct
+ POSCAR, INCAR and KPOINTS ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ WAVECAR not read
+ charge-density read from file: SC                                      
+ WARNING: random wavefunctions but no delay for mixing, default for NELMDL
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1     0.733749148330E+02    0.73375E+02   -0.19595E+04 31104   0.861E+02
+DAV:   2    -0.852513874219E+02   -0.15863E+03   -0.14740E+03 43200   0.159E+02
+DAV:   3    -0.906103048983E+02   -0.53589E+01   -0.53292E+01 45168   0.259E+01
+DAV:   4    -0.906363115100E+02   -0.26007E-01   -0.26005E-01 38256   0.207E+00
+DAV:   5    -0.906365390201E+02   -0.22751E-03   -0.22751E-03 45360   0.186E-01
+DAV:   6    -0.906365417290E+02   -0.27089E-05   -0.27087E-05 36936   0.205E-02
+DAV:   7    -0.906365417651E+02   -0.36095E-07   -0.36079E-07 44688   0.232E-03
+   1 F= -.90636542E+02 E0= -.90628913E+02  d E =-.152573E-01
