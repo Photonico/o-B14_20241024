@@ -995,8 +995,12 @@ def extract_weights_bands_spinDown(directory, start_label=None, end_label=None):
     return extract_weights_bands(directory, "spin2", start_label, end_label)
 
 # plot bandstructure
-
 def create_matters_bs(matters_list):
+    # Ensure input is a list of lists
+    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
+        source_data = matters_list[:]
+        matters_list.clear()
+        matters_list.append(source_data)
     matters = []
     for current_matter in matters_list:
         bstype, label, directory, *optional = current_matter
@@ -1006,7 +1010,6 @@ def create_matters_bs(matters_list):
         weight = get_or_default(optional[2] if len(optional) > 2 else None, 1.5)
         alpha = get_or_default(optional[3] if len(optional) > 3 else None, 1.0)
         current_tolerance = get_or_default(optional[4] if len(optional) > 4 else None, 0)
-
         # Bandstructure plotting style: monocolor
         if bstype.lower() in ["monocolor", "monocolor nonpolarized"]:
             fermi_energy = extract_fermi(directory)
@@ -1044,7 +1047,7 @@ def create_matters_bs(matters_list):
             matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, weight, alpha, current_tolerance])
     return matters
 
-def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc=False):
+def plot_bandstructure(title, matters_list=None, eigen_range=None, legend_loc=False):
     # Help information
     help_info = """
     Usage: plot_bandstructure
@@ -1105,9 +1108,8 @@ def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc=Fa
     # plt.text(kpath_start+kpath_range*0.98, eigen_range*0.02, fermi_energy_text, fontsize=10, c=fermi_color[0], rotation=0, va = "bottom", ha="right", zorder=5)
 
     # Title
-    plt.title(f"Bandstructure {title}")
+    plt.title(f"{title}")
     plt.ylabel("Energy (eV)")
-    # plt.ylabel("$E-E_\text{F}$ (eV)")
 
     # y-axis range
     demo_boundary = process_boundary(eigen_range)
@@ -1145,25 +1147,26 @@ def plot_bandstructure(title, eigen_range=None, matters_list=None, legend_loc=Fa
     plt.tight_layout()
 
 # plot bandstructure with DoS
-
 def create_matters_bsDos(matters_list):
+    # Ensure input is a list of lists
+    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
+        source_data = matters_list[:]
+        matters_list.clear()
+        matters_list.append(source_data)
     matters = []
     for current_matter in matters_list:
         # Unpack inputs and optional values
         bstype, label, bs_dir, dos_dir, *optional = current_matter
-        
         # Set defaults using get_or_default
         color = get_or_default(optional[0] if len(optional) > 0 else None, "default")
         lstyle = get_or_default(optional[1] if len(optional) > 1 else None, "solid")
         weight = get_or_default(optional[2] if len(optional) > 2 else None, 1.5)
         alpha = get_or_default(optional[3] if len(optional) > 3 else None, 1.0)
         current_tolerance = get_or_default(optional[4] if len(optional) > 4 else None, 0)
-        
         # Common operations for extracting data
         fermi_energy = extract_fermi(bs_dir)
         kpath = extract_kpath(bs_dir)
         dos = extract_dos(dos_dir)
-        
         # Handle different bandstructure types
         if bstype.lower() in ["monocolor", "monocolor nonpolarized"]:
             bands = extract_eigenvalues_bands_nonpolarized(bs_dir)
@@ -1188,7 +1191,7 @@ def create_matters_bsDos(matters_list):
             matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, dos, color, lstyle, weight, alpha, current_tolerance])
     return matters
 
-def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legend_loc=False):
+def plot_bsDoS(suptitle, matters_list=None, eigen_range=None, dos_range=None, legend_loc=False):
     # Figure setting
     fig_setting = canvas_setting(12, 6)
     params = fig_setting[2]; plt.rcParams.update(params)
@@ -1206,7 +1209,7 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
     matters = create_matters_bsDos(matters_list)
 
     # Title
-    fig.suptitle(f"Bandstructure and DoS {title}", fontsize=fig_setting[3][0], y=1.00)
+    fig.suptitle(f"{suptitle}", fontsize=fig_setting[3][0], y=1.00)
 
     # ax1 Bandstructure
     ax1.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
@@ -1320,5 +1323,6 @@ def plot_bsDoS(title, eigen_range=None, dos_range=None, matters_list=None, legen
         ax2.legend(loc=legend_loc)
     elif legend_loc is None or legend_loc is False:
         pass
-
     plt.tight_layout()
+
+# plot bandstructure with PDoS

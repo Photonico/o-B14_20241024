@@ -1,0 +1,35 @@
+ running   24 mpi-ranks, with    1 threads/rank, on    1 nodes
+ distrk:  each k-point on   24 cores,    1 groups
+ distr:  one band on    1 cores,   24 groups
+ vasp.6.4.3 19Mar24 (build May 31 2024 16:31:43) complex                        
+  
+ POSCAR found type information on POSCAR B 
+ POSCAR found :  1 types and      14 ions
+ Reading from existing POTCAR
+ scaLAPACK will be used
+ Reading from existing POTCAR
+ LDA part: xc-table for (Slater+PW92), standard interpolation
+ POSCAR, INCAR and KPOINTS ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ WAVECAR not read
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1     0.787682348582E+02    0.78768E+02   -0.20010E+04215424   0.862E+02
+DAV:   2    -0.917358477180E+02   -0.17050E+03   -0.15969E+03297024   0.167E+02
+DAV:   3    -0.975407818971E+02   -0.58049E+01   -0.57702E+01316704   0.274E+01
+DAV:   4    -0.975749397825E+02   -0.34158E-01   -0.34156E-01257976   0.244E+00
+DAV:   5    -0.975753186123E+02   -0.37883E-03   -0.37882E-03316656   0.245E-01    0.123E+01
+DAV:   6    -0.922529263802E+02    0.53224E+01   -0.38204E+00312576   0.644E+00    0.679E+00
+DAV:   7    -0.906062674738E+02    0.16467E+01   -0.31806E+00321600   0.581E+00    0.169E+00
+DAV:   8    -0.906189925352E+02   -0.12725E-01   -0.22480E-01235752   0.163E+00    0.747E-01
+DAV:   9    -0.906337604817E+02   -0.14768E-01   -0.17080E-02302208   0.453E-01    0.205E-01
+DAV:  10    -0.906380840988E+02   -0.43236E-02   -0.26678E-03237864   0.182E-01    0.660E-02
+DAV:  11    -0.906392356126E+02   -0.11515E-02   -0.65915E-04282840   0.900E-02    0.339E-02
+DAV:  12    -0.906393412934E+02   -0.10568E-03   -0.75239E-05267984   0.337E-02    0.638E-03
+DAV:  13    -0.906393500706E+02   -0.87772E-05   -0.74148E-06298320   0.109E-02    0.205E-03
+DAV:  14    -0.906393510920E+02   -0.10214E-05   -0.63218E-07271776   0.350E-03    0.760E-04
+DAV:  15    -0.906393513125E+02   -0.22046E-06   -0.14081E-07252864   0.168E-03
+   1 F= -.92601648E+02 E0= -.92594579E+02  d E =-.141367E-01
+ writing wavefunctions

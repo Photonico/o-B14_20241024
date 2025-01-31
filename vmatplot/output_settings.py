@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 def vasprun_directory(directory="."):
     """Find folders with complete vasprun.xml and print incomplete ones."""
     complete_folders = []
+    incomplete_detected = False  # Flag to track if any incomplete files are detected
 
     for dirpath, _, filenames in os.walk(directory):
         if "vasprun.xml" in filenames:
@@ -23,8 +24,12 @@ def vasprun_directory(directory="."):
                             break
                     else:
                         print(f"vasprun.xml in {dirpath} is incomplete.")
+                        incomplete_detected = True
             except IOError as e:
                 print(f"Error reading {file_name_xml}: {e}")
+
+    if not incomplete_detected:
+        print("All works are finished.")
 
     return complete_folders
 
@@ -99,13 +104,10 @@ def canvas_setting(*args):
                              "figure.facecolor": "w"}
         return (args[0],args[1]), args[2], customized_params, (args[4],args[5]), args[6]
 
-# def fermi_energy_color():
-#     return "#64B4DC"
-
 def color_sampling(color_family):
     help_info = "Usage: color_family(color_family)\n" + \
                 "Input the name of color family will return a series colors." + \
-                "Color families: Grey, Red, Orange, Yellow, Green, Blue, Violet, Purple, Wine, Brown, Orbit\n" + \
+                "Color families: Grey, Red, Orange, Yellow, Green, Cyan, Blue, Violet, Purple, Wine, Brown, Orbit\n" + \
                 "Return values:\n" + \
                 "color[0]: deep color\n" + \
                 "color[1]: major color\n" + \
@@ -133,6 +135,7 @@ def color_sampling(color_family):
         color_set.append("#FA8C00") # colors[6]: pz-orbital
         color_set.append("#96C800") # colors[7]: d-orbital
         color_set.append("#14AFAF") # colors[8]: f-orbital
+        color_set.append("#1E8CA0") # colors[9]
         return color_set
 
     if color_family in ("Grey", "grey", "Gray", "grey"):
@@ -144,6 +147,7 @@ def color_sampling(color_family):
         color_set.append("#FA8C00")
         color_set.append("#FAC828")
         color_set.append("#28AF3C")
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         color_set.append("#8C64F0")
         return color_set
@@ -157,6 +161,7 @@ def color_sampling(color_family):
         color_set.append("#FA8C00")
         color_set.append("#FAC828")
         color_set.append("#28AF3C")
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         color_set.append("#8C64F0")
         return color_set
@@ -169,6 +174,7 @@ def color_sampling(color_family):
         color_set.append("#FA8C00")
         color_set.append("#FAC828")
         color_set.append("#28AF3C")
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         color_set.append("#8C64F0")
         color_set.append("#D25ADC")
@@ -181,6 +187,7 @@ def color_sampling(color_family):
 
         color_set.append("#FAC828")
         color_set.append("#28AF3C")
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         color_set.append("#8C64F0")
         color_set.append("#D25ADC")
@@ -193,6 +200,7 @@ def color_sampling(color_family):
         color_set.append("#FFD732")
 
         color_set.append("#28AF3C")
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         color_set.append("#8C64F0")
         color_set.append("#D25ADC")
@@ -205,12 +213,27 @@ def color_sampling(color_family):
         color_set.append("#28AF3C")
         color_set.append("#73C81E")
 
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         color_set.append("#8C64F0")
         color_set.append("#D25ADC")
         color_set.append("#F03C64")
         color_set.append("#FA8C00")
         color_set.append("#FAC828")
+        return color_set
+
+    if color_family in ("Cyan","cyan"):
+        color_set.append("#1E7878")
+        color_set.append("#19A0A0")
+        color_set.append("#14AFAF")
+
+        color_set.append("#1478E1")
+        color_set.append("#8C64F0")
+        color_set.append("#D25ADC")
+        color_set.append("#F03C64")
+        color_set.append("#FA8C00")
+        color_set.append("#FAC828")
+        color_set.append("#28AF3C")
         return color_set
 
     if color_family in ("Blue", "blue", "Azure", "azure"):
@@ -224,6 +247,7 @@ def color_sampling(color_family):
         color_set.append("#FA8C00") # colors[6]
         color_set.append("#FAC828") # colors[7]
         color_set.append("#28AF3C") # colors[8]
+        color_set.append("#19A0A0") # colors[9]
         return color_set
 
     if color_family in ("Violet", "violet"):
@@ -236,6 +260,7 @@ def color_sampling(color_family):
         color_set.append("#FA8C00")
         color_set.append("#FAC828")
         color_set.append("#28AF3C")
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         return color_set
 
@@ -248,6 +273,7 @@ def color_sampling(color_family):
         color_set.append("#FA8C00")
         color_set.append("#FAC828")
         color_set.append("#28AF3C")
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         color_set.append("#8C64F0")
         return color_set
@@ -260,6 +286,7 @@ def color_sampling(color_family):
         color_set.append("#FA8C00")
         color_set.append("#FAC828")
         color_set.append("#28AF3C")
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         color_set.append("#8C64F0")
         color_set.append("#D25ADC")
@@ -273,13 +300,18 @@ def color_sampling(color_family):
         color_set.append("#FA8C00")
         color_set.append("#FAC828")
         color_set.append("#28AF3C")
+        color_set.append("#19A0A0")
         color_set.append("#1478E1")
         color_set.append("#8C64F0")
         color_set.append("#D25ADC")
         return color_set
 
     if color_family == "all_families":
-        return ["Silver", "Grey", "Red", "Orange", "Yellow", "Green", "Blue", "Violet", "Purple", "Wine", "Brown", "Default"]
+        return ["Silver", "Grey", "Red", "Orange", "Yellow", "Green", "Cyan", "Blue", "Violet", "Purple", "Wine", "Brown", "Default"]
+    
+    else:
+        color_set.extend([color_family] * 10)
+        return color_set
 
 def plot_color_families():
     color_families = color_sampling("all_families")

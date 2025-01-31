@@ -1,5 +1,6 @@
 # Check large files
 
+#%%
 import os
 
 def find_large_files(start_path='.', size_threshold_mb=96):
@@ -16,3 +17,5 @@ def find_large_files(start_path='.', size_threshold_mb=96):
 
 if __name__ == "__main__":
     find_large_files()
+
+# %%

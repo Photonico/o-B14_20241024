@@ -1,0 +1,59 @@
+ running   48 mpi-ranks, with    1 threads/rank, on    1 nodes
+ distrk:  each k-point on   48 cores,    1 groups
+ distr:  one band on   16 cores,    3 groups
+ vasp.6.4.3 19Mar24 (build May 31 2024 16:31:43) complex                        
+  
+ POSCAR found type information on POSCAR B 
+ POSCAR found :  1 types and      14 ions
+ Reading from existing POTCAR
+ scaLAPACK will be used
+ Reading from existing POTCAR
+ LDA part: xc-table for (Slater+PW92), standard interpolation
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     The number of bands has been changed from the values supplied in        |
+|     the INCAR file. This is a result of running the parallel version.       |
+|     The orbitals not found in the WAVECAR file will be initialized with     |
+|     random numbers, which is usually adequate. For correlated               |
+|     calculations, however, you should redo the groundstate calculation.     |
+|     I found NBANDS = 128. Now, NBANDS = 129.                                |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+ found WAVECAR, reading the header
+  number of bands has changed, file:    48 present:   129
+  trying to continue reading WAVECAR, but it might fail
+ POSCAR, INCAR and KPOINTS ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ reading WAVECAR
+ random initialization beyond band           48
+ the WAVECAR file was read successfully
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1    -0.971407657817E+02   -0.97141E+02   -0.33090E+00454080   0.443E+00    0.119E+01
+DAV:   2    -0.924043072468E+02    0.47365E+01   -0.24980E+00529506   0.437E+00    0.692E+00
+DAV:   3    -0.905969650110E+02    0.18073E+01   -0.12584E+00535515   0.290E+00    0.152E+00
+DAV:   4    -0.906100253123E+02   -0.13060E-01   -0.26501E-01523032   0.835E-01    0.951E-01
+DAV:   5    -0.906261249207E+02   -0.16100E-01   -0.11099E-02524544   0.217E-01    0.206E-01
+DAV:   6    -0.906300242182E+02   -0.38993E-02   -0.19286E-03520032   0.869E-02    0.104E-01
+DAV:   7    -0.906318444726E+02   -0.18203E-02   -0.56326E-04506796   0.486E-02    0.386E-02
+DAV:   8    -0.906318735262E+02   -0.29054E-04   -0.42964E-05532836   0.161E-02    0.930E-03
+DAV:   9    -0.906318847424E+02   -0.11216E-04   -0.58791E-06505788   0.486E-03    0.271E-03
+DAV:  10    -0.906318850417E+02   -0.29933E-06   -0.21820E-07504762   0.101E-03
+   1 F= -.90631885E+02 E0= -.90631809E+02  d E =-.152414E-03
+ writing wavefunctions
+ optical routines
+ imaginary and real dielectric function
+ recalculating local potential from charge density
+ direction            1
+ direction            2
+ direction            3
