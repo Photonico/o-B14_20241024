@@ -13,6 +13,7 @@ from vmatplot.output_settings import color_sampling, canvas_setting
 from vmatplot.algorithms import transpose_matrix
 from vmatplot.commons import extract_fermi, get_atoms_count, process_boundary, get_or_default
 from vmatplot.dos import extract_dos
+from vmatplot.pdos import extract_dict_pdos, create_matters_pdos
 
 global_tolerance = 1e-4
 
@@ -1224,7 +1225,7 @@ def plot_bsDoS(suptitle, matters_list=None, eigen_range=None, dos_range=None, le
             for bands_index in range(0, len(matter[4])):
                 current_band = [eigenvalue - bs_fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Bandstructure {bs_current_label}", zorder=4)
+                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Bands {bs_current_label}", zorder=4)
                 else:
                     ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
         elif matter[0].lower() in ["bands"]:
@@ -1326,3 +1327,160 @@ def plot_bsDoS(suptitle, matters_list=None, eigen_range=None, dos_range=None, le
     plt.tight_layout()
 
 # plot bandstructure with PDoS
+def create_matters_bsPDos(bs_list, pdos_list):
+    """
+    Merge BS (Band Structure) and PDoS (Projected Density of States) configurations
+    into a structured pair for combined plotting.
+    
+    Parameters:
+        bs_list (list): BS configuration list. Each item should be in the format:
+            [bstype, label, bs_directory, (optional: color, lstyle, weight, alpha, tolerance)]
+            For example: ["monocolor", "", "4.1_PDoS/o-B14_K20"]
+        pdos_list (list): PDoS configuration list. Each item should be in the format:
+            [pdos_label, pdos_directory, atoms, orbital, (optional: line_color, line_style, line_weight, line_alpha)]
+            For example: ["$p$ for Group 1", "4.1_PDoS/o-B14_K20", index_g1, "p", "blue", "solid", 2.0, 1.0]
+    
+    Returns:
+        tuple: (bs_matters, pdos_matters) where:
+            - bs_matters is produced by calling create_matters_bs(bs_list)
+            - pdos_matters is produced by calling create_matters_pdos(pdos_list)
+    """
+    # Use your previously defined functions for BS and PDoS
+    bs_matters = create_matters_bs(bs_list)
+    pdos_matters = create_matters_pdos(pdos_list)
+    return bs_matters, pdos_matters
+
+def plot_bsPDoS(title, bs_list, pdos_list, eigen_range, dos_range, legend_loc=False):
+    """
+    Plot a combined figure with BS (Band Structure) on the left and PDoS on the right.
+    
+    Parameters:
+        title (str): Plot title.
+        bs_list (list): BS configuration list (see create_matters_bs for details).
+        pdos_list (list): PDoS configuration list (see create_matters_pdos for details).
+        eigen_range (float): Energy range for the BS plot (y-axis from -eigen_range to eigen_range).
+        dos_range (float): x-axis range for the PDoS plot (from 0 to dos_range).
+        legend_loc: Legend location (e.g., "upper right") or False to hide legends.
+    """
+    # Set up figure using predefined canvas settings
+    fig_setting = canvas_setting(12, 6)
+    plt.rcParams.update(fig_setting[2])
+    fig = plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])
+    ax1 = fig.add_subplot(gs[0])
+    ax2 = fig.add_subplot(gs[1])
+    
+    # Color settings for Fermi energy and annotations
+    bs_fermi_color = color_sampling("Violet")
+    annotate_color = color_sampling("Grey")
+    
+    # Set the overall title
+    fig.suptitle(title, fontsize=fig_setting[3][0], y=1.00)
+    
+    # Get BS and PDoS matters using the helper function
+    bs_matters, pdos_matters = create_matters_bsPDos(bs_list, pdos_list)
+    
+    # --------------------- Plot BS (Band Structure) ---------------------
+    ax1.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    ax1.set_title("Bandstructure", fontsize=fig_setting[3][1])
+    
+    # Loop over BS matters (the structure is the same as produced by your original create_matters_bs)
+    for matter in bs_matters:
+        bs_current_label = matter[1]
+        # For monocolor (non-split bands) plotting
+        if matter[0].lower() in ["monocolor", "monocolor nonpolarized", 
+                                 "monocolor spin up", "spin up monocolor", 
+                                 "monocolor spin down", "spin down monocolor"]:
+            fermi = matter[2]
+            for bands_index in range(len(matter[4])):
+                current_band = [energy - fermi for energy in matter[4][bands_index]]
+                if bands_index == 0:
+                    ax1.plot(matter[3], current_band,
+                             c=color_sampling(matter[5])[1],
+                             linestyle=matter[6], lw=matter[7], alpha=matter[8],
+                             label=f"Bandstructure {bs_current_label}", zorder=4)
+                else:
+                    ax1.plot(matter[3], current_band,
+                             c=color_sampling(matter[5])[1],
+                             linestyle=matter[6], lw=matter[7], alpha=matter[8], zorder=4)
+        # For split bands (conduction and valence)
+        elif matter[0].lower() in ["bands", "bands nonpolarized", 
+                                   "bands spin up", "spin up bands", 
+                                   "bands spin down", "spin down bands"]:
+            fermi = matter[2]
+            for bands_index in range(len(matter[4])):
+                current_conduction_band = [energy - fermi for energy in matter[4][bands_index]]
+                if bands_index == 0:
+                    ax1.plot(matter[3], current_conduction_band,
+                             c=color_sampling(matter[6])[2],
+                             linestyle=matter[7], lw=matter[8], alpha=matter[9],
+                             label=f"Conduction bands {bs_current_label}", zorder=4)
+                else:
+                    ax1.plot(matter[3], current_conduction_band,
+                             c=color_sampling(matter[6])[2],
+                             linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
+            for bands_index in range(len(matter[5])):
+                current_valence_band = [energy - fermi for energy in matter[5][bands_index]]
+                if bands_index == 0:
+                    ax1.plot(matter[3], current_valence_band,
+                             c=color_sampling(matter[6])[0],
+                             linestyle=matter[7], lw=matter[8], alpha=matter[9],
+                             label=f"Valence bands {bs_current_label}", zorder=4)
+                else:
+                    ax1.plot(matter[3], current_valence_band,
+                             c=color_sampling(matter[6])[0],
+                             linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
+        # Record k-path range and the last Fermi energy (they are assumed to be similar among matters)
+        kpath_start = matter[3][0]
+        kpath_end = matter[3][-1]
+        bs_fermi_last = matter[2]
+    
+    # Draw the Fermi energy horizontal line
+    ax1.axhline(y=0, color=bs_fermi_color[0], alpha=0.8, linestyle="--",
+                label="Fermi energy", zorder=2)
+    ax1.set_ylim(-eigen_range, eigen_range)
+    ax1.set_xlim(kpath_start, kpath_end)
+    
+    # Set up the x-axis with high-symmetry points using the original BS input
+    bs_directory = bs_list[-1][2]  # Use the directory from the last BS configuration
+    high_symm_paths = kpoints_path(bs_directory)
+    high_symm_positions = list(high_symm_paths.values())
+    high_symm_labels = list(high_symm_paths.keys())
+    if is_kpoints_returning(bs_directory):
+        high_symm_positions.append(kpath_end)
+        high_symm_labels.append(high_symm_labels[0])
+    ax1.set_xticks(high_symm_positions)
+    ax1.set_xticklabels(high_symm_labels)
+    for pos in high_symm_positions[1:-1]:
+        ax1.axvline(x=pos, color=annotate_color[1], linestyle="--", alpha=0.8, zorder=1)
+    
+    # --------------------- Plot PDoS ---------------------
+    ax2.set_title("PDoS", fontsize=fig_setting[3][1])
+    dos_efermi = None
+    for pdos_matter in pdos_matters:
+        pdos_label = pdos_matter[0]
+        pdos_data = pdos_matter[1]
+        orbital = pdos_matter[3]
+        ax2.plot(pdos_data[orbital], pdos_data["pdos_shifted_energy"],
+                 color=color_sampling(pdos_matter[4])[0],
+                 linestyle=pdos_matter[5],
+                 linewidth=pdos_matter[6],
+                 alpha=pdos_matter[7],
+                 label=pdos_label, zorder=2)
+        dos_efermi = pdos_data["efermi"]
+    ax2.set_ylim(-eigen_range, eigen_range)
+    ax2.set_xlim(0, dos_range)
+    ax2.set_xticks([0, dos_range/2, dos_range])
+    ax2.set_xticklabels(["0", f"{dos_range/2:.1f}", f"{dos_range:.1f}"])
+    ax2.set_yticks([])
+    if dos_efermi is not None:
+        ax2.axhline(y=0, linestyle="--", color=bs_fermi_color[0], alpha=0.8,
+                    label="Fermi energy", zorder=2)
+    
+    # Legend settings
+    if legend_loc:
+        ax1.legend(loc=legend_loc)
+        ax2.legend(loc=legend_loc)
+    
+    plt.tight_layout()
+    plt.show()
