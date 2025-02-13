@@ -1,8 +1,8 @@
-#### Calculation Information for SC
+#### Calculation Information for Lattice
 # Created by Lu Niu, LukeNiu@outlook.com, May 18, 2023
 
 ## Project name
-SYSTEM = SC
+SYSTEM = Convergence
 
 ## Start parameters for this Run (default ICHARG = 2 when ISTART = 0; ICHARG = 11 for bandstructure and DOS calculation)
 ISTART = 0
@@ -15,9 +15,9 @@ PREC = Accurate
 # Defaults from POTCAR
 ENCUT = 600
 # Output charge function file CHGCAR
-LCHARG = .TRUE.
+LCHARG = .FALSE.
 # Output wave function file WAVECAR
-LWAVE = .TRUE.
+LWAVE = .FALSE.
 
 # Alorithm for electron optimization, can be also FAST or ALL
 ALGO = Normal
@@ -32,35 +32,32 @@ SIGMA = 0.05
 ISMEAR = 0  # Gaussian Smearing
 
 # Electron Spin (1 for single layer / 2 for double layers)
-# ISPIN = 2       # 2 for spin-polarized calculations (collinear) are performed
+ISPIN = 1       # 2 for spin-polarized calculations (collinear) are performed
 # Magnetic moment
 # MAGMON = 1
 
-# ## Ionic relaxation
-# # Number of steps for IOM   
+## Ionic relaxation
+# Number of steps for IOM   
 NSW = 0
-# # CG for ions, often 1 (RMM-DISS) is faster    
+# CG for ions, often 1 (RMM-DISS) is faster    
 IBRION = -1
-# # Step for ionic-motion (for MD in fs)
-# POTIM = .5
-# # Stress tensor (2 for relaxation ions)
-# ISIF = 2
+# Step for ionic-motion (for MD in fs)
+POTIM = .5
+# Stress tensor (2 for relaxation ions)
+ISIF = 2
 
 # Performance optimization
 # The number of groups made, each group working on one set of k-points 
 # KPAR = 1
 # How many cores handling one orbital
-NCORE = 4
+# NCORE = 4
 # Real space projection; slightly less accurate but faster 
 # LREAL = .FALSE.
 # Generalized Gradient Approximation (GGA)
 GGA = PE
 # Include VdW dispersion correction
-#IVDW = 12
-# Symmetry
-#ISYM = 0
+# IVDW = 12
 
 # Dipole Correction (Double layers only)
-LDIPOL = .TRUE.             # Dipole correction adjusts forces and potential.
-IDIPOL = 3                  # 1 for x direction, 2 for y direction, 3 for z direction, 4 for all 3-dimensions
-DIPOL = 0.5 0.5 0.224
+# DIPOL = .TRUE.             # Dipole correction adjusts forces and potential.
+# IDIPOL = 3                  # 1 for x direction, 2 for y direction, 3 for z direction, 4 for all 3-dimensions
