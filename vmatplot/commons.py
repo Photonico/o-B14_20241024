@@ -3,10 +3,13 @@
 
 import xml.etree.ElementTree as ET
 import os
-
+import math
 import numpy as np
 
 from typing import Tuple, Union
+
+def vector_length(vec):
+    return math.sqrt(sum(x**2 for x in vec))
 
 def get_or_default(value, default):
     """Return the value if it's not None or an empty string, otherwise return the default."""
@@ -150,7 +153,10 @@ def identify_parameters(directory="."):
         "  - EDIFF: Electronic convergence criterion.\n"
         "  - EDIFFG: Force convergence criterion.\n"
         "  - Elapsed time (sec): Total simulation time (from OUTCAR).\n"
-        "  - Scaling: Scaling factor from the second line of POSCAR.\n\n"
+        "  - Scaling: Scaling factor from the second line of CONTCAR.\n"
+        "  - a1: primitive basis a_1\n"
+        "  - a2: primitive basis a_2\n"
+        "  - a3: primitive basis a_3\n"
         "Required Files:\n"
         "  - vasprun.xml\n"
         "  - KPOINTS\n"
@@ -168,10 +174,10 @@ def identify_parameters(directory="."):
     vasprun_path = os.path.join(directory, "vasprun.xml")
     kpoints_path = os.path.join(directory, "KPOINTS")
     outcar_path = os.path.join(directory, "OUTCAR")
-    poscar_path = os.path.join(directory, "POSCAR")
+    contcar_path = os.path.join(directory, "CONTCAR")
 
     # Check file existence
-    if not os.path.exists(vasprun_path) or not os.path.exists(kpoints_path) or not os.path.exists(poscar_path):
+    if not os.path.exists(vasprun_path) or not os.path.exists(kpoints_path) or not os.path.exists(contcar_path):
         print(f"Required files not found in {directory}. Skipping this directory.")
         return None
 
@@ -195,16 +201,33 @@ def identify_parameters(directory="."):
             "electronic convergence (EDIFF)": None,
             "force convergence (EDIFFG)": None,
             "elapsed time (sec)": None,
-            "Scaling": None  # New entry for Scaling
+            "Scaling": None,
+            "a1": None,
+            "a2": None,
+            "a3": None,
         }
 
-        # Extract Scaling factor from POSCAR (second line)
+        # Extract Scaling factor and primitive bases from CONTCAR (second line)
         try:
-            with open(poscar_path, "r", encoding="utf-8") as poscar_file:
-                lines = poscar_file.readlines()
-                parameters["Scaling"] = float(lines[1].strip())
+            with open(contcar_path, "r", encoding="utf-8") as contcar_file:
+                lines = contcar_file.readlines()
+                scaling = float(lines[1].strip())
+                parameters["Scaling"] = scaling
+
+                a1_vector = [float(val) for val in lines[2].split()]
+                a2_vector = [float(val) for val in lines[3].split()]
+                a3_vector = [float(val) for val in lines[4].split()]
+
+                a1_length = scaling * vector_length(a1_vector)
+                a2_length = scaling * vector_length(a2_vector)
+                a3_length = scaling * vector_length(a3_vector)
+
+                parameters["a1"] = a1_length
+                parameters["a2"] = a2_length
+                parameters["a3"] = a3_length
+
         except (IndexError, ValueError) as e:
-            print(f"Error reading Scaling from POSCAR in {directory}: {e}")
+            print(f"Error reading Scaling from CONTCAR in {directory}: {e}")
 
         # Parse XML data from vasprun.xml
         tree = ET.parse(vasprun_path)
