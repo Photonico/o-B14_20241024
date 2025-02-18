@@ -1451,7 +1451,9 @@ def plot_bsPDoS(title, bs_list, pdos_list, eigen_range, dos_range, legend_loc=Fa
         ax1.axvline(x=k_loc, color=annotate_color[1], linestyle="--", alpha=0.8, zorder=1)
 
     # Plot PDoS
-    ax2.set_title("PDoS", fontsize=fig_setting[3][1])
+    ax2.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    ax2.set_title("PDOS (a.u.)", fontsize=fig_setting[3][1])
+
     dos_efermi = None
     for pdos_matter in pdos_matters:
         pdos_label = pdos_matter[0]
