@@ -265,7 +265,7 @@ def plot_energy_kpoints_single(suptitle, *args_list):
     kpoints_labels_plot = [f"({x[0]}, {x[1]}, {x[2]})" for x in [sep_kpoints_sorted[index] for index in kpoints_indices]]
 
     # Plot with fixed spacing based on indices
-    plt.plot(range(len(total_kpoints_plot)), energy_plotting, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha, label=f"Energy versus K-points ({info_suffix})")
+    plt.plot(range(len(total_kpoints_plot)), energy_plotting, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha, label=f"Energy versus K-points {info_suffix}")
     plt.scatter(range(len(total_kpoints_plot)), energy_plotting, c=colors[1], s=line_weight*4, lw=line_weight, alpha=line_alpha, zorder=1)
 
     # Set custom tick labels for x-axis to show kpoints configurations
@@ -798,6 +798,738 @@ def plot_energy_lattice(suptitle, lattice_list):
     ax.legend(handles=legend_handles, loc="best")
     plt.tight_layout()
 
+
+    """
+    Plot multiple datasets: Energy vs a3.
+    a3_list: A 2D list where each sublist contains
+      [info_suffix, source_data, a3_boundary, num_samples, color_family, line_style, line_weight, line_alpha]
+    """
+    if not isinstance(a3_list[0], list):
+        return plot_energy_a3_single(suptitle, a3_list)
+    elif len(a3_list) == 1:
+        return plot_energy_a3_single(suptitle, *a3_list)
+
+    for index, data in enumerate(a3_list):
+        if not isinstance(data, list):
+            print(f"Error: Item at index {index} in a3_list must be a list.")
+            return
+        if len(data) < 8:
+            print(f"Warning: Item at index {index} has less than 8 elements. Missing elements will be filled with None.")
+            a3_list[index] += [None] * (8 - len(data))
+
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    global_a3_set = set()
+    for data in a3_list:
+        args_info = data + [None] * (8 - len(data))
+        _, source_data, a3_boundary, _, _, _, _, _ = args_info
+        data_dict_list = read_energy_parameters(source_data)
+        a3_values = [d.get("a3") for d in data_dict_list]
+        if not a3_values:
+            continue
+        a3_start = min(a3_values) if a3_boundary in [None, ""] else float(a3_boundary[0] or min(a3_values))
+        a3_end = max(a3_values) if a3_boundary in [None, ""] else float(a3_boundary[1] or max(a3_values))
+        for a3 in a3_values:
+            if a3 is not None and a3_start <= a3 <= a3_end:
+                global_a3_set.add(a3)
+    sorted_global_a3 = sorted(global_a3_set)
+    global_a3_labels = [f"{a3:.6g}" for a3 in sorted_global_a3]
+
+    for data in a3_list:
+        args_info = data + [None] * (8 - len(data))
+        info_suffix, source_data, a3_boundary, num_samples, color_family, line_style, line_weight, line_alpha = args_info
+        color_family = get_or_default(color_family, "default")
+        line_style = get_or_default(line_style, "solid")
+        line_weight = get_or_default(line_weight, 1.5)
+        line_alpha = get_or_default(line_alpha, 1.0)
+        colors = color_sampling(color_family)
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy", d.get("Total Energy")) for d in data_dict_list]
+        a3_values = [d.get("a3") for d in data_dict_list]
+        if not a3_values:
+            continue
+        a3_start = min(a3_values) if a3_boundary in [None, ""] else float(a3_boundary[0] or min(a3_values))
+        a3_end = max(a3_values) if a3_boundary in [None, ""] else float(a3_boundary[1] or max(a3_values))
+        filtered = [(a3, e) for a3, e in zip(a3_values, energy) if a3 is not None and a3_start <= a3 <= a3_end]
+        if not filtered:
+            continue
+        a3_filtered, energy_filtered = zip(*sorted(filtered, key=lambda x: x[0]))
+        eos_params, resampled_a3, fitted_energy = fit_birch_murnaghan(a3_filtered, energy_filtered, sample_count=100)
+        fitted_interp = np.interp(sorted_global_a3, a3_filtered, fitted_energy)
+        energy_interp = np.interp(sorted_global_a3, a3_filtered, energy_filtered)
+        plt.plot(range(len(sorted_global_a3)), fitted_interp, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+                 label=f"Fitted EOS curve {info_suffix}")
+        plt.scatter(range(len(sorted_global_a3)), energy_interp, s=line_weight * 4, c=colors[1], alpha=line_alpha, zorder=1)
+        legend_handles.append(
+            mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle=line_style,
+                          label=f"Energy vs a3 {info_suffix}")
+        )
+
+    plt.xlabel("a3 (Å)")
+    plt.ylabel("Energy (eV)")
+    plt.xticks(ticks=range(len(global_a3_labels)), labels=global_a3_labels, rotation=45, ha="right")
+    plt.title(f"{suptitle}")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_energy_scaling_single(suptitle, *args_list):
+    help_info = (
+        "Usage: plot_energy_scaling(suptitle, args_list)\n"
+        "args_list: A list containing [info_suffix, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha].\n"
+        "Example: plot_energy_scaling(suptitle, ['Material Info', 'source_data_path', (start, end), 'green', 'dashed', 2.0, 0.8])\n"
+    )
+
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
+        print(help_info)
+        return
+
+    # Unpack args_list and handle missing parameters
+    args_info = args_list[0] + [None] * (7 - len(args_list[0]))
+    info_suffix, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+    # Apply default values using `get_or_default`
+    color_family = get_or_default(color_family, "default")
+    line_style   = get_or_default(line_style, "solid")
+    line_weight  = get_or_default(line_weight, 1.5)
+    line_alpha   = get_or_default(line_alpha, 1.0)
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color sampling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+
+    # Extract total energy and Scaling values
+    energy = [d.get("total energy") for d in data_dict_list]
+    scaling_values = [d.get("Scaling") for d in data_dict_list]
+
+    # Filter out None values
+    filtered_data = [(s, e) for s, e in zip(scaling_values, energy) if s is not None and e is not None]
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip and sort data by Scaling values
+    scaling_values, energy = zip(*filtered_data)
+    sorted_data = sorted(zip(scaling_values, energy), key=lambda x: x[0])
+    scaling_sorted, energy_sorted = zip(*sorted_data)
+
+    # Set boundaries for Scaling
+    scaling_start = min(scaling_sorted) if not scaling_boundary or scaling_boundary[0] is None else float(scaling_boundary[0])
+    scaling_end   = max(scaling_sorted) if not scaling_boundary or scaling_boundary[1] is None else float(scaling_boundary[1])
+
+    # Filter data within the specified boundary
+    scaling_filtered, energy_filtered = zip(*[
+        (s, e) for s, e in zip(scaling_sorted, energy_sorted) if scaling_start <= s <= scaling_end
+    ])
+
+    # Plotting
+    plt.plot(scaling_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+             label=f"Energy versus Scaling {info_suffix}")
+    plt.scatter(scaling_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+
+    # Set labels and title (x-axis labels are not rotated)
+    plt.title(f"{suptitle} {info_suffix}")
+    plt.xlabel("Scaling")
+    plt.ylabel("Energy (eV)")
+    plt.legend(loc="best")
+    plt.tight_layout()
+
+def plot_energy_scaling(suptitle, scaling_list):
+    """
+    Generalized function to plot energy versus Scaling for multiple datasets.
+
+    Parameters:
+    - scaling_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha].
+    """
+    if not is_nested_list(scaling_list):
+        return plot_energy_scaling_single(suptitle, scaling_list)
+    elif len(scaling_list) == 1:
+        return plot_energy_scaling_single(suptitle, *scaling_list)
+
+    # Verify each dataset has correct structure
+    for index, data in enumerate(scaling_list):
+        if not isinstance(data, list):
+            print(f"Error: Item at index {index} in scaling_list must be a list.")
+            return
+        if len(data) < 4:
+            print(f"Warning: Item at index {index} has less than 4 elements. Missing elements will be filled with None.")
+            scaling_list[index] += [None] * (7 - len(data))
+
+    # Figure and styling settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    global_scaling_set = set()
+    scaling_config_map = {}
+
+    # Collect global Scaling values across all datasets
+    for data in scaling_list:
+        args_info = data + [None] * (7 - len(data))
+        _, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+
+        data_dict_list = read_energy_parameters(source_data)
+        scaling_values = [d.get("Scaling") for d in data_dict_list]
+        scaling_start = min(scaling_values) if not scaling_boundary or scaling_boundary[0] is None else float(scaling_boundary[0])
+        scaling_end   = max(scaling_values) if not scaling_boundary or scaling_boundary[1] is None else float(scaling_boundary[1])
+        for val in scaling_values:
+            if val is not None and scaling_start <= val <= scaling_end:
+                global_scaling_set.add(val)
+                scaling_config_map[val] = f"{val:.6g}"
+    sorted_global_scaling = sorted(global_scaling_set)
+    global_scaling_labels = [scaling_config_map[val] for val in sorted_global_scaling]
+
+    # Plot each dataset aligned with the global Scaling values
+    for data in scaling_list:
+        args_info = data + [None] * (7 - len(data))
+        info_suffix, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+        colors = color_sampling(color_family)
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy") for d in data_dict_list]
+        scaling_values = [d.get("Scaling") for d in data_dict_list]
+        scaling_start = min(scaling_values) if not scaling_boundary or scaling_boundary[0] is None else float(scaling_boundary[0])
+        scaling_end   = max(scaling_values) if not scaling_boundary or scaling_boundary[1] is None else float(scaling_boundary[1])
+        filtered = [(s, e) for s, e in zip(scaling_values, energy) if s is not None and scaling_start <= s <= scaling_end]
+        if not filtered:
+            continue
+        scaling_filtered, energy_filtered = zip(*sorted(filtered, key=lambda x: x[0]))
+
+        # Align energies with global sorted Scaling values
+        energy_aligned = [energy_filtered[scaling_filtered.index(val)] if val in scaling_filtered else np.nan for val in sorted_global_scaling]
+        plt.plot(sorted_global_scaling, energy_aligned, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha)
+        plt.scatter(sorted_global_scaling, energy_aligned, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+
+        legend_handles.append(
+            mlines.Line2D([], [], color=colors[1], marker='o', markersize=6,
+                          linestyle=line_style, label=f"Energy versus Scaling {info_suffix}")
+        )
+
+    plt.xlabel("Scaling")
+    plt.ylabel("Energy (eV)")
+    plt.xticks(ticks=range(len(global_scaling_labels)), labels=global_scaling_labels)
+    plt.title(f"{suptitle}")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_energy_a1_single(suptitle, *args_list):
+    help_info = (
+        "Usage: plot_energy_a1(suptitle, args_list)\n"
+        "args_list: A list containing [info_suffix, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha].\n"
+        "Example: plot_energy_a1(suptitle, ['Material Info', 'source_data_path', (start, end), 'blue', 'solid', 1.5, 1.0])\n"
+    )
+
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
+        print(help_info)
+        return
+
+    # Unpack args_list and handle missing parameters
+    args_info = args_list[0] + [None] * (7 - len(args_list[0]))
+    info_suffix, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+    # Apply default values using `get_or_default`
+    color_family = get_or_default(color_family, "default")
+    line_style   = get_or_default(line_style, "solid")
+    line_weight  = get_or_default(line_weight, 1.5)
+    line_alpha   = get_or_default(line_alpha, 1.0)
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color sampling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+
+    # Extract total energy and a1 values
+    energy = [d.get("total energy") for d in data_dict_list]
+    a1_values = [d.get("a1") for d in data_dict_list]
+
+    # Filter out None values
+    filtered_data = [(val, e) for val, e in zip(a1_values, energy) if val is not None and e is not None]
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip and sort data by a1 values
+    a1_values, energy = zip(*filtered_data)
+    sorted_data = sorted(zip(a1_values, energy), key=lambda x: x[0])
+    a1_sorted, energy_sorted = zip(*sorted_data)
+
+    # Set boundaries for a1
+    a1_start = min(a1_sorted) if not a1_boundary or a1_boundary[0] is None else float(a1_boundary[0])
+    a1_end   = max(a1_sorted) if not a1_boundary or a1_boundary[1] is None else float(a1_boundary[1])
+
+    # Filter data within the specified boundary
+    a1_filtered, energy_filtered = zip(*[
+        (val, e) for val, e in zip(a1_sorted, energy_sorted) if a1_start <= val <= a1_end
+    ])
+
+    # Plotting
+    plt.plot(a1_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+             label=f"Energy versus a1 {info_suffix}")
+    plt.scatter(a1_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+
+    # Set labels and title
+    plt.title(f"{suptitle} {info_suffix}")
+    plt.xlabel("a1 (Å)")
+    plt.ylabel("Energy (eV)")
+    plt.legend(loc="best")
+    plt.tight_layout()
+
+def plot_energy_a1(suptitle, a1_list):
+    """
+    Generalized function to plot energy versus a1 for multiple datasets.
+
+    Parameters:
+    - a1_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha].
+    """
+    if not is_nested_list(a1_list):
+        return plot_energy_a1_single(suptitle, a1_list)
+    elif len(a1_list) == 1:
+        return plot_energy_a1_single(suptitle, *a1_list)
+
+    for index, data in enumerate(a1_list):
+        if not isinstance(data, list):
+            print(f"Error: Item at index {index} in a1_list must be a list.")
+            return
+        if len(data) < 4:
+            print(f"Warning: Item at index {index} has less than 4 elements. Missing elements will be filled with None.")
+            a1_list[index] += [None] * (7 - len(data))
+
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    global_a1_set = set()
+    a1_config_map = {}
+
+    # Gather all unique a1 values for the global x-axis
+    for data in a1_list:
+        args_info = data + [None] * (7 - len(data))
+        _, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha = args_info
+        data_dict_list = read_energy_parameters(source_data)
+        a1_values = [d.get("a1") for d in data_dict_list]
+        a1_start = min(a1_values) if not a1_boundary or a1_boundary[0] is None else float(a1_boundary[0])
+        a1_end   = max(a1_values) if not a1_boundary or a1_boundary[1] is None else float(a1_boundary[1])
+        for val in a1_values:
+            if val is not None and a1_start <= val <= a1_end:
+                global_a1_set.add(val)
+                a1_config_map[val] = f"{val:.6g}"
+    sorted_global_a1 = sorted(global_a1_set)
+    global_a1_labels = [a1_config_map[val] for val in sorted_global_a1]
+
+    # Plot each dataset aligned with the global a1 values
+    for data in a1_list:
+        args_info = data + [None] * (7 - len(data))
+        info_suffix, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+        colors = color_sampling(color_family)
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy") for d in data_dict_list]
+        a1_values = [d.get("a1") for d in data_dict_list]
+        a1_start = min(a1_values) if not a1_boundary or a1_boundary[0] is None else float(a1_boundary[0])
+        a1_end   = max(a1_values) if not a1_boundary or a1_boundary[1] is None else float(a1_boundary[1])
+        filtered = [(val, e) for val, e in zip(a1_values, energy) if val is not None and a1_start <= val <= a1_end]
+        if not filtered:
+            continue
+        a1_filtered, energy_filtered = zip(*sorted(filtered, key=lambda x: x[0]))
+
+        # Align energies with global sorted a1 values
+        energy_aligned = [energy_filtered[a1_filtered.index(val)] if val in a1_filtered else np.nan for val in sorted_global_a1]
+        plt.plot(sorted_global_a1, energy_aligned, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+                 label=f"Energy versus a1 {info_suffix}")
+        plt.scatter(sorted_global_a1, energy_aligned, s=line_weight * 4, c=colors[1], alpha=line_alpha, zorder=1)
+        legend_handles.append(
+            mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle=line_style,
+                          label=f"Energy versus a1 {info_suffix}")
+        )
+
+    plt.xlabel("a1 (Å)")
+    plt.ylabel("Energy (eV)")
+    plt.xticks(ticks=range(len(global_a1_labels)), labels=global_a1_labels)
+    plt.title(f"{suptitle}")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_energy_a2_single(suptitle, *args_list):
+    help_info = (
+        "Usage: plot_energy_a2(suptitle, args_list)\n"
+        "args_list: A list containing [info_suffix, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha].\n"
+        "Example: plot_energy_a2(suptitle, ['Material Info', 'source_data_path', (start, end), 'red', 'dashed', 2.0, 0.8])\n"
+    )
+
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
+        print(help_info)
+        return
+
+    # Unpack args_list and handle missing parameters
+    args_info = args_list[0] + [None] * (7 - len(args_list[0]))
+    info_suffix, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+    # Apply default values using `get_or_default`
+    color_family = get_or_default(color_family, "default")
+    line_style   = get_or_default(line_style, "solid")
+    line_weight  = get_or_default(line_weight, 1.5)
+    line_alpha   = get_or_default(line_alpha, 1.0)
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color sampling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+
+    # Extract total energy and a2 values
+    energy = [d.get("total energy") for d in data_dict_list]
+    a2_values = [d.get("a2") for d in data_dict_list]
+
+    # Filter out None values
+    filtered_data = [(val, e) for val, e in zip(a2_values, energy) if val is not None and e is not None]
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip and sort data by a2 values
+    a2_values, energy = zip(*filtered_data)
+    sorted_data = sorted(zip(a2_values, energy), key=lambda x: x[0])
+    a2_sorted, energy_sorted = zip(*sorted_data)
+
+    # Set boundaries for a2
+    a2_start = min(a2_sorted) if not a2_boundary or a2_boundary[0] is None else float(a2_boundary[0])
+    a2_end   = max(a2_sorted) if not a2_boundary or a2_boundary[1] is None else float(a2_boundary[1])
+
+    # Filter data within the specified boundary
+    a2_filtered, energy_filtered = zip(*[
+        (val, e) for val, e in zip(a2_sorted, energy_sorted) if a2_start <= val <= a2_end
+    ])
+
+    # Plotting
+    plt.plot(a2_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+             label=f"Energy versus a2 {info_suffix}")
+    plt.scatter(a2_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+
+    # Set labels and title
+    plt.title(f"{suptitle} {info_suffix}")
+    plt.xlabel("a2 (Å)")
+    plt.ylabel("Energy (eV)")
+    plt.legend(loc="best")
+    plt.tight_layout()
+
+def plot_energy_a2(suptitle, a2_list):
+    """
+    Generalized function to plot energy versus a2 for multiple datasets.
+
+    Parameters:
+    - a2_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha].
+    """
+    if not is_nested_list(a2_list):
+        return plot_energy_a2_single(suptitle, a2_list)
+    elif len(a2_list) == 1:
+        return plot_energy_a2_single(suptitle, *a2_list)
+
+    for index, data in enumerate(a2_list):
+        if not isinstance(data, list):
+            print(f"Error: Item at index {index} in a2_list must be a list.")
+            return
+        if len(data) < 4:
+            print(f"Warning: Item at index {index} has less than 4 elements. Missing elements will be filled with None.")
+            a2_list[index] += [None] * (7 - len(data))
+
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    global_a2_set = set()
+    a2_config_map = {}
+
+    # Gather all unique a2 values for the global x-axis
+    for data in a2_list:
+        args_info = data + [None] * (7 - len(data))
+        _, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha = args_info
+        data_dict_list = read_energy_parameters(source_data)
+        a2_values = [d.get("a2") for d in data_dict_list]
+        a2_start = min(a2_values) if not a2_boundary or a2_boundary[0] is None else float(a2_boundary[0])
+        a2_end   = max(a2_values) if not a2_boundary or a2_boundary[1] is None else float(a2_boundary[1])
+        for val in a2_values:
+            if val is not None and a2_start <= val <= a2_end:
+                global_a2_set.add(val)
+                a2_config_map[val] = f"{val:.6g}"
+    sorted_global_a2 = sorted(global_a2_set)
+    global_a2_labels = [a2_config_map[val] for val in sorted_global_a2]
+
+    # Plot each dataset aligned with the global a2 values
+    for data in a2_list:
+        args_info = data + [None] * (7 - len(data))
+        info_suffix, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+        colors = color_sampling(color_family)
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy") for d in data_dict_list]
+        a2_values = [d.get("a2") for d in data_dict_list]
+        a2_start = min(a2_values) if not a2_boundary or a2_boundary[0] is None else float(a2_boundary[0])
+        a2_end   = max(a2_values) if not a2_boundary or a2_boundary[1] is None else float(a2_boundary[1])
+        filtered = [(val, e) for val, e in zip(a2_values, energy) if val is not None and a2_start <= val <= a2_end]
+        if not filtered:
+            continue
+        a2_filtered, energy_filtered = zip(*sorted(filtered, key=lambda x: x[0]))
+
+        energy_aligned = [energy_filtered[a2_filtered.index(val)] if val in a2_filtered else np.nan for val in sorted_global_a2]
+        plt.plot(sorted_global_a2, energy_aligned, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+                 label=f"Energy versus a2 {info_suffix}")
+        plt.scatter(sorted_global_a2, energy_aligned, s=line_weight * 4, c=colors[1], alpha=line_alpha, zorder=1)
+        legend_handles.append(
+            mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle=line_style,
+                          label=f"Energy versus a2 {info_suffix}")
+        )
+
+    plt.xlabel("a2 (Å)")
+    plt.ylabel("Energy (eV)")
+    plt.xticks(ticks=range(len(global_a2_labels)), labels=global_a2_labels)
+    plt.title(f"{suptitle}")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_energy_a3_single(suptitle, *args_list):
+    help_info = (
+        "Usage: plot_energy_a3(suptitle, args_list)\n"
+        "args_list: A list containing [info_suffix, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha].\n"
+        "Example: plot_energy_a3(suptitle, ['Material Info', 'source_data_path', (start, end), 'purple', 'dashed', 2.0, 0.8])\n"
+    )
+
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
+        print(help_info)
+        return
+
+    # Unpack args_list and handle missing parameters
+    args_info = args_list[0] + [None] * (7 - len(args_list[0]))
+    info_suffix, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+    # Apply default values using `get_or_default`
+    color_family = get_or_default(color_family, "default")
+    line_style   = get_or_default(line_style, "solid")
+    line_weight  = get_or_default(line_weight, 1.5)
+    line_alpha   = get_or_default(line_alpha, 1.0)
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color sampling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+
+    # Extract total energy and a3 values
+    energy = [d.get("total energy") for d in data_dict_list]
+    a3_values = [d.get("a3") for d in data_dict_list]
+
+    # Filter out None values
+    filtered_data = [(val, e) for val, e in zip(a3_values, energy) if val is not None and e is not None]
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip and sort data by a3 values
+    a3_values, energy = zip(*filtered_data)
+    sorted_data = sorted(zip(a3_values, energy), key=lambda x: x[0])
+    a3_sorted, energy_sorted = zip(*sorted_data)
+
+    # Set boundaries for a3
+    a3_start = min(a3_sorted) if not a3_boundary or a3_boundary[0] is None else float(a3_boundary[0])
+    a3_end   = max(a3_sorted) if not a3_boundary or a3_boundary[1] is None else float(a3_boundary[1])
+
+    # Filter data within the specified boundary
+    a3_filtered, energy_filtered = zip(*[
+        (val, e) for val, e in zip(a3_sorted, energy_sorted) if a3_start <= val <= a3_end
+    ])
+
+    # Plotting
+    plt.plot(a3_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+             label=f"Energy versus a3 {info_suffix}")
+    plt.scatter(a3_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+
+    # Set labels and title
+    plt.title(f"{suptitle} {info_suffix}")
+    plt.xlabel("a3 (Å)")
+    plt.ylabel("Energy (eV)")
+    plt.legend(loc="best")
+    plt.tight_layout()
+
+def plot_energy_a3(suptitle, a3_list):
+    """
+    Generalized function to plot energy versus a3 for multiple datasets.
+
+    Parameters:
+    - a3_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha].
+    """
+    if not is_nested_list(a3_list):
+        return plot_energy_a3_single(suptitle, a3_list)
+    elif len(a3_list) == 1:
+        return plot_energy_a3_single(suptitle, *a3_list)
+
+    for index, data in enumerate(a3_list):
+        if not isinstance(data, list):
+            print(f"Error: Item at index {index} in a3_list must be a list.")
+            return
+        if len(data) < 4:
+            print(f"Warning: Item at index {index} has less than 4 elements. Missing elements will be filled with None.")
+            a3_list[index] += [None] * (7 - len(data))
+
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    global_a3_set = set()
+    a3_config_map = {}
+
+    # Gather all unique a3 values for the global x-axis
+    for data in a3_list:
+        args_info = data + [None] * (7 - len(data))
+        _, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha = args_info
+        data_dict_list = read_energy_parameters(source_data)
+        a3_values = [d.get("a3") for d in data_dict_list]
+        a3_start = min(a3_values) if not a3_boundary or a3_boundary[0] is None else float(a3_boundary[0])
+        a3_end   = max(a3_values) if not a3_boundary or a3_boundary[1] is None else float(a3_boundary[1])
+        for val in a3_values:
+            if val is not None and a3_start <= val <= a3_end:
+                global_a3_set.add(val)
+                a3_config_map[val] = f"{val:.6g}"
+    sorted_global_a3 = sorted(global_a3_set)
+    global_a3_labels = [a3_config_map[val] for val in sorted_global_a3]
+
+    # Plot each dataset aligned with the global a3 values
+    for data in a3_list:
+        args_info = data + [None] * (7 - len(data))
+        info_suffix, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+        colors = color_sampling(color_family)
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy") for d in data_dict_list]
+        a3_values = [d.get("a3") for d in data_dict_list]
+        a3_start = min(a3_values) if not a3_boundary or a3_boundary[0] is None else float(a3_boundary[0])
+        a3_end   = max(a3_values) if not a3_boundary or a3_boundary[1] is None else float(a3_boundary[1])
+        filtered = [(val, e) for val, e in zip(a3_values, energy) if val is not None and a3_start <= val <= a3_end]
+        if not filtered:
+            continue
+        a3_filtered, energy_filtered = zip(*sorted(filtered, key=lambda x: x[0]))
+
+        energy_aligned = [energy_filtered[a3_filtered.index(val)] if val in a3_filtered else np.nan for val in sorted_global_a3]
+        plt.plot(sorted_global_a3, energy_aligned, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+                 label=f"Energy versus a3 {info_suffix}")
+        plt.scatter(sorted_global_a3, energy_aligned, s=line_weight * 4, c=colors[1], alpha=line_alpha, zorder=1)
+        legend_handles.append(
+            mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle=line_style,
+                          label=f"Energy versus a3 {info_suffix}")
+        )
+
+    plt.xlabel("a3 (Å)")
+    plt.ylabel("Energy (eV)")
+    plt.xticks(ticks=range(len(global_a3_labels)), labels=global_a3_labels)
+    plt.title(f"{suptitle}")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
 def plot_energy_kpoints_encut_single(suptitle, kpoints_list, encut_list):
     """
     Plot energy versus K-points and energy cutoff on a shared y-axis with separate x-axes.
@@ -1121,7 +1853,7 @@ def plot_cohesive_energy_kpoints_single(suptitle, *args_list):
 
     # Plot with fixed spacing based on indices
     plt.plot(range(len(total_kpoints_plot)), cohesive_energy_plotting, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
-             label=f"Cohesive energy versus K-points ({info_suffix})")
+             label=f"Cohesive energy versus K-points {info_suffix}")
     plt.scatter(range(len(total_kpoints_plot)), cohesive_energy_plotting, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
 
     # Set custom tick labels for x-axis to show K-points configurations
@@ -1309,7 +2041,7 @@ def plot_cohesive_energy_encut_single(suptitle, *args_list):
 
     # Plotting
     plt.plot(encut_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
-             label=f"Cohesive energy versus energy cutoff ({info_suffix})")
+             label=f"Cohesive energy versus energy cutoff {info_suffix}")
     plt.scatter(encut_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
 
     # Set labels and title
@@ -1631,6 +2363,648 @@ def plot_cohesive_energy_lattice(suptitle, lattice_list):
     ax.set_title(suptitle)
     plt.tight_layout()
 
+def plot_cohesive_energy_scaling_single(suptitle, *args_list):
+    help_info = (
+        "Usage: plot_cohesive_energy_scaling(suptitle, args_list)\n"
+        "args_list: A list containing [info_suffix, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha].\n"
+        "Example: plot_cohesive_energy_scaling(suptitle, ['Material Info', 'source_data_path', (start, end), 'green', 'dashed', 2.0, 0.8])\n"
+    )
+
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
+        print(help_info)
+        return
+
+    # Unpack args_list and handle missing parameters
+    args_info = args_list[0] + [None] * (7 - len(args_list[0]))
+    info_suffix, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+    # Apply default values using `get_or_default`
+    color_family = get_or_default(color_family, "default")
+    line_style   = get_or_default(line_style, "solid")
+    line_weight  = get_or_default(line_weight, 1.5)
+    line_alpha   = get_or_default(line_alpha, 1.0)
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color sampling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+
+    # Extract cohesive energy and Scaling values
+    cohesive_energy = [d.get("cohesive energy") for d in data_dict_list]
+    scaling_values = [d.get("Scaling") for d in data_dict_list]
+
+    # Filter out None values
+    filtered_data = [(s, e) for s, e in zip(scaling_values, cohesive_energy) if s is not None and e is not None]
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip and sort data by Scaling values
+    scaling_values, cohesive_energy = zip(*filtered_data)
+    sorted_data = sorted(zip(scaling_values, cohesive_energy), key=lambda x: x[0])
+    scaling_sorted, cohesive_energy_sorted = zip(*sorted_data)
+
+    # Set boundaries for Scaling
+    scaling_start = min(scaling_sorted) if not scaling_boundary or scaling_boundary[0] is None else float(scaling_boundary[0])
+    scaling_end   = max(scaling_sorted) if not scaling_boundary or scaling_boundary[1] is None else float(scaling_boundary[1])
+
+    # Filter data within the specified boundary
+    scaling_filtered, energy_filtered = zip(*[
+        (s, e) for s, e in zip(scaling_sorted, cohesive_energy_sorted) if scaling_start <= s <= scaling_end
+    ])
+
+    # Plotting
+    plt.plot(scaling_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+             label=f"Cohesive energy versus Scaling {info_suffix}")
+    plt.scatter(scaling_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+
+    # Set labels and title
+    plt.title(f"{suptitle} {info_suffix}")
+    plt.xlabel("Scaling")
+    plt.ylabel("Cohesive energy (eV/atom)")
+    plt.legend(loc="best")
+    plt.tight_layout()
+
+
+def plot_cohesive_energy_scaling(suptitle, scaling_list):
+    """
+    Generalized function to plot cohesive energy versus Scaling for multiple datasets.
+
+    Parameters:
+    - scaling_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha].
+    """
+    if not is_nested_list(scaling_list):
+        return plot_cohesive_energy_scaling_single(suptitle, scaling_list)
+    elif len(scaling_list) == 1:
+        return plot_cohesive_energy_scaling_single(suptitle, *scaling_list)
+
+    # Verify structure of each dataset
+    for index, data in enumerate(scaling_list):
+        if not isinstance(data, list):
+            print(f"Error: Item at index {index} in scaling_list must be a list.")
+            return
+        if len(data) < 4:
+            print(f"Warning: Item at index {index} has less than 4 elements. Missing elements will be filled with None.")
+            scaling_list[index] += [None] * (7 - len(data))
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    global_scaling_set = set()
+    scaling_config_map = {}
+
+    # Gather global Scaling values from all datasets
+    for data in scaling_list:
+        args_info = data + [None] * (7 - len(data))
+        _, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha = args_info
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+        data_dict_list = read_energy_parameters(source_data)
+        scaling_values = [d.get("Scaling") for d in data_dict_list]
+        scaling_start = min(scaling_values) if not scaling_boundary or scaling_boundary[0] is None else float(scaling_boundary[0])
+        scaling_end   = max(scaling_values) if not scaling_boundary or scaling_boundary[1] is None else float(scaling_boundary[1])
+        for val in scaling_values:
+            if val is not None and scaling_start <= val <= scaling_end:
+                global_scaling_set.add(val)
+                scaling_config_map[val] = f"{val:.6g}"
+    sorted_global_scaling = sorted(global_scaling_set)
+    global_scaling_labels = [scaling_config_map[val] for val in sorted_global_scaling]
+
+    # Plot each dataset aligned with the global Scaling values
+    for data in scaling_list:
+        args_info = data + [None] * (7 - len(data))
+        info_suffix, source_data, scaling_boundary, color_family, line_style, line_weight, line_alpha = args_info
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+        colors = color_sampling(color_family)
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy") for d in data_dict_list]
+        scaling_values = [d.get("Scaling") for d in data_dict_list]
+        scaling_start = min(scaling_values) if not scaling_boundary or scaling_boundary[0] is None else float(scaling_boundary[0])
+        scaling_end   = max(scaling_values) if not scaling_boundary or scaling_boundary[1] is None else float(scaling_boundary[1])
+        filtered = [(s, e) for s, e in zip(scaling_values, energy) if s is not None and scaling_start <= s <= scaling_end]
+        if not filtered:
+            continue
+        scaling_filtered, energy_filtered = zip(*sorted(filtered, key=lambda x: x[0]))
+        energy_aligned = [energy_filtered[scaling_filtered.index(val)] if val in scaling_filtered else np.nan for val in sorted_global_scaling]
+        plt.plot(sorted_global_scaling, energy_aligned, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha)
+        plt.scatter(sorted_global_scaling, energy_aligned, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+        legend_handles.append(
+            mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle=line_style,
+                          label=f"Cohesive energy versus Scaling {info_suffix}")
+        )
+
+    plt.xlabel("Scaling")
+    plt.ylabel("Cohesive energy (eV/atom)")
+    plt.xticks(ticks=range(len(global_scaling_labels)), labels=global_scaling_labels)
+    plt.title(f"{suptitle}")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_cohesive_energy_a1_single(suptitle, *args_list):
+    help_info = (
+        "Usage: plot_cohesive_energy_a1(suptitle, args_list)\n"
+        "args_list: A list containing [info_suffix, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha].\n"
+        "Example: plot_cohesive_energy_a1(suptitle, ['Material Info', 'source_data_path', (start, end), 'blue', 'solid', 1.5, 1.0])\n"
+    )
+
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
+        print(help_info)
+        return
+
+    # Unpack args_list and handle missing parameters
+    args_info = args_list[0] + [None] * (7 - len(args_list[0]))
+    info_suffix, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+    # Apply default values using `get_or_default`
+    color_family = get_or_default(color_family, "default")
+    line_style   = get_or_default(line_style, "solid")
+    line_weight  = get_or_default(line_weight, 1.5)
+    line_alpha   = get_or_default(line_alpha, 1.0)
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color sampling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+
+    # Extract cohesive energy and a1 values
+    cohesive_energy = [d.get("cohesive energy") for d in data_dict_list]
+    a1_values = [d.get("a1") for d in data_dict_list]
+
+    # Filter out None values
+    filtered_data = [(val, e) for val, e in zip(a1_values, cohesive_energy) if val is not None and e is not None]
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip and sort data by a1 values
+    a1_values, cohesive_energy = zip(*filtered_data)
+    sorted_data = sorted(zip(a1_values, cohesive_energy), key=lambda x: x[0])
+    a1_sorted, cohesive_energy_sorted = zip(*sorted_data)
+
+    # Set boundaries for a1
+    a1_start = min(a1_sorted) if not a1_boundary or a1_boundary[0] is None else float(a1_boundary[0])
+    a1_end   = max(a1_sorted) if not a1_boundary or a1_boundary[1] is None else float(a1_boundary[1])
+
+    # Filter data within the specified boundary
+    a1_filtered, energy_filtered = zip(*[
+        (val, e) for val, e in zip(a1_sorted, cohesive_energy_sorted) if a1_start <= val <= a1_end
+    ])
+
+    # Plotting
+    plt.plot(a1_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+             label=f"Cohesive energy versus a1 {info_suffix}")
+    plt.scatter(a1_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+
+    # Set labels and title
+    plt.title(f"{suptitle} {info_suffix}")
+    plt.xlabel("a1 (Å)")
+    plt.ylabel("Cohesive energy (eV/atom)")
+    plt.legend(loc="best")
+    plt.tight_layout()
+
+def plot_cohesive_energy_a1(suptitle, a1_list):
+    """
+    Generalized function to plot cohesive energy versus a1 for multiple datasets.
+
+    Parameters:
+    - a1_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha].
+    """
+    if not is_nested_list(a1_list):
+        return plot_cohesive_energy_a1_single(suptitle, a1_list)
+    elif len(a1_list) == 1:
+        return plot_cohesive_energy_a1_single(suptitle, *a1_list)
+
+    for index, data in enumerate(a1_list):
+        if not isinstance(data, list):
+            print(f"Error: Item at index {index} in a1_list must be a list.")
+            return
+        if len(data) < 4:
+            print(f"Warning: Item at index {index} has less than 4 elements. Missing elements will be filled with None.")
+            a1_list[index] += [None] * (7 - len(data))
+
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    global_a1_set = set()
+    a1_config_map = {}
+
+    # Gather all unique a1 values for the global x-axis
+    for data in a1_list:
+        args_info = data + [None] * (7 - len(data))
+        _, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha = args_info
+        data_dict_list = read_energy_parameters(source_data)
+        a1_values = [d.get("a1") for d in data_dict_list]
+        a1_start = min(a1_values) if not a1_boundary or a1_boundary[0] is None else float(a1_boundary[0])
+        a1_end   = max(a1_values) if not a1_boundary or a1_boundary[1] is None else float(a1_boundary[1])
+        for val in a1_values:
+            if val is not None and a1_start <= val <= a1_end:
+                global_a1_set.add(val)
+                a1_config_map[val] = f"{val:.6g}"
+    sorted_global_a1 = sorted(global_a1_set)
+    global_a1_labels = [a1_config_map[val] for val in sorted_global_a1]
+
+    # Plot each dataset aligned with the global a1 values
+    for data in a1_list:
+        args_info = data + [None] * (7 - len(data))
+        info_suffix, source_data, a1_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+        colors = color_sampling(color_family)
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy") for d in data_dict_list]
+        a1_values = [d.get("a1") for d in data_dict_list]
+        a1_start = min(a1_values) if not a1_boundary or a1_boundary[0] is None else float(a1_boundary[0])
+        a1_end   = max(a1_values) if not a1_boundary or a1_boundary[1] is None else float(a1_boundary[1])
+        filtered = [(val, e) for val, e in zip(a1_values, energy) if val is not None and a1_start <= val <= a1_end]
+        if not filtered:
+            continue
+        a1_filtered, energy_filtered = zip(*sorted(filtered, key=lambda x: x[0]))
+        energy_aligned = [energy_filtered[a1_filtered.index(val)] if val in a1_filtered else np.nan for val in sorted_global_a1]
+        plt.plot(sorted_global_a1, energy_aligned, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+                 label=f"Cohesive energy versus a1 {info_suffix}")
+        plt.scatter(sorted_global_a1, energy_aligned, s=line_weight * 4, c=colors[1], alpha=line_alpha, zorder=1)
+        legend_handles.append(
+            mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle=line_style,
+                          label=f"Cohesive energy versus a1 {info_suffix}")
+        )
+
+    plt.xlabel("a1 (Å)")
+    plt.ylabel("Cohesive energy (eV/atom)")
+    plt.xticks(ticks=range(len(global_a1_labels)), labels=global_a1_labels)
+    plt.title(f"{suptitle}")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_cohesive_energy_a2_single(suptitle, *args_list):
+    help_info = (
+        "Usage: plot_cohesive_energy_a2(suptitle, args_list)\n"
+        "args_list: A list containing [info_suffix, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha].\n"
+        "Example: plot_cohesive_energy_a2(suptitle, ['Material Info', 'source_data_path', (start, end), 'red', 'dashed', 2.0, 0.8])\n"
+    )
+
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
+        print(help_info)
+        return
+
+    # Unpack args_list and handle missing parameters
+    args_info = args_list[0] + [None] * (7 - len(args_list[0]))
+    info_suffix, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+    # Apply default values using `get_or_default`
+    color_family = get_or_default(color_family, "default")
+    line_style   = get_or_default(line_style, "solid")
+    line_weight  = get_or_default(line_weight, 1.5)
+    line_alpha   = get_or_default(line_alpha, 1.0)
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color sampling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+
+    # Extract cohesive energy and a2 values
+    cohesive_energy = [d.get("cohesive energy") for d in data_dict_list]
+    a2_values = [d.get("a2") for d in data_dict_list]
+
+    # Filter out None values
+    filtered_data = [(val, e) for val, e in zip(a2_values, cohesive_energy) if val is not None and e is not None]
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip and sort data by a2 values
+    a2_values, cohesive_energy = zip(*filtered_data)
+    sorted_data = sorted(zip(a2_values, cohesive_energy), key=lambda x: x[0])
+    a2_sorted, cohesive_energy_sorted = zip(*sorted_data)
+
+    # Set boundaries for a2
+    a2_start = min(a2_sorted) if not a2_boundary or a2_boundary[0] is None else float(a2_boundary[0])
+    a2_end   = max(a2_sorted) if not a2_boundary or a2_boundary[1] is None else float(a2_boundary[1])
+
+    # Filter data within the specified boundary
+    a2_filtered, energy_filtered = zip(*[
+        (val, e) for val, e in zip(a2_sorted, cohesive_energy_sorted) if a2_start <= val <= a2_end
+    ])
+
+    # Plotting
+    plt.plot(a2_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+             label=f"Cohesive energy versus a2 {info_suffix}")
+    plt.scatter(a2_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+
+    # Set labels and title
+    plt.title(f"{suptitle} {info_suffix}")
+    plt.xlabel("a2 (Å)")
+    plt.ylabel("Cohesive energy (eV/atom)")
+    plt.legend(loc="best")
+    plt.tight_layout()
+
+def plot_cohesive_energy_a2(suptitle, a2_list):
+    """
+    Generalized function to plot cohesive energy versus a2 for multiple datasets.
+
+    Parameters:
+    - a2_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha].
+    """
+    if not is_nested_list(a2_list):
+        return plot_cohesive_energy_a2_single(suptitle, a2_list)
+    elif len(a2_list) == 1:
+        return plot_cohesive_energy_a2_single(suptitle, *a2_list)
+
+    for index, data in enumerate(a2_list):
+        if not isinstance(data, list):
+            print(f"Error: Item at index {index} in a2_list must be a list.")
+            return
+        if len(data) < 4:
+            print(f"Warning: Item at index {index} has less than 4 elements. Missing elements will be filled with None.")
+            a2_list[index] += [None] * (7 - len(data))
+
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    global_a2_set = set()
+    a2_config_map = {}
+
+    # Gather all unique a2 values for the global x-axis
+    for data in a2_list:
+        args_info = data + [None] * (7 - len(data))
+        _, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha = args_info
+        data_dict_list = read_energy_parameters(source_data)
+        a2_values = [d.get("a2") for d in data_dict_list]
+        a2_start = min(a2_values) if not a2_boundary or a2_boundary[0] is None else float(a2_boundary[0])
+        a2_end   = max(a2_values) if not a2_boundary or a2_boundary[1] is None else float(a2_boundary[1])
+        for val in a2_values:
+            if val is not None and a2_start <= val <= a2_end:
+                global_a2_set.add(val)
+                a2_config_map[val] = f"{val:.6g}"
+    sorted_global_a2 = sorted(global_a2_set)
+    global_a2_labels = [a2_config_map[val] for val in sorted_global_a2]
+
+    # Plot each dataset aligned with the global a2 values
+    for data in a2_list:
+        args_info = data + [None] * (7 - len(data))
+        info_suffix, source_data, a2_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+        colors = color_sampling(color_family)
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy") for d in data_dict_list]
+        a2_values = [d.get("a2") for d in data_dict_list]
+        a2_start = min(a2_values) if not a2_boundary or a2_boundary[0] is None else float(a2_boundary[0])
+        a2_end   = max(a2_values) if not a2_boundary or a2_boundary[1] is None else float(a2_boundary[1])
+        filtered = [(val, e) for val, e in zip(a2_values, energy) if val is not None and a2_start <= val <= a2_end]
+        if not filtered:
+            continue
+        a2_filtered, energy_filtered = zip(*sorted(filtered, key=lambda x: x[0]))
+        energy_aligned = [energy_filtered[a2_filtered.index(val)] if val in a2_filtered else np.nan for val in sorted_global_a2]
+        plt.plot(sorted_global_a2, energy_aligned, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+                 label=f"Cohesive energy versus a2 {info_suffix}")
+        plt.scatter(sorted_global_a2, energy_aligned, s=line_weight * 4, c=colors[1], alpha=line_alpha, zorder=1)
+        legend_handles.append(
+            mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle=line_style,
+                          label=f"Cohesive energy versus a2 {info_suffix}")
+        )
+
+    plt.xlabel("a2 (Å)")
+    plt.ylabel("Cohesive energy (eV/atom)")
+    plt.xticks(ticks=range(len(global_a2_labels)), labels=global_a2_labels)
+    plt.title(f"{suptitle}")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
+def plot_cohesive_energy_a3_single(suptitle, *args_list):
+    help_info = (
+        "Usage: plot_cohesive_energy_a3(suptitle, args_list)\n"
+        "args_list: A list containing [info_suffix, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha].\n"
+        "Example: plot_cohesive_energy_a3(suptitle, ['Material Info', 'source_data_path', (start, end), 'purple', 'dashed', 2.0, 0.8])\n"
+    )
+
+    if not args_list or args_list[0] in ["HELP", "Help", "help"]:
+        print(help_info)
+        return
+
+    # Unpack args_list and handle missing parameters
+    args_info = args_list[0] + [None] * (7 - len(args_list[0]))
+    info_suffix, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+    # Apply default values using `get_or_default`
+    color_family = get_or_default(color_family, "default")
+    line_style   = get_or_default(line_style, "solid")
+    line_weight  = get_or_default(line_weight, 1.5)
+    line_alpha   = get_or_default(line_alpha, 1.0)
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Apply ScalarFormatter with scientific notation limits
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    # Color sampling
+    colors = color_sampling(color_family)
+
+    # Data input
+    data_dict_list = read_energy_parameters(source_data)
+
+    # Extract cohesive energy and a3 values
+    cohesive_energy = [d.get("cohesive energy") for d in data_dict_list]
+    a3_values = [d.get("a3") for d in data_dict_list]
+
+    # Filter out None values
+    filtered_data = [(val, e) for val, e in zip(a3_values, cohesive_energy) if val is not None and e is not None]
+    if not filtered_data:
+        print("No valid data found for plotting.")
+        return
+
+    # Unzip and sort data by a3 values
+    a3_values, cohesive_energy = zip(*filtered_data)
+    sorted_data = sorted(zip(a3_values, cohesive_energy), key=lambda x: x[0])
+    a3_sorted, cohesive_energy_sorted = zip(*sorted_data)
+
+    # Set boundaries for a3
+    a3_start = min(a3_sorted) if not a3_boundary or a3_boundary[0] is None else float(a3_boundary[0])
+    a3_end   = max(a3_sorted) if not a3_boundary or a3_boundary[1] is None else float(a3_boundary[1])
+
+    # Filter data within the specified boundary
+    a3_filtered, energy_filtered = zip(*[
+        (val, e) for val, e in zip(a3_sorted, cohesive_energy_sorted) if a3_start <= val <= a3_end
+    ])
+
+    # Plotting
+    plt.plot(a3_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+             label=f"Cohesive energy versus a3 {info_suffix}")
+    plt.scatter(a3_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
+
+    # Set labels and title
+    plt.title(f"{suptitle} {info_suffix}")
+    plt.xlabel("a3 (Å)")
+    plt.ylabel("Cohesive energy (eV/atom)")
+    plt.legend(loc="best")
+    plt.tight_layout()
+
+
+def plot_cohesive_energy_a3(suptitle, a3_list):
+    """
+    Generalized function to plot cohesive energy versus a3 for multiple datasets.
+
+    Parameters:
+    - a3_list: A list of lists, where each inner list contains:
+      [info_suffix, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha].
+    """
+    if not is_nested_list(a3_list):
+        return plot_cohesive_energy_a3_single(suptitle, a3_list)
+    elif len(a3_list) == 1:
+        return plot_cohesive_energy_a3_single(suptitle, *a3_list)
+
+    for index, data in enumerate(a3_list):
+        if not isinstance(data, list):
+            print(f"Error: Item at index {index} in a3_list must be a list.")
+            return
+        if len(data) < 4:
+            print(f"Warning: Item at index {index} has less than 4 elements. Missing elements will be filled with None.")
+            a3_list[index] += [None] * (7 - len(data))
+
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+    formatter = ScalarFormatter(useMathText=True, useOffset=False)
+    formatter.set_powerlimits((-3, 3))
+    plt.gca().yaxis.set_major_formatter(formatter)
+
+    legend_handles = []
+    global_a3_set = set()
+    a3_config_map = {}
+
+    # Gather all unique a3 values for the global x-axis
+    for data in a3_list:
+        args_info = data + [None] * (7 - len(data))
+        _, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha = args_info
+        data_dict_list = read_energy_parameters(source_data)
+        a3_values = [d.get("a3") for d in data_dict_list]
+        a3_start = min(a3_values) if not a3_boundary or a3_boundary[0] is None else float(a3_boundary[0])
+        a3_end   = max(a3_values) if not a3_boundary or a3_boundary[1] is None else float(a3_boundary[1])
+        for val in a3_values:
+            if val is not None and a3_start <= val <= a3_end:
+                global_a3_set.add(val)
+                a3_config_map[val] = f"{val:.6g}"
+    sorted_global_a3 = sorted(global_a3_set)
+    global_a3_labels = [a3_config_map[val] for val in sorted_global_a3]
+
+    # Plot each dataset aligned with the global a3 values
+    for data in a3_list:
+        args_info = data + [None] * (7 - len(data))
+        info_suffix, source_data, a3_boundary, color_family, line_style, line_weight, line_alpha = args_info
+
+        color_family = get_or_default(color_family, "default")
+        line_style   = get_or_default(line_style, "solid")
+        line_weight  = get_or_default(line_weight, 1.5)
+        line_alpha   = get_or_default(line_alpha, 1.0)
+        colors = color_sampling(color_family)
+        data_dict_list = read_energy_parameters(source_data)
+        energy = [d.get("total energy") for d in data_dict_list]
+        a3_values = [d.get("a3") for d in data_dict_list]
+        a3_start = min(a3_values) if not a3_boundary or a3_boundary[0] is None else float(a3_boundary[0])
+        a3_end   = max(a3_values) if not a3_boundary or a3_boundary[1] is None else float(a3_boundary[1])
+        filtered = [(val, e) for val, e in zip(a3_values, energy) if val is not None and a3_start <= val <= a3_end]
+        if not filtered:
+            continue
+        a3_filtered, energy_filtered = zip(*sorted(filtered, key=lambda x: x[0]))
+        energy_aligned = [energy_filtered[a3_filtered.index(val)] if val in a3_filtered else np.nan for val in sorted_global_a3]
+        plt.plot(sorted_global_a3, energy_aligned, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
+                 label=f"Cohesive energy versus a3 {info_suffix}")
+        plt.scatter(sorted_global_a3, energy_aligned, s=line_weight * 4, c=colors[1], alpha=line_alpha, zorder=1)
+        legend_handles.append(
+            mlines.Line2D([], [], color=colors[1], marker='o', markersize=6, linestyle=line_style,
+                          label=f"Cohesive energy versus a3 {info_suffix}")
+        )
+
+    plt.xlabel("a3 (Å)")
+    plt.ylabel("Cohesive energy (eV/atom)")
+    plt.xticks(ticks=range(len(global_a3_labels)), labels=global_a3_labels)
+    plt.title(f"{suptitle}")
+    plt.legend(handles=legend_handles, loc="best")
+    plt.tight_layout()
+
 def plot_cohesive_energy_kpoints_encut_single(suptitle, kpoints_list, encut_list):
     """
     Plot cohesive energy versus K-points and ENCUT (energy cutoff) for a single dataset.
@@ -1897,6 +3271,14 @@ def plot_energy_parameters(suptitle, parameters, *args):
             return plot_energy_encut(suptitle, args_list)
         elif param in ["lattice", "lattice constant"]:
             return plot_energy_lattice(suptitle, args_list)
+        elif param in ["scaling"]:
+            return plot_energy_scaling(suptitle, args_list)
+        elif param in ["a1"]:
+            return plot_energy_a1(suptitle, args_list)
+        elif param in ["a2"]:
+            return plot_energy_a2(suptitle, args_list)
+        elif param in ["a3"]:
+            return plot_energy_a3(suptitle, args_list)
         else:
             print("Parameter type not recognized or incorrect arguments. To be continued.")
     elif isinstance(parameters, (tuple, list)):
@@ -1933,6 +3315,14 @@ def plot_cohesive_energy_parameters(suptitle, parameters, *args):
             return plot_cohesive_energy_encut(suptitle, args_list)
         elif param in ["lattice", "lattice constant"]:
             return plot_cohesive_energy_lattice(suptitle, args_list)
+        elif param in ["scaling"]:
+            return plot_cohesive_energy_scaling(suptitle, args_list)
+        elif param in ["a1"]:
+            return plot_cohesive_energy_a1(suptitle, args_list)
+        elif param in ["a2"]:
+            return plot_cohesive_energy_a2(suptitle, args_list)
+        elif param in ["a3"]:
+            return plot_cohesive_energy_a3(suptitle, args_list)
         else:
             print("Parameter type not recognized or incorrect arguments. To be continued.")
     elif isinstance(parameters, (tuple, list)):
