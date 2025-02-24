@@ -1,0 +1,4 @@
+Warning: no access to tty (Inappropriate ioctl for device).
+Thus no job control in this shell.
+Loading oneapi-2024.2/mkl/latest
+  Loading requirement: oneapi-2024.2/tbb/latest oneapi-2024.2/compiler-rt/latest
