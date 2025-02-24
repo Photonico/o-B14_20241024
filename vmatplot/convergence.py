@@ -73,11 +73,70 @@ def summarize_parameters(directory=".", lattice_boundary=None):
 
     return results
 
-def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
+import os
+
+def summarize_cohesive_energy_for_specific(full_cal, atom_cal):
+    """
+    Calculate the cohesive energy for a specific pair of VASP calculation directories.
+
+    Parameters:
+        full_cal (str): Path to the full calculation directory.
+        atom_cal (str): Path to the atom calculation directory.
+
+    Returns:
+        dict: A dictionary containing:
+              - "total atom count": Total number of atoms from the full calculation.
+              - "total energy": Total energy from the full calculation.
+              - "atom energy": Total energy from the atom calculation.
+              - "cohesive energy": Computed cohesive energy.
+              - "total kpoints": Total number of k-points.
+              - "kpoints mesh": k-points mesh dimensions.
+              - "energy cutoff (ENCUT)": Energy cutoff value.
+              - "Scaling": Scaling factor.
+              - "lattice constant": Lattice constant.
+              
+              Returns None if the parameters cannot be extracted.
+    """
+    # Extract parameters using identify_parameters.
+    full_params = identify_parameters(full_cal)
+    atom_params = identify_parameters(atom_cal)
+    
+    if full_params is None or atom_params is None:
+        print("Error: One or both directories do not contain valid VASP calculation data.")
+        return None
+
+    try:
+        # Compute cohesive energy: full energy minus (total atom count multiplied by atom energy).
+        cohesive_energy = full_params["total energy"] - full_params["total atom count"] * atom_params["total energy"]
+    except KeyError as e:
+        print(f"Error: Missing key in parameters: {e}")
+        return None
+
+    result = {
+        "total atom count": full_params["total atom count"],
+        "total energy": full_params["total energy"],
+        "atom energy": atom_params["total energy"],
+        "cohesive energy": cohesive_energy,
+        "total kpoints": full_params["total kpoints"],
+        "kpoints mesh": full_params["kpoints mesh"],
+        "energy cutoff (ENCUT)": full_params.get("energy cutoff (ENCUT)"),
+        "Scaling": full_params.get("Scaling"),
+        "lattice constant": full_params.get("lattice constant")
+    }
+    
+    return result
+
+def summarize_cohesive_energy_for_supdir(full_cal_dir, atom_cal_dir):
+    """
+    Calculate cohesive energies when both full_cal_dir and atom_cal_dir are parent directories.
+
+    The function iterates through subdirectories in both parent directories, matches the corresponding
+    full and atom calculation data, computes the cohesive energy for each matched pair, and writes the results
+    to 'cohesive_energy.dat' in the atom_cal_dir.
+    """
     result_file = "cohesive_energy.dat"
     result_file_path = os.path.join(atom_cal_dir, result_file)
 
-    # Extract data from both directories
     full_cal_data = []
     atom_cal_data = []
 
@@ -91,52 +150,147 @@ def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
         if params:
             atom_cal_data.append(params)
 
-    # Match and calculate cohesive energy
     results = []
     for full_params in full_cal_data:
         for atom_params in atom_cal_data:
-            # Matching conditions now include energy cutoff and Scaling
-            if (full_params['kpoints mesh'] == atom_params['kpoints mesh'] and
-                full_params['total kpoints'] == atom_params['total kpoints'] and
+            # Matching conditions: kpoints mesh, total kpoints, energy cutoff, and Scaling.
+            if (full_params.get("kpoints mesh") == atom_params.get("kpoints mesh") and
+                full_params.get("total kpoints") == atom_params.get("total kpoints") and
                 full_params.get("energy cutoff (ENCUT)") == atom_params.get("energy cutoff (ENCUT)") and
                 full_params.get("Scaling") == atom_params.get("Scaling")):
                 
-                cohesive_energy = full_params['total energy'] - full_params['total atom count'] * atom_params['total energy']
+                cohesive_energy = full_params["total energy"] - full_params["total atom count"] * atom_params["total energy"]
                 result = {
-                    "total atom count": full_params['total atom count'],
-                    "total energy": full_params['total energy'],
-                    "atom energy": atom_params['total energy'],
+                    "total atom count": full_params["total atom count"],
+                    "total energy": full_params["total energy"],
+                    "atom energy": atom_params["total energy"],
                     "cohesive energy": cohesive_energy,
-                    "total kpoints": full_params['total kpoints'],
-                    "kpoints mesh": full_params['kpoints mesh'],
+                    "total kpoints": full_params["total kpoints"],
+                    "kpoints mesh": full_params["kpoints mesh"],
                     "energy cutoff (ENCUT)": full_params.get("energy cutoff (ENCUT)"),
-                    "Scaling": full_params.get("Scaling"),  # Include Scaling in the result output
+                    "Scaling": full_params.get("Scaling"),
                     "lattice constant": full_params.get("lattice constant")
                 }
                 results.append(result)
 
-    # Check if results are empty before proceeding to write the output
     if not results:
         print("No matching data found. Please check your directories.")
         return results
 
-    # Sort results by total kpoints first, then by energy cutoff (ENCUT)
-    results.sort(key=lambda x: (x['total kpoints'], x['energy cutoff (ENCUT)']))
+    results.sort(key=lambda x: (x["total kpoints"], x.get("energy cutoff (ENCUT)", 0)))
 
-    # Write results to cohesive_energy.dat file
     try:
         with open(result_file_path, "w", encoding="utf-8") as f:
-            # Write headers based on keys in the first result dictionary
             headers = "\t".join(results[0].keys())
             f.write(headers + "\n")
             for result in results:
-                f.write("\t".join(
-                    str(result[key]) if result[key] is not None else 'None' for key in results[0].keys()
-                ) + "\n")
+                f.write("\t".join(str(result[key]) if result[key] is not None else "None" for key in results[0].keys()) + "\n")
     except IOError as e:
         print(f"Error writing to file at {result_file_path}: {e}")
 
     return results
+
+def summarize_cohesive_energy_mixed(full_cal_supdir, atom_cal_dir):
+    """
+    Calculate cohesive energies when full_cal_supdir is a parent directory containing multiple
+    full calculation subdirectories, and atom_cal_dir is a specific directory.
+
+    For each subdirectory in full_cal_supdir, the function computes the cohesive energy using
+    the atom calculation data from the single atom_cal_dir. The results are written to
+    'cohesive_energy.dat' in the full_cal_supdir.
+
+    Parameters:
+        full_cal_supdir (str): Parent directory containing full calculation subdirectories.
+        atom_cal_dir (str): Specific atom calculation directory.
+
+    Returns:
+        list: A list of dictionaries, each containing:
+              - "total atom count", "total energy", "atom energy", "cohesive energy",
+              - "total kpoints", "kpoints mesh", "energy cutoff (ENCUT)", "Scaling", and "lattice constant".
+    """
+    result_file = "cohesive_energy.dat"
+    result_file_path = os.path.join(full_cal_supdir, result_file)
+
+    full_cal_data = []
+    for work_dir in check_vasprun(full_cal_supdir):
+        params = identify_parameters(work_dir)
+        if params:
+            full_cal_data.append(params)
+
+    atom_params = identify_parameters(atom_cal_dir)
+    if atom_params is None:
+        print("Error: Atom calculation directory does not contain valid VASP data.")
+        return None
+
+    results = []
+    for full_params in full_cal_data:
+        try:
+            cohesive_energy = full_params["total energy"] - full_params["total atom count"] * atom_params["total energy"]
+        except KeyError as e:
+            print(f"Error: Missing key in parameters for a directory: {e}")
+            continue
+
+        result = {
+            "total atom count": full_params["total atom count"],
+            "total energy": full_params["total energy"],
+            "atom energy": atom_params["total energy"],
+            "cohesive energy": cohesive_energy,
+            "total kpoints": full_params["total kpoints"],
+            "kpoints mesh": full_params["kpoints mesh"],
+            "energy cutoff (ENCUT)": full_params.get("energy cutoff (ENCUT)"),
+            "Scaling": full_params.get("Scaling"),
+            "lattice constant": full_params.get("lattice constant")
+        }
+        results.append(result)
+
+    if not results:
+        print("No valid full calculation data found. Please check your full calculation directory.")
+        return results
+
+    results.sort(key=lambda x: (x["total kpoints"], x.get("energy cutoff (ENCUT)", 0)))
+
+    try:
+        with open(result_file_path, "w", encoding="utf-8") as f:
+            headers = "\t".join(results[0].keys())
+            f.write(headers + "\n")
+            for result in results:
+                f.write("\t".join(str(result[key]) if result[key] is not None else "None" for key in results[0].keys()) + "\n")
+    except IOError as e:
+        print(f"Error writing to file at {result_file_path}: {e}")
+
+    return results
+
+def summarize_cohesive_energy(full_cal_dir, atom_cal_dir):
+    """
+    Automatically choose the appropriate cohesive energy summarization method based on the type of directories.
+
+    - If both directories are specific calculation directories (i.e., containing 'vasprun.xml'),
+      use summarize_cohesive_energy_for_specific.
+    - If both directories are parent directories (i.e., no 'vasprun.xml' in the root), use
+      summarize_cohesive_energy_for_supdir.
+    - If full_cal_dir is a parent directory and atom_cal_dir is a specific directory, use
+      summarize_cohesive_energy_mixed.
+    - Otherwise, print an error message.
+
+    Parameters:
+        full_cal_dir (str): Path to the full calculation directory or parent directory.
+        atom_cal_dir (str): Path to the atom calculation directory or parent directory.
+
+    Returns:
+        dict or list: The cohesive energy results as computed by the appropriate routine.
+    """
+    full_cal_specific = os.path.isfile(os.path.join(full_cal_dir, "vasprun.xml"))
+    atom_cal_specific = os.path.isfile(os.path.join(atom_cal_dir, "vasprun.xml"))
+    
+    if full_cal_specific and atom_cal_specific:
+        return summarize_cohesive_energy_for_specific(full_cal_dir, atom_cal_dir)
+    elif (not full_cal_specific) and (not atom_cal_specific):
+        return summarize_cohesive_energy_for_supdir(full_cal_dir, atom_cal_dir)
+    elif (not full_cal_specific) and atom_cal_specific:
+        return summarize_cohesive_energy_mixed(full_cal_dir, atom_cal_dir)
+    else:
+        print("Error: The combination of directories provided is not supported.")
+        return None
 
 def read_energy_parameters(data_path):
     help_info = "Usage: read_energy_parameters(data_path)\n" + \

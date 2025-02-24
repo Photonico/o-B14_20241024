@@ -1,0 +1,2 @@
+total atom count	total energy	fermi energy	total kpoints	calculated kpoints	kpoints mesh	lattice constant	symmetry precision (SYMPREC)	energy cutoff (ENCUT)	k-point spacing (KSPACING)	volume	time step (POTIM)	mixing parameter (AMIX)	mixing parameter (BMIX)	electronic convergence (EDIFF)	force convergence (EDIFFG)	elapsed time (sec)	Scaling	a1	a2	a3
+1	-0.3103598	-4.00048076	1	1	(1, 1, 1)	15.0	1e-05	600.0	None	None	0.5	None	None	1e-06	-0.001	39.575	1.0	15.0	12.5	18.0
