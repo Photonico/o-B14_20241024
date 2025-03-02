@@ -18,3 +18,32 @@ from vmatplot.dos import extract_dos
 from vmatplot.pdos import extract_dict_pdos, create_matters_pdos
 
 global_tolerance = 1e-4
+
+def extract_phonon_high_sym_details(directory):
+    # Construct the full path to the vasprun.xml file
+    xml_file = os.path.join(directory, "vasprun.xml")
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+    # Initialize a list to store the k-point coordinates
+    kpoints = []
+    # These elements contain the k-point coordinates
+    kpoints_file_path = os.path.join(directory, "QPOINTS")
+    kpoints_opt_path = os.path.join(directory, "QPOINTS_OPT")
+    # HSE06 algorithms
+    if os.path.exists(kpoints_opt_path):
+        varray_nodes = root.findall("./calculation/eigenvalues_kpoints_opt[@comment='kpoints_opt']/kpoints/varray[@name='kpointlist']")
+        if varray_nodes:
+            last_varray = varray_nodes[-1]
+            for kpoint in last_varray.findall("./v"):
+                coords = [float(x) for x in kpoint.text.split()]
+                kpoints.append(coords)
+    # GGA-PBE algorithms
+    elif os.path.exists(kpoints_file_path):
+        varray_nodes = root.findall("./calculation/kpoints/varray[@name='kpointlist']")
+        if varray_nodes:
+            last_varray = varray_nodes[-1]
+            for kpoint in last_varray.findall("./v"):
+                coords = [float(x) for x in kpoint.text.split()]
+                kpoints.append(coords)
+    # Return the list of k-point coordinates
+    return kpoints
