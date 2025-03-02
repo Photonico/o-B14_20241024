@@ -86,14 +86,14 @@ def extract_phonon_high_sym_details(directory):
     xml_file = os.path.join(directory, "vasprun.xml")
     tree = ET.parse(xml_file)
     root = tree.getroot()
-    # Initialize a list to store the k-point coordinates
+    # Initialize a list to store the q-point coordinates
     qpoints = []
-    # These elements contain the k-point coordinates
+    # These elements contain the q-point coordinates
     qpoints_file_path = os.path.join(directory, "QPOINTS")
     qpoints_opt_path = os.path.join(directory, "QPOINTS_OPT")
     # HSE06 algorithms
     if os.path.exists(qpoints_opt_path):
-        varray_nodes = root.findall("./calculation/eigenvalues_qpoints_opt[@comment='qpoints_opt']/qpoints/varray[@name='kpointlist']")
+        varray_nodes = root.findall("./calculation/eigenvalues_kpoints_opt[@comment='kpoints_opt']/qpoints/varray[@name='kpointlist']")
         if varray_nodes:
             last_varray = varray_nodes[-1]
             for kpoint in last_varray.findall("./v"):
@@ -101,11 +101,45 @@ def extract_phonon_high_sym_details(directory):
                 qpoints.append(coords)
     # GGA-PBE algorithms
     elif os.path.exists(qpoints_file_path):
-        varray_nodes = root.findall("./calculation/qpoints/varray[@name='kpointlist']")
+        varray_nodes = root.findall("./calculation/kpoints/varray[@name='kpointlist']")
         if varray_nodes:
             last_varray = varray_nodes[-1]
             for kpoint in last_varray.findall("./v"):
                 coords = [float(x) for x in kpoint.text.split()]
                 qpoints.append(coords)
-    # Return the list of k-point coordinates
+    # Return the list of q-point coordinates
     return qpoints
+
+def extract_phonon_reciprocal_weights(directory):
+    # Read CONTCAR file
+    contcar_path = f"{directory}/CONTCAR"
+    with open(contcar_path, "r") as file:
+        lines = file.readlines()
+    # Extract lattice vectors
+    lattice_vectors = np.array([list(map(float, line.split())) for line in lines[2:5]])
+    # Calculate reciprocal lattice vectors
+    volume = np.dot(lattice_vectors[0], np.cross(lattice_vectors[1], lattice_vectors[2]))
+    reciprocal_lattice_vectors = 2 * np.pi * np.array([
+        np.cross(lattice_vectors[1], lattice_vectors[2]) / volume,
+        np.cross(lattice_vectors[2], lattice_vectors[0]) / volume,
+        np.cross(lattice_vectors[0], lattice_vectors[1]) / volume
+    ])
+    # Compute the lengths of the reciprocal lattice vectors
+    reciprocal_lengths = [np.linalg.norm(vec) for vec in reciprocal_lattice_vectors]
+    return reciprocal_lengths
+
+def extract_qpath(directory):
+    # Extract q-points and reciprocal weights
+    qpoints = extract_phonon_high_sym_details(directory)
+    reciprocal_weights = extract_phonon_reciprocal_weights(directory)
+    # Initialize cumulative distances
+    cumulative_distances = [0]
+    for i in range(1, len(qpoints)):
+        # Compute the vector difference between two q-points
+        delta_k = np.array(qpoints[i]) - np.array(qpoints[i-1])
+        # Apply the reciprocal lattice weight
+        weighted_distance = np.sqrt(
+            sum((delta_k[j] * reciprocal_weights[j]) ** 2 for j in range(3))
+        )
+        cumulative_distances.append(cumulative_distances[-1] + weighted_distance)
+    return cumulative_distances

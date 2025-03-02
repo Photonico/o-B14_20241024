@@ -128,15 +128,15 @@ def is_kpoints_returning(directory):
 
 def extract_reciprocal_weights(directory):
     """
-    Extract reciprocal lattice weights from the POSCAR file in the given directory.
+    Extract reciprocal lattice weights from the CONTCAR file in the given directory.
     Args:
-    directory (str): The directory containing the POSCAR file.
+    directory (str): The directory containing the CONTCAR file.
     Returns:
     list: A list of weights representing the relative lengths of the reciprocal lattice vectors.
     """
-    # Read POSCAR file
-    poscar_path = f"{directory}/POSCAR"
-    with open(poscar_path, "r") as file:
+    # Read CONTCAR file
+    contcar_path = f"{directory}/CONTCAR"
+    with open(contcar_path, "r") as file:
         lines = file.readlines()
     # Extract lattice vectors
     lattice_vectors = np.array([list(map(float, line.split())) for line in lines[2:5]])
