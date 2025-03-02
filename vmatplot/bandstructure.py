@@ -94,10 +94,8 @@ def is_kpoints_returning(directory):
     """
     Check if the last high symmetry point in the KPOINTS or KPOINTS_OPT file
     returns to the starting point.
-
     Args:
         directory (str): The directory path containing the KPOINTS or KPOINTS_OPT file.
-
     Returns:
         bool: True if the last high symmetry point returns to the starting point, False otherwise.
     """
