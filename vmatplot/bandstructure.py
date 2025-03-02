@@ -282,9 +282,7 @@ def extract_kpath(directory):
         # Compute the vector difference between two k-points
         delta_k = np.array(kpoints[i]) - np.array(kpoints[i-1])
         # Apply the reciprocal lattice weight
-        weighted_distance = np.sqrt(
-            sum((delta_k[j] * reciprocal_weights[j]) ** 2 for j in range(3))
-        )
+        weighted_distance = np.sqrt(sum((delta_k[j] * reciprocal_weights[j]) ** 2 for j in range(3)))
         cumulative_distances.append(cumulative_distances[-1] + weighted_distance)
     return cumulative_distances
 
@@ -701,7 +699,6 @@ def extract_high_sym_intersections(directory, spin_label):
             y = band[index]  # The y-axis value is the eigenvalue at that k-point
             # Append the (path, eigenvalue) coordinates to the list for this high symmetry point
             intersections[label].append((x, y))
-
     return intersections
 
 def extract_high_sym_intersections_with_fermi(directory, spin_label):

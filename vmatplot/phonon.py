@@ -138,8 +138,16 @@ def extract_qpath(directory):
         # Compute the vector difference between two q-points
         delta_k = np.array(qpoints[i]) - np.array(qpoints[i-1])
         # Apply the reciprocal lattice weight
-        weighted_distance = np.sqrt(
-            sum((delta_k[j] * reciprocal_weights[j]) ** 2 for j in range(3))
-        )
+        weighted_distance = np.sqrt(sum((delta_k[j] * reciprocal_weights[j]) ** 2 for j in range(3)))
         cumulative_distances.append(cumulative_distances[-1] + weighted_distance)
     return cumulative_distances
+
+def extract_eigenvalues_qpoints(directory):
+    xml_file = os.path.join(directory, "vasprun.xml")
+    qpoints_file_path = os.path.join(directory, "QPOINTS")
+    qpoints_opt_path = os.path.join(directory, "QPOINTS_OPT")
+
+    return 0
+
+def extract_phonon_bands():
+    return 0
