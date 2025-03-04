@@ -146,7 +146,8 @@ def extract_eigenvalues_qpoints(directory):
     xml_file = os.path.join(directory, "vasprun.xml")
     qpoints_file_path = os.path.join(directory, "QPOINTS")
     qpoints_opt_path = os.path.join(directory, "QPOINTS_OPT")
-
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
     return 0
 
 def extract_phonon_bands():
