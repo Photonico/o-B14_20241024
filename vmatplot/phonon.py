@@ -112,6 +112,37 @@ def extract_phonon_high_sym_details_old(directory):
 
 def extract_phonon_high_sym_details(directory):
     outcar_file = os.path.join(directory, "OUTCAR")
+    q_coords = []
+    path = []
+    prev_coords = None
+    total_distance = 0.0
+    null_count = 0
+
+    with open(outcar_file, 'r') as f:
+        for line in f:
+            if not line.strip(): null_count += 1
+            else: null_count = 0
+            if null_count >= 20: break
+            if "q-point No." in line:
+                coord_line = next(f, "").strip()
+                if not coord_line: continue
+                parts = coord_line.split()
+                try:
+                    coords = [float(parts[1]), float(parts[2]), float(parts[3])]
+                except (IndexError, ValueError):
+                    continue
+                q_coords.append(coords)
+                if prev_coords is None:
+                    total_distance = 0.0
+                else:
+                    dx = coords[0] - prev_coords[0]
+                    dy = coords[1] - prev_coords[1]
+                    dz = coords[2] - prev_coords[2]
+                    d = np.sqrt(dx**2 + dy**2 + dz**2)
+                    total_distance += d
+                path.append(total_distance)
+                prev_coords = coords
+    return {"q_coords": q_coords, "path": path}
 
 def extract_phonon_reciprocal_weights(directory):
     # Read CONTCAR file
