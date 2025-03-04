@@ -2,7 +2,6 @@
 # pylint: disable = C0103, C0114, C0116, C0301, C0302, C0321, R0913, R0914, R0915, W0612, W0105
 
 # Necessary packages invoking
-import xml.etree.ElementTree as ET
 import os
 import numpy as np
 
@@ -12,10 +11,6 @@ import matplotlib.gridspec as gridspec
 from vmatplot.output_settings import color_sampling, canvas_setting
 from vmatplot.algorithms import transpose_matrix
 from vmatplot.commons import extract_fermi, get_atoms_count, process_boundary, get_or_default
-
-from vmatplot.bandstructure import extract_kpath, kpoints_index, kpoints_path, high_symmetry_path, is_kpoints_returning
-from vmatplot.dos import extract_dos
-from vmatplot.pdos import extract_dict_pdos, create_matters_pdos
 
 global_tolerance = 1e-4
 
@@ -81,35 +76,6 @@ def extract_phonon_high_sym(directory):
     else: unique_points = high_symmetry_points            # If only two points, return as is
     return unique_points
 
-def extract_phonon_high_sym_details_old(directory):
-    # Construct the full path to the vasprun.xml file
-    xml_file = os.path.join(directory, "vasprun.xml")
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-    # Initialize a list to store the q-point coordinates
-    qpoints = []
-    # These elements contain the q-point coordinates
-    qpoints_file_path = os.path.join(directory, "QPOINTS")
-    qpoints_opt_path = os.path.join(directory, "QPOINTS_OPT")
-    # HSE06 algorithms
-    if os.path.exists(qpoints_opt_path):
-        varray_nodes = root.findall("./calculation/eigenvalues_kpoints_opt[@comment='kpoints_opt']/qpoints/varray[@name='kpointlist']")
-        if varray_nodes:
-            last_varray = varray_nodes[-1]
-            for kpoint in last_varray.findall("./v"):
-                coords = [float(x) for x in kpoint.text.split()]
-                qpoints.append(coords)
-    # GGA-PBE algorithms
-    elif os.path.exists(qpoints_file_path):
-        varray_nodes = root.findall("./calculation/kpoints/varray[@name='kpointlist']")
-        if varray_nodes:
-            last_varray = varray_nodes[-1]
-            for kpoint in last_varray.findall("./v"):
-                coords = [float(x) for x in kpoint.text.split()]
-                qpoints.append(coords)
-    # Return the list of q-point coordinates
-    return qpoints
-
 def extract_phonon_high_sym_details(directory):
     outcar_file = os.path.join(directory, "OUTCAR")
     q_coords = []
@@ -164,7 +130,7 @@ def extract_phonon_reciprocal_weights(directory):
 
 def extract_qpath(directory):
     # Extract q-points and reciprocal weights
-    qpoints = extract_phonon_high_sym_details(directory)
+    qpoints = extract_phonon_high_sym_details(directory)["q_coords"]
     reciprocal_weights = extract_phonon_reciprocal_weights(directory)
     # Initialize cumulative distances
     cumulative_distances = [0]
@@ -177,12 +143,13 @@ def extract_qpath(directory):
     return cumulative_distances
 
 def extract_eigenvalues_qpoints(directory):
-    xml_file = os.path.join(directory, "vasprun.xml")
-    qpoints_file_path = os.path.join(directory, "QPOINTS")
-    qpoints_opt_path = os.path.join(directory, "QPOINTS_OPT")
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
     return 0
 
 def extract_phonon_bands():
+    return 0
+
+def create_matters_phonons():
+    return 0
+
+def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
     return 0
