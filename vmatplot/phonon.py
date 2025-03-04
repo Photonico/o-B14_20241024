@@ -81,7 +81,7 @@ def extract_phonon_high_sym(directory):
     else: unique_points = high_symmetry_points            # If only two points, return as is
     return unique_points
 
-def extract_phonon_high_sym_details(directory):
+def extract_phonon_high_sym_details_old(directory):
     # Construct the full path to the vasprun.xml file
     xml_file = os.path.join(directory, "vasprun.xml")
     tree = ET.parse(xml_file)
@@ -109,6 +109,9 @@ def extract_phonon_high_sym_details(directory):
                 qpoints.append(coords)
     # Return the list of q-point coordinates
     return qpoints
+
+def extract_phonon_high_sym_details(directory):
+    outcar_file = os.path.join(directory, "OUTCAR")
 
 def extract_phonon_reciprocal_weights(directory):
     # Read CONTCAR file
