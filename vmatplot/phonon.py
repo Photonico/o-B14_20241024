@@ -143,13 +143,212 @@ def extract_qpath(directory):
     return cumulative_distances
 
 def extract_eigenvalues_qpoints(directory):
-    return 0
+    """
+    Extract the phonon frequencies at q-points.
+    In this case, we simply call extract_phonon_bands since the phonon frequencies are extracted from OUTCAR.
+    """
+    return extract_phonon_bands(directory)
 
-def extract_phonon_bands():
-    return 0
+def extract_phonon_bands(directory):
+    """
+    Extract phonon dispersion data from the OUTCAR file:
+      - Parse the vibrational frequencies (in THz) for each q-point for each phonon branch.
+      - Also compute the cumulative path (unweighted) based on the q-point coordinates.
+    Returns:
+      A dictionary containing:
+        - "path": a list of cumulative distances corresponding to the q-points.
+        - "bands": a 2D list where each sublist corresponds to the frequency sequence along the q-path for one phonon branch.
+    """
+    outcar_file = os.path.join(directory, "OUTCAR")
+    # First pass: determine the number of phonon branches (num_bands)
+    num_bands = 0
+    with open(outcar_file, "r") as f:
+        lines = f.readlines()
+    for i, line in enumerate(lines):
+        if "branch index" in line:
+            j = i + 1
+            while j < len(lines) and lines[j].strip():
+                num_bands += 1
+                j += 1
+            break
 
-def create_matters_phonons():
-    return 0
+    # Initialize storage for bands and path
+    bands = [[] for _ in range(num_bands)]
+    path = []
+    prev_coords = None
+    total_distance = 0.0
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if "q-point No." in line:
+            i += 1
+            if i >= len(lines):
+                break
+            coord_line = lines[i].strip()
+            parts = coord_line.split()
+            try:
+                # Assume the format: "q-point: x y z"
+                coords = [float(parts[1]), float(parts[2]), float(parts[3])]
+            except Exception:
+                i += 1
+                continue
+            if prev_coords is None:
+                total_distance = 0.0
+            else:
+                d = np.linalg.norm(np.array(coords) - np.array(prev_coords))
+                total_distance += d
+            path.append(total_distance)
+            prev_coords = coords
+            i += 1
+        elif "branch index" in line:
+            i += 1
+            # For the current q-point, read the next num_bands lines for the phonon frequencies
+            for b in range(num_bands):
+                if i >= len(lines):
+                    break
+                freq_line = lines[i].strip()
+                if not freq_line:
+                    i += 1
+                    continue
+                parts = freq_line.split()
+                try:
+                    freq = float(parts[1])
+                except Exception:
+                    freq = None
+                if freq is not None:
+                    bands[b].append(freq)
+                i += 1
+        else:
+            i += 1
+    return {"path": path, "bands": bands}
+
+def create_matters_phonons(matters_list):
+    # If matters_list is a single list (not nested), convert it to a nested list.
+    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
+        source_data = matters_list[:]
+        matters_list.clear()
+        matters_list.append(source_data)
+    matters = []
+    for current_matter in matters_list:
+        # current_matter format: [ label, directory, *optional ]
+        label, directory, *optional = current_matter
+        color = get_or_default(optional[0] if len(optional) > 0 else None, "default")
+        lstyle = get_or_default(optional[1] if len(optional) > 1 else None, "solid")
+        weight = get_or_default(optional[2] if len(optional) > 2 else None, 1.5)
+        alpha = get_or_default(optional[3] if len(optional) > 3 else None, 1.0)
+        tolerance = get_or_default(optional[4] if len(optional) > 4 else None, 0)
+        # qpath: computed using extract_qpath(directory)
+        qpath = extract_qpath(directory)
+        bands_data = extract_phonon_bands(directory)
+        bands = bands_data["bands"]
+        matters.append([label, 0, qpath, bands, color, lstyle, weight, alpha, tolerance])
+    return matters
 
 def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
-    return 0
+    """
+    Plot the phonon dispersion curves in a style consistent with the bandstructure program.
+    Parameters:
+      - title: The title of the plot.
+      - eigen_range: The frequency range (in THz) for the y-axis, e.g., 50 indicates [-50, 50].
+      - matters_list: A list of phonon matters, each in the format [ label, directory, *optional ].
+      - legend_loc: The location for the legend (e.g., "best"); if False, no legend is shown.
+    """
+    help_info = """
+    Usage: plot_phonons
+        arg[0]: title;
+        arg[1]: the range of eigenvalues (frequency in THz), from -arg[1] to arg[1];
+        arg[2]: matters list;
+        arg[3]: legend location;
+    """
+    if title in ["help", "Help"]:
+        print(help_info)
+        return
+
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    plt.rcParams.update(fig_setting[2])
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    fermi_color = color_sampling("Violet")  # Used for plotting the y=0 reference line
+    annotate_color = color_sampling("Grey")
+
+    # Create matters using the updated create_matters_phonons
+    matters = create_matters_phonons(matters_list)
+    # Use the weighted q-path from one of the matters (they should be identical)
+    weighted_qpath = matters[0][2]
+
+    for matter in matters:
+        current_label = matter[0]
+        qpath = matter[2]; bands = matter[3]; color = matter[4]; lstyle = matter[5]; weight = matter[6]; alpha = matter[7]
+        # tolerance = matter[8]  # Currently not used in plotting
+        for band_index, band in enumerate(bands):
+            if band_index == 0:
+                plt.plot(qpath, band, c=color_sampling(color)[1], linestyle=lstyle, lw=weight, alpha=alpha, label=f"{current_label}", zorder=4)
+            else:
+                plt.plot(qpath, band, c=color_sampling(color)[1], linestyle=lstyle, lw=weight, alpha=alpha, zorder=4)
+    plt.axhline(y=0, color=fermi_color[0], alpha=0.8, linestyle="--", zorder=2)
+    # plt.axhline(y=0, color=fermi_color[0], alpha=0.8, linestyle="--", label="0 (THz)", zorder=2)
+    plt.title(title)
+    plt.ylabel("Frequency (THz)")
+    demo_boundary = process_boundary(eigen_range)
+    if demo_boundary[0] is None:
+        plt.ylim(-demo_boundary[1], demo_boundary[1])
+    else:
+        plt.ylim(demo_boundary[0], demo_boundary[1])
+    if weighted_qpath:
+        plt.xlim(weighted_qpath[0], weighted_qpath[-1])
+
+    # Get the original directory from the original matters_list (format: [label, directory, *optional])
+    orig_directory = matters_list[-1][1]
+
+    # Extract high symmetry point info from QPOINTS and set xticks using the weighted q-path.
+    high_sym_labels = extract_phonon_high_sym(orig_directory)
+    details = extract_phonon_high_sym_details(orig_directory)
+    details_q = details["q_coords"]
+    weighted_qpath_full = extract_qpath(orig_directory)
+    high_sym_positions = []
+    used_labels = []
+    qpoints_file = None
+    qpoints_opt_path = os.path.join(orig_directory, "QPOINTS_OPT")
+    qpoints_file_path = os.path.join(orig_directory, "QPOINTS")
+    if os.path.exists(qpoints_opt_path):
+        qpoints_file = qpoints_opt_path
+    elif os.path.exists(qpoints_file_path):
+        qpoints_file = qpoints_file_path
+    if qpoints_file:
+        with open(qpoints_file, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        high_sym_data = []
+        for line in lines[4:]:
+            tokens = line.strip().split()
+            if len(tokens) >= 4 and tokens[-1].isalpha():
+                label = tokens[-1]
+                coords = [float(tokens[0]), float(tokens[1]), float(tokens[2])]
+                high_sym_data.append((label, coords))
+        for label, hs_coords in high_sym_data:
+            min_dist = float("inf")
+            pos = None
+            for i, q in enumerate(details_q):
+                dist = np.linalg.norm(np.array(q) - np.array(hs_coords))
+                if dist < min_dist:
+                    min_dist = dist
+                    pos = weighted_qpath_full[i] if i < len(weighted_qpath_full) else None
+            if pos is not None and label not in used_labels:
+                high_sym_positions.append((label, pos))
+                used_labels.append(label)
+        # If QPOINTS file represents a closed path, add the last point.
+        if is_qpoints_returning(orig_directory):
+            if high_sym_positions:
+                first_label, _ = high_sym_positions[0]
+                high_sym_positions.append((first_label, weighted_qpath_full[-1]))
+    if high_sym_positions:
+        ticks = [pos for label, pos in high_sym_positions]
+        tick_labels = [label for label, pos in high_sym_positions]
+        plt.xticks(ticks, tick_labels)
+        for pos in ticks[1:-1]:
+            plt.axvline(x=pos, color=annotate_color[1], linestyle="--", alpha=0.8, zorder=1)
+    if legend_loc is None or legend_loc is False: pass
+    else: plt.legend(loc=legend_loc)
+    plt.tight_layout()
+    plt.show()
