@@ -483,3 +483,52 @@ def process_boundaries_rescaling(boundary):
         source_start, source_end = process_boundary(source_range)
         scaled_start, scaled_end = process_boundary(scaled_range)
     return scale_flag, source_start, source_end, scaled_start, scaled_end
+
+def process_boundary_alt(boundary, default=(None, None)):
+    # Enhanced to handle single values as well as tuples/lists
+    # If boundary is None or empty, return the default
+    if not boundary:
+        return default
+    # If boundary is a single value (not a container), treat it as the end value
+    if isinstance(boundary, (int, float)):
+        return (0, boundary)
+    # If boundary is a container with a single item, unpack it
+    if isinstance(boundary, (list, tuple)) and len(boundary) == 1:
+        return (0, boundary[0])
+    # If boundary is a container with two items, return them as start and end
+    elif isinstance(boundary, (list, tuple)) and len(boundary) == 2:
+        return (boundary[0], boundary[1])
+    # In case boundary doesn't match any expected pattern, return default
+    else:
+        return default
+
+def process_boundaries_rescaling_alt(boundary):
+    boundary_type = check_range_type(boundary)
+    scale_flag = False
+    source_start, source_end, scaled_start, scaled_end = 0, 0, 0, 0
+
+    if boundary_type == "Simple end":
+        source_range = (0, boundary)
+        source_start, source_end = process_boundary(source_range)
+    elif boundary_type == "Simple range":
+        source_range = boundary[0]
+        source_start, source_end = process_boundary(source_range)
+    elif boundary_type == "Double ends":
+        scale_flag = True
+        source_range = (0, boundary[0])
+        scaled_range = (0, boundary[1])
+        source_start, source_end = process_boundary(source_range)
+        scaled_start, scaled_end = process_boundary(scaled_range)
+    elif boundary_type == "Simple range with a rate":
+        scale_flag = True
+        source_range = boundary[0]
+        scaled_range = tuple(bounds * boundary[1] for bounds in boundary[0])
+        source_start, source_end = process_boundary(source_range)
+        scaled_start, scaled_end = process_boundary(scaled_range)
+    elif boundary_type == "Double ranges":
+        scale_flag = True
+        source_range = boundary[0]
+        scaled_range = boundary[1]
+        source_start, source_end = process_boundary(source_range)
+        scaled_start, scaled_end = process_boundary(scaled_range)
+    return scale_flag, source_start, source_end, scaled_start, scaled_end
