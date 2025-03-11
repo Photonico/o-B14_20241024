@@ -9,11 +9,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import h5py
 
-from vmatplot.commons import extract_fermi, process_boundary, process_boundaries_rescaling, extract_part
+from vmatplot.commons import extract_fermi, process_boundary_alt, process_boundaries_rescaling_alt, extract_part
 from vmatplot.output_settings import canvas_setting, color_sampling
 from vmatplot.algorithms import energy_to_wavelength, wavelength_to_energy
 
-from matplotlib.patches import Rectangle
 from matplotlib.colors import ListedColormap
 
 ### Physical constants
@@ -418,15 +417,17 @@ def plot_dielectric_help():
                 "\t figure_size: figure size <optional>. \n"
     return help_info
 
-def plot_dielectric_monocomp(suptitle, systems=None, component=None, layout="horizontal", expansion_label=True,
-                             unit=None, boundary=(None,None), figure_size=(None,None)):
+def plot_dielectric_monocomp(suptitle, systems=None, component=None,
+                             layout="horizontal", expansion_label=True,
+                             unit=None, boundary=(None,None),
+                             spectrum_flag=None, figure_size=(None,None)):
     ## Help information
     dielectric_help =  plot_dielectric_help()
     if suptitle in ["help", "Help"]:
         print(dielectric_help)
         return
     ## scale flag and databoundaries
-    rescale_flag, source_start, source_end, scaled_start, scaled_end = process_boundaries_rescaling(boundary)
+    rescale_flag, source_start, source_end, scaled_start, scaled_end = process_boundaries_rescaling_alt(boundary)
     ## components aliases
     comp_label, comp_aliase = None, None
     if isinstance(component, list):
@@ -497,9 +498,6 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None, layout="hor
     else:
         fig.suptitle(f"{suptitle}", fontsize=fig_setting[3][0])
 
-    ## data boundary
-    # photon_start, photon_end = process_boundary(boundary)
-
     ## data plotting
     if single_subfigure is True:
         plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
@@ -525,61 +523,57 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None, layout="hor
                 wavelength_imag, density_wl_imag = extract_part(energy_to_wavelength(data[1]["density_energy_imag"]), data[1][data_key_imag], source_start, source_end)
                 plt.plot(wavelength_real, density_wl_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                 plt.plot(wavelength_imag, density_wl_imag, color=color_sampling(data[2])[1], ls="dashed", lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
+                print(wavelength_real)
                 wavelength_starts.append(min(wavelength_real))
                 wavelength_ends.append(np.max(np.array(wavelength_real)[np.isfinite(wavelength_real)]))
 
-            # plasmon resonance line and rescale rate
+        # plasmon resonance line and rescale rate
+        if var_label == "energy":
+            plasmon_start = min(energy_starts)
+            plasmon_end = max(energy_ends)
+            plt.plot([plasmon_start, plasmon_end],[0,0], color=color_sampling("grey")[1], linestyle="dashed", alpha=0.8)
+        else:
+            plasmon_start=min(wavelength_starts)
+            plasmon_end=max(wavelength_ends)
+            plt.plot([plasmon_start, plasmon_end],[0,0],color=color_sampling("grey")[1], linestyle="dashed", alpha=0.8)
+
+        # Spectrum
+        xmin, xmax = plt.xlim()
+        plt.xlim(xmin, xmax)
+        wl_vis = np.linspace(380, 750, 1000)                # 380 nm (violet) to 750 nm (red)
+        ev_vis = wavelength_to_energy(wl_vis)               # 1.65 eV (red) to 3.26 eV (violet)
+        cmap = plt.get_cmap("nipy_spectral")
+        if spectrum_flag == True:
             if var_label == "energy":
-                plasmon_start = min(energy_starts)
-                plasmon_end = max(energy_ends)
-                plt.plot([plasmon_start, plasmon_end],[0,0], color=color_sampling("grey")[1], linestyle="dashed")
+                cmap = plt.get_cmap("nipy_spectral")
+                colors = cmap(np.linspace(0, 1, 1000))
+                idx_sort = np.argsort(ev_vis)
+                colors_sorted = colors[idx_sort]
+                energy_cmap = ListedColormap(colors_sorted)
+                ev_min, ev_max = np.min(ev_vis), np.max(ev_vis)
+                grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                grad = np.vstack([grad] * 10)
+                alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 2.0
+                alpha_vals = np.clip(alpha_vals, 0, 0.325)
+                alpha_grad = alpha_vals.reshape(1, -1)
+                alpha_grad = np.vstack([alpha_grad] * 10)
+                ymin, ymax = plt.ylim()
+                extent = [ev_min, ev_max, ymin, ymax]
+                plt.imshow(grad, aspect="auto", extent=extent, cmap=energy_cmap, alpha=alpha_grad*0.6, zorder=-12)
             else:
-                plasmon_start=min(wavelength_starts)
-                plasmon_end=max(wavelength_ends)
-                plt.plot([plasmon_start, plasmon_end],[0,0],color=color_sampling("grey")[1],linestyle="dashed")
+                grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                grad = np.vstack([grad] * 10)
+                visible_spectrum_cmap = plt.cm.nipy_spectral
+                alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 0.4
+                alpha_vals = np.clip(alpha_vals, 0, 1)
+                alpha_grad = np.tile(alpha_vals, (10, 1))
+                ymin, ymax = plt.ylim()
+                extent = [380, 750, ymin, ymax]
+                plt.imshow(grad, aspect="auto", extent=extent, cmap=visible_spectrum_cmap, alpha=alpha_grad*0.6, zorder=-12)
+        else: pass
 
         plt.ylabel(r"Dielectric function")
         plt.xlabel(xaxis_label)
-
-        # ## Start: visible lights
-        # if var_label == "energy":
-        #     # Define the visible light range in wavelength (in nm) and convert to energy (in eV)
-        #     visible_wavelengths_nm = np.linspace(380, 750, 1000)  # 380 nm (violet) to 750 nm (red)
-        #     visible_energies_eV = wavelength_to_energy(visible_wavelengths_nm)
-
-        #     # Create a non-linear mapping for the color map
-        #     cmap = plt.get_cmap("nipy_spectral")
-        #     colors = cmap(np.linspace(0, 1, 1000))
-
-        #     sorted_indices = np.argsort(visible_energies_eV)
-        #     colors_energy_based = colors[sorted_indices]
-
-        #     # No need to sort indices since energies are now increasing
-        #     # Create a new colormap based on energy
-        #     energy_cmap = ListedColormap(colors_energy_based)
-
-        #     ax = plt.gca()
-
-        #     visible_min = np.min(visible_energies_eV)
-        #     visible_max = np.max(visible_energies_eV)
-
-        #     gradient = np.linspace(0, 1, 1000).reshape(1, -1)
-        #     gradient = np.vstack([gradient] * 10)
-
-        #     x_min, x_max = ax.get_xlim()
-        #     y_min, y_max = ax.get_ylim()
-
-        # # Create an alpha gradient using a sine function for transparency (0 -> 0.4 -> 0)
-        # alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 2.0
-        # alpha_vals = np.clip(alpha_vals, 0, 0.325)
-        # alpha_gradient = alpha_vals.reshape(1, -1)
-        # alpha_gradient = np.vstack([alpha_gradient] * 10)
-
-        # plt.imshow(gradient,aspect="auto",extent=[visible_min, visible_max, y_min, y_max],cmap=energy_cmap,alpha=alpha_gradient)
-
-        # plt.xlim(x_min, x_max)
-        # plt.ylim(y_min, y_max)
-        # ## End: visible lights
 
         plt.legend(loc="best")
         plt.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
@@ -628,11 +622,11 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None, layout="hor
                 if var_label == "energy":
                     energy_start=min(energy_starts)
                     energy_end=max(energy_ends)
-                    ax.plot([energy_start, energy_end],[0,0],color=color_sampling("grey")[1],linestyle="--")
+                    ax.plot([energy_start, energy_end],[0,0],color=color_sampling("grey")[1],linestyle="--", alpha=0.8)
                 else:
                     wavelength_start=min(wavelength_starts)
                     wavelength_end=max(wavelength_ends)
-                    ax.plot([wavelength_start, wavelength_end],[0,0],color=color_sampling("grey")[1],linestyle="--")
+                    ax.plot([wavelength_start, wavelength_end],[0,0],color=color_sampling("grey")[1],linestyle="--", alpha=0.8)
 
             # curve plotting: imag part
             elif subplot_index%2 != 0:
@@ -643,6 +637,38 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None, layout="hor
                     else:
                         wavelength_imag, density_wl_imag = extract_part(energy_to_wavelength(data[1]["density_energy_imag"]), data[1][data_key_imag], x_start, x_end)
                         ax.plot(wavelength_imag, density_wl_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
+
+            # Spectrum
+            xmin, xmax = ax.get_xlim()
+            ax.set_xlim(xmin, xmax)
+            wl_vis = np.linspace(380, 750, 1000)    # 380 nm (violet) to 750 nm (red)
+            ev_vis = wavelength_to_energy(wl_vis)   # 1.65 eV (red) to 3.26 eV (violet)
+            cmap = plt.get_cmap("nipy_spectral")
+            if spectrum_flag == True:
+                if var_label == "energy":
+                    colors = cmap(np.linspace(0, 1, 1000))
+                    idx_sort = np.argsort(ev_vis)
+                    colors_sorted = colors[idx_sort]
+                    energy_cmap = ListedColormap(colors_sorted)
+                    ev_min, ev_max = np.min(ev_vis), np.max(ev_vis)
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 2.0
+                    alpha_vals = np.clip(alpha_vals, 0, 0.325)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [ev_min, ev_max, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=energy_cmap, alpha=alpha_grad*0.6, zorder=-12)
+                else:
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 0.4
+                    alpha_vals = np.clip(alpha_vals, 0, 1)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [380, 750, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=cmap, alpha=alpha_grad*0.6, zorder=-12)
+            else: pass
 
             # subtitles and axis label (self-assertive): subtitles
             ax.set_title(supplot_subtitles[subplot_index])
@@ -657,9 +683,9 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None, layout="hor
                 if subplot_index%2 == 1:
                     ax.set_xlabel(xaxis_label)
 
-        # Legend
-        ax.legend(loc="best")
-        ax.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
+            # Legend
+            ax.legend(loc="best")
+            ax.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
 
         plt.tight_layout()
 
@@ -700,11 +726,11 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None, layout="hor
                 if var_label == "energy":
                     energy_start=min(energy_starts)
                     energy_end=max(energy_ends)
-                    ax.plot([energy_start, energy_end],[0,0],color=color_sampling("grey")[1],linestyle="--")
+                    ax.plot([energy_start, energy_end],[0,0],color=color_sampling("grey")[1], linestyle="--", alpha=0.8)
                 else:
                     wavelength_start=min(wavelength_starts)
                     wavelength_end=max(wavelength_ends)
-                    ax.plot([wavelength_start, wavelength_end],[0,0],color=color_sampling("grey")[1],linestyle="--")
+                    ax.plot([wavelength_start, wavelength_end],[0,0],color=color_sampling("grey")[1], linestyle="--", alpha=0.8)
 
             # curve plotting: imag part
             elif subplot_index%2 != 0:
@@ -715,6 +741,38 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None, layout="hor
                     else:
                         wavelength_imag, density_wl_imag = extract_part(energy_to_wavelength(data[1]["density_energy_imag"]), data[1][data_key_imag], x_start, x_end)
                         ax.plot(wavelength_imag, density_wl_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
+
+            # Spectrum
+            xmin, xmax = ax.get_xlim()
+            ax.set_xlim(xmin, xmax)
+            wl_vis = np.linspace(380, 750, 1000)        # 380 nm (violet) to 750 nm (red)
+            ev_vis = wavelength_to_energy(wl_vis)       # 1.65 eV (red) to 3.26 eV (violet)
+            cmap = plt.get_cmap("nipy_spectral")
+            if spectrum_flag == True:
+                if var_label == "energy":
+                    colors = cmap(np.linspace(0, 1, 1000))
+                    idx_sort = np.argsort(ev_vis)
+                    colors_sorted = colors[idx_sort]
+                    energy_cmap = ListedColormap(colors_sorted)
+                    ev_min, ev_max = np.min(ev_vis), np.max(ev_vis)
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 2.0
+                    alpha_vals = np.clip(alpha_vals, 0, 0.325)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [ev_min, ev_max, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=energy_cmap, alpha=alpha_grad*0.6, zorder=-12)
+                else:
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 0.4
+                    alpha_vals = np.clip(alpha_vals, 0, 1)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [380, 750, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=cmap, alpha=alpha_grad*0.6, zorder=-12)
+            else: pass
 
             # subtitles and axis label (self-assertive): subtitles
             ax.set_title(supplot_subtitles[subplot_index])
@@ -799,7 +857,8 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None, layout="hor
 
 def plot_dielectric_function(suptitle, systems=None, components=None,
                              layout="horizontal", expansion_label=True,
-                             unit=None, boundary=(None,None), figure_size=(None,None)):
+                             unit=None, boundary=(None, None),
+                             spectrum_flag=None, figure_size=(None,None)):
     ## Help information
     dielectric_help =  plot_dielectric_help()
     if suptitle in ["help", "Help"]:
@@ -808,9 +867,16 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
 
     ## multi components flag
     if isinstance(components, str) or isinstance(components, dict):
-        return plot_dielectric_monocomp(suptitle, systems, components,layout, expansion_label,unit, boundary, figure_size)
+        return plot_dielectric_monocomp(suptitle, systems, components, layout, expansion_label, unit, boundary, spectrum_flag, figure_size)
     elif isinstance(components, list) and len(components) == 1:
-        return plot_dielectric_monocomp(suptitle, systems, components,layout, expansion_label,unit, boundary, figure_size)
+        return plot_dielectric_monocomp(suptitle, systems, components, layout, expansion_label, unit, boundary, spectrum_flag, figure_size)
+
+    ## rescale
+    if isinstance(boundary, tuple):
+        if isinstance(boundary[0], tuple) or isinstance(boundary[1], tuple):
+            return plot_dielectric_function_rescaled(suptitle, systems, components, layout, unit, boundary, spectrum_flag, figure_size)
+        else: pass
+    else: pass
 
     ## expansion flag
     if isinstance(expansion_label, bool):
@@ -917,7 +983,7 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
     fig.suptitle(f"{suptitle}\n", fontsize=fig_setting[3][0])
 
     ## data boundary
-    photon_start, photon_end = process_boundary(boundary)
+    photon_start, photon_end = process_boundary_alt(boundary)
 
     ## data plotting
     # for each subplot
@@ -985,10 +1051,42 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
                     else:
                         wavelength_imag, density_wl_imag = extract_part(energy_to_wavelength(data[1]["density_energy_imag"]), data[1][data_key], photon_start, photon_end)
                         ax.plot(wavelength_imag, density_wl_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
+
+            # Spectrum
+            xmin, xmax = ax.get_xlim()
+            ax.set_xlim(xmin, xmax)
+            wl_vis = np.linspace(380, 750, 1000)        # 380 nm (violet) to 750 nm (red)
+            ev_vis = wavelength_to_energy(wl_vis)       # 1.65 eV (red) to 3.26 eV (violet)
+            cmap = plt.get_cmap("nipy_spectral")
+            if spectrum_flag == True:
+                if var_label == "energy":
+                    colors = cmap(np.linspace(0, 1, 1000))
+                    idx_sort = np.argsort(ev_vis)
+                    colors_sorted = colors[idx_sort]
+                    energy_cmap = ListedColormap(colors_sorted)
+                    ev_min, ev_max = np.min(ev_vis), np.max(ev_vis)
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 2.0
+                    alpha_vals = np.clip(alpha_vals, 0, 0.325)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [ev_min, ev_max, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=energy_cmap, alpha=alpha_grad*0.6, zorder=-12)
+                else:
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 0.4
+                    alpha_vals = np.clip(alpha_vals, 0, 1)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [380, 750, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=cmap, alpha=alpha_grad*0.6, zorder=-12)
+            else: pass
+
             # Legend
             ax.legend(loc="best")
             ax.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
-
     else:
         for subplot_index in range(len(components)):
             ax = axes_element[subplot_index]
@@ -1030,6 +1128,38 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
                 plasmon_end=max(wavelength_ends)
                 ax.plot([plasmon_start, plasmon_end],[0,0],color=color_sampling("grey")[1],linestyle="dashed")
 
+            # Spectrum
+            xmin, xmax = ax.get_xlim()
+            ax.set_xlim(xmin, xmax)
+            wl_vis = np.linspace(380, 750, 1000)        # 380 nm (violet) to 750 nm (red)
+            ev_vis = wavelength_to_energy(wl_vis)       # 1.65 eV (red) to 3.26 eV (violet)
+            cmap = plt.get_cmap("nipy_spectral")
+            if spectrum_flag == True:
+                if var_label == "energy":
+                    colors = cmap(np.linspace(0, 1, 1000))
+                    idx_sort = np.argsort(ev_vis)
+                    colors_sorted = colors[idx_sort]
+                    energy_cmap = ListedColormap(colors_sorted)
+                    ev_min, ev_max = np.min(ev_vis), np.max(ev_vis)
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 2.0
+                    alpha_vals = np.clip(alpha_vals, 0, 0.325)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [ev_min, ev_max, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=energy_cmap, alpha=alpha_grad*0.6, zorder=-12)
+                else:
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 0.4
+                    alpha_vals = np.clip(alpha_vals, 0, 1)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [380, 750, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=cmap, alpha=alpha_grad*0.6, zorder=-12)
+            else: pass
+
             # subtitles and axis label (self-assertive): subtitles
             ax.set_title(comp_aliases[component_index])
             if allcomps_flag is True and layout_flag == "horizontal":
@@ -1067,7 +1197,8 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
     plt.tight_layout()
 
 def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
-                                      layout="horizontal", unit=None, boundary=(None,None), figure_size=(None,None)):
+                                      layout="horizontal", unit=None, boundary=(None,None),
+                                      spectrum_flag=None, figure_size=(None,None)):
 
     ## Help information
     help_info = "Usage: plot_dielectric_function_scaled \n" + \
@@ -1086,12 +1217,12 @@ def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
 
     ## multi components flag
     if isinstance(components, str) or isinstance(components, dict):
-        return plot_dielectric_monocomp(suptitle, systems, components,layout, unit, boundary, figure_size)
+        return plot_dielectric_monocomp(suptitle, systems, components,layout, unit, boundary, spectrum_flag, figure_size)
     elif isinstance(components, list) and len(components) == 1:
-        return plot_dielectric_monocomp(suptitle, systems, components,layout, unit, boundary, figure_size)
+        return plot_dielectric_monocomp(suptitle, systems, components,layout, unit, boundary, spectrum_flag, figure_size)
 
     ## rescale flag and databoundaries
-    rescale_flag, source_start, source_end, scaled_start, scaled_end = process_boundaries_rescaling(boundary)
+    rescale_flag, source_start, source_end, scaled_start, scaled_end = process_boundaries_rescaling_alt(boundary)
 
     ## components aliases
     comp_labels, comp_aliases = [], []
@@ -1120,7 +1251,7 @@ def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
             fig, axs = plt.subplots(len(components), 2, figsize=fig_setting[0], dpi=fig_setting[1])
             axes_element = [axs[i, j] for i in range(len(components)) for j in range(2)] if len(components) != 1 else [axs[0], axs[1]]
     else:
-        return plot_dielectric_function(suptitle, systems, components, layout, False, unit, boundary, figure_size)
+        return plot_dielectric_function(suptitle, systems, components, layout, rescale_flag, unit, boundary, spectrum_flag, figure_size)
 
     ## identify x-axis unit
     var_label = "wavelength" if unit and unit.lower() == "nm" else "energy"
@@ -1180,6 +1311,38 @@ def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
             plasmon_end=max(wavelength_ends)
             ax.plot([plasmon_start, plasmon_end],[0,0],color=color_sampling("grey")[1],linestyle="dashed")
 
+        # Spectrum
+        xmin, xmax = ax.get_xlim()
+        ax.set_xlim(xmin, xmax)
+        wl_vis = np.linspace(380, 750, 1000)        # 380 nm (violet) to 750 nm (red)
+        ev_vis = wavelength_to_energy(wl_vis)       # 1.65 eV (red) to 3.26 eV (violet)
+        cmap = plt.get_cmap("nipy_spectral")
+        if spectrum_flag == True:
+            if var_label == "energy":
+                colors = cmap(np.linspace(0, 1, 1000))
+                idx_sort = np.argsort(ev_vis)
+                colors_sorted = colors[idx_sort]
+                energy_cmap = ListedColormap(colors_sorted)
+                ev_min, ev_max = np.min(ev_vis), np.max(ev_vis)
+                grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                grad = np.vstack([grad] * 10)
+                alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 2.0
+                alpha_vals = np.clip(alpha_vals, 0, 0.325)
+                alpha_grad = np.tile(alpha_vals, (10, 1))
+                ymin, ymax = ax.get_ylim()
+                extent = [ev_min, ev_max, ymin, ymax]
+                ax.imshow(grad, aspect="auto", extent=extent, cmap=energy_cmap, alpha=alpha_grad*0.6, zorder=-12)
+            else:
+                grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                grad = np.vstack([grad] * 10)
+                alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 0.4
+                alpha_vals = np.clip(alpha_vals, 0, 1)
+                alpha_grad = np.tile(alpha_vals, (10, 1))
+                ymin, ymax = ax.get_ylim()
+                extent = [380, 750, ymin, ymax]
+                ax.imshow(grad, aspect="auto", extent=extent, cmap=cmap, alpha=alpha_grad*0.6, zorder=-12)
+        else: pass
+
         # subtitles and axis label (self-assertive): subtitles
         ax.set_title([f"Original view for {comp_aliases[component_index]}", f"Rescaled view for {comp_aliases[component_index]}"][subplot_index%2])
 
@@ -1197,258 +1360,5 @@ def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
 
         ax.legend(loc="best")
         ax.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
-
-    plt.tight_layout()
-
-def plot_dielectric_function_spectrum(suptitle, systems=None, components=None, layout="horizontal", expansion_label=True,
-    unit=None, boundary=(None,None), figure_size=(None,None)):
-    """
-    Simplified: 
-    1) 'boundary' is just a simple or tuple range for x-axis (no 'rescale' logic).
-    2) 'expansion_label' controls whether Real and Imag are in separate subplots.
-    3) Always draws the visible spectrum if unit='eV'.
-    4) Retain original layout logic (2 comps, 9 comps, etc.).
-    """
-    # Help info
-    dielectric_help = plot_dielectric_help()
-    if suptitle in ["help","Help"]:
-        print(dielectric_help)
-        return
-    # expansion_label
-    if isinstance(expansion_label, bool):
-        expansion_flag = expansion_label
-    else:
-        expansion_flag = expansion_label.lower() in ["true","yes","t","y","combine"]
-    # components aliases
-    comp_labels, comp_aliases = [], []
-    if isinstance(components, str):
-        comp_labels.append(components.lower())
-        comp_aliases.append(f"{components}-component")
-    elif isinstance(components, dict):
-        for k,v in components.items():
-            comp_labels.append(k.lower())
-            comp_aliases.append(v)
-    elif isinstance(components, list):
-        for c in components:
-            if isinstance(c, dict):
-                for k,v in c.items():
-                    comp_labels.append(k.lower())
-                    comp_aliases.append(v)
-            else:
-                comp_labels.append(c.lower())
-                comp_aliases.append(f"{c}-component")
-    # figure layout
-    folding_flag = None
-    allcomps_flag = None
-    layout_flag = "horizontal" if layout.lower() not in ["vertical","ver","v"] else "vertical"
-    ncomp = len(comp_labels)
-    # If expansion_flag => we have "2*ncomp" subplots total
-    # else => just ncomp subplots total
-    total_plots = 2*ncomp if expansion_flag else ncomp
-    #   We reuse your existing rules for e.g. 2 comps, 9 comps, etc.
-    #   But we consider "total_plots" instead of "len(components)" in some places.
-    if expansion_flag:
-        # We'll treat "len(components)" = ncomp, 
-        # but each component has 2 subplots => total_plots = 2*ncomp
-        if layout_flag=="horizontal":
-            fig_setting = canvas_setting(8*ncomp, 12) if figure_size==(None,None) else canvas_setting(*figure_size)
-            plt.rcParams.update(fig_setting[2])
-            fig, axs = plt.subplots(2, ncomp, figsize=fig_setting[0], dpi=fig_setting[1])
-            # If only 1 comp, special case
-            if ncomp==1:
-                axes_element = [axs[0], axs[1]]  # 2 subplots
-            else:
-                axes_element = [axs[i,j] for j in range(ncomp) for i in range(2)]
-        else:
-            fig_setting = canvas_setting(16,6*ncomp) if figure_size==(None,None) else canvas_setting(*figure_size)
-            plt.rcParams.update(fig_setting[2])
-            fig, axs = plt.subplots(ncomp,2, figsize=fig_setting[0], dpi=fig_setting[1])
-            if ncomp==1:
-                axes_element = [axs[0], axs[1]]
-            else:
-                axes_element = [axs[i,j] for i in range(ncomp) for j in range(2)]
-    else:
-        # no expansion => 1 subplot per component => ncomp subplots total
-        if ncomp==2:
-            if layout_flag=="horizontal":
-                fig_setting = canvas_setting(16,6) if figure_size==(None,None) else canvas_setting(*figure_size)
-                plt.rcParams.update(fig_setting[2])
-                fig, axs = plt.subplots(1,2, figsize=fig_setting[0], dpi=fig_setting[1])
-                axs=axs.reshape(1,2); axes_element=[axs[0,i] for i in range(2)]
-            else:
-                fig_setting = canvas_setting(8,12) if figure_size==(None,None) else canvas_setting(*figure_size)
-                plt.rcParams.update(fig_setting[2])
-                fig,axs=plt.subplots(2,1,figsize=fig_setting[0],dpi=fig_setting[1])
-                axs=axs.reshape(2,1); axes_element=[axs[i,0] for i in range(2)]
-        elif ncomp==9:
-            allcomps_flag=True
-            if layout_flag=="horizontal":
-                fig_setting = canvas_setting(24,18) if figure_size==(None,None) else canvas_setting(*figure_size)
-                plt.rcParams.update(fig_setting[2])
-                fig, axs = plt.subplots(3,3,figsize=fig_setting[0],dpi=fig_setting[1])
-                axes_element=[axs[i,j] for i in range(3) for j in range(3)]
-            else:
-                fig_setting = canvas_setting(24,18) if figure_size==(None,None) else canvas_setting(*figure_size)
-                plt.rcParams.update(fig_setting[2])
-                fig,axs=plt.subplots(3,3,figsize=fig_setting[0],dpi=fig_setting[1])
-                axes_element=[axs[i,j] for j in range(3) for i in range(3)]
-        elif ncomp%2==0 and ncomp>2:
-            # e.g. folding_flag if 4,6,8...
-            folding_flag=True
-            if layout_flag=="horizontal":
-                fig_setting = canvas_setting(8*ncomp/2,12) if figure_size==(None,None) else canvas_setting(*figure_size)
-                plt.rcParams.update(fig_setting[2])
-                fig,axs=plt.subplots(2,int(ncomp/2), figsize=fig_setting[0], dpi=fig_setting[1])
-                axes_element=[axs[i,j] for i in range(2) for j in range(int(ncomp/2))]
-            else:
-                fig_setting=canvas_setting(16,6*ncomp/2+1) if figure_size==(None,None) else canvas_setting(*figure_size)
-                plt.rcParams.update(fig_setting[2])
-                fig,axs=plt.subplots(int(ncomp/2),2,figsize=fig_setting[0],dpi=fig_setting[1])
-                axes_element=[axs[i,j] for j in range(2) for i in range(int(ncomp/2))]
-        else:
-            if layout_flag=="horizontal":
-                fig_setting = canvas_setting(8*ncomp,6) if figure_size==(None,None) else canvas_setting(*figure_size)
-                plt.rcParams.update(fig_setting[2])
-                fig,axs=plt.subplots(1,ncomp,figsize=fig_setting[0],dpi=fig_setting[1])
-                if ncomp==1:
-                    axes_element=[axs]
-                else:
-                    axes_element=[axs[i] for i in range(ncomp)]
-            else:
-                fig_setting=canvas_setting(10,6*ncomp) if figure_size==(None,None) else canvas_setting(*figure_size)
-                plt.rcParams.update(fig_setting[2])
-                fig,axs=plt.subplots(ncomp,1,figsize=fig_setting[0],dpi=fig_setting[1])
-                if ncomp==1:
-                    axes_element=[axs]
-                else:
-                    axes_element=[axs[i] for i in range(ncomp)]
-    # Identify x-axis unit
-    var_label = "wavelength" if unit and unit.lower()=="nm" else "energy"
-    xaxis_label= "Photon wavelength (nm)" if var_label=="wavelength" else "Photon energy (eV)"
-    # Load systems & suptitle
-    dataset = dielectric_systems_list(systems)
-    fig.suptitle(f"{suptitle}\n", fontsize=fig_setting[3][0])
-    # boundary => simple numeric or tuple => parse to get (photon_start, photon_end)
-    photon_start, photon_end = process_boundary(boundary)
-    # Plotting
-    if expansion_flag:
-        # total_plots=2*ncomp => for each component => subplots: Real / Imag
-        for idx, ax in enumerate(axes_element):
-            ax.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
-            # Which component?
-            comp_i = idx//2
-            is_imag = (idx%2==1)
-            c_label=comp_labels[comp_i]
-            c_alias=comp_aliases[comp_i]
-            data_key_real=f"density_{c_label}_real"
-            data_key_imag=f"density_{c_label}_imag"
-            # Title
-            title_str = f"Real part for {c_alias}" if not is_imag else f"Imag part for {c_alias}"
-            ax.set_title(title_str)
-            # Actually plot
-            w_starts,w_ends, e_starts,e_ends = [],[],[],[]
-            for _, data_item in enumerate(dataset):
-                en_r, val_r=extract_part(data_item[1]["density_energy_real"], data_item[1][data_key_real], photon_start, photon_end)
-                en_i, val_i=extract_part(data_item[1]["density_energy_imag"], data_item[1][data_key_imag], photon_start, photon_end)
-                if var_label=="energy":
-                    if not is_imag:
-                        ax.plot(en_r, val_r, color=color_sampling(data_item[2])[1],
-                                ls=data_item[3], lw=data_item[4], alpha=data_item[5], label=f"Real part{data_item[0]}")
-                        if len(en_r)>0:
-                            e_starts.append(min(en_r)); e_ends.append(max(en_r))
-                    else:
-                        ax.plot(en_i, val_i, color=color_sampling(data_item[2])[2],
-                                ls=data_item[3], lw=data_item[4], alpha=data_item[5], label=f"Imag part{data_item[0]}")
-                else:
-                    wl_r, vr=extract_part(energy_to_wavelength(data_item[1]["density_energy_real"]), data_item[1][data_key_real], photon_start, photon_end)
-                    wl_i, vi=extract_part(energy_to_wavelength(data_item[1]["density_energy_imag"]), data_item[1][data_key_imag], photon_start, photon_end)
-                    if not is_imag:
-                        ax.plot(wl_r, vr, color=color_sampling(data_item[2])[1],
-                                ls=data_item[3], lw=data_item[4], alpha=data_item[5], label=f"Real part{data_item[0]}")
-                        if len(wl_r)>0:
-                            w_starts.append(min(wl_r))
-                            w_valid=np.array(wl_r)[np.isfinite(wl_r)]
-                            if len(w_valid)>0: w_ends.append(max(w_valid))
-                    else:
-                        ax.plot(wl_i, vi, color=color_sampling(data_item[2])[2],
-                                ls=data_item[3], lw=data_item[4], alpha=data_item[5], label=f"Imag part{data_item[0]}")
-            # plasmon line
-            if var_label=="energy" and e_starts and e_ends:
-                ax.plot([min(e_starts), max(e_ends)], [0,0], color=color_sampling("grey")[1], ls="dashed")
-            elif var_label!="energy" and w_starts and w_ends:
-                ax.plot([min(w_starts), max(w_ends)], [0,0], color=color_sampling("grey")[1], ls="dashed")
-            # x / y label
-            # you can do a simpler logic here, or mimic your existing row/col logic
-            # e.g. just do:
-            ax.set_xlabel(xaxis_label)
-            ax.set_ylabel("Dielectric function")
-            ax.legend(loc="best")
-            ax.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
-    else:
-        # No expansion => real & imag together in same subplot => ncomp subplots
-        for idx, ax in enumerate(axes_element):
-            ax.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
-            c_label=comp_labels[idx]
-            c_alias=comp_aliases[idx]
-            data_key_real=f"density_{c_label}_real"
-            data_key_imag=f"density_{c_label}_imag"
-            # Title
-            ax.set_title(f"{c_alias}")
-            w_starts,w_ends, e_starts,e_ends=[],[],[],[]
-            for _, data_item in enumerate(dataset):
-                en_r,val_r=extract_part(data_item[1]["density_energy_real"], data_item[1][data_key_real], photon_start, photon_end)
-                en_i,val_i=extract_part(data_item[1]["density_energy_imag"], data_item[1][data_key_imag], photon_start, photon_end)
-                if var_label=="energy":
-                    ax.plot(en_r,val_r,color=color_sampling(data_item[2])[1],
-                            ls=data_item[3], lw=data_item[4], alpha=data_item[5], label=f"Real part{data_item[0]}")
-                    ax.plot(en_i,val_i,color=color_sampling(data_item[2])[1],
-                            ls="dashed", lw=data_item[4], alpha=data_item[5], label=f"Imag part{data_item[0]}")
-                    if len(en_r)>0:
-                        e_starts.append(min(en_r)); e_ends.append(max(en_r))
-                else:
-                    wl_r,vr=extract_part(energy_to_wavelength(data_item[1]["density_energy_real"]), data_item[1][data_key_real], photon_start, photon_end)
-                    wl_i,vi=extract_part(energy_to_wavelength(data_item[1]["density_energy_imag"]), data_item[1][data_key_imag], photon_start, photon_end)
-                    ax.plot(wl_r,vr,color=color_sampling(data_item[2])[1],
-                            ls=data_item[3], lw=data_item[4], alpha=data_item[5], label=f"Real part{data_item[0]}")
-                    ax.plot(wl_i,vi,color=color_sampling(data_item[2])[1],
-                            ls="dashed", lw=data_item[4], alpha=data_item[5], label=f"Imag part{data_item[0]}")
-                    if len(wl_r)>0:
-                        w_starts.append(min(wl_r))
-                        w_valid=np.array(wl_r)[np.isfinite(wl_r)]
-                        if len(w_valid)>0:
-                            w_ends.append(max(w_valid))
-            # plasmon line
-            if var_label=="energy" and e_starts and e_ends:
-                ax.plot([min(e_starts),max(e_ends)],[0,0],color=color_sampling("grey")[1],ls="dashed")
-            elif var_label!="energy" and w_starts and w_ends:
-                ax.plot([min(w_starts),max(w_ends)],[0,0],color=color_sampling("grey")[1],ls="dashed")
-
-            ax.set_xlabel(xaxis_label)
-            ax.set_ylabel("Dielectric function")
-            ax.legend(loc="best")
-            ax.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
-
-    # Visible spectrum overlay for each subplot if var_label=="energy"
-    if var_label=="energy":
-        for ax in axes_element:
-            xmn,xmx=ax.get_xlim()
-            ymn,ymx=ax.get_ylim()
-            wl_vis=np.linspace(380,750,1000)
-            ev_vis=wavelength_to_energy(wl_vis)
-            cmap=plt.get_cmap("nipy_spectral")
-            colors=cmap(np.linspace(0,1,1000))
-            idx_sort=np.argsort(ev_vis)
-            colors_sorted=colors[idx_sort]
-            energy_cmap=ListedColormap(colors_sorted)
-            ev_min, ev_max = np.min(ev_vis), np.max(ev_vis)
-            grad=np.linspace(0,1,1000).reshape(1,-1)
-            grad=np.vstack([grad]*10)
-            alpha_vals=np.sin(np.linspace(0,np.pi,1000))*2.0
-            alpha_vals=np.clip(alpha_vals,0,0.325)
-            alpha_grad=alpha_vals.reshape(1,-1)
-            alpha_grad=np.vstack([alpha_grad]*10)
-            ax.imshow(grad,aspect="auto",extent=[ev_min,ev_max,ymn,ymx],cmap=energy_cmap,alpha=alpha_grad)
-            ax.set_xlim(xmn,xmx)
-            ax.set_ylim(ymn,ymx)
 
     plt.tight_layout()

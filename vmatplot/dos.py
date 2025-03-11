@@ -213,7 +213,10 @@ def plot_dos(title, matters_list = None, x_range = None, y_top = None, dos_type 
         shift = efermi
         plt.axvline(x = efermi-shift, linestyle="--", c=fermi_color[0], alpha=0.80, label="Fermi energy", zorder = 1)
         fermi_energy_text = f"Fermi energy\n{efermi:.3f} (eV)"
-        plt.text(efermi-shift-x_range*0.02, y_top*0.98, fermi_energy_text, fontsize =1.0*12, c=fermi_color[0], rotation=0, va = "top", ha="right")
+
+        if len(matters) == 1:
+            plt.text(efermi-shift-x_range*0.02, y_top*0.98, fermi_energy_text, fontsize =1.0*12, c=fermi_color[0], rotation=0, va = "top", ha="right")
+        else: pass
 
         # Title
         # plt.title(f"Electronic density of state for {title} ({supplement})")

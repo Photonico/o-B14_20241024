@@ -7,7 +7,9 @@ import matplotlib.pyplot as plt
 from vmatplot.dielectric_function import dielectric_systems_list
 from vmatplot.commons import process_boundary, extract_part
 from vmatplot.output_settings import canvas_setting, color_sampling
-from vmatplot.algorithms import energy_to_wavelength, energy_to_frequency
+from vmatplot.algorithms import energy_to_wavelength, energy_to_frequency, wavelength_to_energy
+
+from matplotlib.colors import ListedColormap
 
 ## References
 
@@ -122,12 +124,20 @@ def lop_plotting_help():
     return help_info
 
 ### rebuild
-def plot_linear_optical_property(suptitle, systems=None, properties=None, components="xx", layout="horizontal", unit="eV", boundary=(None, None), figure_size=(None, None)):
+def plot_linear_optical_property(suptitle, systems=None, properties=None, components="xx",
+                                 layout="horizontal", expansion_label=True,
+                                 unit="eV", boundary=(None, None),
+                                 spectrum_flag=None, figure_size=(None, None)):
     ## Support information
     if suptitle.lower() in ["help", "support"]:
         help_info = lop_plotting_help()
         print(help_info)
         return
+    # expansion label
+    if expansion_label == False:
+        return plot_merged_linear_optical_property(suptitle, systems, properties, components, layout, unit, boundary, spectrum_flag, figure_size)
+    else: pass
+
     # properties labels and determination
     multi_prop_flag = None
     if isinstance(properties, str):
@@ -185,14 +195,20 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
         comp_label = comp_labels[0]
         comp_aliase = comp_aliases[0]
 
+    ## boundaries processing
+    photon_start, photon_end = process_boundary(boundary)
+
+    ## identify x-axis unit
+    var_label = "wavelength" if unit and unit.lower() == "nm" else "energy"
+    xaxis_str = "Photon wavelength (nm)" if var_label == "wavelength" else "Photon energy (eV)"
+
+    ## systems information
+    dataset = dielectric_systems_list(systems)
+
     ## figure settings
     layout_flag = "horizontal" if layout.lower() not in ["vertical", "ver","v"] else "vertical"
     if multi_comp_flag is False:
-        ## figure settings
-        fig_setting = canvas_setting() if figure_size == (None, None) else canvas_setting(figure_size[0], figure_size[1])
-        plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
-        params = fig_setting[2]
-        plt.rcParams.update(params)
+        return plot_merged_linear_optical_property(suptitle, systems, properties, components, layout, unit, boundary, spectrum_flag, figure_size)
 
     elif multi_comp_flag is True:
         ## figure settings
@@ -250,57 +266,8 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
                 plt.rcParams.update(params)
                 fig, axs = plt.subplots(3, 3, figsize=fig_setting[0], dpi=fig_setting[1])
                 axes_element = [axs[i, j] for j in range(3) for i in range(3)]
-
-    ## boundaries processing
-    photon_start, photon_end = process_boundary(boundary)
-
-    ## identify x-axis unit
-    var_label = "wavelength" if unit and unit.lower() == "nm" else "energy"
-    xaxis_str = "Photon wavelength (nm)" if var_label == "wavelength" else "Photon energy (eV)"
-
-    ## systems information
-    dataset = dielectric_systems_list(systems)
-
-    ## suptitle
-    if multi_comp_flag is False:
-        plt.title(f"{suptitle}", fontsize=fig_setting[3][0])
-    elif multi_comp_flag is True:
+        
         fig.suptitle(f"{suptitle}", fontsize=fig_setting[3][0])
-
-    ## data plotting
-    if multi_comp_flag is False:
-        plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
-        # legends and scientific notation
-        if multi_system_flag == True: plt.legend(loc="best")
-        else: pass
-
-        # component key
-        current_component = comp_label.lower()
-        data_key_real = f"density_{current_component}_real"
-        data_key_imag = f"density_{current_component}_imag"
-
-        # curve plotting
-        for _, data in enumerate(dataset):
-            energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key_real], photon_start, photon_end)
-            energy_imag, density_energy_imag = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], photon_start, photon_end)
-            frequency_real = energy_to_frequency(energy_real)
-            wavelength_real = energy_to_wavelength(energy_real)
-            if formula_flag == "absorption":
-                variables = current_lop(formula_flag,frequency_real,density_energy_real,density_energy_imag)
-            else:
-                variables = current_lop(formula_flag,density_energy_real,density_energy_imag)
-            if var_label == "energy":
-                plt.plot(energy_real, variables, color=color_sampling(data[2])[1], ls=data[3], alpha=data[4], lw=data[5], label=f"{data[0]}")
-            elif var_label == "wavelength":
-                plt.plot(wavelength_real, variables, color=color_sampling(data[2])[1], ls=data[3], alpha=data[4], lw=data[5], label=f"{data[0]}")
-
-        # axis labels
-        plt.ylabel(f"{formula_title}")
-        plt.xlabel(xaxis_str)
-        plt.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
-        plt.tight_layout()
-
-    elif multi_comp_flag is True:
         for subplot_index in range(len(components)):
             ax = axes_element[subplot_index]
             ax.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
@@ -314,11 +281,6 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
             data_key_real = f"density_{current_component}_real"
             data_key_imag = f"density_{current_component}_imag"
 
-            # legends and scientific notation
-            if multi_system_flag == True:
-                ax.legend(loc="best")
-            else: pass
-
             # curve plotting
             for _, data in enumerate(dataset):
                 energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key_real], photon_start, photon_end)
@@ -330,11 +292,45 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
                 else:
                     variables = current_lop(formula_flag,density_energy_real,density_energy_imag)
                 if var_label == "energy":
-                    ax.plot(energy_real, variables, color=color_sampling(data[2])[1], ls=data[3], alpha=data[4], lw=data[5], label=f"{data[0]}")
+                    ax.plot(energy_real, variables, color=color_sampling(data[2])[1], ls=data[3], alpha=data[5], lw=data[4], label=data[0])
                 elif var_label == "wavelength":
-                    ax.plot(wavelength_real, variables, color=color_sampling(data[2])[1], ls=data[3], alpha=data[4], lw=data[5], label=f"{data[0]}")
+                    wavelength_real, wavelength_variables = extract_part(energy_to_wavelength(data[1]["density_energy_real"]), data[1][data_key_real], photon_start, photon_end)
+                    ax.plot(wavelength_real, wavelength_variables, color=color_sampling(data[2])[1], ls=data[3], alpha=data[5], lw=data[4], label=data[0])
+            
+            # Spectrum
+            xmin, xmax = ax.get_xlim()
+            ax.set_xlim(xmin, xmax)
+            wl_vis = np.linspace(380, 750, 1000)    # 380 nm (violet) to 750 nm (red)
+            ev_vis = wavelength_to_energy(wl_vis)   # 1.65 eV (red) to 3.26 eV (violet)
+            cmap = plt.get_cmap("nipy_spectral")
+            if spectrum_flag == True:
+                if var_label == "energy":
+                    colors = cmap(np.linspace(0, 1, 1000))
+                    idx_sort = np.argsort(ev_vis)
+                    colors_sorted = colors[idx_sort]
+                    energy_cmap = ListedColormap(colors_sorted)
+                    ev_min, ev_max = np.min(ev_vis), np.max(ev_vis)
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 2.0
+                    alpha_vals = np.clip(alpha_vals, 0, 0.325)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [ev_min, ev_max, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=energy_cmap, alpha=alpha_grad*0.6, zorder=-12)
+                else:
+                    grad = np.linspace(0, 1, 1000).reshape(1, -1)
+                    grad = np.vstack([grad] * 10)
+                    alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 0.4
+                    alpha_vals = np.clip(alpha_vals, 0, 1)
+                    alpha_grad = np.tile(alpha_vals, (10, 1))
+                    ymin, ymax = ax.get_ylim()
+                    extent = [380, 750, ymin, ymax]
+                    ax.imshow(grad, aspect="auto", extent=extent, cmap=cmap, alpha=alpha_grad*0.6, zorder=-12)
+            else: pass
 
             # axis labels
+            ax.legend(loc="best")
             if layout_flag == "horizontal" and len(components) == 2:
                 ax.set_xlabel(xaxis_str)
                 if subplot_index == 0:
@@ -374,27 +370,29 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
             ax.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
             plt.tight_layout()
 
-def plot_merged_linear_optical_property(suptitle, systems=None, properties=None, components="xx", layout="horizontal", unit="eV", boundary=(None, None), figure_size=(None, None)):
+def plot_merged_linear_optical_property(suptitle, systems=None, properties=None, components="xx",
+                                        layout="horizontal",unit="eV", boundary=(None, None),
+                                        spectrum_flag=None, figure_size=(None, None)):
     """
     Plot all systems (and potentially multiple components) in a single Axes.
     Differences from plot_linear_optical_property:
-      1) Only one figure/axes (no subplots).
-      2) If multiple components are given, iteration order is:
-         for comp_idx in comp_labels -> for data_item in dataset
-         (component first, then system).
-      3) If single component: keep dataset's original linestyle, color_sampling(...)[1].
-         If multiple components: ignore original linestyle, use style_cycle + color index.
-         style_cycle = ["solid", "dashed", "dashdot", "dotted", "dashdotdotted",
-                        "dashed", "dashdot", "dotted", "dashdotdotted"]
+      1 Only one figure/axes (no subplots).
+      2 If multiple components are given, iteration order is:
+        for comp_idx in comp_labels -> for data_item in dataset
+        (component first, then system).
+      3 If single component: keep dataset's original linestyle, color_sampling(...)[1].
+        If multiple components: ignore original linestyle, use style_cycle + color index.
+        style_cycle = ["solid", "dashed", "dashdot", "dotted", "dashdotdotted",
+                       "dashed", "dashdot", "dotted", "dashdotdotted"]
     """
     # Predefined style cycle for up to 9 components
     style_cycle = ["solid","dashed","dashdot","dotted","dashdotdotted","dashed","dashdot","dotted","dashdotdotted"]
-    # 1) Help info
+    # Help info
     if suptitle.lower() in ["help","support"]:
         help_info = lop_plotting_help()
         print(help_info)
         return
-    # 2) Optical property
+    # Optical property
     multi_prop_flag = None
     if isinstance(properties, str):
         multi_prop_flag = False
@@ -416,10 +414,10 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
     if multi_prop_flag is True:
         print("Currently we do not support multiple linear optical properties in one figure.")
         return None
-    # 3) Systems
+    # Systems
     dataset = dielectric_systems_list(systems)
     multi_system_flag = (len(dataset) > 1)
-    # 4) Components
+    # Components
     multi_comp_flag = None
     comp_labels, comp_aliases = [], []
     if isinstance(components, str):
@@ -453,7 +451,7 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
     if not multi_comp_flag:
         comp_label = comp_labels[0]
         comp_aliase = comp_aliases[0]
-    # 5) Figure settings
+    # Figure settings
     layout_flag = "horizontal" if layout.lower() not in ["vertical","ver","v"] else "vertical"
     default_fig_size = (12,6) if layout_flag=="horizontal" else (6,12)
     fig_setting = canvas_setting(default_fig_size[0], default_fig_size[1]) if figure_size==(None,None) else canvas_setting(figure_size[0], figure_size[1])
@@ -465,7 +463,7 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
     xaxis_str = "Photon wavelength (nm)" if var_label=="wavelength" else "Photon energy (eV)"
     plt.title(f"{suptitle}", fontsize=fig_setting[3][0])
     plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
-    # 6) Plot
+    # Plot
     if not multi_comp_flag:
         # Single component => use original linestyle + color_sampling(...)[1]
         current_component = comp_label.lower()
@@ -484,8 +482,8 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
             if var_label=="energy":
                 plt.plot(e_real, variables, color=line_color, ls=line_style, alpha=data_item[5], lw=data_item[4], label=f"{data_item[0]}")
             else:
-                wl_real = energy_to_wavelength(e_real)
-                plt.plot(wl_real, variables, color=line_color, ls=line_style, alpha=data_item[5], lw=data_item[4], label=f"{data_item[0]}")
+                wl_real, wl_variables = extract_part(energy_to_wavelength(data_item[1]["density_energy_real"]), data_item[1][dkey_real], photon_start, photon_end)
+                plt.plot(wl_real, wl_variables, color=line_color, ls=line_style, alpha=data_item[5], lw=data_item[4], label=f"{data_item[0]}")
     else:
         # Multiple components => ignore original linestyle, use style_cycle + color index logic
         for comp_idx, c_label in enumerate(comp_labels):
@@ -511,13 +509,45 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
                 if var_label=="energy":
                     plt.plot(e_real, variables, color=line_color, ls=line_style, alpha=data_item[5], lw=data_item[4], label=line_label)
                 else:
-                    wl_real = energy_to_wavelength(e_real)
-                    plt.plot(wl_real, variables, color=line_color, ls=line_style, alpha=data_item[5], lw=data_item[4], label=line_label)
-    # 7) Axis labels
+                    wl_real, wl_variables = extract_part(energy_to_wavelength(data_item[1]["density_energy_real"]), data_item[1][dkey_real], photon_start, photon_end)
+                    plt.plot(wl_real, wl_variables, color=line_color, ls=line_style, alpha=data_item[5], lw=data_item[4], label=line_label)
+    # Spectrum
+    xmin, xmax = plt.xlim()
+    plt.xlim(xmin, xmax)
+    wl_vis = np.linspace(380, 750, 1000)                # 380 nm (violet) to 750 nm (red)
+    ev_vis = wavelength_to_energy(wl_vis)               # 1.65 eV (red) to 3.26 eV (violet)
+    cmap = plt.get_cmap("nipy_spectral")
+    if spectrum_flag == True:
+        if var_label == "energy":
+            cmap = plt.get_cmap("nipy_spectral")
+            colors = cmap(np.linspace(0, 1, 1000))
+            idx_sort = np.argsort(ev_vis)
+            colors_sorted = colors[idx_sort]
+            energy_cmap = ListedColormap(colors_sorted)
+            ev_min, ev_max = np.min(ev_vis), np.max(ev_vis)
+            grad = np.linspace(0, 1, 1000).reshape(1, -1)
+            grad = np.vstack([grad] * 10)
+            alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 2.0
+            alpha_vals = np.clip(alpha_vals, 0, 0.325)
+            alpha_grad = alpha_vals.reshape(1, -1)
+            alpha_grad = np.vstack([alpha_grad] * 10)
+            ymin, ymax = plt.ylim()
+            extent = [ev_min, ev_max, ymin, ymax]
+            plt.imshow(grad, aspect="auto", extent=extent, cmap=energy_cmap, alpha=alpha_grad*0.6, zorder=-12)
+        else:
+            grad = np.linspace(0, 1, 1000).reshape(1, -1)
+            grad = np.vstack([grad] * 10)
+            visible_spectrum_cmap = plt.cm.nipy_spectral
+            alpha_vals = np.sin(np.linspace(0, np.pi, 1000)) * 0.4
+            alpha_vals = np.clip(alpha_vals, 0, 1)
+            alpha_grad = np.tile(alpha_vals, (10, 1))
+            ymin, ymax = plt.ylim()
+            extent = [380, 750, ymin, ymax]
+            plt.imshow(grad, aspect="auto", extent=extent, cmap=visible_spectrum_cmap, alpha=alpha_grad*0.6, zorder=-12)
+    else: pass
+    # Axis labels
     plt.xlabel(xaxis_str)
     plt.ylabel(f"{formula_title}")
     plt.legend(loc="best")
     plt.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
     plt.tight_layout()
-
-# k-points match
