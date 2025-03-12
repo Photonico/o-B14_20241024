@@ -350,5 +350,5 @@ def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
             plt.axvline(x=pos, color=annotate_color[1], linestyle="--", alpha=0.8, zorder=1)
     if legend_loc is None or legend_loc is False: pass
     else: plt.legend(loc=legend_loc)
+    
     plt.tight_layout()
-    plt.show()
