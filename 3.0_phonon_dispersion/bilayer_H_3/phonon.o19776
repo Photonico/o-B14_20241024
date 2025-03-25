@@ -1,0 +1,195 @@
+Warning: no access to tty (Inappropriate ioctl for device).
+Thus no job control in this shell.
+Loading oneapi-2024.2/mkl/latest
+  Loading requirement: oneapi-2024.2/tbb/latest
+=>> PBS: job killed: mem 89791972kb exceeded limit 41943040kb
+Terminated
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          000015347363E730  Unknown               Unknown  Unknown
+vasp_std           0000000000E4A707  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          00001534736295D0  Unknown               Unknown  Unknown
+libc.so.6          0000153473629680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          000014768043E730  Unknown               Unknown  Unknown
+vasp_std           0000000000E4A774  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          00001476804295D0  Unknown               Unknown  Unknown
+libc.so.6          0000147680429680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          000014CC8D23E730  Unknown               Unknown  Unknown
+vasp_std           0000000000E4A76C  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          000014CC8D2295D0  Unknown               Unknown  Unknown
+libc.so.6          000014CC8D229680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          0000145EDCC3E730  Unknown               Unknown  Unknown
+vasp_std           0000000000E4A707  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          0000145EDCC295D0  Unknown               Unknown  Unknown
+libc.so.6          0000145EDCC29680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          0000154D4B83E730  Unknown               Unknown  Unknown
+vasp_std           0000000000E4A715  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          0000154D4B8295D0  Unknown               Unknown  Unknown
+libc.so.6          0000154D4B829680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          00001466F9E3E730  Unknown               Unknown  Unknown
+vasp_std           0000000000E4A734  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          00001466F9E295D0  Unknown               Unknown  Unknown
+libc.so.6          00001466F9E29680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          0000146D80E3E730  Unknown               Unknown  Unknown
+vasp_std           0000000000E4A715  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          0000146D80E295D0  Unknown               Unknown  Unknown
+libc.so.6          0000146D80E29680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          000014BA2123E730  Unknown               Unknown  Unknown
+libmkl_def.so.2    000014B5ADABD58C  mkl_blas_def_xdge     Unknown  Unknown
+libmkl_sequential  000014BA30A14392  mkl_blas_dgemv        Unknown  Unknown
+libmkl_intel_lp64  000014BA320C2895  mkl_blas__dgemv       Unknown  Unknown
+vasp_std           0000000000E4A8E4  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          000014BA212295D0  Unknown               Unknown  Unknown
+libc.so.6          000014BA21229680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          000014744C43E730  Unknown               Unknown  Unknown
+libmkl_def.so.2    0000146FD8C6D5B1  mkl_blas_def_xdge     Unknown  Unknown
+libmkl_sequential  000014745BBC8392  mkl_blas_dgemv        Unknown  Unknown
+libmkl_intel_lp64  000014745D276895  mkl_blas__dgemv       Unknown  Unknown
+vasp_std           0000000000E4A9A6  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          000014744C4295D0  Unknown               Unknown  Unknown
+libc.so.6          000014744C429680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          000014849323E730  Unknown               Unknown  Unknown
+libmkl_def.so.2    000014801F9515CB  mkl_blas_def_xdge     Unknown  Unknown
+libmkl_sequential  00001484A28BF392  mkl_blas_dgemv        Unknown  Unknown
+libmkl_intel_lp64  00001484A3F6D895  mkl_blas__dgemv       Unknown  Unknown
+vasp_std           0000000000E4A8E4  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          00001484932295D0  Unknown               Unknown  Unknown
+libc.so.6          0000148493229680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          000014D8D943E730  Unknown               Unknown  Unknown
+libmkl_def.so.2    000014D465BB85A5  mkl_blas_def_xdge     Unknown  Unknown
+libmkl_sequential  000014D8E8B21392  mkl_blas_dgemv        Unknown  Unknown
+libmkl_intel_lp64  000014D8EA1CF895  mkl_blas__dgemv       Unknown  Unknown
+vasp_std           0000000000E4A8E4  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          000014D8D94295D0  Unknown               Unknown  Unknown
+libc.so.6          000014D8D9429680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          000014B69183E730  Unknown               Unknown  Unknown
+libmkl_def.so.2    000014B21DF515C3  mkl_blas_def_xdge     Unknown  Unknown
+libmkl_sequential  000014B6A0EA9392  mkl_blas_dgemv        Unknown  Unknown
+libmkl_intel_lp64  000014B6A2557895  mkl_blas__dgemv       Unknown  Unknown
+vasp_std           0000000000E4A8E4  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          000014B6918295D0  Unknown               Unknown  Unknown
+libc.so.6          000014B691829680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          000014E877A3E730  Unknown               Unknown  Unknown
+libmkl_def.so.2    000014E4041155B1  mkl_blas_def_xdge     Unknown  Unknown
+libmkl_sequential  000014E887069392  mkl_blas_dgemv        Unknown  Unknown
+libmkl_intel_lp64  000014E888717895  mkl_blas__dgemv       Unknown  Unknown
+vasp_std           0000000000E4A9A6  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          000014E877A295D0  Unknown               Unknown  Unknown
+libc.so.6          000014E877A29680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          00001551D643E730  Unknown               Unknown  Unknown
+libmkl_def.so.2    0000154D62B52044  mkl_blas_def_xdge     Unknown  Unknown
+libmkl_sequential  00001551E5AAA392  mkl_blas_dgemv        Unknown  Unknown
+libmkl_intel_lp64  00001551E7158895  mkl_blas__dgemv       Unknown  Unknown
+vasp_std           0000000000E4A9A6  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          00001551D64295D0  Unknown               Unknown  Unknown
+libc.so.6          00001551D6429680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+libc.so.6          00001517A243E730  Unknown               Unknown  Unknown
+libmkl_def.so.2    000015132EB01597  mkl_blas_def_xdge     Unknown  Unknown
+libmkl_sequential  00001517B1A5D392  mkl_blas_dgemv        Unknown  Unknown
+libmkl_intel_lp64  00001517B310B895  mkl_blas__dgemv       Unknown  Unknown
+vasp_std           0000000000E4A9A6  Unknown               Unknown  Unknown
+vasp_std           0000000000E334B7  Unknown               Unknown  Unknown
+vasp_std           0000000000E8DDBF  Unknown               Unknown  Unknown
+vasp_std           00000000032A84F4  Unknown               Unknown  Unknown
+vasp_std           000000000044040D  Unknown               Unknown  Unknown
+libc.so.6          00001517A24295D0  Unknown               Unknown  Unknown
+libc.so.6          00001517A2429680  __libc_start_main     Unknown  Unknown
+vasp_std           0000000000440325  Unknown               Unknown  Unknown

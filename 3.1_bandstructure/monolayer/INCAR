@@ -34,7 +34,7 @@ ISMEAR = 0  # Gaussian Smearing
 # Electron Spin (1 for single layer / 2 for double layers)
 # ISPIN = 2       # 2 for spin-polarized calculations (collinear) are performed
 # Magnetic moment
-# MAGMON = 1
+# MAGMOM = 1
 
 # ## Ionic relaxation
 # # Number of steps for IOM   

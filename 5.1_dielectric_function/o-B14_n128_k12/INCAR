@@ -48,7 +48,7 @@ NBANDS = 128
 # ISPIN = 2
 
 # Magnetic moment (depends on system)
-# MAGMON = 1
+# MAGMOM = 1
 
 ## Ionic relaxation (not needed for optical properties)
 # Number of steps for IOM   

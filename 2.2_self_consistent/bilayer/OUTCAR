@@ -1,6 +1,6 @@
  vasp.6.5.0 16Dec24 (build Jan 08 2025 16:17:04) complex                        
   
- executed on             LinuxIFC date 2025.03.07  16:25:20
+ executed on             LinuxIFC date 2025.03.18  01:39:35
  running   42 mpi-ranks, on    1 nodes
  distrk:  each k-point on   42 cores,    1 groups
  distr:  one band on NCORE=   1 cores,   42 groups
@@ -1154,7 +1154,7 @@ Coulomb truncation method
  Maximum number of real-space cells   4x   4x   1
  Maximum number of reciprocal cells   2x   2x   7
 
-    FEWALD:  cpu time      0.0049: real time      0.0049
+    FEWALD:  cpu time      0.0012: real time      0.0013
 
 
 --------------------------------------- Ionic step        1  -------------------------------------------
@@ -1165,12 +1165,12 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   1)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1169: real time      0.1190
-    SETDIJ:  cpu time      0.0016: real time      0.0017
-     EDDAV:  cpu time     56.4807: real time     56.7990
-       DOS:  cpu time      0.0049: real time      0.0049
+    POTLOK:  cpu time      0.0726: real time      0.0732
+    SETDIJ:  cpu time      0.0015: real time      0.0015
+     EDDAV:  cpu time     23.4503: real time     23.5824
+       DOS:  cpu time      0.0009: real time      0.0010
     --------------------------------------------
-      LOOP:  cpu time     56.6044: real time     56.9252
+      LOOP:  cpu time     23.5257: real time     23.6587
 
  eigenvalue-minimisations  : 15120
  total energy-change (2. order) : 0.4894688E+03  (-0.3139311E+04)
@@ -1213,10 +1213,10 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   2)  ---------------------------------------
 
 
-     EDDAV:  cpu time     74.2874: real time     74.7015
-       DOS:  cpu time      0.0006: real time      0.0005
+     EDDAV:  cpu time     35.4121: real time     35.6037
+       DOS:  cpu time      0.0005: real time      0.0005
     --------------------------------------------
-      LOOP:  cpu time     74.2880: real time     74.7022
+      LOOP:  cpu time     35.4125: real time     35.6042
 
  eigenvalue-minimisations  : 24948
  total energy-change (2. order) :-0.6405372E+03  (-0.5912251E+03)
@@ -1259,10 +1259,10 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   3)  ---------------------------------------
 
 
-     EDDAV:  cpu time     56.1189: real time     56.4411
-       DOS:  cpu time      0.0006: real time      0.0006
+     EDDAV:  cpu time     32.8620: real time     33.0350
+       DOS:  cpu time      0.0009: real time      0.0009
     --------------------------------------------
-      LOOP:  cpu time     56.1193: real time     56.4410
+      LOOP:  cpu time     32.8631: real time     33.0362
 
  eigenvalue-minimisations  : 22680
  total energy-change (2. order) :-0.4503132E+02  (-0.4442266E+02)
@@ -1305,10 +1305,10 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   4)  ---------------------------------------
 
 
-     EDDAV:  cpu time     44.0132: real time     44.2605
-       DOS:  cpu time      0.0046: real time      0.0046
+     EDDAV:  cpu time     31.5552: real time     31.7218
+       DOS:  cpu time      0.0008: real time      0.0008
     --------------------------------------------
-      LOOP:  cpu time     44.0178: real time     44.2651
+      LOOP:  cpu time     31.5556: real time     31.7219
 
  eigenvalue-minimisations  : 21798
  total energy-change (2. order) :-0.6812272E+00  (-0.6804257E+00)
@@ -1351,12 +1351,12 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   5)  ---------------------------------------
 
 
-     EDDAV:  cpu time     73.7761: real time     74.1871
-       DOS:  cpu time      0.0006: real time      0.0006
-    CHARGE:  cpu time      1.1183: real time      1.1253
-    MIXING:  cpu time      0.0052: real time      0.0052
+     EDDAV:  cpu time     31.9241: real time     32.0865
+       DOS:  cpu time      0.0005: real time      0.0005
+    CHARGE:  cpu time      0.7293: real time      0.7328
+    MIXING:  cpu time      0.0017: real time      0.0017
     --------------------------------------------
-      LOOP:  cpu time     74.9000: real time     75.3180
+      LOOP:  cpu time     32.6553: real time     32.8213
 
  eigenvalue-minimisations  : 23268
  total energy-change (2. order) :-0.1734861E-01  (-0.1734394E-01)
@@ -1404,14 +1404,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   6)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1010: real time      0.1022
-    SETDIJ:  cpu time      0.0011: real time      0.0011
-     EDDAV:  cpu time     46.6651: real time     46.9336
+    POTLOK:  cpu time      0.0556: real time      0.0567
+    SETDIJ:  cpu time      0.0013: real time      0.0013
+     EDDAV:  cpu time     30.0616: real time     30.2230
        DOS:  cpu time      0.0006: real time      0.0006
-    CHARGE:  cpu time      1.1061: real time      1.1128
-    MIXING:  cpu time      0.0055: real time      0.0055
+    CHARGE:  cpu time      0.7268: real time      0.7305
+    MIXING:  cpu time      0.0014: real time      0.0014
     --------------------------------------------
-      LOOP:  cpu time     47.8793: real time     48.1557
+      LOOP:  cpu time     30.8474: real time     31.0135
 
  eigenvalue-minimisations  : 22638
  total energy-change (2. order) : 0.1452095E+02  (-0.1159651E+01)
@@ -1463,14 +1463,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   7)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1006: real time      0.1027
-    SETDIJ:  cpu time      0.0052: real time      0.0052
-     EDDAV:  cpu time     53.4546: real time     53.7623
+    POTLOK:  cpu time      0.0597: real time      0.0600
+    SETDIJ:  cpu time      0.0013: real time      0.0013
+     EDDAV:  cpu time     30.6416: real time     30.7971
        DOS:  cpu time      0.0007: real time      0.0007
-    CHARGE:  cpu time      1.1291: real time      1.1361
-    MIXING:  cpu time      0.0072: real time      0.0073
+    CHARGE:  cpu time      1.1324: real time      1.1379
+    MIXING:  cpu time      0.0027: real time      0.0027
     --------------------------------------------
-      LOOP:  cpu time     54.6974: real time     55.0144
+      LOOP:  cpu time     31.8384: real time     31.9997
 
  eigenvalue-minimisations  : 22680
  total energy-change (2. order) : 0.4310981E+01  (-0.1053743E+01)
@@ -1503,7 +1503,7 @@ Coulomb truncation method
   -Hartree energ DENC   =    -23428.51479127
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       201.91768821
-  PAW double counting   =      6386.25806693    -6364.72935974
+  PAW double counting   =      6386.25806693    -6364.72935973
   entropy T*S    EENTRO =        -0.00008646
   eigenvalues    EBANDS =      -855.88295954
   atomic energy  EATOM  =      1992.74882108
@@ -1522,14 +1522,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   8)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1018: real time      0.1036
-    SETDIJ:  cpu time      0.0054: real time      0.0054
-     EDDAV:  cpu time     52.7662: real time     53.0699
-       DOS:  cpu time      0.0007: real time      0.0007
-    CHARGE:  cpu time      1.0911: real time      1.0979
-    MIXING:  cpu time      0.0053: real time      0.0053
+    POTLOK:  cpu time      0.0587: real time      0.0597
+    SETDIJ:  cpu time      0.0016: real time      0.0016
+     EDDAV:  cpu time     30.4194: real time     30.5716
+       DOS:  cpu time      0.0006: real time      0.0006
+    CHARGE:  cpu time      1.1762: real time      1.1824
+    MIXING:  cpu time      0.0017: real time      0.0017
     --------------------------------------------
-      LOOP:  cpu time     53.9705: real time     54.2829
+      LOOP:  cpu time     31.6583: real time     31.8177
 
  eigenvalue-minimisations  : 22638
  total energy-change (2. order) : 0.1609101E+00  (-0.1031723E+00)
@@ -1562,7 +1562,7 @@ Coulomb truncation method
   -Hartree energ DENC   =    -23465.72551241
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       202.78246772
-  PAW double counting   =      7444.06058793    -7422.58508738
+  PAW double counting   =      7444.06058792    -7422.58508737
   entropy T*S    EENTRO =        -0.00026771
   eigenvalues    EBANDS =      -819.32254312
   atomic energy  EATOM  =      1992.74882108
@@ -1581,14 +1581,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   9)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.0976: real time      0.0982
-    SETDIJ:  cpu time      0.0051: real time      0.0051
-     EDDAV:  cpu time     45.0924: real time     45.3517
-       DOS:  cpu time      0.0008: real time      0.0008
-    CHARGE:  cpu time      1.1055: real time      1.1124
-    MIXING:  cpu time      0.0020: real time      0.0021
+    POTLOK:  cpu time      0.0591: real time      0.0594
+    SETDIJ:  cpu time      0.0012: real time      0.0012
+     EDDAV:  cpu time     30.5880: real time     30.7407
+       DOS:  cpu time      0.0011: real time      0.0011
+    CHARGE:  cpu time      1.0455: real time      1.0511
+    MIXING:  cpu time      0.0013: real time      0.0013
     --------------------------------------------
-      LOOP:  cpu time     46.3033: real time     46.5702
+      LOOP:  cpu time     31.6961: real time     31.8547
 
  eigenvalue-minimisations  : 22554
  total energy-change (2. order) : 0.7748935E-01  (-0.9177540E-02)
@@ -1621,7 +1621,7 @@ Coulomb truncation method
   -Hartree energ DENC   =    -23495.29510769
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.19835237
-  PAW double counting   =      7803.79214123    -7782.27743195
+  PAW double counting   =      7803.79214122    -7782.27743194
   entropy T*S    EENTRO =        -0.00097165
   eigenvalues    EBANDS =      -790.12967303
   atomic energy  EATOM  =      1992.74882108
@@ -1640,14 +1640,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  10)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1164: real time      0.1180
-    SETDIJ:  cpu time      0.0050: real time      0.0051
-     EDDAV:  cpu time     45.2401: real time     45.4990
-       DOS:  cpu time      0.0010: real time      0.0010
-    CHARGE:  cpu time      1.0953: real time      1.1020
-    MIXING:  cpu time      0.0015: real time      0.0015
+    POTLOK:  cpu time      0.0485: real time      0.0498
+    SETDIJ:  cpu time      0.0011: real time      0.0011
+     EDDAV:  cpu time     29.0763: real time     29.2229
+       DOS:  cpu time      0.0007: real time      0.0007
+    CHARGE:  cpu time      1.0095: real time      1.0150
+    MIXING:  cpu time      0.0017: real time      0.0017
     --------------------------------------------
-      LOOP:  cpu time     46.4594: real time     46.7266
+      LOOP:  cpu time     30.1377: real time     30.2912
 
  eigenvalue-minimisations  : 21252
  total energy-change (2. order) : 0.1581953E-01  (-0.1294150E-02)
@@ -1680,7 +1680,7 @@ Coulomb truncation method
   -Hartree energ DENC   =    -23508.08612187
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.28779520
-  PAW double counting   =      7759.23849176    -7737.68720974
+  PAW double counting   =      7759.23849177    -7737.68720975
   entropy T*S    EENTRO =        -0.00107981
   eigenvalues    EBANDS =      -777.44856271
   atomic energy  EATOM  =      1992.74882108
@@ -1699,14 +1699,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  11)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1029: real time      0.1037
+    POTLOK:  cpu time      0.0591: real time      0.0594
     SETDIJ:  cpu time      0.0012: real time      0.0012
-     EDDAV:  cpu time     44.8890: real time     45.1464
-       DOS:  cpu time      0.0048: real time      0.0048
-    CHARGE:  cpu time      1.1399: real time      1.1472
-    MIXING:  cpu time      0.0053: real time      0.0053
+     EDDAV:  cpu time     30.7911: real time     30.9452
+       DOS:  cpu time      0.0007: real time      0.0007
+    CHARGE:  cpu time      1.0186: real time      1.0240
+    MIXING:  cpu time      0.0016: real time      0.0016
     --------------------------------------------
-      LOOP:  cpu time     46.1432: real time     46.4087
+      LOOP:  cpu time     31.8723: real time     32.0322
 
  eigenvalue-minimisations  : 22554
  total energy-change (2. order) : 0.1689948E-01  (-0.1385594E-02)
@@ -1739,7 +1739,7 @@ Coulomb truncation method
   -Hartree energ DENC   =    -23529.60572668
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.47650970
-  PAW double counting   =      7764.41900874    -7742.85340905
+  PAW double counting   =      7764.41900873    -7742.85340903
   entropy T*S    EENTRO =        -0.00226553
   eigenvalues    EBANDS =      -756.11365465
   atomic energy  EATOM  =      1992.74882108
@@ -1758,14 +1758,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  12)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1001: real time      0.1038
-    SETDIJ:  cpu time      0.0050: real time      0.0050
-     EDDAV:  cpu time     51.4705: real time     51.7616
+    POTLOK:  cpu time      0.0568: real time      0.0578
+    SETDIJ:  cpu time      0.0013: real time      0.0013
+     EDDAV:  cpu time     29.8497: real time     29.9996
        DOS:  cpu time      0.0007: real time      0.0007
-    CHARGE:  cpu time      1.0999: real time      1.1062
-    MIXING:  cpu time      0.0057: real time      0.0057
+    CHARGE:  cpu time      1.1273: real time      1.1330
+    MIXING:  cpu time      0.0019: real time      0.0019
     --------------------------------------------
-      LOOP:  cpu time     52.6819: real time     52.9830
+      LOOP:  cpu time     31.0376: real time     31.1942
 
  eigenvalue-minimisations  : 22302
  total energy-change (2. order) : 0.7582392E-03  (-0.4292825E-03)
@@ -1798,7 +1798,7 @@ Coulomb truncation method
   -Hartree energ DENC   =    -23544.25065519
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.56741486
-  PAW double counting   =      7753.52070736    -7731.94857809
+  PAW double counting   =      7753.52070735    -7731.94857808
   entropy T*S    EENTRO =        -0.00307048
   eigenvalues    EBANDS =      -741.56439137
   atomic energy  EATOM  =      1992.74882108
@@ -1817,14 +1817,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  13)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1023: real time      0.1036
-    SETDIJ:  cpu time      0.0051: real time      0.0051
-     EDDAV:  cpu time     56.9388: real time     57.2683
-       DOS:  cpu time      0.0009: real time      0.0009
-    CHARGE:  cpu time      1.1212: real time      1.1281
-    MIXING:  cpu time      0.0065: real time      0.0065
+    POTLOK:  cpu time      0.0575: real time      0.0578
+    SETDIJ:  cpu time      0.0014: real time      0.0014
+     EDDAV:  cpu time     28.4863: real time     28.6293
+       DOS:  cpu time      0.0006: real time      0.0006
+    CHARGE:  cpu time      1.0674: real time      1.0728
+    MIXING:  cpu time      0.0015: real time      0.0015
     --------------------------------------------
-      LOOP:  cpu time     58.1747: real time     58.5125
+      LOOP:  cpu time     29.6147: real time     29.7634
 
  eigenvalue-minimisations  : 21420
  total energy-change (2. order) :-0.2874579E-02  (-0.1551353E-03)
@@ -1854,12 +1854,12 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87820493
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23553.02286771
+  -Hartree energ DENC   =    -23553.02286772
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.59307939
-  PAW double counting   =      7747.67021096    -7726.10330521
+  PAW double counting   =      7747.67021097    -7726.10330522
   entropy T*S    EENTRO =        -0.00322312
-  eigenvalues    EBANDS =      -732.81522355
+  eigenvalues    EBANDS =      -732.81522354
   atomic energy  EATOM  =      1992.74882108
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
@@ -1876,14 +1876,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  14)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1104: real time      0.1118
-    SETDIJ:  cpu time      0.0054: real time      0.0055
-     EDDAV:  cpu time     48.7227: real time     49.0028
-       DOS:  cpu time      0.0008: real time      0.0008
-    CHARGE:  cpu time      1.1155: real time      1.1220
-    MIXING:  cpu time      0.0058: real time      0.0059
+    POTLOK:  cpu time      0.0585: real time      0.0594
+    SETDIJ:  cpu time      0.0012: real time      0.0012
+     EDDAV:  cpu time     27.5281: real time     27.6670
+       DOS:  cpu time      0.0007: real time      0.0007
+    CHARGE:  cpu time      1.1168: real time      1.1230
+    MIXING:  cpu time      0.0015: real time      0.0015
     --------------------------------------------
-      LOOP:  cpu time     49.9606: real time     50.2487
+      LOOP:  cpu time     28.7068: real time     28.8528
 
  eigenvalue-minimisations  : 20454
  total energy-change (2. order) :-0.2111145E-02  (-0.3964077E-04)
@@ -1916,7 +1916,7 @@ Coulomb truncation method
   -Hartree energ DENC   =    -23556.40489863
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.58791855
-  PAW double counting   =      7743.37257522    -7721.80586810
+  PAW double counting   =      7743.37257521    -7721.80586810
   entropy T*S    EENTRO =        -0.00313219
   eigenvalues    EBANDS =      -729.43004388
   atomic energy  EATOM  =      1992.74882108
@@ -1935,14 +1935,14 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  15)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1009: real time      0.1030
-    SETDIJ:  cpu time      0.0051: real time      0.0052
-     EDDAV:  cpu time     49.4673: real time     49.7501
-       DOS:  cpu time      0.0008: real time      0.0008
-    CHARGE:  cpu time      1.1304: real time      1.1374
-    MIXING:  cpu time      0.0056: real time      0.0056
+    POTLOK:  cpu time      0.0530: real time      0.0533
+    SETDIJ:  cpu time      0.0014: real time      0.0014
+     EDDAV:  cpu time     26.4043: real time     26.5384
+       DOS:  cpu time      0.0010: real time      0.0010
+    CHARGE:  cpu time      1.1972: real time      1.2037
+    MIXING:  cpu time      0.0017: real time      0.0017
     --------------------------------------------
-      LOOP:  cpu time     50.7101: real time     51.0021
+      LOOP:  cpu time     27.6586: real time     27.7995
 
  eigenvalue-minimisations  : 19614
  total energy-change (2. order) :-0.2959507E-02  (-0.2975448E-04)
@@ -1972,12 +1972,12 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87831167
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23558.01667780
+  -Hartree energ DENC   =    -23558.01667777
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.57926635
-  PAW double counting   =      7747.61035500    -7726.04229809
+  PAW double counting   =      7747.61035498    -7726.04229807
   entropy T*S    EENTRO =        -0.00317228
-  eigenvalues    EBANDS =      -727.81397982
+  eigenvalues    EBANDS =      -727.81397984
   atomic energy  EATOM  =      1992.74882108
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
@@ -1994,17 +1994,17 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  16)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1011: real time      0.1028
-    SETDIJ:  cpu time      0.0052: real time      0.0052
-     EDDAV:  cpu time     50.5561: real time     50.8483
-       DOS:  cpu time      0.0077: real time      0.0078
-    CHARGE:  cpu time      1.1665: real time      1.1735
-    MIXING:  cpu time      0.0106: real time      0.0106
+    POTLOK:  cpu time      0.0529: real time      0.0532
+    SETDIJ:  cpu time      0.0012: real time      0.0012
+     EDDAV:  cpu time     26.9460: real time     27.0837
+       DOS:  cpu time      0.0007: real time      0.0007
+    CHARGE:  cpu time      1.0947: real time      1.1004
+    MIXING:  cpu time      0.0017: real time      0.0017
     --------------------------------------------
-      LOOP:  cpu time     51.8472: real time     52.1481
+      LOOP:  cpu time     28.0971: real time     28.2409
 
  eigenvalue-minimisations  : 20202
- total energy-change (2. order) :-0.1514485E-02  (-0.1047548E-04)
+ total energy-change (2. order) :-0.1514485E-02  (-0.1047547E-04)
  number of electron      83.9999999 magnetization 
  augmentation part       -0.2885250 magnetization 
 
@@ -2032,10 +2032,10 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87843613
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23558.97859440
+  -Hartree energ DENC   =    -23558.97859441
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.58150387
-  PAW double counting   =      7747.75378117    -7726.18584363
+  PAW double counting   =      7747.75378120    -7726.18584365
   entropy T*S    EENTRO =        -0.00331683
   eigenvalues    EBANDS =      -726.85567575
   atomic energy  EATOM  =      1992.74882108
@@ -2054,17 +2054,17 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  17)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1355: real time      0.1366
-    SETDIJ:  cpu time      0.0076: real time      0.0076
-     EDDAV:  cpu time     47.9435: real time     48.2198
-       DOS:  cpu time      0.0077: real time      0.0077
-    CHARGE:  cpu time      1.1748: real time      1.1816
-    MIXING:  cpu time      0.0107: real time      0.0107
+    POTLOK:  cpu time      0.0535: real time      0.0550
+    SETDIJ:  cpu time      0.0012: real time      0.0012
+     EDDAV:  cpu time     26.4087: real time     26.5422
+       DOS:  cpu time      0.0009: real time      0.0009
+    CHARGE:  cpu time      1.1371: real time      1.1427
+    MIXING:  cpu time      0.0016: real time      0.0017
     --------------------------------------------
-      LOOP:  cpu time     49.2797: real time     49.5640
+      LOOP:  cpu time     27.6030: real time     27.7438
 
  eigenvalue-minimisations  : 19698
- total energy-change (2. order) :-0.9647530E-03  (-0.7530567E-05)
+ total energy-change (2. order) :-0.9647530E-03  (-0.7530566E-05)
  number of electron      83.9999999 magnetization 
  augmentation part       -0.2885306 magnetization 
 
@@ -2092,12 +2092,12 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87858939
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23559.38066810
+  -Hartree energ DENC   =    -23559.38066811
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.58116303
-  PAW double counting   =      7746.81265740    -7725.24421791
+  PAW double counting   =      7746.81265738    -7725.24421790
   entropy T*S    EENTRO =        -0.00335633
-  eigenvalues    EBANDS =      -726.45484168
+  eigenvalues    EBANDS =      -726.45484167
   atomic energy  EATOM  =      1992.74882108
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
@@ -2114,17 +2114,17 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  18)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.2373: real time      0.2415
-    SETDIJ:  cpu time      0.0386: real time      0.0388
-     EDDAV:  cpu time     43.8592: real time     44.1083
-       DOS:  cpu time      0.0008: real time      0.0008
-    CHARGE:  cpu time      1.0858: real time      1.0924
-    MIXING:  cpu time      0.0057: real time      0.0057
+    POTLOK:  cpu time      0.0591: real time      0.0617
+    SETDIJ:  cpu time      0.0012: real time      0.0013
+     EDDAV:  cpu time     27.6151: real time     27.7555
+       DOS:  cpu time      0.0007: real time      0.0007
+    CHARGE:  cpu time      1.1463: real time      1.1522
+    MIXING:  cpu time      0.0023: real time      0.0023
     --------------------------------------------
-      LOOP:  cpu time     45.2273: real time     45.4875
+      LOOP:  cpu time     28.8248: real time     28.9736
 
  eigenvalue-minimisations  : 20706
- total energy-change (2. order) :-0.2450032E-03  (-0.9872598E-06)
+ total energy-change (2. order) :-0.2450030E-03  (-0.9872587E-06)
  number of electron      83.9999999 magnetization 
  augmentation part       -0.2885398 magnetization 
 
@@ -2152,18 +2152,18 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87865989
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23559.51440740
+  -Hartree energ DENC   =    -23559.51440739
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.58198526
-  PAW double counting   =      7747.03319776    -7725.46512944
+  PAW double counting   =      7747.03319776    -7725.46512943
   entropy T*S    EENTRO =        -0.00339177
-  eigenvalues    EBANDS =      -726.32183351
+  eigenvalues    EBANDS =      -726.32183352
   atomic energy  EATOM  =      1992.74882108
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
   free energy    TOTEN  =      -177.70512926 eV
 
-  energy without entropy =     -177.70173749  energy(sigma->0) =     -177.70343338
+  energy without entropy =     -177.70173749  energy(sigma->0) =     -177.70343337
 
 
 --------------------------------------------------------------------------------------------------------
@@ -2174,17 +2174,17 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  19)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1093: real time      0.1108
-    SETDIJ:  cpu time      0.0053: real time      0.0053
-     EDDAV:  cpu time     47.1003: real time     47.3718
+    POTLOK:  cpu time      0.0580: real time      0.0583
+    SETDIJ:  cpu time      0.0011: real time      0.0011
+     EDDAV:  cpu time     27.1841: real time     27.3226
        DOS:  cpu time      0.0007: real time      0.0007
-    CHARGE:  cpu time      1.1402: real time      1.1471
-    MIXING:  cpu time      0.0061: real time      0.0061
+    CHARGE:  cpu time      1.1612: real time      1.1673
+    MIXING:  cpu time      0.0021: real time      0.0021
     --------------------------------------------
-      LOOP:  cpu time     48.3620: real time     48.6418
+      LOOP:  cpu time     28.4073: real time     28.5522
 
  eigenvalue-minimisations  : 20328
- total energy-change (2. order) :-0.1910303E-03  (-0.8183363E-06)
+ total energy-change (2. order) :-0.1910305E-03  (-0.8183359E-06)
  number of electron      83.9999999 magnetization 
  augmentation part       -0.2885488 magnetization 
 
@@ -2212,12 +2212,12 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87874672
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23559.57099475
+  -Hartree energ DENC   =    -23559.57099474
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.58160838
   PAW double counting   =      7746.74243683    -7725.17440929
   entropy T*S    EENTRO =        -0.00341580
-  eigenvalues    EBANDS =      -726.26508232
+  eigenvalues    EBANDS =      -726.26508233
   atomic energy  EATOM  =      1992.74882108
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
@@ -2234,17 +2234,17 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  20)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1087: real time      0.1101
-    SETDIJ:  cpu time      0.0013: real time      0.0013
-     EDDAV:  cpu time     67.8307: real time     68.2232
+    POTLOK:  cpu time      0.0534: real time      0.0550
+    SETDIJ:  cpu time      0.0011: real time      0.0011
+     EDDAV:  cpu time     25.4963: real time     25.6275
        DOS:  cpu time      0.0007: real time      0.0007
-    CHARGE:  cpu time      1.0988: real time      1.1065
-    MIXING:  cpu time      0.0067: real time      0.0068
+    CHARGE:  cpu time      1.1403: real time      1.1461
+    MIXING:  cpu time      0.0019: real time      0.0019
     --------------------------------------------
-      LOOP:  cpu time     69.0470: real time     69.4486
+      LOOP:  cpu time     26.6937: real time     26.8323
 
  eigenvalue-minimisations  : 18144
- total energy-change (2. order) :-0.2690195E-04  (-0.3639013E-07)
+ total energy-change (2. order) :-0.2690196E-04  (-0.3638952E-07)
  number of electron      83.9999999 magnetization 
  augmentation part       -0.2885465 magnetization 
 
@@ -2294,17 +2294,17 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  21)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.0987: real time      0.1001
-    SETDIJ:  cpu time      0.0012: real time      0.0012
-     EDDAV:  cpu time     47.0433: real time     47.3176
-       DOS:  cpu time      0.0010: real time      0.0010
-    CHARGE:  cpu time      1.1269: real time      1.1340
-    MIXING:  cpu time      0.0021: real time      0.0021
+    POTLOK:  cpu time      0.0519: real time      0.0522
+    SETDIJ:  cpu time      0.0011: real time      0.0011
+     EDDAV:  cpu time     26.0632: real time     26.1982
+       DOS:  cpu time      0.0007: real time      0.0007
+    CHARGE:  cpu time      1.1545: real time      1.1605
+    MIXING:  cpu time      0.0019: real time      0.0019
     --------------------------------------------
-      LOOP:  cpu time     48.2732: real time     48.5561
+      LOOP:  cpu time     27.2732: real time     27.4145
 
  eigenvalue-minimisations  : 19026
- total energy-change (2. order) :-0.2308726E-04  (-0.6066690E-07)
+ total energy-change (2. order) :-0.2308711E-04  (-0.6066779E-07)
  number of electron      83.9999999 magnetization 
  augmentation part       -0.2885441 magnetization 
 
@@ -2332,12 +2332,12 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87878926
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23559.58881806
+  -Hartree energ DENC   =    -23559.58881807
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.58130450
-  PAW double counting   =      7746.97913707    -7725.41106867
+  PAW double counting   =      7746.97913709    -7725.41106869
   entropy T*S    EENTRO =        -0.00341506
-  eigenvalues    EBANDS =      -726.24708926
+  eigenvalues    EBANDS =      -726.24708925
   atomic energy  EATOM  =      1992.74882108
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
@@ -2354,17 +2354,17 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  22)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1184: real time      0.1283
-    SETDIJ:  cpu time      0.0069: real time      0.0069
-     EDDAV:  cpu time     55.2982: real time     55.6214
-       DOS:  cpu time      0.0047: real time      0.0048
-    CHARGE:  cpu time      1.1406: real time      1.1476
-    MIXING:  cpu time      0.0059: real time      0.0060
+    POTLOK:  cpu time      0.0585: real time      0.0589
+    SETDIJ:  cpu time      0.0013: real time      0.0013
+     EDDAV:  cpu time     24.7985: real time     24.9255
+       DOS:  cpu time      0.0006: real time      0.0006
+    CHARGE:  cpu time      1.1112: real time      1.1170
+    MIXING:  cpu time      0.0020: real time      0.0020
     --------------------------------------------
-      LOOP:  cpu time     56.5748: real time     56.9149
+      LOOP:  cpu time     25.9721: real time     26.1053
 
  eigenvalue-minimisations  : 17598
- total energy-change (2. order) :-0.4222119E-05  (-0.4602435E-08)
+ total energy-change (2. order) :-0.4222201E-05  (-0.4602336E-08)
  number of electron      83.9999999 magnetization 
  augmentation part       -0.2885439 magnetization 
 
@@ -2392,12 +2392,12 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87879488
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23559.60189269
+  -Hartree energ DENC   =    -23559.60189266
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.58137264
-  PAW double counting   =      7746.98801433    -7725.41993451
+  PAW double counting   =      7746.98801428    -7725.41993446
   entropy T*S    EENTRO =        -0.00341648
-  eigenvalues    EBANDS =      -726.23410261
+  eigenvalues    EBANDS =      -726.23410264
   atomic energy  EATOM  =      1992.74882108
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
@@ -2414,17 +2414,17 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  23)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.1073: real time      0.1086
-    SETDIJ:  cpu time      0.0014: real time      0.0014
-     EDDAV:  cpu time     40.0583: real time     40.2919
-       DOS:  cpu time      0.0047: real time      0.0048
-    CHARGE:  cpu time      1.1334: real time      1.1401
-    MIXING:  cpu time      0.0059: real time      0.0060
+    POTLOK:  cpu time      0.0542: real time      0.0568
+    SETDIJ:  cpu time      0.0012: real time      0.0012
+     EDDAV:  cpu time     20.5484: real time     20.6544
+       DOS:  cpu time      0.0010: real time      0.0010
+    CHARGE:  cpu time      1.1559: real time      1.1618
+    MIXING:  cpu time      0.0022: real time      0.0022
     --------------------------------------------
-      LOOP:  cpu time     41.3110: real time     41.5526
+      LOOP:  cpu time     21.7629: real time     21.8775
 
  eigenvalue-minimisations  : 13944
- total energy-change (2. order) :-0.2285549E-05  (-0.3574099E-08)
+ total energy-change (2. order) :-0.2285661E-05  (-0.3574518E-08)
  number of electron      83.9999999 magnetization 
  augmentation part       -0.2885442 magnetization 
 
@@ -2452,12 +2452,12 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87879888
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23559.60768890
+  -Hartree energ DENC   =    -23559.60768891
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.58136876
-  PAW double counting   =      7746.98055976    -7725.41248503
+  PAW double counting   =      7746.98055978    -7725.41248505
   entropy T*S    EENTRO =        -0.00341665
-  eigenvalues    EBANDS =      -726.22830356
+  eigenvalues    EBANDS =      -726.22830355
   atomic energy  EATOM  =      1992.74882108
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
@@ -2474,15 +2474,15 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(  24)  ---------------------------------------
 
 
-    POTLOK:  cpu time      0.0811: real time      0.0818
-    SETDIJ:  cpu time      0.0052: real time      0.0052
-     EDDAV:  cpu time     37.0415: real time     37.2509
-       DOS:  cpu time      0.0007: real time      0.0007
+    POTLOK:  cpu time      0.0576: real time      0.0579
+    SETDIJ:  cpu time      0.0011: real time      0.0011
+     EDDAV:  cpu time     24.2659: real time     24.3896
+       DOS:  cpu time      0.0009: real time      0.0009
     --------------------------------------------
-      LOOP:  cpu time     37.1288: real time     37.3389
+      LOOP:  cpu time     24.3258: real time     24.4498
 
  eigenvalue-minimisations  : 17178
- total energy-change (2. order) :-0.5748652E-06  (-0.2437262E-09)
+ total energy-change (2. order) :-0.5748789E-06  (-0.2438324E-09)
  number of electron      83.9999999 magnetization 
  augmentation part       -0.2885442 magnetization 
 
@@ -2500,12 +2500,12 @@ Coulomb truncation method
   ---------------------------------------------------
   alpha Z        PSCENC =        52.87879968
   Ewald energy   TEWEN  =     21837.35696886
-  -Hartree energ DENC   =    -23559.61040186
+  -Hartree energ DENC   =    -23559.61040187
   -exchange      EXHF   =         0.00000000
   -V(xc)+E(xc)   XCENC  =       203.58136013
-  PAW double counting   =      7746.97799630    -7725.40992136
+  PAW double counting   =      7746.97799628    -7725.40992134
   entropy T*S    EENTRO =        -0.00341647
-  eigenvalues    EBANDS =      -726.22558372
+  eigenvalues    EBANDS =      -726.22558370
   atomic energy  EATOM  =      1992.74882108
   Solvation  Ediel_sol  =         0.00000000
   ---------------------------------------------------
@@ -2533,10 +2533,10 @@ Coulomb truncation method
  
  E-fermi :  -1.4541     XC(G=0):  -3.0014     alpha+bet : -3.0468
 
- val. band max:       -1.4721981489   @ k =   0.0250   0.4722   0.0000
- cond. band min:      -1.3675104091   @ k =   0.0250   0.0278   0.0000
+ val. band max:       -1.4721981487   @ k =   0.0250   0.4722   0.0000
+ cond. band min:      -1.3675104089   @ k =   0.0250   0.0278   0.0000
  fundamental gap:      0.1046877398
- Fermi energy:        -1.4540724001
+ Fermi energy:        -1.4540723999
 
  k-point     1 :       0.0250    0.0278    0.0000
   band No.  band energies     occupation 
@@ -10399,13 +10399,13 @@ Coulomb truncation method
 ------------------------ aborting loop because EDIFF is reached ----------------------------------------
 
 
-    CHARGE:  cpu time      1.1743: real time      1.1815
-    FORLOC:  cpu time      0.0088: real time      0.0088
-    FORNL :  cpu time     15.8689: real time     15.9670
-    STRESS:  cpu time     39.1970: real time     39.4559
-    FORCOR:  cpu time      0.1175: real time      0.1181
-    FORHAR:  cpu time      0.0310: real time      0.0312
-    MIXING:  cpu time      0.0021: real time      0.0021
+    CHARGE:  cpu time      1.1135: real time      1.1192
+    FORLOC:  cpu time      0.0056: real time      0.0056
+    FORNL :  cpu time      7.9055: real time      7.9547
+    STRESS:  cpu time     21.4166: real time     21.5543
+    FORCOR:  cpu time      0.0481: real time      0.0483
+    FORHAR:  cpu time      0.0149: real time      0.0149
+    MIXING:  cpu time      0.0018: real time      0.0018
     OFIELD:  cpu time      0.0000: real time      0.0000
 
  ---------------------------------------------------------------------------------------------
@@ -10419,7 +10419,7 @@ Coulomb truncation method
  E6    (eV) :    -2.0729
  E8    (eV) :    -1.0803
  % E8        : 34.26
-    FORVDW:  cpu time      0.0288: real time      0.0399
+    FORVDW:  cpu time      0.0256: real time      0.0360
 
   FORCE on cell =-STRESS in cart. coord.  units (eV):
   Direction    XX          YY          ZZ          XY          YZ          ZX
@@ -10430,7 +10430,7 @@ Coulomb truncation method
   E(xc)    -270.13371  -270.10129  -273.59051     0.00000     0.00000     0.00000
   Local  -47280.99215-47158.16405 47011.49125     0.00000     0.00000     0.00000
   n-local   -26.29047   -28.90210   -22.36220    -0.10797    -0.00000    -0.00000
-  augment     2.10302     2.10072     2.51260     0.00000     0.00000     0.00000
+  augment     2.10302     2.10072     2.51260     0.00000     0.00000    -0.00000
   Kinetic   908.30339   916.52460   940.28251    -0.00237     0.00000    -0.00000
   Fock        0.00000     0.00000     0.00000     0.00000     0.00000     0.00000
   vdW        -3.32581    -3.27179    -2.07081    -0.00000    -0.00000    -0.00000
@@ -10472,20 +10472,20 @@ Coulomb truncation method
    -.313E+02 -.540E+02 -.229E+03   0.342E+02 0.587E+02 0.229E+03   -.289E+01 -.468E+01 0.437E+00   -.510E-05 -.161E-04 0.216E-04
    0.313E+02 0.540E+02 0.229E+03   -.342E+02 -.587E+02 -.229E+03   0.289E+01 0.468E+01 -.437E+00   0.510E-05 0.161E-04 -.216E-04
    0.313E+02 0.540E+02 -.229E+03   -.342E+02 -.587E+02 0.229E+03   0.289E+01 0.468E+01 0.437E+00   0.510E-05 0.161E-04 0.216E-04
-   0.391E-07 -.144E+02 0.424E+02   0.150E-07 0.150E+02 -.363E+02   -.434E-18 -.585E+00 -.615E+01   -.610E-13 -.476E-05 -.863E-06
-   0.313E-07 -.150E+02 -.435E+03   0.272E-07 0.156E+02 0.438E+03   0.173E-17 -.592E+00 -.241E+01   -.190E-13 -.484E-05 0.394E-04
-   0.475E-07 0.150E+02 0.435E+03   0.357E-07 -.156E+02 -.438E+03   0.173E-17 0.592E+00 0.241E+01   0.534E-13 0.484E-05 -.394E-04
-   0.599E-07 0.144E+02 -.424E+02   0.246E-07 -.150E+02 0.363E+02   0.434E-18 0.585E+00 0.615E+01   0.865E-13 0.476E-05 0.865E-06
-   0.304E-07 -.150E+02 0.435E+03   0.272E-07 0.156E+02 -.438E+03   0.000E+00 -.592E+00 0.241E+01   -.359E-13 -.484E-05 -.394E-04
-   0.392E-07 -.144E+02 -.424E+02   0.150E-07 0.150E+02 0.363E+02   0.434E-18 -.585E+00 0.615E+01   -.524E-13 -.476E-05 0.865E-06
-   0.600E-07 0.144E+02 0.424E+02   0.246E-07 -.150E+02 -.363E+02   -.434E-18 0.585E+00 -.615E+01   0.762E-13 0.476E-05 -.863E-06
-   0.467E-07 0.150E+02 -.435E+03   0.357E-07 -.156E+02 0.438E+03   0.000E+00 0.592E+00 -.241E+01   0.748E-13 0.484E-05 0.394E-04
-   0.173E-07 -.609E+02 0.241E+03   0.883E-07 0.653E+02 -.241E+03   0.000E+00 -.444E+01 -.170E-01   0.456E-13 -.121E-04 -.218E-04
-   0.120E-07 -.609E+02 -.241E+03   0.883E-07 0.653E+02 0.241E+03   0.000E+00 -.444E+01 0.170E-01   0.495E-13 -.121E-04 0.218E-04
-   0.684E-08 0.609E+02 0.241E+03   0.480E-07 -.653E+02 -.241E+03   0.000E+00 0.444E+01 -.170E-01   -.654E-13 0.121E-04 -.218E-04
-   0.122E-07 0.609E+02 -.241E+03   0.480E-07 -.653E+02 0.241E+03   0.000E+00 0.444E+01 0.170E-01   -.735E-13 0.121E-04 0.218E-04
+   0.391E-07 -.144E+02 0.424E+02   0.150E-07 0.150E+02 -.363E+02   0.434E-18 -.585E+00 -.615E+01   -.705E-13 -.476E-05 -.863E-06
+   0.313E-07 -.150E+02 -.435E+03   0.272E-07 0.156E+02 0.438E+03   -.260E-17 -.592E+00 -.241E+01   -.364E-13 -.484E-05 0.394E-04
+   0.475E-07 0.150E+02 0.435E+03   0.357E-07 -.156E+02 -.438E+03   0.260E-17 0.592E+00 0.241E+01   0.519E-13 0.484E-05 -.394E-04
+   0.599E-07 0.144E+02 -.424E+02   0.246E-07 -.150E+02 0.363E+02   -.434E-18 0.585E+00 0.615E+01   0.732E-13 0.476E-05 0.866E-06
+   0.304E-07 -.150E+02 0.435E+03   0.272E-07 0.156E+02 -.438E+03   0.867E-18 -.592E+00 0.241E+01   -.400E-13 -.484E-05 -.394E-04
+   0.392E-07 -.144E+02 -.424E+02   0.150E-07 0.150E+02 0.363E+02   0.000E+00 -.585E+00 0.615E+01   -.685E-13 -.476E-05 0.866E-06
+   0.600E-07 0.144E+02 0.424E+02   0.246E-07 -.150E+02 -.363E+02   0.000E+00 0.585E+00 -.615E+01   0.692E-13 0.476E-05 -.863E-06
+   0.467E-07 0.150E+02 -.435E+03   0.357E-07 -.156E+02 0.438E+03   0.867E-18 0.592E+00 -.241E+01   0.567E-13 0.484E-05 0.394E-04
+   0.173E-07 -.609E+02 0.241E+03   0.883E-07 0.653E+02 -.241E+03   -.520E-17 -.444E+01 -.170E-01   0.479E-13 -.121E-04 -.218E-04
+   0.120E-07 -.609E+02 -.241E+03   0.883E-07 0.653E+02 0.241E+03   0.347E-17 -.444E+01 0.170E-01   0.507E-13 -.121E-04 0.218E-04
+   0.684E-08 0.609E+02 0.241E+03   0.480E-07 -.653E+02 -.241E+03   -.347E-17 0.444E+01 -.170E-01   -.688E-13 0.121E-04 -.218E-04
+   0.122E-07 0.609E+02 -.241E+03   0.480E-07 -.653E+02 0.241E+03   0.173E-17 0.444E+01 0.170E-01   -.704E-13 0.121E-04 0.218E-04
  -----------------------------------------------------------------------------------------------
-   0.267E-06 0.359E-04 -.109E-03   -.246E-14 0.142E-13 0.114E-12   -.885E-15 0.000E+00 0.437E-15   0.155E-12 -.499E-10 0.324E-07
+   0.267E-06 0.359E-04 -.109E-03   -.246E-14 0.142E-13 0.114E-12   -.178E-14 -.533E-14 -.892E-15   0.458E-13 -.499E-10 0.324E-07
  
  
  POSITION                                       TOTAL-FORCE (eV/Angst)
@@ -10506,16 +10506,16 @@ Coulomb truncation method
       5.15923      5.73474      5.95935         0.008208      0.005462     -0.008626
       0.56027      0.61436      2.12876        -0.008208     -0.005462      0.008626
       0.56027      0.61436      5.95935        -0.008208     -0.005462     -0.008626
-      4.28962      4.59336      3.19746        -0.000000     -0.001847      0.006734
+      4.28962      4.59336      3.19746         0.000000     -0.001847      0.006734
       4.28962      4.59125      6.83984         0.000000     -0.002282      0.024141
-      1.42987      1.75784      1.24827        -0.000000      0.002282     -0.024141
-      1.42987      1.75573      4.89066        -0.000000      0.001847     -0.006734
-      4.28962      4.59125      1.24827        -0.000000     -0.002282     -0.024141
-      4.28962      4.59336      4.89066        -0.000000     -0.001847     -0.006734
-      1.42987      1.75573      3.19746        -0.000000      0.001847      0.006734
-      1.42987      1.75784      6.83984        -0.000000      0.002282      0.024141
-      1.42987      3.28019      2.07787        -0.000000     -0.003321      0.001896
-      1.42987      3.28019      6.01025        -0.000000     -0.003321     -0.001896
+      1.42987      1.75784      1.24827         0.000000      0.002282     -0.024141
+      1.42987      1.75573      4.89066         0.000000      0.001847     -0.006734
+      4.28962      4.59125      1.24827         0.000000     -0.002282     -0.024141
+      4.28962      4.59336      4.89066         0.000000     -0.001847     -0.006734
+      1.42987      1.75573      3.19746         0.000000      0.001847      0.006734
+      1.42987      1.75784      6.83984         0.000000      0.002282      0.024141
+      1.42987      3.28019      2.07787         0.000000     -0.003321      0.001896
+      1.42987      3.28019      6.01025         0.000000     -0.003321     -0.001896
       4.28962      3.06890      2.07787         0.000000      0.003321      0.001896
       4.28962      3.06890      6.01025         0.000000      0.003321     -0.001896
  -----------------------------------------------------------------------------------
@@ -10537,14 +10537,14 @@ Coulomb truncation method
 --------------------------------------------------------------------------------------------------------
 
 
-    POTLOK:  cpu time      0.1190: real time      0.1197
+    POTLOK:  cpu time      0.0554: real time      0.0557
 
 
 --------------------------------------------------------------------------------------------------------
 
 
  writing wavefunctions
-     LOOP+:  cpu time   1380.4456: real time   1401.8402
+     LOOP+:  cpu time    740.9188: real time    775.0542
  vacuum level on the upper side and lower side of the slab         1.800         1.827
     4ORBIT:  cpu time      0.0000: real time      0.0000
 
@@ -10563,14 +10563,14 @@ Coulomb truncation method
  General timing and accounting informations for this job:
  ========================================================
   
-                  Total CPU time used (sec):     1400.405
-                            User time (sec):      975.228
-                          System time (sec):      425.176
-                         Elapsed time (sec):     1424.665
+                  Total CPU time used (sec):      757.453
+                            User time (sec):      712.641
+                          System time (sec):       44.812
+                         Elapsed time (sec):      794.353
   
-                   Maximum memory used (kb):      728072.
+                   Maximum memory used (kb):      727204.
                    Average memory used (kb):          N/A
   
-                          Minor page faults:        37867
-                          Major page faults:          488
-                 Voluntary context switches:        38828
+                          Minor page faults:        36996
+                          Major page faults:           60
+                 Voluntary context switches:        59989
