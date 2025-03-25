@@ -5,8 +5,8 @@
   <i name="version" type="string">6.5.0  </i>
   <i name="subversion" type="string">16Dec24 (build Jan 08 2025 16:17:04) complex                          parallel </i>
   <i name="platform" type="string">LinuxIFC </i>
-  <i name="date" type="string">2025 03 07 </i>
-  <i name="time" type="string">16:25:20 </i>
+  <i name="date" type="string">2025 03 18 </i>
+  <i name="time" type="string">01:39:35 </i>
  </generator>
  <incar>
   <i type="string" name="SYSTEM">SCF</i>
@@ -727,8 +727,8 @@
  </structure>
  <calculation>
   <scstep>
-   <time name="dav">   56.48   56.80</time>
-   <time name="total">   56.60   56.93</time>
+   <time name="dav">   23.45   23.58</time>
+   <time name="total">   23.53   23.66</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00000068 </v>
     <i name="Tr[quadrupol]">   -532.45282600 </i>
@@ -752,8 +752,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   74.29   74.70</time>
-   <time name="total">   74.29   74.70</time>
+   <time name="dav">   35.41   35.60</time>
+   <time name="total">   35.41   35.60</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00000068 </v>
     <i name="Tr[quadrupol]">   -532.45282600 </i>
@@ -768,8 +768,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   56.12   56.44</time>
-   <time name="total">   56.12   56.44</time>
+   <time name="dav">   32.86   33.03</time>
+   <time name="total">   32.86   33.04</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00000068 </v>
     <i name="Tr[quadrupol]">   -532.45282600 </i>
@@ -784,8 +784,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   44.01   44.26</time>
-   <time name="total">   44.02   44.27</time>
+   <time name="dav">   31.56   31.72</time>
+   <time name="total">   31.56   31.72</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00000068 </v>
     <i name="Tr[quadrupol]">   -532.45282600 </i>
@@ -800,8 +800,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   73.78   74.19</time>
-   <time name="total">   74.90   75.32</time>
+   <time name="dav">   31.92   32.09</time>
+   <time name="total">   32.66   32.82</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00000068 </v>
     <i name="Tr[quadrupol]">   -532.45282600 </i>
@@ -816,8 +816,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   46.67   46.93</time>
-   <time name="total">   47.88   48.16</time>
+   <time name="dav">   30.06   30.22</time>
+   <time name="total">   30.85   31.01</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00088875 </v>
     <i name="Tr[quadrupol]">   -535.67192824 </i>
@@ -832,8 +832,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   53.45   53.76</time>
-   <time name="total">   54.70   55.01</time>
+   <time name="dav">   30.64   30.80</time>
+   <time name="total">   31.84   32.00</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00110448 </v>
     <i name="Tr[quadrupol]">   -539.03062140 </i>
@@ -848,8 +848,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   52.77   53.07</time>
-   <time name="total">   53.97   54.28</time>
+   <time name="dav">   30.42   30.57</time>
+   <time name="total">   31.66   31.82</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00072747 </v>
     <i name="Tr[quadrupol]">   -540.58911420 </i>
@@ -864,8 +864,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   45.09   45.35</time>
-   <time name="total">   46.30   46.57</time>
+   <time name="dav">   30.59   30.74</time>
+   <time name="total">   31.70   31.85</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00035444 </v>
     <i name="Tr[quadrupol]">   -542.05705716 </i>
@@ -880,8 +880,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   45.24   45.50</time>
-   <time name="total">   46.46   46.73</time>
+   <time name="dav">   29.08   29.22</time>
+   <time name="total">   30.14   30.29</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00003799 </v>
     <i name="Tr[quadrupol]">   -542.76106008 </i>
@@ -896,8 +896,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   44.89   45.15</time>
-   <time name="total">   46.14   46.41</time>
+   <time name="dav">   30.79   30.95</time>
+   <time name="total">   31.87   32.03</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00057147 </v>
     <i name="Tr[quadrupol]">   -543.86125940 </i>
@@ -912,8 +912,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   51.47   51.76</time>
-   <time name="total">   52.68   52.98</time>
+   <time name="dav">   29.85   30.00</time>
+   <time name="total">   31.04   31.19</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00101126 </v>
     <i name="Tr[quadrupol]">   -544.65711559 </i>
@@ -928,8 +928,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   56.94   57.27</time>
-   <time name="total">   58.17   58.51</time>
+   <time name="dav">   28.49   28.63</time>
+   <time name="total">   29.61   29.76</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00126330 </v>
     <i name="Tr[quadrupol]">   -545.14174233 </i>
@@ -944,8 +944,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   48.72   49.00</time>
-   <time name="total">   49.96   50.25</time>
+   <time name="dav">   27.53   27.67</time>
+   <time name="total">   28.71   28.85</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00124487 </v>
     <i name="Tr[quadrupol]">   -545.32526092 </i>
@@ -960,8 +960,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   49.47   49.75</time>
-   <time name="total">   50.71   51.00</time>
+   <time name="dav">   26.40   26.54</time>
+   <time name="total">   27.66   27.80</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00103579 </v>
     <i name="Tr[quadrupol]">   -545.40403670 </i>
@@ -976,8 +976,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   50.56   50.85</time>
-   <time name="total">   51.85   52.15</time>
+   <time name="dav">   26.95   27.08</time>
+   <time name="total">   28.10   28.24</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00077049 </v>
     <i name="Tr[quadrupol]">   -545.43656058 </i>
@@ -992,8 +992,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   47.94   48.22</time>
-   <time name="total">   49.28   49.56</time>
+   <time name="dav">   26.41   26.54</time>
+   <time name="total">   27.60   27.74</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00044378 </v>
     <i name="Tr[quadrupol]">   -545.44387443 </i>
@@ -1008,8 +1008,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   43.86   44.11</time>
-   <time name="total">   45.23   45.49</time>
+   <time name="dav">   27.62   27.76</time>
+   <time name="total">   28.82   28.97</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00029346 </v>
     <i name="Tr[quadrupol]">   -545.44453354 </i>
@@ -1020,12 +1020,12 @@
    <energy>
     <i name="e_fr_energy">   -177.70512926 </i>
     <i name="e_wo_entrp">   -177.70173749 </i>
-    <i name="e_0_energy">   -177.70343338 </i>
+    <i name="e_0_energy">   -177.70343337 </i>
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   47.10   47.37</time>
-   <time name="total">   48.36   48.64</time>
+   <time name="dav">   27.18   27.32</time>
+   <time name="total">   28.41   28.55</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00010834 </v>
     <i name="Tr[quadrupol]">   -545.44382767 </i>
@@ -1040,8 +1040,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   67.83   68.22</time>
-   <time name="total">   69.05   69.45</time>
+   <time name="dav">   25.50   25.63</time>
+   <time name="total">   26.69   26.83</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00006518 </v>
     <i name="Tr[quadrupol]">   -545.44437391 </i>
@@ -1056,8 +1056,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   47.04   47.32</time>
-   <time name="total">   48.27   48.56</time>
+   <time name="dav">   26.06   26.20</time>
+   <time name="total">   27.27   27.41</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00001764 </v>
     <i name="Tr[quadrupol]">   -545.44542125 </i>
@@ -1072,8 +1072,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   55.30   55.62</time>
-   <time name="total">   56.57   56.91</time>
+   <time name="dav">   24.80   24.93</time>
+   <time name="total">   25.97   26.11</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000       0.00000564 </v>
     <i name="Tr[quadrupol]">   -545.44679730 </i>
@@ -1088,11 +1088,11 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   40.06   40.29</time>
-   <time name="total">   41.31   41.55</time>
+   <time name="dav">   20.55   20.65</time>
+   <time name="total">   21.76   21.88</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00000288 </v>
-    <i name="Tr[quadrupol]">   -545.44782186 </i>
+    <i name="Tr[quadrupol]">   -545.44782185 </i>
     <i name="Echarged">      0.00000000 </i>
     <i name="Edipol_quadrupol">      0.00000000 </i>
     <i name="Eion">      0.00000000 </i>
@@ -1104,8 +1104,8 @@
    </energy>
   </scstep>
   <scstep>
-   <time name="dav">   37.04   37.25</time>
-   <time name="total">   37.13   37.34</time>
+   <time name="dav">   24.27   24.39</time>
+   <time name="total">   24.33   24.45</time>
    <dipole>
     <v name="dipole">      0.00000000       0.00000000      -0.00000458 </v>
     <i name="Tr[quadrupol]">   -545.44869546 </i>
@@ -1116,12 +1116,12 @@
    <energy>
     <i name="alphaZ">     52.87879968 </i>
     <i name="ewald">  21837.35696886 </i>
-    <i name="hartreedc"> -23559.61040186 </i>
+    <i name="hartreedc"> -23559.61040187 </i>
     <i name="XCdc">    203.58136013 </i>
-    <i name="pawpsdc">   7746.97799630 </i>
-    <i name="pawaedc">  -7725.40992136 </i>
+    <i name="pawpsdc">   7746.97799628 </i>
+    <i name="pawaedc">  -7725.40992134 </i>
     <i name="eentropy">     -0.00341647 </i>
-    <i name="bandstr">   -726.22558372 </i>
+    <i name="bandstr">   -726.22558370 </i>
     <i name="atom">   1992.74882108 </i>
     <i name="e_fr_energy">   -177.70537736 </i>
     <i name="e_wo_entrp">   -177.70196090 </i>
@@ -1190,30 +1190,30 @@
    <v>       0.00820787       0.00546155      -0.00862577 </v>
    <v>      -0.00820787      -0.00546155       0.00862577 </v>
    <v>      -0.00820787      -0.00546155      -0.00862577 </v>
-   <v>      -0.00000000      -0.00184707       0.00673418 </v>
+   <v>       0.00000000      -0.00184707       0.00673418 </v>
    <v>       0.00000000      -0.00228249       0.02414090 </v>
-   <v>      -0.00000000       0.00228249      -0.02414090 </v>
-   <v>      -0.00000000       0.00184707      -0.00673418 </v>
-   <v>      -0.00000000      -0.00228249      -0.02414090 </v>
-   <v>      -0.00000000      -0.00184707      -0.00673418 </v>
-   <v>      -0.00000000       0.00184707       0.00673418 </v>
-   <v>      -0.00000000       0.00228249       0.02414090 </v>
-   <v>      -0.00000000      -0.00332101       0.00189607 </v>
-   <v>      -0.00000000      -0.00332101      -0.00189607 </v>
+   <v>       0.00000000       0.00228249      -0.02414090 </v>
+   <v>       0.00000000       0.00184707      -0.00673418 </v>
+   <v>       0.00000000      -0.00228249      -0.02414090 </v>
+   <v>       0.00000000      -0.00184707      -0.00673418 </v>
+   <v>       0.00000000       0.00184707       0.00673418 </v>
+   <v>       0.00000000       0.00228249       0.02414090 </v>
+   <v>       0.00000000      -0.00332101       0.00189607 </v>
+   <v>       0.00000000      -0.00332101      -0.00189607 </v>
    <v>       0.00000000       0.00332101       0.00189607 </v>
    <v>       0.00000000       0.00332101      -0.00189607 </v>
   </varray>
   <varray name="stress" >
-   <v>      -0.15284087       0.00000000       0.00000000 </v>
+   <v>      -0.15284086      -0.00000000       0.00000000 </v>
    <v>       0.00000000      -0.07745491       0.00000000 </v>
-   <v>       0.00000000       0.00000000      -0.20368896 </v>
+   <v>       0.00000000       0.00000000      -0.20368897 </v>
   </varray>
   <energy>
    <i name="e_fr_energy">   -180.85854328 </i>
    <i name="e_wo_entrp">   -180.85512681 </i>
    <i name="e_0_energy">   -180.85683505 </i>
   </energy>
-  <time name="totalsc"> 1380.45 1401.84</time>
+  <time name="totalsc">  740.92  775.05</time>
   <eigenvalues>
    <array>
     <dimension dim="1">band</dimension>
@@ -9251,7 +9251,7 @@
        <r>     4.4357    19.0442   141.6907 </r>
        <r>     4.5255    19.7140   143.4607 </r>
        <r>     4.6152    20.8126   145.3294 </r>
-       <r>     4.7050    20.7363   147.1912 </r>
+       <r>     4.7050    20.7363   147.1911 </r>
        <r>     4.7948    20.3899   149.0218 </r>
        <r>     4.8846    20.6805   150.8786 </r>
        <r>     4.9744    20.4410   152.7139 </r>

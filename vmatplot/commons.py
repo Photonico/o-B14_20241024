@@ -3,10 +3,27 @@
 
 import xml.etree.ElementTree as ET
 import os
+import re
 import math
 import numpy as np
 
 from typing import Tuple, Union
+
+def check_spin(folder_directory):
+    outcar_path = os.path.join(folder_directory, 'OUTCAR')
+    if os.path.isfile(outcar_path):
+        try:
+            with open(outcar_path, "r") as f:
+                for line in f:
+                    if "ISPIN" in line:
+                        match = re.search(r'ISPIN\s*=\s*(\d)', line)
+                        if match:
+                            ispin = int(match.group(1))
+                            return ispin == 2
+        except Exception as e:
+            print(f"Error reading OUTCAR: {e}")
+    else: print("Cannot find OUTCAR")
+    return False
 
 def vector_length(vec):
     return math.sqrt(sum(x**2 for x in vec))
