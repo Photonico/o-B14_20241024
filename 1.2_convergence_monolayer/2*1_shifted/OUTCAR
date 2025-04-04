@@ -148411,3 +148411,62 @@ Coulomb truncation method
 
     POTLOK:  cpu time      0.1030: real time      0.1040
     SETDIJ:  cpu time      0.0039: real time      0.0040
+     EDDAV:  cpu time     61.4433: real time     61.7811
+       DOS:  cpu time      0.0017: real time      0.0017
+    CHARGE:  cpu time      1.6343: real time      1.6435
+    MIXING:  cpu time      0.0047: real time      0.0047
+    --------------------------------------------
+      LOOP:  cpu time     63.1910: real time     63.5389
+
+ eigenvalue-minimisations  : 24598
+ total energy-change (2. order) :-0.1888851E-03  (-0.8664080E-04)
+ number of electron      84.0000000 magnetization 
+ augmentation part       -0.3279860 magnetization 
+
+ DIPCOR: dipole corrections for dipol
+ direction  3 min pos   225,
+ dipolmoment           0.000000      0.000000      0.001438 electrons x Angstroem
+ Tr[quadrupol]     -1221.533119
+
+ energy correction for charged system         0.000000 eV
+ dipol+quadrupol energy correction           -0.000000 eV
+ added-field ion interaction         -0.000505 eV  (added to PSCEN)
+
+
+ Broyden mixing:
+  rms(total) = 0.15195E-01    rms(broyden)= 0.15195E-01
+  rms(prec ) = 0.18837E-01
+  weight for this iteration     100.00
+
+ eigenvalues of (default mixing * dielectric matrix)
+  average eigenvalue GAMMA=   0.1298
+  0.1298
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        31.16438519
+  Ewald energy   TEWEN  =     12734.01094421
+  -Hartree energ DENC   =    -14295.07034880
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       200.97303118
+  PAW double counting   =      7526.78945707    -7505.14692654
+  entropy T*S    EENTRO =        -0.03739311
+  eigenvalues    EBANDS =      -856.05463909
+  atomic energy  EATOM  =      1992.74882108
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =      -170.62266880 eV
+
+  energy without entropy =     -170.58527569  energy(sigma->0) =     -170.60397225
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration     15(   3)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.0882: real time      0.0889
+    SETDIJ:  cpu time      0.0037: real time      0.0037
