@@ -357,8 +357,9 @@ def dielectric_systems_list(systems_list):
     # data[1] = dielectric function data
     # data[2] = color family
     # data[3] = linestyle
-    # data[5] = linewidth
-    # data[4] = alpha
+    # data[4] = linewidth
+    # data[5] = alpha
+    # data[6] = material factors
     if not isinstance(systems_list, list):
         systems_list = [systems_list]
     if systems_list and not isinstance(systems_list[0], (list, tuple)):
@@ -371,22 +372,29 @@ def dielectric_systems_list(systems_list):
             linestyle = "solid"
             linewidth = 1.5
             alpha = 1.0
+            factors = (1, 1)
         elif len(values_dir) == 3:
             label, directory, color = values_dir
             linestyle = "solid"
             linewidth = 1.5
             alpha = 1.0
+            factors = (1, 1)
         elif len(values_dir) == 4:
             label, directory, color, linestyle = values_dir
             linewidth = 1.5
             alpha = 1.0
+            factors = (1, 1)
         elif len(values_dir) == 5:
             label, directory, color, linestyle, linewidth = values_dir
             alpha = 1.0
-        else:
+            factors = (1, 1)
+        elif len(values_dir) == 6:
             label, directory, color, linestyle, linewidth, alpha = values_dir
+            factors = (1, 1)
+        else:
+            label, directory, color, linestyle, linewidth, alpha, factors = values_dir
         dielectric_data = extract_dielectric_function(directory)
-        systems.append([label, dielectric_data, color, linestyle, linewidth, alpha])
+        systems.append([label, dielectric_data, color, linestyle, linewidth, alpha, factors])
     return systems
 
 def identify_components(component_key):
@@ -511,8 +519,12 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
         data_key_imag = f"density_{current_component}_imag"
 
         for _, data in enumerate(dataset):
-            energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key_real], source_start, source_end)
-            energy_imag, density_energy_imag = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], source_start, source_end)
+            supercell_thickness, system_thickness = data[6]
+            d_ratio = supercell_thickness/system_thickness
+            energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], source_start, source_end)
+            energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], source_start, source_end)
+            density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
+            density_energy_imag= density_energy_imag_source * d_ratio
             if var_label == "energy":
                 plt.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                 plt.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[1], ls="dashed", lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
@@ -605,7 +617,10 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
             if subplot_index%2 == 0:
                 # for each system
                 for _, data in enumerate(dataset):
-                    energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
+                    supercell_thickness, system_thickness = data[6]
+                    d_ratio = supercell_thickness/system_thickness
+                    energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
+                    density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
                     if var_label == "energy":
                         ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                         # plasmon resonance line for photon energy
@@ -631,7 +646,10 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
             # curve plotting: imag part
             elif subplot_index%2 != 0:
                 for _, data in enumerate(dataset):
-                    energy_imag, density_energy_imag = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
+                    supercell_thickness, system_thickness = data[6]
+                    d_ratio = supercell_thickness/system_thickness
+                    energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
+                    density_energy_imag= density_energy_imag_source * d_ratio
                     if var_label == "energy":
                         ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
                     else:
@@ -709,7 +727,10 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
             if subplot_index%2 == 0:
                 # for each system
                 for _, data in enumerate(dataset):
-                    energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
+                    supercell_thickness, system_thickness = data[6]
+                    d_ratio = supercell_thickness/system_thickness
+                    energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
+                    density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
                     if var_label == "energy":
                         ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                         # plasmon resonance line for photon energy
@@ -735,7 +756,10 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
             # curve plotting: imag part
             elif subplot_index%2 != 0:
                 for _, data in enumerate(dataset):
-                    energy_imag, density_energy_imag = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
+                    supercell_thickness, system_thickness = data[6]
+                    d_ratio = supercell_thickness/system_thickness
+                    energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
+                    density_energy_imag= density_energy_imag_source * d_ratio
                     if var_label == "energy":
                         ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
                     else:
@@ -813,8 +837,12 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
 
             # curve plotting: real part and imaginary part for each system
             for _, data in enumerate(dataset):
-                energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
-                energy_imag, density_energy_imag = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
+                supercell_thickness, system_thickness = data[6]
+                d_ratio = supercell_thickness/system_thickness
+                energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
+                energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
+                density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
+                density_energy_imag= density_energy_imag_source * d_ratio
                 if var_label == "energy":
                     ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                     ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[1], ls="dashed", lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
@@ -1019,7 +1047,10 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
             if subplot_index%2 == 0:
                 # for each system
                 for _, data in enumerate(dataset):
-                    energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key], photon_start, photon_end)
+                    supercell_thickness, system_thickness = data[6]
+                    d_ratio = supercell_thickness/system_thickness
+                    energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key], photon_start, photon_end)
+                    density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
                     if var_label == "energy":
                         ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                         # plasmon resonance line for photon energy
@@ -1045,7 +1076,10 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
             # curve plotting: imaginary part
             else:
                 for _, data in enumerate(dataset):
-                    energy_imag, density_energy_imag = extract_part(data[1]["density_energy_imag"], data[1][data_key], photon_start, photon_end)
+                    supercell_thickness, system_thickness = data[6]
+                    d_ratio = supercell_thickness/system_thickness
+                    energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key], photon_start, photon_end)
+                    density_energy_imag= density_energy_imag_source * d_ratio
                     if var_label == "energy":
                         ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
                     else:
@@ -1103,8 +1137,12 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
 
             # curve plotting: real part and imaginary part
             for _, data in enumerate(dataset):
-                energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key_real], photon_start, photon_end)
-                energy_imag, density_energy_imag = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], photon_start, photon_end)
+                supercell_thickness, system_thickness = data[6]
+                d_ratio = supercell_thickness/system_thickness
+                energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], photon_start, photon_end)
+                energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], photon_start, photon_end)
+                density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
+                density_energy_imag= density_energy_imag_source * d_ratio
                 if var_label == "energy":
                     ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                     ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[1], ls="dashed", lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
@@ -1286,8 +1324,12 @@ def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
 
         # curve plotting: real part and imaginary part for each system
         for _, data in enumerate(dataset):
-            energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
-            energy_imag, density_energy_imag = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
+            supercell_thickness, system_thickness = data[6]
+            d_ratio = supercell_thickness/system_thickness
+            energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
+            energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
+            density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
+            density_energy_imag= density_energy_imag_source * d_ratio
             if var_label == "energy":
                 ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                 ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[1], ls="dashed", lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
