@@ -64,6 +64,9 @@ GGA = PE
 # Include VdW dispersion correction
 IVDW = 12
 
+# Symmetric configuration
+ISYM = -1
+
 # Dipole Correction (Double layers only)
 LDIPOL = .TRUE.             # Dipole correction adjusts forces and potential.
 IDIPOL = 3                  # 1 for x direction, 2 for y direction, 3 for z direction, 4 for all 3-dimensions

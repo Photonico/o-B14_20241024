@@ -283,8 +283,12 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
 
             # curve plotting
             for _, data in enumerate(dataset):
-                energy_real, density_energy_real = extract_part(data[1]["density_energy_real"], data[1][data_key_real], photon_start, photon_end)
-                energy_imag, density_energy_imag = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], photon_start, photon_end)
+                supercell_thickness, system_thickness = data[6]
+                d_ratio = supercell_thickness/system_thickness
+                energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], photon_start, photon_end)
+                energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], photon_start, photon_end)
+                density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
+                density_energy_imag= density_energy_imag_source * d_ratio
                 frequency_real = energy_to_frequency(energy_real)
                 wavelength_real = energy_to_wavelength(energy_real)
                 if formula_flag == "absorption":
@@ -470,8 +474,12 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
         dkey_real = f"density_{current_component}_real"
         dkey_imag = f"density_{current_component}_imag"
         for _, data_item in enumerate(dataset):
-            e_real, den_e_real = extract_part(data_item[1]["density_energy_real"], data_item[1][dkey_real], photon_start, photon_end)
-            e_imag, den_e_imag = extract_part(data_item[1]["density_energy_imag"], data_item[1][dkey_imag], photon_start, photon_end)
+            supercell_thickness, system_thickness = data_item[6]
+            d_ratio = supercell_thickness/system_thickness
+            e_real, den_e_real_source = extract_part(data_item[1]["density_energy_real"], data_item[1][dkey_real], photon_start, photon_end)
+            e_imag, den_e_imag_source = extract_part(data_item[1]["density_energy_imag"], data_item[1][dkey_imag], photon_start, photon_end)
+            den_e_real = den_e_real_source * d_ratio - d_ratio + 1
+            den_e_imag = den_e_imag_source * d_ratio
             freq_real = energy_to_frequency(e_real)
             variables = current_lop(formula_flag, freq_real, den_e_real, den_e_imag) if formula_flag=="absorption" else current_lop(formula_flag, den_e_real, den_e_imag)
             clist = color_sampling(data_item[2])
@@ -492,8 +500,12 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
             dkey_real = f"density_{ckey_lower}_real"
             dkey_imag = f"density_{ckey_lower}_imag"
             for _, data_item in enumerate(dataset):
-                e_real, den_e_real = extract_part(data_item[1]["density_energy_real"], data_item[1][dkey_real], photon_start, photon_end)
-                e_imag, den_e_imag = extract_part(data_item[1]["density_energy_imag"], data_item[1][dkey_imag], photon_start, photon_end)
+                supercell_thickness, system_thickness = data_item[6]
+                d_ratio = supercell_thickness/system_thickness
+                e_real, den_e_real_source = extract_part(data_item[1]["density_energy_real"], data_item[1][dkey_real], photon_start, photon_end)
+                e_imag, den_e_imag_source = extract_part(data_item[1]["density_energy_imag"], data_item[1][dkey_imag], photon_start, photon_end)
+                den_e_real = den_e_real_source * d_ratio - d_ratio + 1
+                den_e_imag = den_e_imag_source * d_ratio
                 freq_real = energy_to_frequency(e_real)
                 variables = current_lop(formula_flag, freq_real, den_e_real, den_e_imag) if formula_flag=="absorption" else current_lop(formula_flag, den_e_real, den_e_imag)
                 if comp_idx<9:
