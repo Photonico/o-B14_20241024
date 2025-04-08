@@ -4,6 +4,7 @@
 # Necessary packages invoking
 import xml.etree.ElementTree as ET
 import os
+import h5py
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -190,7 +191,7 @@ def extract_high_sym(directory):
         unique_points = high_symmetry_points            # If only two points, return as is
     return unique_points
 
-def extract_high_sym_details(directory):
+def extract_high_sym_details_xml(directory):
     """
     Extracts the list of k-point coordinates from the vasprun.xml file of a VASP calculation.
 
@@ -235,6 +236,17 @@ def extract_high_sym_details(directory):
     # Return the list of k-point coordinates
     return kpoints
 
+def extract_high_sym_details_hdf5(directory):
+    """
+    Extract k-point coordinates from the HDF5 file.
+    Data is assumed to be stored in '/calculation/kpoints/kpointlist' as a 2D array (nkpoints x 3).
+    """
+    h5_path = os.path.join(directory, "vaspout.h5")
+    with h5py.File(h5_path, "r") as f:
+        kp_data = f["calculation/kpoints/kpointlist"][:]
+    kpoints = [row.tolist() for row in kp_data]
+    return kpoints
+
 def extract_kpath_no_weight(directory):
     """
     Calculates the cumulative distances along a path through k-points in reciprocal space.
@@ -253,7 +265,8 @@ def extract_kpath_no_weight(directory):
     The resulting cumulative distances serve as the x-axis values (k-points) in a bandstructure plot.
     """
     # Extract the list of k-point coordinates
-    kpoints = extract_high_sym_details(directory)
+    # changing flag
+    kpoints = extract_high_sym_details_xml(directory)
     # Initialize the list for cumulative distances with the starting point (0 distance)
     cumulative_distances = [0]
     # Iterate over the list of k-points to calculate the path distances
@@ -274,7 +287,8 @@ def extract_kpath(directory):
     list: A list of cumulative distances reflecting true path proportions.
     """
     # Extract k-points and reciprocal weights
-    kpoints = extract_high_sym_details(directory)
+    # changing flag
+    kpoints = extract_high_sym_details_xml(directory)
     reciprocal_weights = extract_reciprocal_weights(directory)
     # Initialize cumulative distances
     cumulative_distances = [0]
@@ -379,7 +393,7 @@ def extract_kpoints_eigenval(directory):
     kpoints_array = np.array(kpoints_list)
     return kpoints_array
 
-def extract_weight(directory):
+def extract_weight_xml(directory):
     xml_file = os.path.join(directory, "vasprun.xml")
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -397,7 +411,23 @@ def extract_weight(directory):
             weight_list.append(float(weight.text))
     return weight_list
 
-def extract_kpoints_count(directory):
+def extract_weight_hdf5(directory):
+    h5_file = os.path.join(directory, "vaspout.h5")
+    kpoints_opt_path = os.path.join(directory, "KPOINTS_OPT")
+    kpoints_file_path = os.path.join(directory, "KPOINTS")
+    weight_list = []
+    with h5py.File(h5_file, "r") as f:
+        if os.path.exists(kpoints_opt_path):
+            # HSE06 algorithm: read weights from the corresponding group
+            weight_data = f["/calculation/eigenvalues_kpoints_opt/kpoints/weights"][:]
+            weight_list = weight_data.tolist()
+        elif os.path.exists(kpoints_file_path):
+            # GGA-PBE algorithm: read weights from the corresponding group
+            weight_data = f["/calculation/kpoints/weights"][:]
+            weight_list = weight_data.tolist()
+    return weight_list
+
+def extract_kpoints_count_xml(directory):
     xml_file = os.path.join(directory, "vasprun.xml")
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -418,6 +448,30 @@ def extract_kpoints_count(directory):
     else:
         print("The kpointlist section does not exist in the provided XML file.")
         return None
+
+def extract_kpoints_count_hdf5(directory):
+    h5_path = os.path.join(directory, "vaspout.h5")
+    kpoints_opt_path = os.path.join(directory, "KPOINTS_OPT")
+    kpoints_file_path = os.path.join(directory, "KPOINTS")
+    with h5py.File(h5_path, "r") as f:
+        if os.path.exists(kpoints_opt_path):
+            try:
+                kpointlist_ds = f["/calculation/eigenvalues_kpoints_opt/kpoints/kpointlist"]
+            except KeyError:
+                print("Dataset '/calculation/eigenvalues_kpoints_opt/kpoints/kpointlist' not found.")
+                return None
+        elif os.path.exists(kpoints_file_path):
+            try:
+                kpointlist_ds = f["/calculation/kpoints/kpointlist"]
+            except KeyError:
+                print("Dataset '/calculation/kpoints/kpointlist' not found.")
+                return None
+        else:
+            print("Neither KPOINTS_OPT nor KPOINTS files exist in the directory.")
+            return None
+
+        num_kpoints = kpointlist_ds.shape[0]
+        return num_kpoints
 
 def extract_bands_count(directory):
     eigen_lines = extract_eigenvalues_bands_nonpolarized(directory)
@@ -449,7 +503,8 @@ def kpoints_index(directory):
     # Retrieve the coordinates of the high symmetry points
     high_symmetry_points = kpoints_coordinate(directory)
     # Retrieve the list of kpoints
-    kpoints_list = extract_high_sym_details(directory)
+    # changing flag
+    kpoints_list = extract_high_sym_details_xml(directory)
     # Initialize a dictionary to store the indices of the high symmetry points
     high_symmetry_indices = {}
     # For each high symmetry point, find the closest kpoint
@@ -529,7 +584,7 @@ def clean_kpoints(kpoints_list, tol=1e-10):
     kpoints_list[np.isclose(kpoints_list, 0, atol=tol)] = 0
     return kpoints_list
 
-def extract_eigenvalues_kpoints(directory, spin_label):
+def extract_eigenvalues_kpoints_xml(directory, spin_label):
     """
     Extracts the eigenvalues for each k-point from a VASP vasprun.xml file considering spin polarization.
     Args:
@@ -579,14 +634,31 @@ def extract_eigenvalues_kpoints(directory, spin_label):
     # Return the matrix of eigenvalues
     return eigenvalues_matrix
 
+def extract_eigenvalues_kpoints_hdf5(directory, spin_label):
+    """
+    Extract eigenvalues for each k-point from the HDF5 file for the specified spin channel.
+    Data is assumed to be stored in '/calculation/eigenvalues/{spin_label}' with shape (nkpoints x nbands).
+    """
+    h5_path = os.path.join(directory, "vaspout.h5")
+    with h5py.File(h5_path, "r") as f:
+        try:
+            eigenvalues_data = f["calculation/eigenvalues"][spin_label][:]
+        except KeyError:
+            print(f"No eigenvalues data found for spin label: {spin_label}")
+            return []
+    return eigenvalues_data.tolist()
+
 def extract_eigenvalues_kpoints_nonpolarized(directory):
-    return extract_eigenvalues_kpoints(directory, "spin 1")
+    # changing flag
+    return extract_eigenvalues_kpoints_xml(directory, "spin 1")
 
 def extract_eigenvalues_kpoints_spinUp(directory):
-    return extract_eigenvalues_kpoints(directory, "spin 1")
+    # changing flag
+    return extract_eigenvalues_kpoints_xml(directory, "spin 1")
 
 def extract_eigenvalues_kpoints_spinDown(directory):
-    return extract_eigenvalues_kpoints(directory, "spin 2")
+    # changing flag
+    return extract_eigenvalues_kpoints_xml(directory, "spin 2")
 
 def extract_eigenvalues_bands(directory, spin_label):
     """
@@ -610,7 +682,8 @@ def extract_eigenvalues_bands(directory, spin_label):
         # 'bands_matrix' now contains the eigenvalues with bands as rows and k-points as columns
     """
     # Extract the eigenvalues for each k-point
-    eigenvalues_matrix = extract_eigenvalues_kpoints(directory, spin_label)
+    # changing flag
+    eigenvalues_matrix = extract_eigenvalues_kpoints_xml(directory, spin_label)
     # Transpose the matrix so that bands are rows and k-points are columns
     transposed_eigenvalues_matrix = transpose_matrix(eigenvalues_matrix)
     # Return the transposed matrix of eigenvalues
@@ -844,7 +917,7 @@ def extract_high_sym_max_valence_intersections(directory, spin_label):
 
 # extract bands with weights
 
-def extract_weights_kpoints(directory, spin_label, start_label=None, end_label=None):
+def extract_weights_kpoints_xml(directory, spin_label, start_label=None, end_label=None):
     """
     Extracts the projected weight of eigenvalues for different orbitals (s, p, d) for specified spin electrons from a VASP calculation.
 
@@ -923,14 +996,56 @@ def extract_weights_kpoints(directory, spin_label, start_label=None, end_label=N
             weights_kpoints_d,                                                                      # -2
             weights_kpoints_p)                                                                      # -1
 
+def extract_weights_kpoints_hdf5(directory, spin_label, start_label=None, end_label=None):
+    """
+    Extract orbital projection weights from the HDF5 file for the specified spin channel.
+    Data is assumed to be stored in '/calculation/projected/array/{spin_label}' with shape
+    (nkpoints, nbands, natoms, 8), where the 8 channels correspond to:
+    [s, py, pz, px, dxy, dyz, dz2, dx2y2].
+    The function sums the weights over atoms (or a specified atom range).
+    """
+    h5_path = os.path.join(directory, "vaspout.h5")
+    with h5py.File(h5_path, "r") as f:
+        try:
+            proj_data = f["calculation/projected/array"][spin_label][:]
+        except KeyError:
+            print(f"No projection data found for spin label: {spin_label}")
+            return ([], [], [], [], [], [], [], [], [], [])
+    if start_label is None:
+        start = 0
+    else:
+        start = start_label
+    if end_label is None:
+        end = proj_data.shape[2]
+    else:
+        end = end_label
+    proj_subset = proj_data[:, :, start:end, :]  # Shape: (nkpoints, nbands, natoms_subset, 8)
+    proj_sum = np.sum(proj_subset, axis=2)         # Sum over atoms -> Shape: (nkpoints, nbands, 8)
+    weights_s = proj_sum[:, :, 0].tolist()
+    weights_py = proj_sum[:, :, 1].tolist()
+    weights_pz = proj_sum[:, :, 2].tolist()
+    weights_px = proj_sum[:, :, 3].tolist()
+    weights_dxy = proj_sum[:, :, 4].tolist()
+    weights_dyz = proj_sum[:, :, 5].tolist()
+    weights_dz2 = proj_sum[:, :, 6].tolist()
+    weights_dx2y2 = proj_sum[:, :, 7].tolist()
+    weights_d = np.add.reduce([proj_sum[:, :, 4], proj_sum[:, :, 5], proj_sum[:, :, 6], proj_sum[:, :, 7]]).tolist()
+    weights_p = np.add.reduce([proj_sum[:, :, 1], proj_sum[:, :, 2], proj_sum[:, :, 3]]).tolist()
+    return (weights_s, weights_py, weights_pz, weights_px,
+            weights_dxy, weights_dyz, weights_dz2, weights_dx2y2,
+            weights_d, weights_p)
+
 def extract_weights_kpoints_nonpolarized(directory, start_label=None, end_label=None):
-    return extract_weights_kpoints(directory, "spin1", start_label, end_label)
+    # changing flag
+    return extract_weights_kpoints_xml(directory, "spin1", start_label, end_label)
 
 def extract_weights_kpoints_spinUp(directory, start_label=None, end_label=None):
-    return extract_weights_kpoints(directory, "spin1", start_label, end_label)
+    # changing flag
+    return extract_weights_kpoints_xml(directory, "spin1", start_label, end_label)
 
 def extract_weights_kpoints_spinDown(directory, start_label=None, end_label=None):
-    return extract_weights_kpoints(directory, "spin2", start_label, end_label)
+    # changing flag
+    return extract_weights_kpoints_xml(directory, "spin2", start_label, end_label)
 
 def extract_weights_bands(directory, spin_label, start_label=None, end_label=None):
     """
@@ -963,7 +1078,8 @@ def extract_weights_bands(directory, spin_label, start_label=None, end_label=Non
     weights_for_bands = extract_weights_bands("/path/to/directory", "spin1")
     s_orbital_weights = weights_for_bands[0]  # Weights for s orbital across bands
     """
-    weights_kpoints = extract_weights_kpoints(directory, spin_label, start_label, end_label)
+    # changing flag
+    weights_kpoints = extract_weights_kpoints_xml(directory, spin_label, start_label, end_label)
     weights_bands_s = transpose_matrix(weights_kpoints[0])
     weights_bands_py = transpose_matrix(weights_kpoints[1])
     weights_bands_pz = transpose_matrix(weights_kpoints[2])
