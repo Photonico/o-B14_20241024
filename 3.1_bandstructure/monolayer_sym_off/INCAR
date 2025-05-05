@@ -45,7 +45,6 @@ ISMEAR = 0  # Gaussian Smearing
 # POTIM = .5
 # # Stress tensor (2 for relaxation ions)
 # ISIF = 2
-ISYM = 0
 
 # Performance optimization
 # The number of groups made, each group working on one set of k-points 
@@ -59,11 +58,11 @@ GGA = PE
 # Include VdW dispersion correction
 IVDW = 12
 # Symmetry
-# ISYM = 0
+ISYM = 0
 
 # Dipole Correction
 LDIPOL = .TRUE.             # Dipole correction adjusts forces and potential.
 IDIPOL = 3                  # 1 for x direction, 2 for y direction, 3 for z direction, 4 for all 3-dimensions
-DIPOL = 0.5 0.5 0.0841
+DIPOL = 0.5 0.5 0.0840968281527772
 # min+(max-min)/2 for Direct coorindates
 # (min+(max-min)/2)/Z_lattice for Cartesian coordinates
