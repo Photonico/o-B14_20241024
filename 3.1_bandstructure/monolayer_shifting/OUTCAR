@@ -1493,3 +1493,49 @@ Coulomb truncation method
 
     POTLOK:  cpu time      0.1317: real time      0.1334
     SETDIJ:  cpu time      0.0024: real time      0.0024
+     EDDAV:  cpu time     86.6192: real time     87.1547
+       DOS:  cpu time      0.0014: real time      0.0014
+    --------------------------------------------
+      LOOP:  cpu time     86.7551: real time     87.2927
+
+ eigenvalue-minimisations  : 26880
+ total energy-change (2. order) : 0.4684530E+03  (-0.2577776E+04)
+ number of electron      84.0000000 magnetization 
+ augmentation part       84.0000000 magnetization 
+
+ DIPCOR: dipole corrections for dipol
+ direction  3 min pos   225,
+ dipolmoment           0.000000      0.000000      0.000403 electrons x Angstroem
+ Tr[quadrupol]     -1221.645179
+
+ energy correction for charged system         0.000000 eV
+ dipol+quadrupol energy correction           -0.000000 eV
+ added-field ion interaction         -0.000141 eV  (added to PSCEN)
+
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        31.16474875
+  Ewald energy   TEWEN  =     12734.00291247
+  -Hartree energ DENC   =    -14295.28602729
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       200.97825433
+  PAW double counting   =      7527.38414994    -7505.74196789
+  entropy T*S    EENTRO =        -0.05981009
+  eigenvalues    EBANDS =      -216.73810737
+  atomic energy  EATOM  =      1992.74882108
+  Solvation  Ediel_sol  =         0.00000000
+  ---------------------------------------------------
+  free energy    TOTEN  =       468.45297393 eV
+
+  energy without entropy =      468.51278402  energy(sigma->0) =      468.48287897
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   2)  ---------------------------------------
+
+

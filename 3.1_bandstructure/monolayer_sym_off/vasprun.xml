@@ -846,3 +846,44 @@
  </structure>
  <calculation>
   <scstep>
+   <time name="dav">   53.59   53.87</time>
+   <time name="total">   53.69   53.97</time>
+   <dipole>
+    <v name="dipole">      0.00000000       0.00000000      -0.00064423 </v>
+    <i name="Tr[quadrupol]">  -1221.65634079 </i>
+    <i name="Echarged">      0.00000000 </i>
+    <i name="Edipol_quadrupol">      0.00000000 </i>
+    <i name="Eion">      0.00000000 </i>
+   </dipole>
+   <energy>
+    <i name="alphaZ">     31.16499394 </i>
+    <i name="ewald">  12734.82538564 </i>
+    <i name="hartreedc"> -14296.07724387 </i>
+    <i name="XCdc">    200.98883611 </i>
+    <i name="pawpsdc">   7529.97871594 </i>
+    <i name="pawaedc">  -7508.33744743 </i>
+    <i name="eentropy">     -0.06025857 </i>
+    <i name="bandstr">   -216.79846091 </i>
+    <i name="atom">   1992.74882108 </i>
+    <i name="e_fr_energy">    468.43334193 </i>
+    <i name="e_wo_entrp">    468.49360050 </i>
+    <i name="e_0_energy">    468.46347121 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="dav">   83.81   84.24</time>
+   <time name="total">   83.81   84.24</time>
+   <dipole>
+    <v name="dipole">      0.00000000       0.00000000      -0.00064423 </v>
+    <i name="Tr[quadrupol]">  -1221.65634079 </i>
+    <i name="Echarged">      0.00000000 </i>
+    <i name="Edipol_quadrupol">      0.00000000 </i>
+    <i name="Eion">      0.00000000 </i>
+   </dipole>
+   <energy>
+    <i name="e_fr_energy">   -108.70768971 </i>
+    <i name="e_wo_entrp">   -108.65352493 </i>
+    <i name="e_0_energy">   -108.68060732 </i>
+   </energy>
+  </scstep>
+  <scstep>
