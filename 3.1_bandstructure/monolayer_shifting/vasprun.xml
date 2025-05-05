@@ -963,3 +963,19 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="dav">  119.89  120.61</time>
+   <time name="total">  119.89  120.61</time>
+   <dipole>
+    <v name="dipole">      0.00000000       0.00000000       0.00040263 </v>
+    <i name="Tr[quadrupol]">  -1221.64517901 </i>
+    <i name="Echarged">      0.00000000 </i>
+    <i name="Edipol_quadrupol">      0.00000000 </i>
+    <i name="Eion">      0.00000000 </i>
+   </dipole>
+   <energy>
+    <i name="e_fr_energy">   -170.71681644 </i>
+    <i name="e_wo_entrp">   -170.60320087 </i>
+    <i name="e_0_energy">   -170.66000866 </i>
+   </energy>
+  </scstep>
+  <scstep>
