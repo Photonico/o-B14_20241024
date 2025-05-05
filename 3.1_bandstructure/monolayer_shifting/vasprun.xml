@@ -874,3 +874,28 @@
  </structure>
  <calculation>
   <scstep>
+   <time name="dav">   86.62   87.15</time>
+   <time name="total">   86.76   87.29</time>
+   <dipole>
+    <v name="dipole">      0.00000000       0.00000000       0.00040263 </v>
+    <i name="Tr[quadrupol]">  -1221.64517901 </i>
+    <i name="Echarged">      0.00000000 </i>
+    <i name="Edipol_quadrupol">      0.00000000 </i>
+    <i name="Eion">      0.00000000 </i>
+   </dipole>
+   <energy>
+    <i name="alphaZ">     31.16474875 </i>
+    <i name="ewald">  12734.00291247 </i>
+    <i name="hartreedc"> -14295.28602729 </i>
+    <i name="XCdc">    200.97825433 </i>
+    <i name="pawpsdc">   7527.38414994 </i>
+    <i name="pawaedc">  -7505.74196789 </i>
+    <i name="eentropy">     -0.05981009 </i>
+    <i name="bandstr">   -216.73810737 </i>
+    <i name="atom">   1992.74882108 </i>
+    <i name="e_fr_energy">    468.45297393 </i>
+    <i name="e_wo_entrp">    468.51278402 </i>
+    <i name="e_0_energy">    468.48287897 </i>
+   </energy>
+  </scstep>
+  <scstep>

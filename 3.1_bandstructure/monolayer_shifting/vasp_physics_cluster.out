@@ -69,3 +69,4 @@
  charge-density read from file: BS                                      
  entering main loop
        N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1     0.468452973928E+03    0.46845E+03   -0.25778E+04 26880   0.759E+02
