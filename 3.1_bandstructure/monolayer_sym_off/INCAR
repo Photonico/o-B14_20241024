@@ -45,6 +45,7 @@ ISMEAR = 0  # Gaussian Smearing
 # POTIM = .5
 # # Stress tensor (2 for relaxation ions)
 # ISIF = 2
+ISYM = 0
 
 # Performance optimization
 # The number of groups made, each group working on one set of k-points 
