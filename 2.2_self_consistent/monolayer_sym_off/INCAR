@@ -59,7 +59,7 @@ GGA = PE
 # Include VdW dispersion correction
 IVDW = 12
 # Symmetry
-# ISYM = 0
+ISYM = 0
 
 # Dipole Correction
 LDIPOL = .TRUE.             # Dipole correction adjusts forces and potential.
