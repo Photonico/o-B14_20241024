@@ -1470,3 +1470,26 @@ Coulomb truncation method
 --------------------------------------------------------------------------------------------------------
 
 
+ Maximum index for augmentation-charges          467 (set IRDMAX)
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+ First call to EWALD:  gamma=   0.148
+ Maximum number of real-space cells   3x   5x   2
+ Maximum number of reciprocal cells   3x   2x   5
+
+    FEWALD:  cpu time      0.0014: real time      0.0015
+
+
+--------------------------------------- Ionic step        1  -------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   1)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.1317: real time      0.1334
+    SETDIJ:  cpu time      0.0024: real time      0.0024

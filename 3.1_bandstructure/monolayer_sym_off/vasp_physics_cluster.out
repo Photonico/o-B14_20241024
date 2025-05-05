@@ -67,3 +67,5 @@
  FFT: planning ... GRID
  WAVECAR not read
  charge-density read from file: BS                                      
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
