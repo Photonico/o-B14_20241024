@@ -107,7 +107,7 @@ def summarize_cohesive_energy_for_specific(full_cal, atom_cal):
 
     try:
         # Compute cohesive energy: full energy minus (total atom count multiplied by atom energy).
-        cohesive_energy = full_params["total energy"] - full_params["total atom count"] * atom_params["total energy"]
+        cohesive_energy = (full_params["total energy"] - full_params["total atom count"] * atom_params["total energy"])/full_params["total atom count"]
     except KeyError as e:
         print(f"Error: Missing key in parameters: {e}")
         return None
@@ -159,7 +159,7 @@ def summarize_cohesive_energy_for_supdir(full_cal_dir, atom_cal_dir):
                 full_params.get("energy cutoff (ENCUT)") == atom_params.get("energy cutoff (ENCUT)") and
                 full_params.get("Scaling") == atom_params.get("Scaling")):
                 
-                cohesive_energy = full_params["total energy"] - full_params["total atom count"] * atom_params["total energy"]
+                cohesive_energy = (full_params["total energy"] - full_params["total atom count"] * atom_params["total energy"])/(full_params["total atom count"])
                 result = {
                     "total atom count": full_params["total atom count"],
                     "total energy": full_params["total energy"],
@@ -225,7 +225,7 @@ def summarize_cohesive_energy_mixed(full_cal_supdir, atom_cal_dir):
     results = []
     for full_params in full_cal_data:
         try:
-            cohesive_energy = full_params["total energy"] - full_params["total atom count"] * atom_params["total energy"]
+            cohesive_energy = (full_params["total energy"] - full_params["total atom count"] * atom_params["total energy"])/(full_params["total atom count"])
         except KeyError as e:
             print(f"Error: Missing key in parameters for a directory: {e}")
             continue
