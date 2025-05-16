@@ -20,30 +20,25 @@ def cal_type_pdos(directory_path):
     elif os.path.exists(kpoints_file_path):
         return "HSE06"
 
-def count_pdos_atoms(directory_path):
+def count_pdos_atoms_vasp(directory_path):
     """
     Get the total number of atoms (ions) from the vasprun.xml file in the specified folder.
-    Parameters:
-        directory_path (str): Path to the directory containing vasprun.xml.
-    Returns:
-        int: Total number of atoms.
-    Raises:
-        FileNotFoundError: If the vasprun.xml file does not exist.
-        ValueError: If the atom count cannot be determined.
+    This version reads from <atominfo>/<atoms> tag, which is more reliable.
     """
-    # Construct the path to vasprun.xml
     file_path = os.path.join(directory_path, "vasprun.xml")
     if not os.path.isfile(file_path):
         raise FileNotFoundError(f"The file vasprun.xml does not exist in the directory: {directory_path}")
-    # Parse vasprun.xml
+
     tree = ET.parse(file_path)
     root = tree.getroot()
-    # Locate the <positions> section to count atoms
-    positions_section = root.find(".//varray[@name='positions'][1]")
-    if positions_section is None:
-        raise ValueError("Failed to locate the positions section in vasprun.xml.")
-    # Count the number of <v> elements in the positions section
-    atom_count = len(positions_section.findall("v"))
+    # Find the <atoms> tag inside <atominfo>
+    atoms_tag = root.find(".//atominfo/atoms")
+    if atoms_tag is None or atoms_tag.text is None:
+        raise ValueError("Failed to locate the total atom count in <atominfo>.")
+    try:
+        atom_count = int(atoms_tag.text)
+    except ValueError:
+        raise ValueError("The value inside <atoms> is not an integer.")
     return atom_count
 
 # Extract Kpoints number
@@ -762,25 +757,47 @@ def extract_index_pdos(directory_path, index=None):
     total_ions = count_pdos_atoms(directory_path)
 
     # Handle index logic: Normalize index to a list of integers
+    # if index in (None, [], "All", "all", "Total", "total"):  # Special cases: all ions
+    #     index = list(range(1, total_ions + 1))
+    # elif isinstance(index, int):  # Single integer
+    #     index = [index]
+    # elif isinstance(index, tuple):  # Single tuple (range)
+    #     index = list(range(index[0], index[1] + 1))
+    # elif isinstance(index, list):  # List with mixed values
+    #     expanded_index = []
+    #     for item in index:
+    #         if isinstance(item, tuple):
+    #             expanded_index.extend(range(item[0], item[1] + 1))
+    #         else:
+    #             expanded_index.append(item)
+    #     index = sorted(set(expanded_index))     # Remove duplicates and sort
+    # else:
+    #     raise ValueError(f"Invalid index type: {type(index)}")
+    # Handle index logic: Normalize index to a list of integers
     if index in (None, [], "All", "all", "Total", "total"):  # Special cases: all ions
         index = list(range(1, total_ions + 1))
-    elif isinstance(index, int):  # Single integer
-        index = [index]
-    elif isinstance(index, tuple):  # Single tuple (range)
-        index = list(range(index[0], index[1] + 1))
-    elif isinstance(index, list):  # List with mixed values
-        expanded_index = []
-        for item in index:
-            if isinstance(item, tuple):
-                expanded_index.extend(range(item[0], item[1] + 1))
-            else:
-                expanded_index.append(item)
-        index = sorted(set(expanded_index))  # Remove duplicates and sort
     else:
-        raise ValueError(f"Invalid index type: {type(index)}")
+        to_expand = [index]
+        expanded_index = []
+        while to_expand:
+            item = to_expand.pop()
+            if item in (None, [], "All", "all", "Total", "total"):
+                expanded_index.extend(range(1, total_ions + 1))
+            elif isinstance(item, int):
+                expanded_index.append(item)
+            elif isinstance(item, tuple) and len(item) == 2 and all(isinstance(x, int) for x in item):
+                expanded_index.extend(range(item[0], item[1] + 1))
+            elif isinstance(item, (list, tuple)):
+                to_expand.extend(reversed(item))
+            else:
+                raise ValueError(f"Invalid index type: {type(item)}")
+        index = sorted(set(expanded_index))
 
     # Filter out indices that are out of range
     index = [i for i in index if 1 <= i <= total_ions]
+
+    # test
+    print(index)
 
     # If no valid indices remain after filtering, raise an error
     if not index:
