@@ -1072,7 +1072,7 @@ def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None):
 
         energy = pdos_data["pdos_shifted_energy"]
         plt.plot(energy, pdos_data[orbital],
-                 color=color_sampling(line_color)[0],
+                 color=color_sampling(line_color)[1],
                  linestyle=line_style, linewidth=line_weight, alpha=line_alpha,
                  label=f"{label}")
 
