@@ -598,7 +598,7 @@ def extract_index_pdos_backup(directory_path, index=None):
     root = tree.getroot()
 
     # Get total number of atoms
-    total_ions = count_pdos_atoms(directory_path)
+    total_ions = count_pdos_atoms_vasp(directory_path)
 
     # Handle index logic: Normalize index to a list of integers
     if index in (None, [], "All", "all", "Total", "total"):  # Special cases: all ions
@@ -746,15 +746,15 @@ def extract_index_pdos(directory_path, index=None):
     tree = ET.parse(file_path)
     root = tree.getroot()
 
-    # Get total number of atoms
-    def count_pdos_atoms(directory_path):
-        """Count total atoms in vasprun.xml"""
-        positions_section = root.find(".//varray[@name='positions'][1]")
-        if positions_section is None:
-            raise ValueError("Failed to locate the positions section in vasprun.xml.")
-        return len(positions_section.findall("v"))
+    # # Get total number of atoms
+    # def count_pdos_atoms(directory_path):
+    #     """Count total atoms in vasprun.xml"""
+    #     positions_section = root.find(".//varray[@name='positions'][1]")
+    #     if positions_section is None:
+    #         raise ValueError("Failed to locate the positions section in vasprun.xml.")
+    #     return len(positions_section.findall("v"))
 
-    total_ions = count_pdos_atoms(directory_path)
+    total_ions = count_pdos_atoms_vasp(directory_path)
 
     # Handle index logic: Normalize index to a list of integers
     # if index in (None, [], "All", "all", "Total", "total"):  # Special cases: all ions
@@ -773,6 +773,7 @@ def extract_index_pdos(directory_path, index=None):
     #     index = sorted(set(expanded_index))     # Remove duplicates and sort
     # else:
     #     raise ValueError(f"Invalid index type: {type(index)}")
+
     # Handle index logic: Normalize index to a list of integers
     if index in (None, [], "All", "all", "Total", "total"):  # Special cases: all ions
         index = list(range(1, total_ions + 1))
@@ -1072,7 +1073,7 @@ def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None):
 
         energy = pdos_data["pdos_shifted_energy"]
         plt.plot(energy, pdos_data[orbital],
-                 color=color_sampling(line_color)[0],
+                 color=color_sampling(line_color)[1],
                  linestyle=line_style, linewidth=line_weight, alpha=line_alpha,
                  label=f"{label}")
 
