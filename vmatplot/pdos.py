@@ -1092,4 +1092,4 @@ def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None):
     plt.ylim(0, y_top)
     plt.legend(loc="upper right")
     plt.tight_layout()
-    plt.show()
+    # plt.show()
