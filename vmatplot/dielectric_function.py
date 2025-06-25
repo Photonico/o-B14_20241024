@@ -679,7 +679,7 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
                     supercell_thickness, system_thickness = data[6]
                     d_ratio = supercell_thickness/system_thickness
                     energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
-                    density_energy_imag= density_energy_imag_source * d_ratio
+                    density_energy_imag = density_energy_imag_source * d_ratio
                     energy_imag, density_energy_imag = mask_imag(energy_imag, density_energy_imag, y_sup)
                     if var_label == "energy":
                         ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
