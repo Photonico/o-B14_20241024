@@ -425,39 +425,39 @@ def plot_dielectric_help():
                 "\t figure_size: figure size <optional>. \n"
     return help_info
 
-def mask_real_imag(energy_real, density_real, energy_imag, density_imag, y_sup):
-    """
-    If y_sup is not None, mask out points where either real or imaginary density > y_sup.
-    Returns masked arrays (energy_real, density_real, energy_imag, density_imag).
-    """
-    if y_sup is None:
-        return energy_real, density_real, energy_imag, density_imag
-    m = (density_real <= y_sup) & (density_imag <= y_sup)
+# Mask both real and imaginary densities within the processed boundary
+def mask_real_imag(energy_real, density_real, energy_imag, density_imag, y_boundary=None):
+    lo, hi = process_boundary_alt(y_boundary)
+    m = np.ones_like(density_real, bool)
+    if lo is not None:
+        m &= (density_real >= lo) & (density_imag >= lo)
+    if hi is not None:
+        m &= (density_real <= hi) & (density_imag <= hi)
     return energy_real[m], density_real[m], energy_imag[m], density_imag[m]
 
-def mask_real(energy_real, density_real, y_sup):
-    """
-    If y_sup is not None, mask out points where either real or imaginary density > y_sup.
-    Returns masked arrays (energy_real, density_real).
-    """
-    if y_sup is None:
-        return energy_real, density_real
-    m = (density_real <= y_sup)
+# Mask only real density
+def mask_real(energy_real, density_real, y_boundary=None):
+    lo, hi = process_boundary_alt(y_boundary)
+    m = np.ones_like(density_real, bool)
+    if lo is not None:
+        m &= density_real >= lo
+    if hi is not None:
+        m &= density_real <= hi
     return energy_real[m], density_real[m]
 
-def mask_imag(energy_imag, density_imag, y_sup):
-    """
-    If y_sup is not None, mask out points where either real or imaginary density > y_sup.
-    Returns masked arrays ( energy_imag, density_imag).
-    """
-    if y_sup is None:
-        return  energy_imag, density_imag
-    m = (density_imag <= y_sup)
+# Mask only imaginary density
+def mask_imag(energy_imag, density_imag, y_boundary=None):
+    lo, hi = process_boundary_alt(y_boundary)
+    m = np.ones_like(density_imag, bool)
+    if lo is not None:
+        m &= density_imag >= lo
+    if hi is not None:
+        m &= density_imag <= hi
     return energy_imag[m], density_imag[m]
 
 def plot_dielectric_monocomp(suptitle, systems=None, component=None,
                              layout="horizontal", expansion_label=True,
-                             unit=None, x_boundary=(None,None), y_sup=None,
+                             unit=None, x_boundary=(None,None), y_boundary=(None,None),
                              spectrum_flag=None, figure_size=(None,None)):
     ## Help information
     dielectric_help =  plot_dielectric_help()
@@ -554,7 +554,7 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
             energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], source_start, source_end)
             density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
             density_energy_imag= density_energy_imag_source * d_ratio
-            energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, y_sup)
+            energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, None)
             if var_label == "energy":
                 plt.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                 plt.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[1], ls="dashed", lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
@@ -578,6 +578,13 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
             plasmon_start=min(wavelength_starts)
             plasmon_end=max(wavelength_ends)
             plt.plot([plasmon_start, plasmon_end],[0,0],color=color_sampling("grey")[1], linestyle="dashed", alpha=0.8)
+
+        # y boundary
+        y_min, y_max = ax.get_ylim()
+        y_low, y_hig = process_boundary_alt(y_boundary)
+        y_inf = y_min if y_low is None else max(y_low, y_min)
+        y_sup = y_max if y_hig is None else min(y_hig, y_max)
+        ax.set_ylim(y_inf, y_sup)
 
         # Spectrum
         xmin, xmax = plt.xlim()
@@ -651,7 +658,7 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
                     d_ratio = supercell_thickness/system_thickness
                     energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
                     density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
-                    energy_real, density_energy_real = mask_real(energy_real, density_energy_real, y_sup)
+                    energy_real, density_energy_real = mask_real(energy_real, density_energy_real, None)
                     if var_label == "energy":
                         ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                         # plasmon resonance line for photon energy
@@ -680,12 +687,22 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
                     d_ratio = supercell_thickness/system_thickness
                     energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
                     density_energy_imag = density_energy_imag_source * d_ratio
-                    energy_imag, density_energy_imag = mask_imag(energy_imag, density_energy_imag, y_sup)
+                    energy_imag, density_energy_imag = mask_imag(energy_imag, density_energy_imag, None)
                     if var_label == "energy":
                         ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
                     else:
                         wavelength_imag, density_wl_imag = extract_part(energy_to_wavelength(data[1]["density_energy_imag"]), data[1][data_key_imag], x_start, x_end)
                         ax.plot(wavelength_imag, density_wl_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
+
+            # y boundary
+            y_min, y_max = ax.get_ylim()
+            # print(y_min, y_max)
+            y_low, y_hig = process_boundary_alt(y_boundary)
+            y_sup = y_max if y_hig is None else min(y_hig, y_max)
+            if subplot_index%2 == 0:
+                y_inf = y_min if y_low is None else max(y_low, y_min)
+            else: y_inf = -(y_sup*0.05)
+            ax.set_ylim(y_inf, y_sup)
 
             # Spectrum
             xmin, xmax = ax.get_xlim()
@@ -739,7 +756,7 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
         plt.tight_layout()
 
     elif expansion_flag is True and rescale_flag is False:
-        supplot_subtitles = [f"Real part for {comp_aliase}",f"Imaginary part for {comp_aliase}"]
+        supplot_subtitles = [f"Real part for {comp_aliase}", f"Imaginary part for {comp_aliase}"]
         for subplot_index in range(2):
             ax = axes_element[subplot_index]
             ax.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
@@ -762,7 +779,7 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
                     d_ratio = supercell_thickness/system_thickness
                     energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], x_start, x_end)
                     density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
-                    energy_real, density_energy_real = mask_real(energy_real, density_energy_real, y_sup)
+                    energy_real, density_energy_real = mask_real(energy_real, density_energy_real, None)
                     if var_label == "energy":
                         ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                         # plasmon resonance line for photon energy
@@ -792,12 +809,22 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
                     d_ratio = supercell_thickness/system_thickness
                     energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
                     density_energy_imag = density_energy_imag_source * d_ratio
-                    energy_imag, density_energy_imag = mask_imag(energy_imag, density_energy_imag, y_sup)
+                    energy_imag, density_energy_imag = mask_imag(energy_imag, density_energy_imag, None)
                     if var_label == "energy":
                         ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
                     else:
                         wavelength_imag, density_wl_imag = extract_part(energy_to_wavelength(data[1]["density_energy_imag"]), data[1][data_key_imag], x_start, x_end)
                         ax.plot(wavelength_imag, density_wl_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
+
+            # y boundary
+            y_min, y_max = ax.get_ylim()
+            # print(y_min, y_max)
+            y_low, y_hig = process_boundary_alt(y_boundary)
+            y_sup = y_max if y_hig is None else min(y_hig, y_max)
+            if subplot_index%2 == 0:
+                y_inf = y_min if y_low is None else max(y_low, y_min)
+            else: y_inf = -(y_sup*0.05)
+            ax.set_ylim(y_inf, y_sup)
 
             # Spectrum
             xmin, xmax = ax.get_xlim()
@@ -876,7 +903,7 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
                 energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
                 density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
                 density_energy_imag= density_energy_imag_source * d_ratio
-                energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, y_sup)
+                energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, None)
                 if var_label == "energy":
                     ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                     ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[1], ls="dashed", lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
@@ -911,6 +938,14 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
                 if subplot_index == 1:
                     ax.set_xlabel(xaxis_label)
 
+            # y boundary
+            y_min, y_max = ax.get_ylim()
+            # print(y_min, y_max)
+            y_low, y_hig = process_boundary_alt(y_boundary)
+            y_inf = y_min if y_low is None else max(y_low, y_min)
+            y_sup = y_max if y_hig is None else min(y_hig, y_max)
+            ax.set_ylim(y_inf, y_sup)
+
             # Legend
             ax.legend(loc="best")
             ax.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
@@ -919,8 +954,8 @@ def plot_dielectric_monocomp(suptitle, systems=None, component=None,
 
 def plot_dielectric_function(suptitle, systems=None, components=None,
                              layout="horizontal", expansion_label=True,
-                             unit=None, x_boundary=(None, None), y_sup = None,
-                             spectrum_flag=None, figure_size=(None,None)):
+                             unit=None, x_boundary=(None, None), y_boundary=(None, None),
+                             spectrum_flag=None, figure_size = (None,None)):
     ## Help information
     dielectric_help =  plot_dielectric_help()
     if suptitle in ["help", "Help"]:
@@ -1085,7 +1120,7 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
                     d_ratio = supercell_thickness/system_thickness
                     energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key], photon_start, photon_end)
                     density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
-                    energy_real, density_energy_real = mask_real(energy_real, density_energy_real, y_sup)
+                    energy_real, density_energy_real = mask_real(energy_real, density_energy_real, None)
                     if var_label == "energy":
                         ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                         # plasmon resonance line for photon energy
@@ -1115,12 +1150,22 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
                     d_ratio = supercell_thickness/system_thickness
                     energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key], photon_start, photon_end)
                     density_energy_imag= density_energy_imag_source * d_ratio
-                    energy_imag, density_energy_imag = mask_imag(energy_imag, density_energy_imag, y_sup)
+                    energy_imag, density_energy_imag = mask_imag(energy_imag, density_energy_imag, None)
                     if var_label == "energy":
                         ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
                     else:
                         wavelength_imag, density_wl_imag = extract_part(energy_to_wavelength(data[1]["density_energy_imag"]), data[1][data_key], photon_start, photon_end)
                         ax.plot(wavelength_imag, density_wl_imag, color=color_sampling(data[2])[2], ls=data[3], lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
+
+            # y boundary
+            y_min, y_max = ax.get_ylim()
+            # print(y_min, y_max)
+            y_low, y_hig = process_boundary_alt(y_boundary)
+            y_sup = y_max if y_hig is None else min(y_hig, y_max)
+            if subplot_index%2 == 0:
+                y_inf = y_min if y_low is None else max(y_low, y_min)
+            else: y_inf = -(y_sup*0.05)
+            ax.set_ylim(y_inf, y_sup)
 
             # Spectrum
             xmin, xmax = ax.get_xlim()
@@ -1170,7 +1215,7 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
             current_component = comp_labels[component_index].lower()
             data_key_real = f"density_{current_component}_real"
             data_key_imag = f"density_{current_component}_imag"
-            energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, y_sup)
+            energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, None)
             # curve plotting: real part and imaginary part
             for _, data in enumerate(dataset):
                 supercell_thickness, system_thickness = data[6]
@@ -1179,7 +1224,7 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
                 energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], photon_start, photon_end)
                 density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
                 density_energy_imag= density_energy_imag_source * d_ratio
-                energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, y_sup)
+                energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, None)
                 if var_label == "energy":
                     ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                     ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[1], ls="dashed", lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
@@ -1202,6 +1247,14 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
                 plasmon_start=min(wavelength_starts)
                 plasmon_end=max(wavelength_ends)
                 ax.plot([plasmon_start, plasmon_end],[0,0],color=color_sampling("grey")[1],linestyle="dashed")
+
+            # y boundary
+            y_min, y_max = ax.get_ylim()
+            # print(y_min, y_max)
+            y_low, y_hig = process_boundary_alt(y_boundary)
+            y_inf = y_min if y_low is None else max(y_low, y_min)
+            y_sup = y_max if y_hig is None else min(y_hig, y_max)
+            ax.set_ylim(y_inf, y_sup)
 
             # Spectrum
             xmin, xmax = ax.get_xlim()
@@ -1272,7 +1325,7 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
     plt.tight_layout()
 
 def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
-                                      layout="horizontal", unit=None, x_boundary=(None,None), y_sup=None,
+                                      layout="horizontal", unit=None, x_boundary=(None,None), y_boundary=(None,None),
                                       spectrum_flag=None, figure_size=(None,None)):
 
     ## Help information
@@ -1367,7 +1420,7 @@ def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
             energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], x_start, x_end)
             density_energy_real = density_energy_real_source * d_ratio - d_ratio + 1
             density_energy_imag= density_energy_imag_source * d_ratio
-            energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, y_sup)
+            energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, None)
             if var_label == "energy":
                 ax.plot(energy_real, density_energy_real, color=color_sampling(data[2])[1], ls=data[3], lw=data[4], alpha=data[5], label=f"Real part {data[0]}")
                 ax.plot(energy_imag, density_energy_imag, color=color_sampling(data[2])[1], ls="dashed", lw=data[4], alpha=data[5], label=f"Imaginary part {data[0]}")
@@ -1390,6 +1443,14 @@ def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
             plasmon_start=min(wavelength_starts)
             plasmon_end=max(wavelength_ends)
             ax.plot([plasmon_start, plasmon_end],[0,0],color=color_sampling("grey")[1],linestyle="dashed")
+
+        # y boundary
+        y_min, y_max = ax.get_ylim()
+        # print(y_min, y_max)
+        y_low, y_hig = process_boundary_alt(y_boundary)
+        y_inf = y_min if y_low is None else max(y_low, y_min)
+        y_sup = y_max if y_hig is None else min(y_hig, y_max)
+        ax.set_ylim(y_inf, y_sup)
 
         # Spectrum
         xmin, xmax = ax.get_xlim()
@@ -1442,9 +1503,3 @@ def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
         ax.ticklabel_format(style="sci", axis="y", scilimits=(-3,3), useOffset=False, useMathText=True)
 
     plt.tight_layout()
-
-"""
-energy_real, density_energy_real, energy_imag, density_energy_imag = mask_real_imag(energy_real, density_energy_real, energy_imag, density_energy_imag, y_sup)
-energy_real, density_energy_real = mask_real(energy_real, density_energy_real, y_sup)
-energy_imag, density_energy_imag = mask_imag(energy_imag, density_energy_imag, y_sup)
-"""
