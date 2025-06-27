@@ -266,7 +266,7 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
                 plt.rcParams.update(params)
                 fig, axs = plt.subplots(3, 3, figsize=fig_setting[0], dpi=fig_setting[1])
                 axes_element = [axs[i, j] for j in range(3) for i in range(3)]
-        
+
         fig.suptitle(f"{suptitle}", fontsize=fig_setting[3][0])
         for subplot_index in range(len(components)):
             ax = axes_element[subplot_index]
@@ -284,6 +284,7 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
             # curve plotting
             for _, data in enumerate(dataset):
                 supercell_thickness, system_thickness = data[6]
+                # print(data[6])
                 d_ratio = supercell_thickness/system_thickness
                 energy_real, density_energy_real_source = extract_part(data[1]["density_energy_real"], data[1][data_key_real], photon_start, photon_end)
                 energy_imag, density_energy_imag_source = extract_part(data[1]["density_energy_imag"], data[1][data_key_imag], photon_start, photon_end)
@@ -300,7 +301,7 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
                 elif var_label == "wavelength":
                     wavelength_real, wavelength_variables = extract_part(energy_to_wavelength(data[1]["density_energy_real"]), data[1][data_key_real], photon_start, photon_end)
                     ax.plot(wavelength_real, wavelength_variables, color=color_sampling(data[2])[1], ls=data[3], alpha=data[5], lw=data[4], label=data[0])
-            
+
             # Spectrum
             xmin, xmax = ax.get_xlim()
             ax.set_xlim(xmin, xmax)
