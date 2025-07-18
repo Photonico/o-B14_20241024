@@ -1396,7 +1396,7 @@ def plot_bsDoS(suptitle, matters_list=None, eigen_range=None, dos_range=None, le
 
     # ax2 DoS
     ax2.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
-    ax2.set_title("DOS (a.u.)", fontsize=fig_setting[3][1])
+    ax2.set_title("DoS (a.u.)", fontsize=fig_setting[3][1])
     for matter in matters:
         DoS_current_label = matter[1]
         if matter[0].lower() in ["monocolor"]:
@@ -1484,13 +1484,13 @@ def plot_bsPDoS(title, bs_list, pdos_list, eigen_range, dos_range, legend_loc=Fa
     # Color settings for Fermi energy and annotations
     bs_fermi_color = color_sampling("Violet")
     annotate_color = color_sampling("Grey")
-    
+
     # Set the overall title
     fig.suptitle(title, fontsize=fig_setting[3][0], y=1.00)
-    
+
     # Get BS and PDoS matters using the helper function
     bs_matters, pdos_matters = create_matters_bsPDoS(bs_list, pdos_list)
-    
+
     # Plot bandstructure
     ax1.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
     ax1.set_title("Bandstructure", fontsize=fig_setting[3][1])
@@ -1563,7 +1563,7 @@ def plot_bsPDoS(title, bs_list, pdos_list, eigen_range, dos_range, legend_loc=Fa
 
     # Plot PDoS
     ax2.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
-    ax2.set_title("PDOS (a.u.)", fontsize=fig_setting[3][1])
+    ax2.set_title("PDoS (a.u.)", fontsize=fig_setting[3][1])
 
     dos_efermi = None
     for pdos_matter in pdos_matters:
