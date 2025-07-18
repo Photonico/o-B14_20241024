@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from vmatplot.dielectric_function import dielectric_systems_list
-from vmatplot.commons import process_boundary, extract_part
+from vmatplot.commons import process_boundary_alt, extract_part
 from vmatplot.output_settings import canvas_setting, color_sampling
 from vmatplot.algorithms import energy_to_wavelength, energy_to_frequency, wavelength_to_energy
 
@@ -119,14 +119,14 @@ def lop_plotting_help():
                 "\t expansion: select one variable to expansion (rescale<auto>, properties, systems); \n" +\
                 "\t layout: subfigures layout (horizontal<default>, vertical); \n" +\
                 "\t unit: x-axis unit (eV<default>, nm); \n" +\
-                "\t boundary: a-axis range <optional>; \n" +\
+                "\t photon_boundary: x-axis range <optional>; \n" +\
+                "\t value_boundary: a-axis range <optional>; \n" +\
                 "\t figure_size: figure size <optional>. \n"
     return help_info
 
-### rebuild
 def plot_linear_optical_property(suptitle, systems=None, properties=None, components="xx",
                                  layout="horizontal", expansion_label=True,
-                                 unit="eV", boundary=(None, None),
+                                 unit="eV", photon_boundary=(None, None), value_boundary=(None, None), 
                                  spectrum_flag=None, figure_size=(None, None)):
     ## Support information
     if suptitle.lower() in ["help", "support"]:
@@ -135,7 +135,7 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
         return
     # expansion label
     if expansion_label == False:
-        return plot_merged_linear_optical_property(suptitle, systems, properties, components, layout, unit, boundary, spectrum_flag, figure_size)
+        return plot_merged_linear_optical_property(suptitle, systems, properties, components, layout, unit, photon_boundary, value_boundary, spectrum_flag, figure_size)
     else: pass
 
     # properties labels and determination
@@ -196,7 +196,7 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
         comp_aliase = comp_aliases[0]
 
     ## boundaries processing
-    photon_start, photon_end = process_boundary(boundary)
+    photon_start, photon_end = process_boundary_alt(photon_boundary)
 
     ## identify x-axis unit
     var_label = "wavelength" if unit and unit.lower() == "nm" else "energy"
@@ -208,7 +208,7 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
     ## figure settings
     layout_flag = "horizontal" if layout.lower() not in ["vertical", "ver","v"] else "vertical"
     if multi_comp_flag is False:
-        return plot_merged_linear_optical_property(suptitle, systems, properties, components, layout, unit, boundary, spectrum_flag, figure_size)
+        return plot_merged_linear_optical_property(suptitle, systems, properties, components, layout, unit, photon_boundary, value_boundary, spectrum_flag, figure_size)
 
     elif multi_comp_flag is True:
         ## figure settings
@@ -302,6 +302,14 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
                     wavelength_real, wavelength_variables = extract_part(energy_to_wavelength(data[1]["density_energy_real"]), data[1][data_key_real], photon_start, photon_end)
                     ax.plot(wavelength_real, wavelength_variables, color=color_sampling(data[2])[1], ls=data[3], alpha=data[5], lw=data[4], label=data[0])
 
+            # y boundary
+            y_min_source, y_max_source = ax.get_ylim()
+            # print(y_min_source, y_max_source)
+            y_low, y_hig = process_boundary_alt(value_boundary)
+            y_sup = y_max_source if y_hig is None else min(y_hig, y_max_source)
+            y_inf = y_min_source if y_low is None else y_low
+            ax.set_ylim(y_inf, y_sup)
+
             # Spectrum
             xmin, xmax = ax.get_xlim()
             ax.set_xlim(xmin, xmax)
@@ -376,7 +384,7 @@ def plot_linear_optical_property(suptitle, systems=None, properties=None, compon
             plt.tight_layout()
 
 def plot_merged_linear_optical_property(suptitle, systems=None, properties=None, components="xx",
-                                        layout="horizontal",unit="eV", boundary=(None, None),
+                                        layout="horizontal",unit="eV", photon_boundary=(None, None), value_boundary=(None, None), 
                                         spectrum_flag=None, figure_size=(None, None)):
     """
     Plot all systems (and potentially multiple components) in a single Axes.
@@ -397,6 +405,7 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
         help_info = lop_plotting_help()
         print(help_info)
         return
+
     # Optical property
     multi_prop_flag = None
     if isinstance(properties, str):
@@ -419,6 +428,7 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
     if multi_prop_flag is True:
         print("Currently we do not support multiple linear optical properties in one figure.")
         return None
+
     # Systems
     dataset = dielectric_systems_list(systems)
     multi_system_flag = (len(dataset) > 1)
@@ -463,7 +473,7 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
     plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
     params = fig_setting[2]
     plt.rcParams.update(params)
-    photon_start, photon_end = process_boundary(boundary)
+    photon_start, photon_end = process_boundary_alt(photon_boundary)
     var_label = "wavelength" if unit and unit.lower()=="nm" else "energy"
     xaxis_str = "Photon wavelength (nm)" if var_label=="wavelength" else "Photon energy (eV)"
     plt.title(f"{suptitle}", fontsize=fig_setting[3][0])
@@ -524,6 +534,16 @@ def plot_merged_linear_optical_property(suptitle, systems=None, properties=None,
                 else:
                     wl_real, wl_variables = extract_part(energy_to_wavelength(data_item[1]["density_energy_real"]), data_item[1][dkey_real], photon_start, photon_end)
                     plt.plot(wl_real, wl_variables, color=line_color, ls=line_style, alpha=data_item[5], lw=data_item[4], label=line_label)
+
+    # y boundary
+    y_min_source, y_max_source = plt.ylim()
+    # print(y_min_source, y_max_source)
+    y_low, y_hig = process_boundary_alt(value_boundary)
+    y_low, y_hig = process_boundary_alt(value_boundary)
+    y_sup = y_max_source if y_hig is None else min(y_hig, y_max_source)
+    y_inf = y_min_source if y_low is None else y_low
+    plt.ylim(y_inf, y_sup)
+
     # Spectrum
     xmin, xmax = plt.xlim()
     plt.xlim(xmin, xmax)
