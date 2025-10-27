@@ -1706,7 +1706,6 @@ def plot_dielectric_function(suptitle, systems=None, components=None,
 
     plt.tight_layout()
 
-
 def plot_dielectric_function_rescaled(suptitle, systems=None, components=None,
                                       layout="horizontal", unit=None, x_boundary=(None,None), y_boundary=(None,None),
                                       spectrum_flag=None, figure_size=(None,None)):
