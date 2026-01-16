@@ -16,6 +16,13 @@ from vmatplot.commons import extract_fermi, get_atoms_count, process_boundary, g
 from vmatplot.dos import extract_dos
 from vmatplot.pdos import extract_dict_pdos, create_matters_pdos
 
+import matplotlib as mpl
+
+mpl.rcParams["lines.solid_capstyle"] = "round"
+mpl.rcParams["lines.dash_capstyle"]  = "round"
+mpl.rcParams["lines.solid_joinstyle"] = "round"
+mpl.rcParams["lines.dash_joinstyle"]  = "round"
+
 global_tolerance = 1e-4
 
 # extract bands
@@ -278,26 +285,136 @@ def extract_kpath_no_weight(directory):
     # Return the list of cumulative distances
     return cumulative_distances
 
-def extract_kpath(directory):
+def _parse_line_mode_kpoints_segments(directory):
+    """Parse VASP KPOINTS in line-mode and return (n_per_segment, segments).
+    segments: [((label_start, [kx,ky,kz]), (label_end, [kx,ky,kz])), ...]
+    Returns (None, None) if KPOINTS is missing or not line-mode.
     """
-    Calculates cumulative distances for k-points with reciprocal lattice weights.
+    kpoints_path = os.path.join(directory, "KPOINTS")
+    if not os.path.exists(kpoints_path):
+        return None, None
+    with open(kpoints_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    if len(lines) < 4: return None, None
+    # Second line: points per segment in typical VASP line-mode KPOINTS
+    try: n_per = int(lines[1].strip().split()[0])
+    except Exception:
+        return None, None
+    mode = lines[2].strip().lower()
+    if not mode.startswith("l"):    # "line" or "line-mode"
+        return None, None
+    endpoints = []
+    for line in lines[4:]:
+        toks = line.strip().split()
+        if len(toks) < 4:
+            continue
+        label = toks[-1]
+        try: coords = [float(toks[0]), float(toks[1]), float(toks[2])]
+        except ValueError: continue
+        endpoints.append((label, coords))
+    if len(endpoints) < 2:
+        return None, None
+    segments = []
+    for i in range(0, len(endpoints) - 1, 2):
+        segments.append((endpoints[i], endpoints[i + 1]))
+    return n_per, segments
+
+def _segment_break_indices_from_kpoints(directory, nk_from_vasprun, tol=1e-10):
+    """Return indices where the next segment restarts from a different point.
+    The returned indices are positions in the concatenated k-point list (as VASP emits for line-mode):
+    insert a break *before* that index (between index-1 and index).
+    """
+    n_per, segments = _parse_line_mode_kpoints_segments(directory)
+    if n_per is None or segments is None:
+        return []
+    expected_nk = n_per * len(segments)
+    if nk_from_vasprun is not None and expected_nk != nk_from_vasprun:
+        # If mismatch, do not trust segment arithmetic (e.g., non-standard producer). Fall back later.
+        return []
+    breaks = []
+    for si in range(len(segments) - 1):
+        _start_i, end_i = segments[si]
+        start_next, _end_next = segments[si + 1]
+        if np.linalg.norm(np.array(end_i[1]) - np.array(start_next[1])) > tol:
+            breaks.append((si + 1) * n_per)
+    return breaks
+
+def _jump_break_indices_from_klist(kpoints, reciprocal_weights=None, jump_factor=5.0, tol=1e-12):
+    """Heuristic fallback: detect discontinuities by unusually large steps."""
+    k = np.asarray(kpoints, dtype=float)
+    if len(k) < 2:
+        return []
+    dk = np.diff(k, axis=0)
+    if reciprocal_weights is not None:
+        w = np.asarray(reciprocal_weights, dtype=float)
+        dk = dk * w
+    steps = np.linalg.norm(dk, axis=1)
+    nz = steps[steps > tol]
+    if nz.size == 0:
+        return []
+    typical = float(np.median(nz))
+    if typical < tol:
+        return []
+    # break if a step is much larger than typical step
+    return (np.where(steps > jump_factor * typical)[0] + 1).tolist()
+
+def _apply_breaks_insert_nan(path, breaks, *band_groups):
+    """Insert a separator point at each break: duplicate x and insert NaN in y.
+    This yields a visual line break while preserving both segment endpoints.
     Args:
-    directory (str): Path to the directory containing the VASP files.
+      path: list[float]
+      breaks: list[int] indices in the *original* arrays.
+      band_groups: each is list[list[float]] e.g. bands, conduction_bands, valence_bands
     Returns:
-    list: A list of cumulative distances reflecting true path proportions.
+      (path_new, *groups_new)
     """
-    # Extract k-points and reciprocal weights
-    # changing flag
+    if not breaks:
+        return (path, *band_groups)
+    path_new = list(path)
+    groups_new = []
+    for g in band_groups:
+        groups_new.append([list(b) for b in g])
+    # Insert from back to front so indices stay valid
+    for b in sorted(breaks, reverse=True):
+        if b <= 0:
+            xval = path_new[0] if path_new else 0.0
+        else:
+            xval = path_new[b - 1]
+        path_new.insert(b, xval)
+        for g in groups_new:
+            for band in g:
+                band.insert(b, float("nan"))
+    return (path_new, *groups_new)
+
+def extract_kpath(directory, return_breaks=False, jump_factor=5.0):
+    """
+    Calculates the cumulative distances along a path through k-points in reciprocal space.
+    For standard line-mode KPOINTS with branched paths (segment restarts), this function:
+      - makes the x-axis continuous across segment restarts (does not add the 'jump' distance)
+      - can return break indices so the plotter can insert NaNs to break the lines.
+    Args:
+      directory (str): The directory path that contains the VASP vasprun.xml file.
+      return_breaks (bool): If True, return (kpath, breaks).
+      jump_factor (float): Heuristic fallback sensitivity if KPOINTS parsing doesn't match vasprun.
+    Returns:
+      list or (list, list[int])
+    """
     kpoints = extract_high_sym_details_xml(directory)
     reciprocal_weights = extract_reciprocal_weights(directory)
-    # Initialize cumulative distances
-    cumulative_distances = [0]
-    for i in range(1, len(kpoints)):
-        # Compute the vector difference between two k-points
-        delta_k = np.array(kpoints[i]) - np.array(kpoints[i-1])
-        # Apply the reciprocal lattice weight
+    nk = len(kpoints)
+    breaks = _segment_break_indices_from_kpoints(directory, nk_from_vasprun=nk)
+    if not breaks:
+        breaks = _jump_break_indices_from_klist(kpoints, reciprocal_weights=reciprocal_weights, jump_factor=jump_factor)
+    break_set = set(breaks)
+    cumulative_distances = [0.0]
+    for i in range(1, nk):
+        delta_k = np.array(kpoints[i]) - np.array(kpoints[i - 1])
         weighted_distance = np.sqrt(sum((delta_k[j] * reciprocal_weights[j]) ** 2 for j in range(3)))
-        cumulative_distances.append(cumulative_distances[-1] + weighted_distance)
+        if i in break_set:
+            weighted_distance = 0.0
+        cumulative_distances.append(cumulative_distances[-1] + float(weighted_distance))
+    if return_breaks:
+        return cumulative_distances, breaks
     return cumulative_distances
 
 def extract_high_symlines(directory):
@@ -540,6 +657,92 @@ def kpoints_path(directory):
         label: path_distances[index] for label, index in high_symmetry_indices.items()
     }
     return high_symmetry_paths
+
+
+def extract_kpoints_high_sym_boundaries(directory, return_coords=False):
+    """Parse VASP KPOINTS/KPOINTS_OPT line-mode file and return boundary high-symmetry points.
+    This keeps repeats and supports branched paths (segments that restart from a different point).
+    If return_coords=False: returns [label, ...]
+    If return_coords=True : returns [(label, (kx,ky,kz)), ...]
+    """
+    kpoints_file_path = os.path.join(directory, "KPOINTS")
+    kpoints_opt_path = os.path.join(directory, "KPOINTS_OPT")
+    if os.path.exists(kpoints_opt_path):
+        kpoints_file = kpoints_opt_path
+    elif os.path.exists(kpoints_file_path):
+        kpoints_file = kpoints_file_path
+    else: raise FileNotFoundError("KPOINTS file not found in the directory.")
+    with open(kpoints_file, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    if len(lines) < 4 or lines[2].strip()[:1].lower() != "l":
+        raise ValueError(
+            f"Expected a line-mode KPOINTS file (3rd line starts with 'L'), got: "
+            f"{lines[2] if len(lines) > 2 else '<missing>'}"
+        )
+    endpoints = []
+    for line in lines[4:]:
+        tokens = line.strip().split()
+        if len(tokens) < 4: continue
+        label = tokens[-1]
+        if not label.isalpha(): continue
+        try: coords = (float(tokens[0]), float(tokens[1]), float(tokens[2]))
+        except ValueError: continue
+        endpoints.append((label, coords))
+    if not endpoints:
+        return [] if not return_coords else []
+    # Pair into segments (start,end), (start,end), ...
+    segments = []
+    for i in range(0, len(endpoints) - 1, 2):
+        segments.append((endpoints[i], endpoints[i + 1]))
+    boundaries = [segments[0][0]]
+    for si, (start, end) in enumerate(segments):
+        boundaries.append(end)
+        if si + 1 < len(segments):
+            next_start = segments[si + 1][0]
+            if np.linalg.norm(np.array(next_start[1]) - np.array(end[1])) > 1e-10:
+                boundaries.append(next_start)
+    if return_coords:
+        return boundaries
+    return [lbl for (lbl, _c) in boundaries]
+
+def kpoints_path_lists(directory):
+    """Return (positions, labels) for x-ticks along the bandstructure path.
+    Unlike kpoints_path(), this keeps repeated labels (e.g., Γ ... Γ) and handles branched paths
+    by matching boundary points monotonically along the k-point list extracted from vasprun.xml.
+    """
+    boundaries = extract_kpoints_high_sym_boundaries(directory, return_coords=True)
+    if not boundaries:
+        return [], []
+    kpoints_list = extract_high_sym_details_xml(directory)
+    path_distances = extract_kpath(directory)
+    if not kpoints_list or not path_distances:
+        return [], []
+    positions = []
+    labels = []
+    last_search_start = 0
+    for label, hs_coord in boundaries:
+        min_dist = float("inf")
+        best_idx = None
+        hs = np.array(hs_coord, dtype=float)
+        for index, kp in enumerate(kpoints_list[last_search_start:], start=last_search_start):
+            d = np.linalg.norm(hs - np.array(kp, dtype=float))
+            if d < min_dist:
+                min_dist = d
+                best_idx = index
+                if min_dist < 1e-12:
+                    break
+        if best_idx is None or best_idx >= len(path_distances):
+            continue
+        pos = path_distances[best_idx]
+        # Merge if multiple boundaries map to the same position (segment boundary duplication)
+        if positions and abs(pos - positions[-1]) < 1e-10:
+            if labels[-1] != label:
+                labels[-1] = f"{labels[-1]}|{label}"
+        else:
+            positions.append(pos)
+            labels.append(label)
+        last_search_start = best_idx + 1
+    return positions, labels
 
 def high_symmetry_coordinates(directory):
     """
@@ -1125,37 +1328,43 @@ def create_matters_bs(matters_list):
         # Bandstructure plotting style: monocolor
         if bstype.lower() in ["monocolor", "monocolor nonpolarized"]:
             fermi_energy = extract_fermi(directory)
-            kpath = extract_kpath(directory)
+            kpath, breaks = extract_kpath(directory, return_breaks=True)
             bands = extract_eigenvalues_bands_nonpolarized(directory)
+            kpath, bands = _apply_breaks_insert_nan(kpath, breaks, bands)
             matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["monocolor spin up", "spin up monocolor"]:
             fermi_energy = extract_fermi(directory)
-            kpath = extract_kpath(directory)
+            kpath, breaks = extract_kpath(directory, return_breaks=True)
             bands = extract_eigenvalues_bands_spinUp(directory)
+            kpath, bands = _apply_breaks_insert_nan(kpath, breaks, bands)
             matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["monocolor spin down", "spin down monocolor"]:
             fermi_energy = extract_fermi(directory)
-            kpath = extract_kpath(directory)
+            kpath, breaks = extract_kpath(directory, return_breaks=True)
             bands = extract_eigenvalues_bands_spinDown(directory)
+            kpath, bands = _apply_breaks_insert_nan(kpath, breaks, bands)
             matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, weight, alpha, current_tolerance])
         # Bandstructure plotting style: bands
         elif bstype.lower() in ["bands", "bands nonpolarized"]:
             fermi_energy = extract_fermi(directory)
-            kpath = extract_kpath(directory)
+            kpath, breaks = extract_kpath(directory, return_breaks=True)
             conduction_bands = extract_eigenvalues_conductionBands_nonpolarized(directory, current_tolerance)
             valence_bands = extract_eigenvalues_valenceBands_nonpolarized(directory, current_tolerance)
+            kpath, conduction_bands, valence_bands = _apply_breaks_insert_nan(kpath, breaks, conduction_bands, valence_bands)
             matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["bands spin up", "spin up bands"]:
             fermi_energy = extract_fermi(directory)
-            kpath = extract_kpath(directory)
+            kpath, breaks = extract_kpath(directory, return_breaks=True)
             conduction_bands = extract_eigenvalues_conductionBands_spinUp(directory, current_tolerance)
             valence_bands = extract_eigenvalues_valenceBands_spinUp(directory, current_tolerance)
+            kpath, conduction_bands, valence_bands = _apply_breaks_insert_nan(kpath, breaks, conduction_bands, valence_bands)
             matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, weight, alpha, current_tolerance])
         elif bstype.lower() in ["bands spin down", "spin down bands"]:
             fermi_energy = extract_fermi(directory)
-            kpath = extract_kpath(directory)
+            kpath, breaks = extract_kpath(directory, return_breaks=True)
             conduction_bands = extract_eigenvalues_conductionBands_spinDown(directory, current_tolerance)
             valence_bands = extract_eigenvalues_valenceBands_spinDown(directory, current_tolerance)
+            kpath, conduction_bands, valence_bands = _apply_breaks_insert_nan(kpath, breaks, conduction_bands, valence_bands)
             matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, weight, alpha, current_tolerance])
     return matters
 
@@ -1191,7 +1400,7 @@ def plot_bandstructure(title, matters_list=None, eigen_range=None, legend_loc=Fa
             for bands_index in range(0, len(matter[4])):
                 current_band = [eigenvalue - fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], label=f"Bands {current_label}", zorder=4)
+                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], label=f"{current_label}", zorder=4)
                 else:
                     plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], zorder=4)
         elif matter[0] in ["bands"]:
@@ -1199,13 +1408,13 @@ def plot_bandstructure(title, matters_list=None, eigen_range=None, legend_loc=Fa
             for bands_index in range(0, len(matter[4])):
                 current_conduction_band = [eigenvalue - fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Conduction bands {current_label}", zorder=4)
+                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Conduction bands for {current_label}", zorder=4)
                 else:
                     plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
             for bands_index in range(0, len(matter[5])):
                 current_valence_band = [eigenvalue - fermi for eigenvalue in matter[5][bands_index]]
                 if bands_index == 0:
-                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Valence bands {current_label}", zorder=4)
+                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Valence bands for {current_label}", zorder=4)
                 else:
                     plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
         kpath_start = matter[3][0]
@@ -1234,16 +1443,7 @@ def plot_bandstructure(title, matters_list=None, eigen_range=None, legend_loc=Fa
 
     # High symmetry path
     directory = matters_list[-1][2]
-    high_symmetry_paths = kpoints_path(directory)
-    high_symmetry_positions = list(high_symmetry_paths.values())
-    high_symmetry_labels = list(high_symmetry_paths.keys())
-
-    # Check if the KPOINTS file returns to the starting point
-    if is_kpoints_returning(directory) is True:
-        high_symmetry_positions.append(kpath_end)
-        high_symmetry_labels.append(high_symmetry_labels[0])
-    else: pass
-
+    high_symmetry_positions, high_symmetry_labels = kpoints_path_lists(directory)
     plt.xticks(high_symmetry_positions, high_symmetry_labels)
 
     for k_loc in high_symmetry_positions[1:-1]:
@@ -1336,7 +1536,7 @@ def plot_bsDoS(suptitle, matters_list=None, eigen_range=None, dos_range=None, le
             for bands_index in range(0, len(matter[4])):
                 current_band = [eigenvalue - bs_fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Bands {bs_current_label}", zorder=4)
+                    ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"{bs_current_label}", zorder=4)
                 else:
                     ax1.plot(matter[3], current_band, c=color_sampling(matter[6])[1], linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
         elif matter[0].lower() in ["bands"]:
@@ -1376,18 +1576,7 @@ def plot_bsDoS(suptitle, matters_list=None, eigen_range=None, dos_range=None, le
     ax1.set_xlim(kpath_start, kpath_end)
 
     bs_direction = (matters_list[-1])[2]
-    high_symmetry_paths = kpoints_path(bs_direction)
-    high_symmetry_positions = list(high_symmetry_paths.values())
-    # high_symmetry_positions = list(kpoints_path(bs_direction).values())
-
-    high_symmetry_labels = list(high_symmetry_paths.keys())
-    # high_symmetry_labels = list(kpoints_path(bs_direction).keys())
-
-    if is_kpoints_returning(bs_direction) is True:
-        high_symmetry_positions.append(kpath_end)
-        high_symmetry_labels.append(high_symmetry_labels[0])
-    else: pass
-
+    high_symmetry_positions, high_symmetry_labels = kpoints_path_lists(bs_direction)
     ax1.set_xticks(high_symmetry_positions)
     ax1.set_xticklabels(high_symmetry_labels)
 
@@ -1503,7 +1692,7 @@ def plot_bsPDoS(title, bs_list, pdos_list, eigen_range, dos_range, legend_loc=Fa
             for bands_index in range(0, len(matter[4])):
                 current_band = [eigenvalue - bs_fermi for eigenvalue in matter[4][bands_index]]
                 if bands_index == 0:
-                    ax1.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], label=f"Bands {bs_current_label}", zorder=4)
+                    ax1.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], label=f"{bs_current_label}", zorder=4)
                 else:
                     ax1.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], zorder=4)
         elif matter[0].lower() in ["bands"]:
@@ -1541,20 +1730,8 @@ def plot_bsPDoS(title, bs_list, pdos_list, eigen_range, dos_range, legend_loc=Fa
 
     # x-axis
     ax1.set_xlim(kpath_start, kpath_end)
-
     bs_direction = (bs_list[-1])[2]
-    high_symmetry_paths = kpoints_path(bs_direction)
-    high_symmetry_positions = list(high_symmetry_paths.values())
-    # high_symmetry_positions = list(kpoints_path(bs_direction).values())
-
-    high_symmetry_labels = list(high_symmetry_paths.keys())
-    # high_symmetry_labels = list(kpoints_path(bs_direction).keys())
-
-    if is_kpoints_returning(bs_direction) is True:
-        high_symmetry_positions.append(kpath_end)
-        high_symmetry_labels.append(high_symmetry_labels[0])
-    else: pass
-
+    high_symmetry_positions, high_symmetry_labels = kpoints_path_lists(bs_direction)
     ax1.set_xticks(high_symmetry_positions)
     ax1.set_xticklabels(high_symmetry_labels)
 

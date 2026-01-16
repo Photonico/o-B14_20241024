@@ -42,8 +42,16 @@ def is_qpoints_returning(directory):
     except Exception:
         return False
 
-def extract_phonon_high_sym(directory):
-    # Open and read the QPOINTS file
+def extract_phonon_high_sym(directory, return_coords=False):
+    """Parse a VASP QPOINTS/QPOINTS_OPT line-mode file and return high-symmetry path markers.
+    Parameters
+    directory : str
+        Directory containing QPOINTS or QPOINTS_OPT.
+    return_coords : bool
+        If False (default), return a list of labels.
+        If True, return a list of (label, [qx, qy, qz]) boundary points in plotting order.
+        This keeps repeated labels when they represent distinct boundaries/branches.
+    """
     qpoints_file_path = os.path.join(directory, "QPOINTS")
     qpoints_opt_path = os.path.join(directory, "QPOINTS_OPT")
     if os.path.exists(qpoints_opt_path):
@@ -52,29 +60,52 @@ def extract_phonon_high_sym(directory):
         qpoints_file = qpoints_file_path
     else:
         raise FileNotFoundError("QPOINTS file not found in the directory.")
+
     with open(qpoints_file, "r", encoding="utf-8") as file:
-        QPOINTS = file.readlines()
-    # Check if the QPOINTS file is in line-mode
-    if QPOINTS[2][0] not in ("l", "L"):
-        raise ValueError(f"Expected 'L' on the third line of QPOINTS file, got: {QPOINTS[2]}")
-    # Initialize a list to store high symmetry points
-    high_symmetry_points = []
-    # Read the high symmetry points from the QPOINTS file
-    for i in range(4, len(QPOINTS)):
-        tokens = QPOINTS[i].strip().split()
-        if tokens and tokens[-1].isalpha():
-            high_symmetry_points.append(tokens[-1])
-    # Remove duplicates except for the first and last points
-    if len(high_symmetry_points) > 2:
-        unique_points = [high_symmetry_points[0]]       # Keep the first point
-        seen = set(unique_points)
-        for point in high_symmetry_points[1:-1]:        # Process middle points
-            if point not in seen:
-                unique_points.append(point)
-                seen.add(point)
-        unique_points.append(high_symmetry_points[-1])  # Keep the last point
-    else: unique_points = high_symmetry_points            # If only two points, return as is
-    return unique_points
+        qlines = file.readlines()
+
+    # Check line-mode (accept both 'line' and 'line-mode')
+    if len(qlines) < 4 or qlines[2].strip()[:1].lower() != "l":
+        raise ValueError(f"Expected a line-mode QPOINTS file (3rd line starts with 'L'), got: {qlines[2] if len(qlines) > 2 else '<missing>'}")
+
+    # Collect all labeled endpoints (each segment is defined by two consecutive labeled lines).
+    endpoints = []
+    for line in qlines[4:]:
+        tokens = line.strip().split()
+        if len(tokens) < 4:
+            continue
+        label = tokens[-1]
+        # Many people use Γ etc; isalpha() covers unicode letters too.
+        if not label.isalpha():
+            continue
+        try:
+            coords = [float(tokens[0]), float(tokens[1]), float(tokens[2])]
+        except ValueError:
+            continue
+        endpoints.append((label, coords))
+
+    if not endpoints:
+        return [] if not return_coords else []
+
+    # Pair endpoints into segments: (start, end), (start, end), ...
+    segments = []
+    for i in range(0, len(endpoints) - 1, 2):
+        segments.append((endpoints[i], endpoints[i + 1]))
+
+    # Build a boundary list that:
+    #   - keeps repeated labels when they occur at different boundaries
+    #   - inserts the start point again if a segment starts from a different point than the previous segment ended
+    boundaries = [segments[0][0]]
+    for si, (start, end) in enumerate(segments):
+        boundaries.append(end)
+        if si + 1 < len(segments):
+            next_start = segments[si + 1][0]
+            if np.linalg.norm(np.array(next_start[1]) - np.array(end[1])) > 1e-10:
+                boundaries.append(next_start)
+
+    if return_coords:
+        return boundaries
+    return [lbl for (lbl, _c) in boundaries]
 
 def extract_phonon_high_sym_details(directory):
     outcar_file = os.path.join(directory, "OUTCAR")
@@ -162,65 +193,53 @@ def extract_phonon_bands(directory):
     outcar_file = os.path.join(directory, "OUTCAR")
     # First pass: determine the number of phonon branches (num_bands)
     num_bands = 0
-    with open(outcar_file, "r") as f:
-        lines = f.readlines()
-    for i, line in enumerate(lines):
+    with open(outcar_file, "r") as f: lines = f.readlines()
+    for index, line in enumerate(lines):
         if "branch index" in line:
-            j = i + 1
-            while j < len(lines) and lines[j].strip():
+            order = index + 1
+            while order < len(lines) and lines[order].strip():
                 num_bands += 1
-                j += 1
+                order += 1
             break
-
     # Initialize storage for bands and path
     bands = [[] for _ in range(num_bands)]
     path = []
     prev_coords = None
     total_distance = 0.0
-
-    i = 0
-    while i < len(lines):
-        line = lines[i]
+    index = 0
+    while index < len(lines):
+        line = lines[index]
         if "q-point No." in line:
-            i += 1
-            if i >= len(lines):
-                break
-            coord_line = lines[i].strip()
+            index += 1
+            if index >= len(lines): break
+            coord_line = lines[index].strip()
             parts = coord_line.split()
-            try:
-                # Assume the format: "q-point: x y z"
-                coords = [float(parts[1]), float(parts[2]), float(parts[3])]
+            try: coords = [float(parts[1]), float(parts[2]), float(parts[3])] # Assume the format: "q-point: x y z"
             except Exception:
-                i += 1
+                index += 1
                 continue
-            if prev_coords is None:
-                total_distance = 0.0
+            if prev_coords is None: total_distance = 0.0
             else:
                 d = np.linalg.norm(np.array(coords) - np.array(prev_coords))
                 total_distance += d
             path.append(total_distance)
             prev_coords = coords
-            i += 1
+            index += 1
         elif "branch index" in line:
-            i += 1
+            index += 1
             # For the current q-point, read the next num_bands lines for the phonon frequencies
-            for b in range(num_bands):
-                if i >= len(lines):
-                    break
-                freq_line = lines[i].strip()
+            for band in range(num_bands):
+                if index >= len(lines): break
+                freq_line = lines[index].strip()
                 if not freq_line:
-                    i += 1
+                    index += 1
                     continue
                 parts = freq_line.split()
-                try:
-                    freq = float(parts[1])
-                except Exception:
-                    freq = None
-                if freq is not None:
-                    bands[b].append(freq)
-                i += 1
-        else:
-            i += 1
+                try:  freq = float(parts[1])
+                except Exception: freq = None
+                if freq is not None: bands[band].append(freq)
+                index += 1
+        else: index += 1
     return {"path": path, "bands": bands}
 
 def create_matters_phonons(matters_list):
@@ -302,46 +321,46 @@ def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
     # Get the original directory from the original matters_list (format: [label, directory, *optional])
     orig_directory = matters_list[-1][1]
 
-    # Extract high symmetry point info from QPOINTS and set xticks using the weighted q-path.
-    high_sym_labels = extract_phonon_high_sym(orig_directory)
+    # Extract high symmetry boundaries from QPOINTS (keep repeats for multi-segment / branched paths)
+    # and set xticks using the weighted q-path.
+    boundaries = extract_phonon_high_sym(orig_directory, return_coords=True)
     details = extract_phonon_high_sym_details(orig_directory)
     details_q = details["q_coords"]
     weighted_qpath_full = extract_qpath(orig_directory)
+
     high_sym_positions = []
-    used_labels = []
-    qpoints_file = None
-    qpoints_opt_path = os.path.join(orig_directory, "QPOINTS_OPT")
-    qpoints_file_path = os.path.join(orig_directory, "QPOINTS")
-    if os.path.exists(qpoints_opt_path):
-        qpoints_file = qpoints_opt_path
-    elif os.path.exists(qpoints_file_path):
-        qpoints_file = qpoints_file_path
-    if qpoints_file:
-        with open(qpoints_file, "r", encoding="utf-8") as f:
-            lines = f.readlines()
-        high_sym_data = []
-        for line in lines[4:]:
-            tokens = line.strip().split()
-            if len(tokens) >= 4 and tokens[-1].isalpha():
-                label = tokens[-1]
-                coords = [float(tokens[0]), float(tokens[1]), float(tokens[2])]
-                high_sym_data.append((label, coords))
-        for label, hs_coords in high_sym_data:
-            min_dist = float("inf")
-            pos = None
-            for i, q in enumerate(details_q):
-                dist = np.linalg.norm(np.array(q) - np.array(hs_coords))
-                if dist < min_dist:
-                    min_dist = dist
-                    pos = weighted_qpath_full[i] if i < len(weighted_qpath_full) else None
-            if pos is not None and label not in used_labels:
-                high_sym_positions.append((label, pos))
-                used_labels.append(label)
-        # If QPOINTS file represents a closed path, add the last point.
-        if is_qpoints_returning(orig_directory):
-            if high_sym_positions:
-                first_label, _ = high_sym_positions[0]
-                high_sym_positions.append((first_label, weighted_qpath_full[-1]))
+    last_search_start = 0  # enforce monotonic matching along the OUTCAR q-point sequence
+
+    for label, hs_coords in boundaries:
+        if not details_q:
+            break
+
+        min_dist = float("inf")
+        best_idx = None
+        # Match forward only; otherwise repeated points (e.g., Γ ... Γ) collapse onto the first occurrence.
+        for i, q in enumerate(details_q[last_search_start:], start=last_search_start):
+            dist = np.linalg.norm(np.array(q) - np.array(hs_coords))
+            if dist < min_dist:
+                min_dist = dist
+                best_idx = i
+                if min_dist < 1e-12:
+                    break
+
+        if best_idx is None or best_idx >= len(weighted_qpath_full):
+            continue
+
+        pos = weighted_qpath_full[best_idx]
+
+        # If two labeled endpoints map to the same x-position (segment boundary duplication),
+        # merge the labels as "A|B" at a single tick.
+        if high_sym_positions and abs(pos - high_sym_positions[-1][1]) < 1e-10:
+            prev_label, prev_pos = high_sym_positions[-1]
+            if prev_label != label:
+                high_sym_positions[-1] = (f"{prev_label}|{label}", prev_pos)
+        else:
+            high_sym_positions.append((label, pos))
+
+        last_search_start = best_idx + 1
     if high_sym_positions:
         ticks = [pos for label, pos in high_sym_positions]
         tick_labels = [label for label, pos in high_sym_positions]

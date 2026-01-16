@@ -4,6 +4,13 @@
 import os
 import matplotlib.pyplot as plt
 
+import matplotlib as mpl
+
+mpl.rcParams["lines.solid_capstyle"] = "round"
+mpl.rcParams["lines.dash_capstyle"]  = "round"
+mpl.rcParams["lines.solid_joinstyle"] = "round"
+mpl.rcParams["lines.dash_joinstyle"]  = "round"
+
 def vasprun_directory(directory="."):
     """Find folders with complete vasprun.xml and print incomplete ones."""
     complete_folders = []
