@@ -11,6 +11,13 @@ from vmatplot.algorithms import energy_to_wavelength, energy_to_frequency, wavel
 
 from matplotlib.colors import ListedColormap
 
+import matplotlib as mpl
+
+mpl.rcParams["lines.solid_capstyle"] = "round"
+mpl.rcParams["lines.dash_capstyle"]  = "round"
+mpl.rcParams["lines.solid_joinstyle"] = "round"
+mpl.rcParams["lines.dash_joinstyle"]  = "round"
+
 ## References
 
 # <https://vaspkit.com/tutorials.html#linear-optical-properties>

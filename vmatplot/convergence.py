@@ -14,6 +14,13 @@ from vmatplot.commons import check_vasprun, identify_parameters, get_or_default
 from vmatplot.algorithms import is_nested_list, fit_birch_murnaghan
 from vmatplot.output_settings import canvas_setting, color_sampling
 
+import matplotlib as mpl
+
+mpl.rcParams["lines.solid_capstyle"] = "round"
+mpl.rcParams["lines.dash_capstyle"]  = "round"
+mpl.rcParams["lines.solid_joinstyle"] = "round"
+mpl.rcParams["lines.dash_joinstyle"]  = "round"
+
 ## Process and calculate data
 
 def cal_cohesive_energy(atom_count, atom_energy, total_energy):
@@ -402,7 +409,8 @@ def plot_energy_kpoints_single(suptitle, *args_list):
     total_kpoints_sorted, energy_sorted, sep_kpoints_sorted = zip(*sorted_data)
 
     # Set title with info_suffix
-    plt.title(f"{suptitle} {info_suffix}")
+    # plt.title(f"{suptitle} {info_suffix}")
+    plt.title(f"{suptitle}")
     plt.xlabel("K-points configuration")
     plt.ylabel("Energy (eV)")
 
@@ -606,7 +614,8 @@ def plot_energy_encut_single(suptitle, *args_list):
 
     # Set title with info_suffix
     # plt.title(f"Energy versus energy cutoff {info_suffix}")
-    plt.title(f"{suptitle} {info_suffix}")
+    # plt.title(f"{suptitle} {info_suffix}")
+    plt.title(f"{suptitle}")
     plt.xlabel("Energy cutoff (eV)")
     plt.ylabel("Energy (eV)")
 
@@ -823,7 +832,8 @@ def plot_energy_lattice_single(suptitle, *args_list):
     # Set labels, title, and legend
     ax_kpoints.set_xlabel(r"Lattice constant (Å)")
     ax_kpoints.set_ylabel(r"Energy (eV)")
-    ax_kpoints.set_title(f"{suptitle} {info_suffix}")
+    # ax_kpoints.set_title(f"{suptitle} {info_suffix}")
+    ax_kpoints.set_title(f"{suptitle}")
     ax_kpoints.legend()
     plt.tight_layout()
 
@@ -1103,7 +1113,8 @@ def plot_energy_scaling_single(suptitle, *args_list):
     plt.scatter(scaling_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
 
     # Set labels and title (x-axis labels are not rotated)
-    plt.title(f"{suptitle} {info_suffix}")
+    # plt.title(f"{suptitle} {info_suffix}")
+    plt.title(f"{suptitle}")
     plt.xlabel("Scaling")
     plt.ylabel("Energy (eV)")
     plt.legend(loc="best")
@@ -1272,7 +1283,8 @@ def plot_energy_a1_single(suptitle, *args_list):
     plt.scatter(a1_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
 
     # Set labels and title
-    plt.title(f"{suptitle} {info_suffix}")
+    # plt.title(f"{suptitle} {info_suffix}")
+    plt.title(f"{suptitle}")
     plt.xlabel("a1 (Å)")
     plt.ylabel("Energy (eV)")
     plt.legend(loc="best")
@@ -1433,7 +1445,8 @@ def plot_energy_a2_single(suptitle, *args_list):
     plt.scatter(a2_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
 
     # Set labels and title
-    plt.title(f"{suptitle} {info_suffix}")
+    # plt.title(f"{suptitle} {info_suffix}")
+    plt.title(f"{suptitle}")
     plt.xlabel("a2 (Å)")
     plt.ylabel("Energy (eV)")
     plt.legend(loc="best")
@@ -1593,7 +1606,8 @@ def plot_energy_a3_single(suptitle, *args_list):
     plt.scatter(a3_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
 
     # Set labels and title
-    plt.title(f"{suptitle} {info_suffix}")
+    # plt.title(f"{suptitle} {info_suffix}")
+    plt.title(f"{suptitle}")
     plt.xlabel("a3 (Å)")
     plt.ylabel("Energy (eV)")
     plt.legend(loc="best")
@@ -2014,7 +2028,7 @@ def plot_cohesive_energy_kpoints_single(suptitle, *args_list):
     # Set custom tick labels for x-axis to show K-points configurations
     plt.xticks(ticks=range(len(kpoints_labels_plot)), labels=kpoints_labels_plot, rotation=45, ha="right")
 
-    plt.legend(loc="best")
+    # plt.legend(loc="best")
     plt.tight_layout()
 
 def plot_cohesive_energy_kpoints(suptitle, kpoints_list):
@@ -2195,8 +2209,8 @@ def plot_cohesive_energy_encut_single(suptitle, *args_list):
     ])
 
     # Plotting
-    plt.plot(encut_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha,
-             label=f"Cohesive energy versus energy cutoff {info_suffix}")
+    plt.plot(encut_filtered, energy_filtered, c=colors[1], ls=line_style, lw=line_weight, alpha=line_alpha)
+             # label=f"Cohesive energy versus energy cutoff {info_suffix}")
     plt.scatter(encut_filtered, energy_filtered, s=line_weight * 4, c=colors[1], zorder=1, alpha=line_alpha)
 
     # Set labels and title
@@ -2204,7 +2218,7 @@ def plot_cohesive_energy_encut_single(suptitle, *args_list):
     plt.title(f"{suptitle}")
     plt.xlabel("Energy cutoff (eV)")
     plt.ylabel("Cohesive energy (eV/atom)")
-    plt.legend(loc="best")
+    # plt.legend(loc="best")
     plt.tight_layout()
 
 def plot_cohesive_energy_encut(suptitle, encut_list):
