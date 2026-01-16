@@ -1,0 +1,33 @@
+ running   24 mpi-ranks, with    1 threads/rank, on    1 nodes
+ distrk:  each k-point on   24 cores,    1 groups
+ distr:  one band on    1 cores,   24 groups
+ vasp.6.4.3 19Mar24 (build May 31 2024 16:31:43) complex                        
+  
+ POSCAR found type information on POSCAR B 
+ POSCAR found :  1 types and      14 ions
+ Reading from existing POTCAR
+ scaLAPACK will be used
+ Reading from existing POTCAR
+ LDA part: xc-table for (Slater+PW92), standard interpolation
+ POSCAR, INCAR and KPOINTS ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ WAVECAR not read
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1     0.796276554729E+02    0.79628E+02   -0.19996E+04 16800   0.862E+02
+DAV:   2    -0.917023621205E+02   -0.17133E+03   -0.16063E+03 23256   0.168E+02
+DAV:   3    -0.975356823506E+02   -0.58333E+01   -0.57993E+01 24720   0.275E+01
+DAV:   4    -0.975701506175E+02   -0.34468E-01   -0.34466E-01 20016   0.245E+00
+DAV:   5    -0.975705393026E+02   -0.38869E-03   -0.38867E-03 24792   0.248E-01    0.123E+01
+DAV:   6    -0.922123316978E+02    0.53582E+01   -0.39095E+00 24192   0.654E+00    0.677E+00
+DAV:   7    -0.905759271383E+02    0.16364E+01   -0.31893E+00 25176   0.582E+00    0.170E+00
+DAV:   8    -0.905884284149E+02   -0.12501E-01   -0.23288E-01 18696   0.167E+00    0.703E-01
+DAV:   9    -0.906026098387E+02   -0.14181E-01   -0.16809E-02 23280   0.438E-01    0.197E-01
+DAV:  10    -0.906066457918E+02   -0.40360E-02   -0.20931E-03 19200   0.161E-01    0.609E-02
+DAV:  11    -0.906077141065E+02   -0.10683E-02   -0.62798E-04 21624   0.869E-02    0.319E-02
+DAV:  12    -0.906078286948E+02   -0.11459E-03   -0.91892E-05 21048   0.370E-02    0.427E-03
+DAV:  13    -0.906078335664E+02   -0.48716E-05   -0.40967E-06 23256   0.879E-03    0.179E-03
+DAV:  14    -0.906078342423E+02   -0.67594E-06   -0.28058E-07 20640   0.229E-03
+   1 F= -.90607834E+02 E0= -.90606226E+02  d E =-.321578E-02
