@@ -1,1 +1,9 @@
 phonon dispersion with phononpy
+
+steps
+
+1. run `phonopy -d --dim 3 3 1 --pa auto --pm`
+
+2. submit the calculations
+
+3. run `phonopy -f disp-{001..003}/vasprun.xml`
