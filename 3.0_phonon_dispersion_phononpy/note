@@ -2,7 +2,7 @@ phonon dispersion with phononpy
 
 steps
 
-1. run `phonopy -d --dim 3 3 1 --pa auto --pm`
+1. run `phonopy -d --dim 3 3 1 --pa auto` to process POSCAR
 
 2. submit the calculations
 
