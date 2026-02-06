@@ -1,0 +1,622 @@
+ running   42 mpi-ranks, on    1 nodes
+ distrk:  each k-point on   42 cores,    1 groups
+ distr:  one band on    7 cores,    6 groups
+ vasp.6.5.0 16Dec24 (build Jan 08 2025 16:17:04) complex                        
+  
+ POSCAR found type information on POSCAR B H 
+ POSCAR found :  2 types and     270 ions
+ Reading from existing POTCAR
+ scaLAPACK will be used
+ Reading from existing POTCAR
+ LDA part: xc-table for (Slater+PW92), standard interpolation
+ POSCAR, INCAR and KPOINTS ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ WAVECAR not read
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+DAV:   1     0.607485044775E+04    0.60749E+04   -0.29267E+05  6576   0.122E+03
+DAV:   2    -0.893114964661E+03   -0.69680E+04   -0.67240E+04  9072   0.263E+02
+DAV:   3    -0.176220723715E+04   -0.86909E+03   -0.85629E+03  7200   0.981E+01
+DAV:   4    -0.179175603066E+04   -0.29549E+02   -0.29316E+02  8556   0.186E+01
+DAV:   5    -0.179276306837E+04   -0.10070E+01   -0.10049E+01  8400   0.301E+00    0.547E+01
+DAV:   6    -0.166556765498E+04    0.12720E+03   -0.17780E+02  7320   0.143E+01    0.291E+01
+DAV:   7    -0.163529550610E+04    0.30272E+02   -0.11356E+02  7680   0.110E+01    0.883E+00
+DAV:   8    -0.163433504311E+04    0.96046E+00   -0.94142E+00  7764   0.380E+00    0.326E+00
+DAV:   9    -0.163391695247E+04    0.41809E+00   -0.12555E+00  7644   0.133E+00    0.115E+00
+DAV:  10    -0.163386226805E+04    0.54684E-01   -0.18133E-01  8004   0.493E-01    0.656E-01
+DAV:  11    -0.163381113585E+04    0.51132E-01   -0.84263E-02  7452   0.318E-01    0.321E-01
+DAV:  12    -0.163380176133E+04    0.93745E-02   -0.52328E-02  7608   0.239E-01    0.221E-01
+DAV:  13    -0.163381990151E+04   -0.18140E-01   -0.19836E-02  7224   0.162E-01    0.146E-01
+DAV:  14    -0.163383735329E+04   -0.17452E-01   -0.10240E-02  7068   0.114E-01    0.760E-02
+DAV:  15    -0.163384952127E+04   -0.12168E-01   -0.21063E-03  7428   0.525E-02    0.506E-02
+DAV:  16    -0.163385848212E+04   -0.89609E-02   -0.10244E-03  7500   0.323E-02    0.284E-02
+DAV:  17    -0.163386522559E+04   -0.67435E-02   -0.42030E-04  7500   0.182E-02    0.175E-02
+DAV:  18    -0.163386982895E+04   -0.46034E-02   -0.29570E-04  7488   0.127E-02    0.203E-02
+DAV:  19    -0.164334195254E+04   -0.94721E+01    0.14094E-01  8532   0.559E-02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   774.00216 new  775.87117
+    0.912E-01
+DAV:  20    -0.204640229707E+04   -0.40306E+03   -0.83424E+01  7932   0.985E-01BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   775.87117 new  779.24596
+    0.282E+00
+DAV:  21    -0.776559269329E+04   -0.57192E+04   -0.13835E+01  7848   0.827E+00BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   779.24596 new  775.53977
+    0.305E+00
+DAV:  22    -0.106650733960E+05   -0.28995E+04   -0.44720E+02  7512   0.108E+01BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   775.53977 new  779.39256
+    0.352E+00
+DAV:  23    -0.398198544172E+05   -0.29155E+05   -0.57994E+02  7584   0.139E+01BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   779.39256 new  784.93379
+    0.612E+00
+DAV:  24    -0.263574890227E+05    0.13462E+05   -0.43629E+02  7776   0.250E+01BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   784.93379 new  782.76808
+    0.764E+00
+DAV:  25    -0.517755252817E+05   -0.25418E+05   -0.10309E+03  7512   0.356E+01BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   782.76808 new  785.21457
+    0.121E+01
+DAV:  26    -0.218503797782E+05    0.29925E+05   -0.53542E+02  7596   0.550E+01BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   785.21457 new  782.30075
+    0.175E+01
+DAV:  27    -0.600459216582E+05   -0.38196E+05   -0.51046E+02  7632   0.727E+01BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   782.30075 new  790.90797
+    0.256E+01
+DAV:  28    -0.503219458888E+05    0.97240E+04    0.13996E+03  7704   0.101E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   790.90797 new  790.69376
+    0.300E+01
+DAV:  29    -0.229549476798E+05    0.27367E+05    0.20246E+03  7596   0.115E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   790.69376 new  788.41827
+    0.297E+01
+DAV:  30    -0.246853651068E+05   -0.17304E+04    0.21127E+03  7512   0.109E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   788.41827 new  792.66284
+    0.295E+01
+DAV:  31    -0.144821389956E+05    0.10203E+05    0.30104E+03  7596   0.111E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   792.66284 new  794.15293
+    0.295E+01
+DAV:  32    -0.156741451640E+05   -0.11920E+04   -0.73470E+03  8016   0.111E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   794.15293 new  790.68045
+    0.302E+01
+DAV:  33    -0.138590349460E+08   -0.13843E+08    0.14613E+03  7584   0.106E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   790.68045 new  804.39901
+    0.345E+01
+DAV:  34    -0.226518063641E+05    0.13836E+08    0.40774E+03  7464   0.117E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   804.39901 new  813.02843
+    0.332E+01
+DAV:  35    -0.214359177181E+05    0.12159E+04    0.60928E+03  7800   0.107E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   813.02843 new  808.62533
+    0.310E+01
+DAV:  36    -0.198910668748E+05    0.15449E+04    0.58955E+03  7368   0.122E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   808.62533 new  801.01950
+    0.293E+01
+DAV:  37    -0.350272508248E+07   -0.34828E+07   -0.56442E+03  7692   0.115E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   801.01950 new  815.21316
+    0.423E+01
+DAV:  38    -0.153000631998E+05    0.34874E+07    0.48730E+03  7440   0.145E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   815.21316 new  819.33627
+    0.327E+01
+DAV:  39    -0.288301544508E+05   -0.13530E+05    0.75197E+03  7968   0.117E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   819.33627 new  811.55658
+    0.293E+01
+DAV:  40    -0.236651881484E+05    0.51650E+04   -0.50554E+03  7488   0.121E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   811.55658 new  811.79552
+    0.335E+01
+DAV:  41    -0.233330740619E+05    0.33211E+03    0.50875E+03  7284   0.124E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   811.79552 new  805.71959
+    0.281E+01
+DAV:  42    -0.296596889890E+05   -0.63266E+04    0.56154E+03  7632   0.112E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   805.71959 new  805.92019
+    0.285E+01
+DAV:  43    -0.235034093271E+05    0.61563E+04    0.57009E+03  7392   0.116E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   805.92019 new  803.81499
+    0.275E+01
+DAV:  44    -0.216425615840E+05    0.18608E+04    0.53294E+03  7656   0.111E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   803.81499 new  800.01245
+    0.267E+01
+DAV:  45    -0.233258477561E+05   -0.16833E+04    0.46584E+03  7680   0.107E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   800.01245 new  800.72766
+    0.276E+01
+DAV:  46    -0.226221988052E+05    0.70365E+03    0.48097E+03  7272   0.117E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   800.72766 new  801.16828
+    0.273E+01
+DAV:  47    -0.232305818629E+05   -0.60838E+03    0.48883E+03  7596   0.114E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   801.16828 new  802.59578
+    0.273E+01
+DAV:  48    -0.220337055363E+05    0.11969E+04    0.51619E+03  7596   0.118E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   802.59578 new  800.82469
+    0.266E+01
+DAV:  49    -0.260171537595E+05   -0.39834E+04    0.48359E+03  7620   0.110E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   800.82469 new  796.92072
+    0.257E+01
+DAV:  50    -0.221133160540E+05    0.39038E+04    0.41344E+03  7644   0.105E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   796.92072 new  798.99861
+    0.270E+01
+DAV:  51    -0.207451440270E+05    0.13682E+04    0.45187E+03  7452   0.116E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   798.99861 new  797.73740
+    0.262E+01
+DAV:  52    -0.208143893313E+05   -0.69245E+02    0.42914E+03  7584   0.110E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   797.73740 new  799.99460
+    0.272E+01
+DAV:  53    -0.224376637169E+05   -0.16233E+04    0.47064E+03  7692   0.113E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   799.99460 new  798.03437
+    0.260E+01
+DAV:  54    -0.240586652976E+05   -0.16210E+04    0.43548E+03  7716   0.106E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   798.03437 new  799.07582
+    0.267E+01
+DAV:  55    -0.207308884556E+05    0.33278E+04    0.45466E+03  7560   0.112E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   799.07582 new  795.76559
+    0.255E+01
+DAV:  56    -0.251662205040E+05   -0.44353E+04    0.39444E+03  7716   0.103E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   795.76559 new  794.62950
+    0.259E+01
+DAV:  57    -0.253168063951E+05   -0.15059E+03    0.36981E+03  8172   0.104E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   794.62950 new  799.36541
+    0.259E+01
+DAV:  58    -0.264762416164E+05   -0.11594E+04    0.35385E+03  8052   0.108E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   799.36541 new  805.87103
+    0.273E+01
+DAV:  59    -0.305763195821E+05   -0.41001E+04    0.50164E+03  7980   0.123E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   805.87103 new  802.09634
+    0.259E+01
+DAV:  60    -0.103749913431E+08   -0.10344E+08    0.40553E+03  7452   0.118E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   802.09634 new  811.59750
+    0.456E+01
+DAV:  61    -0.557670526151E+05    0.10319E+08    0.40485E+03  7836   0.134E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   811.59750 new  809.31076
+    0.416E+01
+DAV:  62    -0.507816359823E+05    0.49854E+04    0.33052E+03  7476   0.133E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   809.31076 new  795.91342
+    0.375E+01
+DAV:  63    -0.701425634937E+05   -0.19361E+05    0.14900E+03  7692   0.160E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   795.91342 new  771.65882
+    0.370E+01
+DAV:  64    -0.532623323290E+05    0.16880E+05   -0.23951E+03  7524   0.174E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   771.65882 new  764.58765
+    0.441E+01
+DAV:  65    -0.813189645612E+05   -0.28057E+05   -0.28581E+05  7728   0.207E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   764.58765 new  758.87843
+    0.679E+01
+DAV:  66    -0.506740741819E+05    0.30645E+05   -0.73419E+03  7848   0.224E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   758.87843 new  746.10509
+    0.521E+01
+DAV:  67    -0.582330563203E+05   -0.75590E+04   -0.54296E+03  7596   0.217E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   746.10509 new  734.92557
+    0.498E+01
+DAV:  68    -0.527647025810E+05    0.54684E+04   -0.72609E+03  7812   0.215E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   734.92557 new  736.18640
+    0.509E+01
+DAV:  69    -0.335412533619E+05    0.19223E+05   -0.69196E+03  7776   0.222E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   736.18640 new  731.94339
+    0.499E+01
+DAV:  70    -0.369287497817E+05   -0.33875E+04   -0.76552E+03  7764   0.216E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   731.94339 new  734.33857
+    0.509E+01
+DAV:  71    -0.326724177940E+05    0.42563E+04   -0.77599E+03  7728   0.228E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   734.33857 new  731.78971
+    0.498E+01
+DAV:  72    -0.372729989706E+05   -0.46006E+04   -0.22112E+04  7860   0.218E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   731.78971 new  733.09552
+    0.520E+01
+DAV:  73    -0.395932490065E+05   -0.23203E+04   -0.38724E+04  7848   0.223E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   733.09552 new  729.29424
+    0.527E+01
+DAV:  74    -0.118546292014E+08   -0.11815E+08   -0.29406E+06  7884   0.218E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   729.29424 new  748.59022
+    0.101E+02
+DAV:  75    -0.499104115609E+05    0.11805E+08   -0.94790E+03  7164   0.250E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   748.59022 new  745.55906
+    0.549E+01
+DAV:  76    -0.654664140975E+05   -0.15556E+05   -0.61466E+03  7848   0.204E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   745.55906 new  743.86545
+    0.537E+01
+DAV:  77    -0.502842698682E+05    0.15182E+05   -0.59100E+03  7728   0.232E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   743.86545 new  741.57532
+    0.509E+01
+DAV:  78    -0.462441606596E+05    0.40401E+04   -0.61410E+03  7740   0.226E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   741.57532 new  744.49362
+    0.527E+01
+DAV:  79    -0.427171200359E+05    0.35270E+04   -0.54997E+03  7608   0.232E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   744.49362 new  747.60046
+    0.535E+01
+DAV:  80    -0.254730964671E+06   -0.21201E+06   -0.21460E+06  7728   0.242E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   747.60046 new  743.36992
+    0.914E+01
+DAV:  81    -0.491803372489E+05    0.20555E+06   -0.27221E+04  7740   0.240E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   743.36992 new  739.50618
+    0.569E+01
+DAV:  82    -0.554527005559E+05   -0.62724E+04   -0.84787E+03  7728   0.221E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   739.50618 new  742.06582
+    0.510E+01
+DAV:  83    -0.226395233714E+06   -0.17094E+06   -0.18435E+06  7764   0.235E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   742.06582 new  746.03963
+    0.837E+01
+DAV:  84    -0.504762302829E+05    0.17592E+06   -0.10010E+04  7704   0.241E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   746.03963 new  736.84916
+    0.485E+01
+DAV:  85    -0.513291419923E+05   -0.85291E+03   -0.68862E+03  7620   0.217E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   736.84916 new  748.28181
+    0.508E+01
+DAV:  86    -0.352309531601E+07   -0.34718E+07   -0.10816E+05  7776   0.237E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   748.28181 new  760.86267
+    0.817E+01
+DAV:  87    -0.743902181100E+06    0.27792E+07   -0.70579E+06  7308   0.256E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   760.86267 new  767.22667
+    0.105E+02
+DAV:  88    -0.741800601220E+07   -0.66741E+07   -0.77134E+03  8052   0.241E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   767.22667 new  755.72149
+    0.755E+01
+DAV:  89    -0.774149729254E+05    0.73406E+07   -0.45557E+03  6996   0.220E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   755.72149 new  764.80937
+    0.598E+01
+DAV:  90    -0.630243370308E+07   -0.62250E+07   -0.43209E+05  7344   0.232E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   764.80937 new  756.88262
+    0.692E+01
+DAV:  91    -0.863800341559E+05    0.62161E+07   -0.57830E+05  7692   0.230E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   756.88262 new  761.67794
+    0.864E+01
+DAV:  92    -0.104407074097E+08   -0.10354E+08   -0.78730E+03  7632   0.231E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   761.67794 new  756.56012
+    0.690E+01
+DAV:  93    -0.596974109983E+05    0.10381E+08   -0.42901E+03  7344   0.231E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   756.56012 new  761.99287
+    0.603E+01
+DAV:  94    -0.636782380529E+05   -0.39808E+04   -0.36070E+03  7632   0.221E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   761.99287 new  753.92065
+    0.560E+01
+DAV:  95    -0.547928591040E+05    0.88854E+04   -0.42416E+03  7692   0.237E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   753.92065 new  757.69848
+    0.557E+01
+DAV:  96    -0.540146887408E+05    0.77817E+03   -0.34046E+03  7908   0.240E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   757.69848 new  736.80691
+    0.525E+01
+DAV:  97    -0.729443578305E+05   -0.18930E+05   -0.24775E+05  7884   0.217E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   736.80691 new  741.07176
+    0.656E+01
+DAV:  98    -0.562209316327E+07   -0.55491E+07   -0.93612E+03  7656   0.238E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   741.07176 new  751.48570
+    0.631E+01
+DAV:  99    -0.474131124645E+05    0.55747E+07   -0.48934E+03  7524   0.240E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   751.48570 new  755.94020
+    0.548E+01
+DAV: 100    -0.538616324134E+06   -0.49120E+06   -0.48632E+06  7788   0.230E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   755.94020 new  747.62223
+    0.891E+01
+DAV: 101    -0.562729498754E+05    0.48234E+06   -0.10548E+04  8436   0.248E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   747.62223 new  750.63185
+    0.520E+01
+DAV: 102    -0.502513472311E+07   -0.49689E+07   -0.67782E+05  8508   0.241E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   750.63185 new  750.14023
+    0.927E+01
+DAV: 103    -0.655445058833E+07   -0.15293E+07   -0.10062E+04  7440   0.221E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   750.14023 new  770.71648
+    0.667E+01
+DAV: 104    -0.618214977720E+05    0.64926E+07   -0.29879E+03  7944   0.229E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   770.71648 new  767.66712
+    0.558E+01
+DAV: 105    -0.613838029282E+05    0.43769E+03   -0.30909E+03  7704   0.237E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   767.66712 new  764.05299
+    0.551E+01
+DAV: 106    -0.344245536221E+07   -0.33811E+07   -0.69850E+05  7500   0.285E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   764.05299 new  838.38801
+    0.735E+01
+DAV: 107    -0.567478909113E+05    0.33857E+07    0.52006E+03  7500   0.277E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   838.38801 new  831.54303
+    0.391E+01
+DAV: 108    -0.894928599088E+05   -0.32745E+05    0.79351E+03  7380   0.248E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   831.54303 new  814.35621
+    0.425E+01
+DAV: 109    -0.790048373117E+05    0.10488E+05    0.56150E+03  7368   0.297E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   814.35621 new  799.66565
+    0.414E+01
+DAV: 110    -0.129259237697E+08   -0.12847E+08   -0.41998E+06  7656   0.301E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   799.66565 new  781.07584
+    0.105E+02
+DAV: 111    -0.740909531897E+07    0.55168E+07   -0.66431E+03  7644   0.298E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   781.07584 new  799.60355
+    0.604E+01
+DAV: 112    -0.950544641984E+05    0.73140E+07    0.18407E+03  7728   0.348E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   799.60355 new  776.93572
+    0.396E+01
+DAV: 113    -0.966546673781E+05   -0.16002E+04   -0.12863E+03  7464   0.324E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   776.93572 new  784.22123
+    0.420E+01
+DAV: 114    -0.798175859641E+06   -0.70152E+06   -0.66847E+06  7416   0.370E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   784.22123 new  802.66564
+    0.718E+01
+DAV: 115    -0.717962419113E+05    0.72638E+06    0.79533E+02  7380   0.405E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   802.66564 new  786.51567
+    0.480E+01
+DAV: 116    -0.193119708783E+06   -0.12132E+06   -0.10090E+06  7860   0.374E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   786.51567 new  787.52029
+    0.805E+01
+DAV: 117    -0.109341669865E+07   -0.90030E+06   -0.10120E+07  7596   0.387E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   787.52029 new  784.71804
+    0.848E+01
+DAV: 118    -0.116079912659E+08   -0.10515E+08   -0.33973E+03  7884   0.389E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   784.71804 new  761.58675
+    0.646E+01
+DAV: 119    -0.233459200745E+08   -0.11738E+08   -0.60337E+03  7188   0.332E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   761.58675 new  791.16056
+    0.572E+01
+DAV: 120    -0.101600352676E+08    0.13186E+08   -0.43667E+04  7176   0.366E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   791.16056 new  806.04260
+    0.669E+01
+DAV: 121    -0.842864878673E+06    0.93172E+07   -0.75131E+06  7548   0.391E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   806.04260 new  798.01706
+    0.108E+02
+DAV: 122    -0.599343011479E+07   -0.51506E+07   -0.24233E+03  7512   0.382E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   798.01706 new  781.00945
+    0.466E+01
+DAV: 123    -0.865602375725E+05    0.59069E+07   -0.53088E+02  7716   0.348E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   781.00945 new  792.65279
+    0.422E+01
+DAV: 124    -0.583488429879E+07   -0.57483E+07   -0.52082E+05  7620   0.377E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   792.65279 new  789.28170
+    0.466E+01
+DAV: 125    -0.106871499082E+08   -0.48523E+07    0.11685E+03  7536   0.377E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   789.28170 new  779.93200
+    0.611E+01
+DAV: 126    -0.248390146687E+06    0.10439E+08   -0.79928E+05  7980   0.328E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   779.93200 new  789.89043
+    0.662E+01
+DAV: 127    -0.985693435766E+05    0.14982E+06   -0.89860E+02  7908   0.366E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   789.89043 new  786.39721
+    0.372E+01
+DAV: 128    -0.954851239117E+05    0.30842E+04    0.17483E+03  7632   0.385E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   786.39721 new  782.78279
+    0.342E+01
+DAV: 129    -0.570067391337E+07   -0.56052E+07    0.13258E+03  7704   0.378E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   782.78279 new  772.00962
+    0.438E+01
+DAV: 130    -0.131710940001E+06    0.55690E+07   -0.19413E+03  7320   0.346E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   772.00962 new  803.27557
+    0.360E+01
+DAV: 131    -0.235611061647E+06   -0.10390E+06   -0.16068E+06  7812   0.389E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   803.27557 new  779.49234
+    0.899E+01
+DAV: 132    -0.203647778568E+08   -0.20129E+08   -0.59566E+03  7440   0.381E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   779.49234 new  753.81345
+    0.773E+01
+DAV: 133    -0.220921436963E+06    0.20144E+08   -0.77743E+03  6948   0.289E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   753.81345 new  819.31463
+    0.416E+01
+DAV: 134    -0.144952297036E+07   -0.12286E+07   -0.32802E+06  7620   0.401E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   819.31463 new  795.21442
+    0.588E+01
+DAV: 135    -0.158447495560E+06    0.12911E+07   -0.11684E+03  7236   0.381E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   795.21442 new  781.64691
+    0.278E+01
+DAV: 136    -0.245661406133E+07   -0.22982E+07   -0.23561E+07  8016   0.378E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   781.64691 new  779.89771
+    0.130E+02
+DAV: 137    -0.174965697488E+08   -0.15040E+08   -0.95728E+06  7728   0.373E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   779.89771 new  747.63359
+    0.125E+02
+DAV: 138    -0.265114608223E+08   -0.90149E+07   -0.13364E+04  7224   0.297E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   747.63359 new  773.73534
+    0.759E+01
+DAV: 139    -0.140838036764E+08    0.12428E+08   -0.36014E+03  7068   0.299E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   773.73534 new  803.88740
+    0.367E+01
+DAV: 140    -0.138980216994E+06    0.13945E+08   -0.35733E+05  7452   0.349E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   803.88740 new  803.58070
+    0.290E+01
+DAV: 141    -0.740929350485E+06   -0.60195E+06   -0.18294E+06  8028   0.374E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   803.58070 new  787.88124
+    0.221E+01
+DAV: 142    -0.567678920269E+07   -0.49359E+07   -0.59949E+05  7872   0.348E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   787.88124 new  777.75753
+    0.309E+01
+DAV: 143    -0.858510023157E+07   -0.29083E+07   -0.19967E+06  7536   0.345E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   777.75753 new  796.85726
+    0.101E+02
+DAV: 144    -0.158753026251E+08   -0.72902E+07   -0.24600E+07  7248   0.369E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   796.85726 new  779.53202
+    0.119E+02
+DAV: 145    -0.159616565764E+08   -0.86354E+05   -0.43721E+05  7140   0.305E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   779.53202 new  796.45101
+    0.355E+01
+DAV: 146    -0.272719989739E+06    0.15689E+08   -0.18843E+06  7968   0.344E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   796.45101 new  802.79339
+    0.937E+01
+DAV: 147    -0.207665627183E+06    0.65054E+05   -0.42689E+05  7440   0.359E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   802.79339 new  779.07306
+    0.233E+01
+DAV: 148    -0.889884970310E+07   -0.86912E+07   -0.81187E+01  8088   0.329E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   779.07306 new  771.80435
+    0.523E+01
+DAV: 149    -0.145702930420E+08   -0.56714E+07   -0.34544E+03  7284   0.322E+02BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   771.80435 new  812.91717
+    0.429E+01
+DAV: 150    -0.599671029689E+05    0.14510E+08    0.54093E+03  7092   0.352E+02
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     The electronic self-consistency was not achieved in the given           |
+|     number of steps (NELM). The forces and other quantities evaluated       |
+|     might not be reliable so examine the results carefully. If you find     |
+|     spurious results, we suggest increasing NELM, if you were close to      |
+|     convergence or switching to a different ALGO or adjusting the           |
+|     density mixing parameters otherwise.                                    |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     Your highest band is occupied at some k-points! Unless you are          |
+|     performing a calculation for an insulator or semiconductor, without     |
+|     unoccupied bands, you have included TOO FEW BANDS!! Please increase     |
+|     the parameter NBANDS in file INCAR to ensure that the highest band      |
+|     is unoccupied at all k-points. It is always recommended to include      |
+|     a few unoccupied bands to accelerate the convergence of                 |
+|     molecular-dynamics runs (even for insulators or semiconductors),        |
+|     since the presence of unoccupied bands improves wavefunction            |
+|     prediction and helps to suppress 'band-crossings'.                      |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+BRMIX: very serious problems
+ the old and the new charge density differ
+ old charge density:   812.91717 new  805.34558
+   1 F= -.59999062E+05 E0= -.59996658E+05  d E =-.480715E+01
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     The minimum charge density times volume of the cell along the axis      |
+|     of the dipole correction is larger 1E-1, which could mean that your     |
+|     workfunction is not accurate as there is no field free region in        |
+|     your cell. Please consider either increasing the size of your cell      |
+|     along the dipole correction (vacuum dimension) or perhaps               |
+|     increasing the precision of your calculation.                           |
+|                                                                             |
+ -----------------------------------------------------------------------------
+

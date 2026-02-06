@@ -48,7 +48,8 @@ IBRION = -1
 # The number of groups made, each group working on one set of k-points 
 # KPAR = 1
 # How many cores handling one orbital
-NCORE = 7
+NCORE = 3
+LSCALAPACK = .FALSE.
 # Real space projection; slightly less accurate but faster 
 LREAL = Auto
 # Generalized Gradient Approximation (GGA)
