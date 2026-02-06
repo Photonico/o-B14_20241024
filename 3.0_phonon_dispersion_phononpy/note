@@ -6,4 +6,11 @@ steps
 
 2. submit the calculations
 
-3. run `phonopy -f disp-{001..003}/vasprun.xml`
+3. run `phonopy -f $(ls disp-*/vasprun.xml | sort -V)` for a quick look
+
+unfinished
+
+/cmt2/lniu6305/o-B14_20241024/3.0_phonon_dispersion_phononpy/bilayer_bridge/pd-008
+/cmt2/lniu6305/o-B14_20241024/3.0_phonon_dispersion_phononpy/bilayer_bridge/pd-029
+/cmt2/lniu6305/o-B14_20241024/3.0_phonon_dispersion_phononpy/bilayer_bridge/pd-033
+/cmt2/lniu6305/o-B14_20241024/3.0_phonon_dispersion_phononpy/bilayer_bridge/pd-045
