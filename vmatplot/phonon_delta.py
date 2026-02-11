@@ -3,7 +3,6 @@
 
 # Necessary packages invoking
 import os
-import re
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -244,117 +243,6 @@ def extract_phonon_bands(directory):
     return {"path": path, "bands": bands}
 
 
-def _clean_phonopy_label(label: str) -> str:
-    """Best-effort cleanup of phonopy label strings (often LaTeX) into plain text."""
-    if label is None:
-        return ""
-    s = str(label).strip()
-    # Strip $...$ math wrappers
-    if len(s) >= 2 and s[0] == "$" and s[-1] == "$":
-        s = s[1:-1].strip()
-
-    # Common LaTeX wrappers
-    # e.g. \mathrm{K} -> K
-    m = re.match(r"\\mathrm\{([^}]*)\}$", s)
-    if m:
-        s = m.group(1).strip()
-
-    # Remove leading backslashes
-    s = s.replace("\\", "")
-    s = s.replace("\\", "")  # defensive
-
-    # Map a few common Greek names to Unicode
-    greek = {
-        "Gamma": "Γ",
-        "Delta": "Δ",
-        "Sigma": "Σ",
-        "Lambda": "Λ",
-        "Xi": "Ξ",
-        "Pi": "Π",
-        "Omega": "Ω",
-    }
-    return greek.get(s, s)
-
-
-def extract_phonopy_high_sym_from_band_yaml(directory: str):
-    """Return (ticks, labels) for phonopy plots from band.yaml when possible.
-
-    This mirrors the spirit of extract_phonon_high_sym (VASP/QPOINTS):
-    - ticks: x positions of high-symmetry points along the path
-    - labels: corresponding labels (e.g. Γ Z T Y Γ)
-
-    Preference order:
-      1) band.yaml: keys 'labels' + 'segment_nqpoint' / distance repeats
-      2) band.conf / phonopy.conf: BAND_LABELS + segmentation inferred from qpath NaNs (fallback)
-    """
-    directory = str(directory)
-
-    # --- locate band.yaml ---
-    band_yaml = None
-    for cand in ("band.yaml", "phonopy_band.yaml"):
-        p = os.path.join(directory, cand)
-        if os.path.exists(p):
-            band_yaml = p
-            break
-    if band_yaml is None:
-        return None, None
-
-    # --- read YAML ---
-    try:
-        import yaml  # type: ignore
-        with open(band_yaml, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-    except Exception:
-        return None, None
-
-    phonon = (data or {}).get("phonon", [])
-    if not phonon:
-        return None, None
-
-    dist = [float(p.get("distance", 0.0)) for p in phonon]
-    n = len(dist)
-
-    # --- ticks from segment_nqpoint if consistent; otherwise from distance repeats ---
-    ticks = [dist[0]]
-    seg = (data or {}).get("segment_nqpoint", None)
-    if isinstance(seg, list) and seg and all(isinstance(x, (int, float, str)) for x in seg):
-        try:
-            seg_int = [int(x) for x in seg]
-        except Exception:
-            seg_int = []
-        if seg_int and sum(seg_int) == n:
-            idx = 0
-            for s in seg_int:
-                idx += s
-                ticks.append(dist[idx - 1])
-    if len(ticks) == 1:
-        # Fallback: boundary points often appear twice -> distance[i] == distance[i-1]
-        for i in range(1, n):
-            if abs(dist[i] - dist[i - 1]) < 1e-12:
-                ticks.append(dist[i])
-        if abs(ticks[-1] - dist[-1]) > 1e-12:
-            ticks.append(dist[-1])
-
-    # --- labels ---
-    labels = None
-    pairs = (data or {}).get("labels", None)
-    if isinstance(pairs, list) and pairs and all(isinstance(x, (list, tuple)) and len(x) >= 2 for x in pairs):
-        labels = [_clean_phonopy_label(pairs[0][0])]
-        for a, b, *rest in pairs:
-            labels.append(_clean_phonopy_label(b))
-
-    if not labels:
-        conf = extract_phonopy_band_conf(directory)
-        labels = conf.get("band_labels", []) if conf else []
-
-    # Align lengths defensively
-    m = min(len(ticks), len(labels)) if labels else len(ticks)
-    if not labels:
-        labels = [""] * len(ticks)
-        m = len(ticks)
-
-    return ticks[:m], labels[:m]
-
 def detect_phonon_backend(directory):
     """Detect which backend produced the phonon dispersion data stored under *directory*.
 
@@ -482,32 +370,22 @@ def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
         plt.ylim(-demo_boundary[1], demo_boundary[1])
     else:
         plt.ylim(demo_boundary[0], demo_boundary[1])
-    # Determine x-range from all matters (robust when overlaying multiple materials).
-    qmins, qmaxs = [], []
-    for _m in matters:
-        _qx = np.array(_m[2], dtype=float)
+    if weighted_qpath:
+        _qx = np.array(weighted_qpath, dtype=float)
         if np.isfinite(_qx).any():
-            qmins.append(float(np.nanmin(_qx)))
-            qmaxs.append(float(np.nanmax(_qx)))
-    if qmins:
-        plt.xlim(min(qmins), max(qmaxs))
-
-    # Get the original directory from the original matters_list (format: [label, directory, *optional])
-    orig_directory = matters_list[0][1]
+            plt.xlim(float(np.nanmin(_qx)), float(np.nanmax(_qx)))
+# Get the original directory from the original matters_list (format: [label, directory, *optional])
+    orig_directory = matters_list[-1][1]
     backend_ref = detect_phonon_backend(orig_directory)
 
     if backend_ref == "phonopy":
-        # Phonopy: prefer labels/segments recorded in band.yaml (most reliable).
-        ticks, tick_labels = extract_phonopy_high_sym_from_band_yaml(orig_directory)
+        # Phonopy: read high-symmetry points from band.conf and match them onto the band.yaml path.
+        try:
+            seg_nq = extract_phonopy_bands(orig_directory).get("segment_nqpoint", None)
+        except Exception:
+            seg_nq = None
 
-        # Fallback: infer segmentation from NaNs inserted into weighted_qpath + BAND_LABELS in band.conf.
-        if not ticks:
-            try:
-                seg_nq = extract_phonopy_bands(orig_directory).get("segment_nqpoint", None)
-            except Exception:
-                seg_nq = None
-            ticks, tick_labels = _phonopy_high_sym_positions(orig_directory, weighted_qpath, segment_nqpoint=seg_nq)
-
+        ticks, tick_labels = _phonopy_high_sym_positions(orig_directory, weighted_qpath, segment_nqpoint=seg_nq)
         if ticks:
             plt.xticks(ticks, tick_labels)
             for pos in ticks[1:-1]:
