@@ -469,8 +469,58 @@ def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
 
     # Create matters using the updated create_matters_phonons
     matters = create_matters_phonons(matters_list)
-    # Use the weighted q-path from one of the matters (they should be identical)
-    weighted_qpath = matters[0][2]
+
+    # If VASP- and Phonopy-based dispersions are plotted together, their k-path distances can
+    # differ by a constant scale (e.g. 2π convention). To make overlays comparable, rescale
+    # the Phonopy k-path to the VASP k-path range.
+    has_vasp = any(m[-1] == "vasp" for m in matters)
+    has_phonopy = any(m[-1] == "phonopy" for m in matters)
+
+    # Choose the reference dataset for axis ticks (prefer VASP when mixed).
+    ref_idx = 0
+    if has_vasp:
+        for i, m in enumerate(matters):
+            if m[-1] == "vasp":
+                ref_idx = i
+                break
+
+    if has_vasp and has_phonopy:
+        vasp_max = None
+        for m in matters:
+            if m[-1] != "vasp":
+                continue
+            q = np.asarray(m[2], dtype=float)
+            if np.isfinite(q).any():
+                qmax = float(np.nanmax(q))
+                vasp_max = qmax if vasp_max is None else max(vasp_max, qmax)
+
+        if vasp_max is not None and vasp_max > 0.0:
+            for m in matters:
+                if m[-1] != "phonopy":
+                    continue
+                q = np.asarray(m[2], dtype=float)
+                if not np.isfinite(q).any():
+                    continue
+                qmax = float(np.nanmax(q))
+                if qmax <= 0.0:
+                    continue
+                scale = vasp_max / qmax
+                if abs(scale - 1.0) < 1e-12:
+                    continue
+                q_scaled = []
+                for x in m[2]:
+                    try:
+                        xf = float(x)
+                    except Exception:
+                        q_scaled.append(x)
+                        continue
+                    if np.isfinite(xf):
+                        q_scaled.append(xf * scale)
+                    else:
+                        q_scaled.append(np.nan)
+                m[2] = q_scaled
+
+    weighted_qpath = matters[ref_idx][2]
 
     for matter in matters:
         current_label = matter[0]
@@ -501,8 +551,8 @@ def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
         plt.xlim(min(qmins), max(qmaxs))
 
     # Get the original directory from the original matters_list (format: [label, directory, *optional])
-    orig_directory = matters_list[0][1]
-    backend_ref = detect_phonon_backend(orig_directory)
+    orig_directory = matters_list[ref_idx][1]
+    backend_ref = matters[ref_idx][-1]
 
     if backend_ref == "phonopy":
         # Phonopy: prefer labels/segments recorded in band.yaml (most reliable).
@@ -573,7 +623,36 @@ def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
     if legend_loc is None or legend_loc is False: pass
     else: plt.legend(loc=legend_loc)
     
+    # Collect minimum-frequency point for each matter (for stability diagnostics).
+    minima = {}
+    for _m, _m_orig in zip(matters, matters_list):
+        _label = _m[0]
+        _qx = np.asarray(_m[2], dtype=float)
+        _bands = _m[3]
+        _best_y = None
+        _best_x = None
+        for _band in _bands:
+            _by = np.asarray(_band, dtype=float)
+            _mask = np.isfinite(_qx) & np.isfinite(_by)
+            if not _mask.any():
+                continue
+            _idxs = np.where(_mask)[0]
+            _i_min = int(_idxs[np.argmin(_by[_idxs])])
+            _y_min = float(_by[_i_min])
+            _x_min = float(_qx[_i_min])
+            if (_best_y is None) or (_y_min < _best_y):
+                _best_y = _y_min
+                _best_x = _x_min
+        minima[_label] = {
+            'x': _best_x,
+            'freq_THz': _best_y,
+            'backend': _m[-1] if len(_m) > 0 else None,
+            'directory': _m_orig[1] if isinstance(_m_orig, (list, tuple)) and len(_m_orig) > 1 else None,
+        }
+
     plt.tight_layout()
+    return minima
+
 
 
 #### Phonopy phonon dispersion (phonopy band.yaml)
