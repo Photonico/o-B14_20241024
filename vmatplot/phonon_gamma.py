@@ -623,36 +623,7 @@ def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
     if legend_loc is None or legend_loc is False: pass
     else: plt.legend(loc=legend_loc)
     
-    # Collect minimum-frequency point for each matter (for stability diagnostics).
-    minima = {}
-    for _m, _m_orig in zip(matters, matters_list):
-        _label = _m[0]
-        _qx = np.asarray(_m[2], dtype=float)
-        _bands = _m[3]
-        _best_y = None
-        _best_x = None
-        for _band in _bands:
-            _by = np.asarray(_band, dtype=float)
-            _mask = np.isfinite(_qx) & np.isfinite(_by)
-            if not _mask.any():
-                continue
-            _idxs = np.where(_mask)[0]
-            _i_min = int(_idxs[np.argmin(_by[_idxs])])
-            _y_min = float(_by[_i_min])
-            _x_min = float(_qx[_i_min])
-            if (_best_y is None) or (_y_min < _best_y):
-                _best_y = _y_min
-                _best_x = _x_min
-        minima[_label] = {
-            'x': _best_x,
-            'freq_THz': _best_y,
-            'backend': _m[-1] if len(_m) > 0 else None,
-            'directory': _m_orig[1] if isinstance(_m_orig, (list, tuple)) and len(_m_orig) > 1 else None,
-        }
-
     plt.tight_layout()
-    return minima
-
 
 
 #### Phonopy phonon dispersion (phonopy band.yaml)
