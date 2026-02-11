@@ -336,24 +336,32 @@ def extract_phonopy_high_sym_from_band_yaml(directory: str):
             ticks.append(dist[-1])
 
     # --- labels ---
-    labels = None
-    pairs = (data or {}).get("labels", None)
-    if isinstance(pairs, list) and pairs and all(isinstance(x, (list, tuple)) and len(x) >= 2 for x in pairs):
-        labels = [_clean_phonopy_label(pairs[0][0])]
-        for a, b, *rest in pairs:
-            labels.append(_clean_phonopy_label(b))
-
-    if not labels:
+    # Prefer BAND_LABELS from band.conf (user-specified). If not available, fall back to band.yaml.
+    labels = []
+    try:
         conf = extract_phonopy_band_conf(directory)
-        labels = conf.get("band_labels", []) if conf else []
+        labels = conf.get("boundary_labels", []) if conf else []
+    except Exception:
+        labels = []
 
-    # Align lengths defensively
-    m = min(len(ticks), len(labels)) if labels else len(ticks)
+    # Normalize labels (handles LaTeX like $\Gamma$ or \\Gamma)
+    if labels:
+        labels = [_clean_phonopy_label(x) for x in labels]
+
     if not labels:
-        labels = [""] * len(ticks)
-        m = len(ticks)
+        pairs = (data or {}).get("labels", None)
+        if isinstance(pairs, list) and pairs and all(isinstance(x, (list, tuple)) and len(x) >= 2 for x in pairs):
+            labels = [_clean_phonopy_label(pairs[0][0])]
+            for a, b, *rest in pairs:
+                labels.append(_clean_phonopy_label(b))
 
-    return ticks[:m], labels[:m]
+    # Force labels length == ticks length (never trim ticks based on labels)
+    if len(labels) < len(ticks):
+        labels = labels + [""] * (len(ticks) - len(labels))
+    elif len(labels) > len(ticks):
+        labels = labels[: len(ticks)]
+
+    return ticks, labels
 
 def detect_phonon_backend(directory):
     """Detect which backend produced the phonon dispersion data stored under *directory*.
@@ -805,6 +813,120 @@ def extract_phonopy_band_conf(directory, conf_name=None):
         boundary_labels = [f"P{i}" for i in range(nseg + 1)]
     return {"conf_path": conf_path, "band_points": band_points, "nseg": nseg, "boundary_labels": boundary_labels}
 
+def _phonopy_clean_label(label):
+    """Normalize labels coming from band.conf / phonopy.yaml / band.yaml.
+    - Convert common LaTeX-like strings (e.g. '$\\Gamma$') to Unicode (e.g. 'Γ').
+    - Strip quotes and surrounding '$'.
+    """
+    if label is None:
+        return ""
+    s = str(label).strip().strip("'").strip('"').strip()
+    # Remove surrounding $...$
+    if s.startswith("$") and s.endswith("$") and len(s) >= 2:
+        s = s[1:-1].strip()
+    # Remove any remaining '$'
+    s = s.replace("$", "").strip()
+
+    # Convert common LaTeX greek macros to unicode
+    greek_map = {
+        r"\Gamma": "Γ",
+        r"\Delta": "Δ",
+        r"\Lambda": "Λ",
+        r"\Sigma": "Σ",
+        r"\Xi": "Ξ",
+        r"\Pi": "Π",
+        r"\Phi": "Φ",
+        r"\Psi": "Ψ",
+        r"\Omega": "Ω",
+    }
+    for k, v in greek_map.items():
+        s = s.replace(k, v)
+
+    # A few alternative notations
+    # A few alternative notations
+    s = s.replace("\\\\", "\\")  # collapse doubled backslashes if any
+    s = s.replace("\\Gamma", "Γ").replace("\\Delta", "Δ").replace("\\Sigma", "Σ")
+    # Final trim
+    return s.strip()
+
+def _phonopy_boundary_labels_from_band_conf(directory, nseg):
+    try:
+        conf = extract_phonopy_band_conf(directory)
+    except Exception:
+        return None
+    labels = conf.get("boundary_labels") or []
+    labels = [_phonopy_clean_label(x) for x in labels]
+    if len(labels) == nseg + 1:
+        return labels
+    return None
+
+def _phonopy_boundary_labels_from_phonopy_yaml(directory, nseg):
+    # phonopy writes either phonopy.yaml or phonopy_disp.yaml (phonopy-yaml mode).
+    for fname in ("phonopy.yaml", "phonopy_disp.yaml"):
+        path = os.path.join(directory, fname)
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                for line in f:
+                    m = re.match(r"^\s*band_labels\s*:\s*['\"]?([^'\"]+)['\"]?\s*$", line)
+                    if m:
+                        labels = [_phonopy_clean_label(x) for x in m.group(1).split()]
+                        if len(labels) == nseg + 1:
+                            return labels
+        except Exception:
+            pass
+    return None
+
+def _phonopy_boundary_labels_from_band_yaml(directory, nseg):
+    # Parse band.yaml's "labels:" section, which is a list of pairs:
+    #   labels:
+    #   - [ '$\\Gamma$', 'Z' ]
+    #   - [ 'Z', 'T' ]
+    path = os.path.join(directory, "band.yaml")
+    if not os.path.isfile(path):
+        return None
+
+    pairs = []
+    in_labels = False
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                if not in_labels:
+                    if re.match(r"^\s*labels\s*:\s*$", line):
+                        in_labels = True
+                    continue
+                # End labels section when we hit a new top-level key
+                if re.match(r"^[A-Za-z_].*:\s*$", line) and not line.startswith(" "):
+                    break
+                m = re.match(r"^\s*-\s*\[\s*(.+?)\s*,\s*(.+?)\s*\]\s*$", line)
+                if not m:
+                    continue
+                a, b = m.group(1), m.group(2)
+                pairs.append((_phonopy_clean_label(a), _phonopy_clean_label(b)))
+
+        if not pairs:
+            return None
+        # boundary labels: first label of first pair, then the second label of each pair
+        boundary = [pairs[0][0]] + [p[1] for p in pairs]
+        if len(boundary) == nseg + 1:
+            return boundary
+    except Exception:
+        return None
+    return None
+
+def _phonopy_get_boundary_labels(directory, nseg):
+    """Return boundary labels (length nseg+1) with robust fallbacks."""
+    for fn in (
+        _phonopy_boundary_labels_from_band_conf,
+        _phonopy_boundary_labels_from_phonopy_yaml,
+        _phonopy_boundary_labels_from_band_yaml,
+    ):
+        labels = fn(directory, nseg)
+        if labels:
+            return labels
+    return None
+
 
 
 def _phonopy_high_sym_positions(directory, qpath, segment_nqpoint=None):
@@ -820,7 +942,7 @@ def _phonopy_high_sym_positions(directory, qpath, segment_nqpoint=None):
     """
     conf = extract_phonopy_band_conf(directory)
     nseg = conf["nseg"]
-    labels = conf["boundary_labels"]
+    labels = _phonopy_get_boundary_labels(directory, nseg) or conf.get("boundary_labels")
 
     # Split into segments using NaNs
     segments = []
@@ -845,6 +967,7 @@ def _phonopy_high_sym_positions(directory, qpath, segment_nqpoint=None):
 
     # Match labels length
     if labels:
+        labels = [_phonopy_clean_label(x) for x in labels]
         boundary_labels = (labels + [""] * len(boundary_positions))[: len(boundary_positions)]
     else:
         boundary_labels = [f"P{i}" for i in range(len(boundary_positions))]
