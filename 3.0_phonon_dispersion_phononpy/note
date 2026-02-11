@@ -2,13 +2,17 @@ phonon dispersion with phononpy
 
 steps
 
-1. process POSCAR: `phonopy -d --dim 3 3 1 --pa auto` to 
+1. process POSCAR: `phonopy -d --dim 3 3 1 --pa auto`
 
 2. submit the calculations
 
-3. create FORCE_SETS: `phonopy -f $(ls disp-*/vasprun.xml | sort -V)`
+3. create FORCE_SETS
+    unix: `phonopy -f $(ls dp-*/vasprun.xml | sort -V)`
+    windows: `phonopy --vasp -f (Get-ChildItem -Directory -Filter "pd-*" | Sort-Object { [int]($_.Name -replace '^pd-','') } | ForEach-Object { "$($_.Name)\vasprun.xml" } | Where-Object { Test-Path $_ })`
 
 4. generate band.yaml: `phonopy -p band.conf`
+
+5. quick view: `phonopy-bandplot band.yaml -o band.pdf`
 
 unfinished
 
