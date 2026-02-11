@@ -371,9 +371,10 @@ def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
     else:
         plt.ylim(demo_boundary[0], demo_boundary[1])
     if weighted_qpath:
-        plt.xlim(weighted_qpath[0], weighted_qpath[-1])
-
-    # Get the original directory from the original matters_list (format: [label, directory, *optional])
+        _qx = np.array(weighted_qpath, dtype=float)
+        if np.isfinite(_qx).any():
+            plt.xlim(float(np.nanmin(_qx)), float(np.nanmax(_qx)))
+# Get the original directory from the original matters_list (format: [label, directory, *optional])
     orig_directory = matters_list[-1][1]
     backend_ref = detect_phonon_backend(orig_directory)
 
@@ -457,12 +458,30 @@ def plot_phonons(title, matters_list=None, eigen_range=None, legend_loc=False):
 #        phonopy --vasp -f pd-*/vasprun.xml
 #        phonopy -p band.conf
 
+
 def extract_phonopy_bands(directory, band_yaml="band.yaml"):
     """
-    Extract phonon dispersion data from phonopy band.yaml:
-      - distance: cumulative q-path distance
-      - frequency (THz): for each branch at each q-point
-    Returns: {"path": [...], "bands": [[...], ...], "segment_nqpoint": ...}
+    Extract phonon dispersion data from phonopy band.yaml.
+
+    Key pitfall:
+      In phonopy band.yaml, "distance" can be either
+        (A) global cumulative distance along the entire path (monotonic), or
+        (B) per-segment distance restarting from ~0 at each segment.
+
+      If we "stitch" (B) correctly, we must add offsets between segments.
+      But if we mistakenly stitch (A), later segments get pushed too far right and the plot looks "broken".
+
+    What we do:
+      1) Detect whether distance is globally monotonic (A). If yes: keep it, only insert NaN separators.
+      2) Otherwise (B): stitch per segment by adding offsets, and insert NaN separators.
+      3) NaN separators are inserted between segments to break polylines (same behavior as phonopy-bandplot).
+
+    Returns:
+      {
+        "path": [...],              # cumulative distance with NaN separators
+        "bands": [[...], ...],      # each band aligned with path (NaNs inserted)
+        "segment_nqpoint": list|None
+      }
     """
     band_path = os.path.join(directory, band_yaml)
     if not os.path.isfile(band_path):
@@ -479,27 +498,107 @@ def extract_phonopy_bands(directory, band_yaml="band.yaml"):
     if not phonon_list:
         raise ValueError(f"Invalid {band_yaml}: missing 'phonon' list.")
 
-    path = []
-    bands = []
-    num_bands = None
-
-    for iq, q in enumerate(phonon_list):
-        if "distance" not in q: raise ValueError(f"Missing 'distance' at phonon[{iq}] in {band_yaml}.")
-        path.append(float(q["distance"]))
-        band_entries = q.get("band", None)
-        if band_entries is None: raise ValueError(f"Missing 'band' at phonon[{iq}] in {band_yaml}.")
-        if num_bands is None:
-            num_bands = len(band_entries)
-            bands = [[] for _ in range(num_bands)]
-        for ib, b in enumerate(band_entries):
-            # phonopy uses key "frequency"
-            freq = b.get("frequency", None)
-            if freq is None: freq = b.get("freq", None)
-            if freq is None: bands[ib].append(np.nan)
-            else: bands[ib].append(float(freq))
-
     seg_nq = data.get("segment_nqpoint", None) if isinstance(data, dict) else None
-    return {"path": path, "bands": bands, "segment_nqpoint": seg_nq}
+
+    distances_raw = []
+    bands_raw = None
+    for iq, q in enumerate(phonon_list):
+        if "distance" not in q:
+            raise ValueError(f"Missing 'distance' at phonon[{iq}] in {band_yaml}.")
+        distances_raw.append(float(q["distance"]))
+        band_entries = q.get("band", None)
+        if band_entries is None:
+            raise ValueError(f"Missing 'band' at phonon[{iq}] in {band_yaml}.")
+        if bands_raw is None:
+            nb = len(band_entries)
+            bands_raw = [[] for _ in range(nb)]
+        for ib, b in enumerate(band_entries):
+            freq = b.get("frequency", None)
+            if freq is None:
+                freq = b.get("freq", None)
+            bands_raw[ib].append(np.nan if freq is None else float(freq))
+    if bands_raw is None:
+        raise ValueError(f"No bands found in {band_yaml}.")
+
+    # Decide segment boundaries
+    n_total = len(distances_raw)
+    use_seg_nq = isinstance(seg_nq, list) and seg_nq and sum(int(n) for n in seg_nq) == n_total
+
+    # Detect whether distance is globally monotonic (type A)
+    tol = 1e-8
+    monotonic = True
+    for i in range(1, n_total):
+        if distances_raw[i] < distances_raw[i-1] - tol:
+            monotonic = False
+            break
+
+    qpath = []
+    bands = [[] for _ in range(len(bands_raw))]
+
+    def _append_point(x, freqs):
+        qpath.append(x)
+        for ib, v in enumerate(freqs):
+            bands[ib].append(v)
+
+    if monotonic:
+        # Keep global distance; only insert NaN separators between segments if seg_nq is available.
+        if use_seg_nq:
+            idx0 = 0
+            for iseg, n in enumerate(seg_nq):
+                n = int(n)
+                for j in range(idx0, idx0 + n):
+                    _append_point(float(distances_raw[j]), [bands_raw[ib][j] for ib in range(len(bands_raw))])
+                if iseg != len(seg_nq) - 1:
+                    _append_point(np.nan, [np.nan] * len(bands_raw))
+                idx0 += n
+        else:
+            # No reliable segment info; still handle reset-detected separators (shouldn't happen if monotonic)
+            for j in range(n_total):
+                _append_point(float(distances_raw[j]), [bands_raw[ib][j] for ib in range(len(bands_raw))])
+    else:
+        # Stitch per-segment distance (type B)
+        if use_seg_nq:
+            offset = 0.0
+            idx0 = 0
+            for iseg, n in enumerate(seg_nq):
+                n = int(n)
+                seg_dist = distances_raw[idx0: idx0 + n]
+                seg0 = float(seg_dist[0])
+                seg_len = float(seg_dist[-1] - seg0) if n > 0 else 0.0
+                for j in range(n):
+                    x = offset + float(seg_dist[j] - seg0)
+                    _append_point(x, [bands_raw[ib][idx0 + j] for ib in range(len(bands_raw))])
+                if iseg != len(seg_nq) - 1:
+                    _append_point(np.nan, [np.nan] * len(bands_raw))
+                offset += seg_len
+                idx0 += n
+        else:
+            # Fallback: detect resets and stitch accordingly
+            offset = 0.0
+            seg_start = 0
+            prev = distances_raw[0]
+            for i in range(1, n_total):
+                if distances_raw[i] < prev - tol:
+                    seg_dist = distances_raw[seg_start:i]
+                    seg0 = float(seg_dist[0])
+                    seg_len = float(seg_dist[-1] - seg0)
+                    for j in range(seg_start, i):
+                        x = offset + float(distances_raw[j] - seg0)
+                        _append_point(x, [bands_raw[ib][j] for ib in range(len(bands_raw))])
+                    _append_point(np.nan, [np.nan] * len(bands_raw))
+                    offset += seg_len
+                    seg_start = i
+                prev = distances_raw[i]
+            # last segment
+            seg_dist = distances_raw[seg_start:n_total]
+            seg0 = float(seg_dist[0])
+            for j in range(seg_start, n_total):
+                x = offset + float(distances_raw[j] - seg0)
+                _append_point(x, [bands_raw[ib][j] for ib in range(len(bands_raw))])
+
+    return {"path": qpath, "bands": bands, "segment_nqpoint": seg_nq}
+
+
 
 
 def _phonopy_parse_number(token):
@@ -585,57 +684,50 @@ def extract_phonopy_band_conf(directory, conf_name=None):
     return {"conf_path": conf_path, "band_points": band_points, "nseg": nseg, "boundary_labels": boundary_labels}
 
 
+
 def _phonopy_high_sym_positions(directory, qpath, segment_nqpoint=None):
     """
-    Build high-symmetry tick positions and merged labels (A|B for duplicated endpoints).
-    Uses:
-      - band.conf for labels and nseg
-      - band.yaml segment_nqpoint or BAND_POINTS to locate boundary indices
+    Build high-symmetry tick positions for phonopy bands.
+
+    We do NOT use duplicated boundary points (which would create labels like 'Z|T').
+    Instead, we infer boundary positions from segment ends on the stitched qpath:
+      boundaries = [start_of_first_segment] + [end_of_each_segment]
+
+    qpath may contain NaNs as separators (inserted by extract_phonopy_bands).
     Returns: (ticks, tick_labels)
     """
     conf = extract_phonopy_band_conf(directory)
     nseg = conf["nseg"]
-    band_points = conf["band_points"]
     labels = conf["boundary_labels"]
-    nq = len(qpath)
 
-    boundary_indices = []
-
-    if isinstance(segment_nqpoint, list) and segment_nqpoint:
-        cum = 0
-        boundary_indices = [0]
-        for n in segment_nqpoint:
-            cum += int(n)
-            boundary_indices.append(cum - 1)
-        if len(boundary_indices) > nseg + 1:
-            boundary_indices = boundary_indices[: nseg + 1]
-    elif band_points is not None and nseg > 0:
-        bp = int(band_points)
-        # two common conventions
-        if nq == nseg * bp:
-            boundary_indices = [0] + [(s + 1) * bp - 1 for s in range(nseg)]
-        elif nq == nseg * (bp - 1) + 1:
-            boundary_indices = [s * (bp - 1) for s in range(nseg + 1)]
+    # Split into segments using NaNs
+    segments = []
+    current = []
+    for x in qpath:
+        if isinstance(x, float) and np.isnan(x):
+            if current:
+                segments.append(current)
+                current = []
         else:
-            boundary_indices = [int(round(s * (nq - 1) / nseg)) for s in range(nseg + 1)]
+            current.append(float(x))
+    if current:
+        segments.append(current)
+
+    if not segments:
+        return [], []
+
+    # boundary positions: start of first segment, then end of each segment (nseg segments expected)
+    start0 = segments[0][0]
+    ends = [seg[-1] for seg in segments[:nseg]]  # truncate if extra
+    boundary_positions = [start0] + ends
+
+    # Match labels length
+    if labels:
+        boundary_labels = (labels + [""] * len(boundary_positions))[: len(boundary_positions)]
     else:
-        boundary_indices = [int(round(s * (nq - 1) / max(nseg, 1))) for s in range(max(nseg, 1) + 1)]
+        boundary_labels = [f"P{i}" for i in range(len(boundary_positions))]
 
-    high_sym_positions = []
-    for i, idx in enumerate(boundary_indices):
-        if idx < 0 or idx >= nq: continue
-        pos = float(qpath[idx])
-        label = labels[i] if i < len(labels) else ""
-        if high_sym_positions and abs(pos - high_sym_positions[-1][1]) < 1e-10:
-            prev_label, prev_pos = high_sym_positions[-1]
-            if prev_label != label and label:
-                high_sym_positions[-1] = (f"{prev_label}|{label}" if prev_label else label, prev_pos)
-        else:
-            high_sym_positions.append((label, pos))
-
-    ticks = [pos for label, pos in high_sym_positions]
-    tick_labels = [label for label, pos in high_sym_positions]
-    return ticks, tick_labels
+    return boundary_positions, boundary_labels
 
 
 def create_matters_phonopy(matters_list):
