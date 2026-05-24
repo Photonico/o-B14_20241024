@@ -13,6 +13,13 @@ from vmatplot.output_settings import color_sampling, canvas_setting
 from vmatplot.algorithms import transpose_matrix
 from vmatplot.commons import extract_fermi, get_atoms_count, process_boundary, get_or_default
 
+import matplotlib as mpl
+
+mpl.rcParams["lines.solid_capstyle"] = "round"
+mpl.rcParams["lines.dash_capstyle"]  = "round"
+mpl.rcParams["lines.solid_joinstyle"] = "round"
+mpl.rcParams["lines.dash_joinstyle"]  = "round"
+
 global_tolerance = 1e-4
 
 def is_qpoints_returning(directory):
@@ -878,18 +885,25 @@ def extract_phonopy_band_conf(directory, conf_name=None):
         if x is None or y is None or z is None:
             raise ValueError(f"Invalid BAND entry near: {band_tokens[i:i+3]}")
         band_pts.append([x, y, z])
-    if len(band_pts) % 2 != 0:
-        raise ValueError(f"Invalid BAND point count in {conf_path}: {len(band_pts)} (must be even).")
-    nseg = len(band_pts) // 2
-
-    # boundary labels count should be nseg+1
-    if labels:
-        if len(labels) == nseg + 1:
-            boundary_labels = labels
-        else:
-            boundary_labels = (labels + [""] * (nseg + 1))[: (nseg + 1)]
+    if labels and len(labels) == len(band_pts):
+        nseg = len(band_pts) - 1
+        boundary_labels = labels
     else:
-        boundary_labels = [f"P{i}" for i in range(nseg + 1)]
+        if len(band_pts) % 2 != 0:
+            raise ValueError(
+                f"Invalid BAND point count in {conf_path}: {len(band_pts)}. "
+                "It is neither a compact path matching BAND_LABELS nor an even-numbered pairwise path."
+            )
+        nseg = len(band_pts) // 2
+
+        # boundary labels count should be nseg+1
+        if labels:
+            if len(labels) == nseg + 1:
+                boundary_labels = labels
+            else:
+                boundary_labels = (labels + [""] * (nseg + 1))[: (nseg + 1)]
+        else:
+            boundary_labels = [f"P{i}" for i in range(nseg + 1)]
     return {"conf_path": conf_path, "band_points": band_points, "nseg": nseg, "boundary_labels": boundary_labels}
 
 def _phonopy_clean_label(label):
