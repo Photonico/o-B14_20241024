@@ -899,7 +899,7 @@ def extract_element_pdos(directory_path, element):
         d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum +
         x2_y2_pdos_sum
     )
-    integrated_pdos_list = np.trapz(total_pdos_list, x=energy_dos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x=energy_dos_shift)
     energy_pdos_shift = energy_pdos_sum - efermi
 
     return (
@@ -1026,7 +1026,7 @@ def extract_element_pdos_backup(directory_path, element):
     d_zx_pdos_sum = np.sum(d_zx_pdos_matrix, axis=1)
     x2_y2_pdos_sum = np.sum(x2_y2_pdos_matrix, axis=1)
     total_pdos_list = s_pdos_sum + p_y_pdos_sum + p_z_pdos_sum + p_x_pdos_sum + d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum + x2_y2_pdos_sum
-    integrated_pdos_list = np.trapz(total_pdos_list, x = energy_dos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x = energy_dos_shift)
     energy_pdos_shift = energy_pdos_sum - shift
     return (efermi, ions_number, kpoints_number, eigen_matrix, occu_matrix,             # 0 ~ 4
             energy_dos_shift,                                                           # 5
@@ -1322,7 +1322,7 @@ def extract_segment_pdos(directory_path, start, end=None):
         d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum +
         x2_y2_pdos_sum
     )
-    integrated_pdos_list = np.trapz(total_pdos_list, x=energy_dos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x=energy_dos_shift)
 
     return (
         efermi, ions_number, kpoints_number, eigen_matrix, occu_matrix,
@@ -1451,7 +1451,7 @@ def extract_segment_pdos_backup(directory_path, start, end = None):
     x2_y2_pdos_sum = np.sum(x2_y2_pdos_matrix, axis=1)
     energy_pdos_shift = energy_pdos_sum - shift
     total_pdos_list = s_pdos_sum + p_y_pdos_sum + p_z_pdos_sum + p_x_pdos_sum + d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum + x2_y2_pdos_sum
-    integrated_pdos_list = np.trapz(total_pdos_list, x=energy_dos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x=energy_dos_shift)
 
     return (efermi, ions_number, kpoints_number, eigen_matrix, occu_matrix,                 # 0 ~ 4
             energy_dos_shift, total_pdos_list, integrated_pdos_list,                        # 5 ~ 7
@@ -1743,7 +1743,7 @@ def extract_index_pdos(directory_path, index=None):
         x2_y2_pdos_sum
     )
     energy_pdos_shift = energy_pdos_sum - efermi
-    integrated_pdos_list = np.trapz(total_pdos_list, x=energy_pdos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x=energy_pdos_shift)
 
     return (
         efermi, total_ions, kpoints_number, eigen_matrix, occu_matrix,
@@ -1928,7 +1928,7 @@ def extract_index_pdos_backup(directory_path, index=None):
         d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum + x2_y2_pdos_sum
     )
     energy_pdos_shift = energy_pdos_sum - efermi
-    integrated_pdos_list = np.trapz(total_pdos_list, x=energy_pdos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x=energy_pdos_shift)
 
     return (
         efermi, total_ions, kpoints_number, eigen_matrix, occu_matrix,              # 0 ~ 4
@@ -2073,7 +2073,7 @@ def extract_index_pdos_old(directory_path, index=None):
         d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum + x2_y2_pdos_sum
     )
     energy_pdos_shift = energy_pdos_sum - efermi
-    integrated_pdos_list = np.trapz(total_pdos_list, x=energy_pdos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x=energy_pdos_shift)
 
     return (
         efermi, total_ions, kpoints_number, eigen_matrix, occu_matrix,              # 0 ~ 4
@@ -2416,6 +2416,70 @@ def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None):
         fermi_energy_text = f"Fermi energy\n({pdos_data['efermi']:.3f} eV)"
         plt.text(-x_range * 0.02, y_top * 0.98, fermi_energy_text,
                  fontsize=12, color=fermi_color[0], rotation=0, va="top", ha="right")
+
+    # Plot settings
+    plt.title(title)
+    plt.xlabel("Energy (eV)")
+    plt.ylabel("Density of States")
+    plt.xlim(-x_range, x_range)
+    plt.ylim(0, y_top)
+    # plt.legend(loc="upper right")
+    plt.legend(loc="best")
+    plt.tight_layout()
+    # plt.show()
+
+def plot_single_pdos_pure(title, matters_list=None, x_range=None, y_top=None):
+    """
+    Plot PDoS for a single system with individual settings for each orbital.
+
+    Parameters:
+        title (str): Title of the plot.
+        x_range (float): Range of the x-axis (energy range).
+        y_top (float): Maximum value of the y-axis.
+        matters_list (list): List of configurations for each orbital. Each item is a list containing:
+                             [label, directory, atoms, orbital, line_color, line_style, line_weight, line_alpha].
+    """
+    # Validate input
+    if not matters_list or len(matters_list) == 0:
+        raise ValueError("matters_list must contain at least one configuration.")
+
+    # Figure Settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Color for Fermi energy line
+    fermi_color = color_sampling("Violet")
+
+    # Plot PDoS for each orbital with individual settings
+    for matter in matters_list:
+        label, directory, atoms, orbital, line_color, line_style, line_weight, line_alpha = matter
+        # Extract PDoS data for this system
+        pdos_data = extract_dict_pdos(directory, atoms)
+        if pdos_data is None:
+            print(f"Warning: Skipping {label} because PDoS data could not be extracted.")
+            continue
+        # Ensure the orbital exists in the PDoS data
+        if orbital not in pdos_data:
+            print(f"Warning: Orbital '{orbital}' not found for {label}. Skipping...")
+            continue
+        energy = pdos_data["pdos_shifted_energy"]
+        plt.plot(energy, pdos_data[orbital],
+                 color=color_sampling(line_color)[1],
+                 linestyle=line_style, linewidth=line_weight, alpha=line_alpha,
+                 label=f"{label}")
+        
+        # Total DoS
+        # efermi, e_shift, dos_total = read_total_dos_from_doscar(directory)
+        # pdos_total = pdos_data["total_pdos"]
+        # interstitial = dos_total - pdos_total
+        # plt.plot(e_shift, dos_total,  color=color_sampling(line_color)[1], linestyle=line_style, linewidth=line_weight, alpha=line_alpha,label="Total DOS")
+        # plt.plot(e_shift, interstitial,  color=color_sampling(line_color)[1], linestyle=line_style, linewidth=line_weight, alpha=line_alpha, label="Interstitial (DOS - PDOS)")
+
+    # Add Fermi energy line
+    plt.axvline(x=0, linestyle="--", color=fermi_color[0], alpha=0.8, label="Fermi energy")
 
     # Plot settings
     plt.title(title)
