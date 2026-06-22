@@ -1770,3 +1770,253 @@ def plot_bsPDoS(title, bs_list, pdos_list, eigen_range, dos_range, legend_loc=Fa
     
     plt.tight_layout()
     plt.show()
+
+# plot spin-polarized bandstructure: FM / AFM
+def _bs_parse_pair(value, default_pair, duplicate_scalar=True):
+    """Return a two-item tuple from tuple/list or strings such as "(blue,purple)" and "(solid/dotted)"."""
+    if value is None:
+        return tuple(default_pair)
+
+    if isinstance(value, (tuple, list)):
+        if len(value) == 0:
+            return tuple(default_pair)
+        if len(value) == 1:
+            return (value[0], value[0]) if duplicate_scalar else tuple(default_pair)
+        return (value[0], value[1])
+
+    value_str = str(value).strip()
+    if value_str == "":
+        return tuple(default_pair)
+
+    if value_str.lower() == "default":
+        return tuple(default_pair)
+
+    if value_str.startswith("(") and value_str.endswith(")"):
+        value_str = value_str[1:-1].strip()
+
+    if "," in value_str:
+        parts = [part.strip() for part in value_str.split(",") if part.strip()]
+    elif "/" in value_str:
+        parts = [part.strip() for part in value_str.split("/") if part.strip()]
+    else:
+        parts = [value_str]
+
+    if len(parts) >= 2:
+        return (parts[0], parts[1])
+    if len(parts) == 1 and duplicate_scalar:
+        return (parts[0], parts[0])
+    return tuple(default_pair)
+
+
+def _bs_resolve_color(color, shade_index=1):
+    """Resolve a vmatplot color name through color_sampling; fall back to raw Matplotlib color."""
+    try:
+        sampled = color_sampling(color)
+        if isinstance(sampled, (list, tuple)) and len(sampled) > shade_index:
+            return sampled[shade_index]
+    except Exception:
+        pass
+    return color
+
+
+def _bs_normalize_matters_list(matters_list):
+    """Accept either a single matter list or a list of matter lists."""
+    if matters_list is None:
+        return []
+    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
+        return [matters_list]
+    return matters_list
+
+
+def create_matters_bs_spin(matters_list):
+    """
+    Create spin-polarized bandstructure matters.
+
+    Accepted matter format:
+        [bstype, label, directory, color_pair, linestyle_pair, weight, alpha, tolerance]
+
+    Examples:
+        ["monocolor", "GGA-PBE", "3.1_bandstructure/monolayer", ("blue", "purple")]
+        ["monocolor", "GGA-PBE", "3.1_bandstructure/monolayer", "(blue,purple)", "(solid/dotted)"]
+    """
+    matters = []
+    for current_matter in _bs_normalize_matters_list(matters_list):
+        bstype, label, directory, *optional = current_matter
+
+        color_pair = _bs_parse_pair(
+            optional[0] if len(optional) > 0 else None,
+            ("blue", "red"),
+            duplicate_scalar=True
+        )
+        lstyle_pair = _bs_parse_pair(
+            optional[1] if len(optional) > 1 else None,
+            ("solid", "dotted"),
+            duplicate_scalar=True
+        )
+        weight = get_or_default(optional[2] if len(optional) > 2 else None, 1.5)
+        alpha = get_or_default(optional[3] if len(optional) > 3 else None, 1.0)
+        current_tolerance = get_or_default(optional[4] if len(optional) > 4 else None, 0)
+
+        fermi_energy = extract_fermi(directory)
+        kpath, breaks = extract_kpath(directory, return_breaks=True)
+
+        bstype_lower = bstype.lower()
+        if bstype_lower in ["monocolor", "monocolor spin", "spin monocolor", "monocolor fm", "monocolor afm"]:
+            bands_up = extract_eigenvalues_bands_spinUp(directory)
+            bands_down = extract_eigenvalues_bands_spinDown(directory)
+            kpath, bands_up, bands_down = _apply_breaks_insert_nan(kpath, breaks, bands_up, bands_down)
+            matters.append([
+                bstype, label, fermi_energy, kpath,
+                bands_up, bands_down,
+                color_pair, lstyle_pair, weight, alpha, current_tolerance, directory
+            ])
+
+        elif bstype_lower in ["bands", "bands spin", "spin bands", "bands fm", "bands afm"]:
+            conduction_up = extract_eigenvalues_conductionBands_spinUp(directory, current_tolerance)
+            valence_up = extract_eigenvalues_valenceBands_spinUp(directory, current_tolerance)
+            conduction_down = extract_eigenvalues_conductionBands_spinDown(directory, current_tolerance)
+            valence_down = extract_eigenvalues_valenceBands_spinDown(directory, current_tolerance)
+            kpath, conduction_up, valence_up, conduction_down, valence_down = _apply_breaks_insert_nan(
+                kpath, breaks, conduction_up, valence_up, conduction_down, valence_down
+            )
+            matters.append([
+                bstype, label, fermi_energy, kpath,
+                conduction_up, valence_up, conduction_down, valence_down,
+                color_pair, lstyle_pair, weight, alpha, current_tolerance, directory
+            ])
+
+        else:
+            raise ValueError(
+                f"Unsupported spin bandstructure type: {bstype}. "
+                "Use 'monocolor' or 'bands'."
+            )
+
+    return matters
+
+
+def _plot_bandstructure_spin(title, matters_list=None, eigen_range=None, legend_loc=False, magnetic_order="FM"):
+    help_info = """
+    Usage: plot_bandstructure_FM / plot_bandstructure_AFM
+        arg[0]: title
+        arg[1]: matters list
+        arg[2]: eigenvalue range, from -arg[2] to arg[2], or [emin, emax]
+        arg[3]: legend location
+
+    matter format:
+        [bstype, label, directory, color_pair, linestyle_pair, weight, alpha, tolerance]
+
+    examples:
+        ["monocolor", "bands of GGA-PBE", "3.1_bandstructure/monolayer", ("blue", "purple")]
+        ["monocolor", "bands of GGA-PBE", "3.1_bandstructure/monolayer", "(blue,purple)", "(solid/dotted)"]
+    """
+    if title in ["help", "Help"]:
+        print(help_info)
+        return
+
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
+    params = fig_setting[2]
+    plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    fermi_color = color_sampling("Violet")
+    annotate_color = color_sampling("Grey")
+
+    matters = create_matters_bs_spin(matters_list)
+
+    kpath_start = None
+    kpath_end = None
+    last_directory = None
+
+    for matter in matters:
+        bstype_lower = matter[0].lower()
+        current_label = matter[1]
+        fermi = matter[2]
+        kpath = matter[3]
+        last_directory = matter[-1]
+
+        if bstype_lower in ["monocolor", "monocolor spin", "spin monocolor", "monocolor fm", "monocolor afm"]:
+            bands_up = matter[4]
+            bands_down = matter[5]
+            color_pair = matter[6]
+            lstyle_pair = matter[7]
+            weight = matter[8]
+            alpha = matter[9]
+
+            spin_channels = [
+                (bands_up, "spin up", _bs_resolve_color(color_pair[0]), lstyle_pair[0]),
+                (bands_down, "spin down", _bs_resolve_color(color_pair[1]), lstyle_pair[1]),
+            ]
+
+            for bands, spin_label, color, lstyle in spin_channels:
+                for band_index, band in enumerate(bands):
+                    current_band = [eigenvalue - fermi for eigenvalue in band]
+                    plot_label = f"{current_label} {spin_label}" if band_index == 0 else None
+                    plt.plot(kpath, current_band, c=color, linestyle=lstyle, lw=weight,
+                             alpha=alpha, label=plot_label, zorder=4)
+
+        elif bstype_lower in ["bands", "bands spin", "spin bands", "bands fm", "bands afm"]:
+            conduction_up = matter[4]
+            valence_up = matter[5]
+            conduction_down = matter[6]
+            valence_down = matter[7]
+            color_pair = matter[8]
+            lstyle_pair = matter[9]
+            weight = matter[10]
+            alpha = matter[11]
+
+            spin_channels = [
+                (conduction_up + valence_up, "spin up", _bs_resolve_color(color_pair[0]), lstyle_pair[0]),
+                (conduction_down + valence_down, "spin down", _bs_resolve_color(color_pair[1]), lstyle_pair[1]),
+            ]
+
+            for bands, spin_label, color, lstyle in spin_channels:
+                for band_index, band in enumerate(bands):
+                    current_band = [eigenvalue - fermi for eigenvalue in band]
+                    plot_label = f"{current_label} {spin_label}" if band_index == 0 else None
+                    plt.plot(kpath, current_band, c=color, linestyle=lstyle, lw=weight,
+                             alpha=alpha, label=plot_label, zorder=4)
+
+        kpath_start = kpath[0]
+        kpath_end = kpath[-1]
+
+    if kpath_start is None or kpath_end is None:
+        raise ValueError("No bandstructure matter was provided.")
+
+    plt.axhline(y=0, color=fermi_color[0], alpha=0.8, linestyle="--",
+                label="Fermi energy", zorder=2)
+
+    plt.title(f"{title}")
+    plt.ylabel("Energy (eV)")
+
+    if eigen_range is not None:
+        demo_boundary = process_boundary(eigen_range)
+        if demo_boundary[0] is None:
+            plt.ylim(demo_boundary[1] * (-1), demo_boundary[1])
+        else:
+            plt.ylim(demo_boundary[0], demo_boundary[1])
+
+    plt.xlim(kpath_start, kpath_end)
+
+    high_symmetry_positions, high_symmetry_labels = kpoints_path_lists(last_directory)
+    plt.xticks(high_symmetry_positions, high_symmetry_labels)
+
+    for k_loc in high_symmetry_positions[1:-1]:
+        plt.axvline(x=k_loc, color=annotate_color[1], linestyle="--", alpha=0.8, zorder=1)
+
+    if legend_loc is True:
+        plt.legend()
+    elif legend_loc is not None and legend_loc is not False:
+        plt.legend(loc=legend_loc)
+
+    plt.tight_layout()
+
+
+def plot_bandstructure_FM(title, matters_list=None, eigen_range=None, legend_loc=False):
+    """Plot collinear spin-polarized bandstructure for FM calculations."""
+    return _plot_bandstructure_spin(title, matters_list, eigen_range, legend_loc, magnetic_order="FM")
+
+
+def plot_bandstructure_AFM(title, matters_list=None, eigen_range=None, legend_loc=False):
+    """Plot collinear spin-polarized bandstructure for AFM calculations."""
+    return _plot_bandstructure_spin(title, matters_list, eigen_range, legend_loc, magnetic_order="AFM")
