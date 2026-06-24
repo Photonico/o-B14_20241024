@@ -1,0 +1,34 @@
+# INCAR for Ga2O3 melting at 3000K
+# Electronic structure
+PREC = Normal
+ENCUT = 350        # Adjust based on your POTCAR
+EDIFF = 1E-5
+ALGO = Fast        # Good for MD
+LREAL = Auto       # Real space projection for efficiency
+NELMIN = 6
+NELM = 40
+ISMEAR = 0
+SIGMA = 0.1
+ISYM = 0
+
+# MD Parameters
+IBRION = 0         # Molecular dynamics
+NSW = 5500        # Number of MD steps (adjust for 10-20 ps)
+POTIM = 1.0        # Time step in fs
+TEBEG = 400       # Starting temperature
+TEEND = 400       # Ending temperature
+
+# Thermostat
+MDALGO = 2         # Nosé-Hoover thermostat
+SMASS = 0        # Nosé mass parameter (0.0 = automatic)
+ISIF = 2           # Stress tensor (2 for NVT)
+
+# Output control
+NWRITE = 1
+LWAVE = .FALSE.
+LCHARG = .FALSE.
+NBLOCK = 10        # Write XDATCAR every 10 steps
+KBLOCK = 10        # Write OSZICAR averages
+
+# Parallelization
+NCORE = 21          # Adjust based on your system
