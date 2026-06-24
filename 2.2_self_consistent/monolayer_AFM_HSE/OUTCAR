@@ -1188,3 +1188,52 @@ Coulomb truncation method
 
     POTLOK:  cpu time      0.2854: real time      0.2870
     SETDIJ:  cpu time      0.1367: real time      0.1374
+    TRIAL :  cpu time   3085.8894: real time   3107.2470
+    CORREC:  cpu time      0.0008: real time      0.0031
+    CHARGE:  cpu time      0.7682: real time      0.7770
+    --------------------------------------------
+      LOOP:  cpu time   3087.0816: real time   3108.4572
+
+ eigenvalue-minimisations  :     0
+ total energy-change (2. order) : 0.4450754E+01  (-0.3475578E+02)
+ number of electron      42.0000000 magnetization      -0.0824660
+ augmentation part       -0.2120356 magnetization      -0.0025890
+
+ DIPCOR: dipole corrections for dipol
+ direction  3 min pos   225,
+ dipolmoment           0.000000      0.000000     -0.099953 electrons x Angstroem
+ Tr[quadrupol]      -241.523291
+
+ energy correction for charged system         0.000000 eV
+ dipol+quadrupol energy correction           -0.001045 eV
+ added-field ion interaction          0.016116 eV  (added to PSCEN)
+
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        15.59751574
+  Ewald energy   TEWEN  =      6366.19658577
+  -Hartree energ DENC   =     -6831.98236418
+  -exchange      EXHF   =        68.86270496
+  -V(xc)+E(xc)   XCENC  =        73.96952515
+  PAW double counting   =      3742.91667237    -3733.21690026
+  entropy T*S    EENTRO =        -0.00449307
+  eigenvalues    EBANDS =      -761.59235109
+  atomic energy  EATOM  =       983.73793191
+  ---------------------------------------------------
+  free energy    TOTEN  =       -75.51452915 eV
+
+  energy without entropy =      -75.51003608  energy(sigma->0) =      -75.51228262
+  exchange ACFDT corr.  =        -0.00301846  see jH, gK, PRB 81, 115126
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   7)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.2916: real time      0.2948
+    SETDIJ:  cpu time      0.1449: real time      0.1460
