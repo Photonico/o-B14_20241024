@@ -46,7 +46,7 @@ PRECFOCK = Normal
 LASPH = .TRUE.
 
 ## Dispersion correction
-IVDW = 12
+# IVDW = 12
 
 ## Symmetry
 ISYM = 0
