@@ -999,3 +999,192 @@ Coulomb truncation method
 --------------------------------------- Iteration      1(   2)  ---------------------------------------
 
 
+    TRIAL :  cpu time     21.8123: real time     21.9928
+    CORREC:  cpu time      0.0005: real time      0.0006
+    --------------------------------------------
+      LOOP:  cpu time     21.8133: real time     21.9962
+
+ eigenvalue-minimisations  : 15120
+ total energy-change (2. order) :-0.2824571E+03  (-0.2819186E+03)
+ number of electron      42.0000000 magnetization      -0.0000104
+ augmentation part       42.0000000 magnetization      -0.0000104
+
+ DIPCOR: dipole corrections for dipol
+ direction  3 min pos   225,
+ dipolmoment           0.000000      0.000000     -0.000166 electrons x Angstroem
+ Tr[quadrupol]      -270.060396
+
+ energy correction for charged system         0.000000 eV
+ dipol+quadrupol energy correction           -0.000000 eV
+ added-field ion interaction          0.000027 eV  (added to PSCEN)
+
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        15.58247138
+  Ewald energy   TEWEN  =      6366.19658577
+  -Hartree energ DENC   =     -7158.68973065
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       100.86924861
+  PAW double counting   =      3780.07049069    -4027.08265901
+  entropy T*S    EENTRO =        -0.00802458
+  eigenvalues    EBANDS =      -171.78671495
+  atomic energy  EATOM  =       983.73793191
+  ---------------------------------------------------
+  free energy    TOTEN  =      -111.11040083 eV
+
+  energy without entropy =     -111.10237625  energy(sigma->0) =     -111.10638854
+  exchange ACFDT corr.  =         0.00000000  see jH, gK, PRB 81, 115126
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   3)  ---------------------------------------
+
+
+    TRIAL :  cpu time     21.9280: real time     22.0605
+    CORREC:  cpu time      0.0006: real time      0.0009
+    --------------------------------------------
+      LOOP:  cpu time     21.9288: real time     22.0616
+
+ eigenvalue-minimisations  : 15120
+ total energy-change (2. order) :-0.1450160E+03  (-0.1445239E+03)
+ number of electron      42.0000000 magnetization      -0.0000104
+ augmentation part       42.0000000 magnetization      -0.0000104
+
+ DIPCOR: dipole corrections for dipol
+ direction  3 min pos   225,
+ dipolmoment           0.000000      0.000000     -0.000166 electrons x Angstroem
+ Tr[quadrupol]      -270.060396
+
+ energy correction for charged system         0.000000 eV
+ dipol+quadrupol energy correction           -0.000000 eV
+ added-field ion interaction          0.000027 eV  (added to PSCEN)
+
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        15.58247138
+  Ewald energy   TEWEN  =      6366.19658577
+  -Hartree energ DENC   =     -7158.68973065
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       100.86924861
+  PAW double counting   =      3780.07049069    -4027.08265901
+  entropy T*S    EENTRO =        -0.00402402
+  eigenvalues    EBANDS =      -316.80674371
+  atomic energy  EATOM  =       983.73793191
+  ---------------------------------------------------
+  free energy    TOTEN  =      -256.12642904 eV
+
+  energy without entropy =     -256.12240501  energy(sigma->0) =     -256.12441703
+  exchange ACFDT corr.  =         0.00000000  see jH, gK, PRB 81, 115126
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   4)  ---------------------------------------
+
+
+    TRIAL :  cpu time     21.5107: real time     21.6845
+    CORREC:  cpu time      0.0005: real time      0.0005
+    --------------------------------------------
+      LOOP:  cpu time     21.5118: real time     21.6892
+
+ eigenvalue-minimisations  : 15120
+ total energy-change (2. order) :-0.7058209E+02  (-0.6995757E+02)
+ number of electron      42.0000000 magnetization      -0.0000104
+ augmentation part       42.0000000 magnetization      -0.0000104
+
+ DIPCOR: dipole corrections for dipol
+ direction  3 min pos   225,
+ dipolmoment           0.000000      0.000000     -0.000166 electrons x Angstroem
+ Tr[quadrupol]      -270.060396
+
+ energy correction for charged system         0.000000 eV
+ dipol+quadrupol energy correction           -0.000000 eV
+ added-field ion interaction          0.000027 eV  (added to PSCEN)
+
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        15.58247138
+  Ewald energy   TEWEN  =      6366.19658577
+  -Hartree energ DENC   =     -7158.68973065
+  -exchange      EXHF   =         0.00000000
+  -V(xc)+E(xc)   XCENC  =       100.86924861
+  PAW double counting   =      3780.07049069    -4027.08265901
+  entropy T*S    EENTRO =        -0.00320767
+  eigenvalues    EBANDS =      -387.38965184
+  atomic energy  EATOM  =       983.73793191
+  ---------------------------------------------------
+  free energy    TOTEN  =      -326.70852081 eV
+
+  energy without entropy =     -326.70531315  energy(sigma->0) =     -326.70691698
+  exchange ACFDT corr.  =         0.00000000  see jH, gK, PRB 81, 115126
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   5)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.2630: real time      0.2648
+    SETDIJ:  cpu time      0.1485: real time      0.1498
+    TRIAL :  cpu time   3097.3231: real time   3118.6555
+    CORREC:  cpu time      0.0006: real time      0.0010
+    CHARGE:  cpu time      0.7601: real time      0.7647
+    --------------------------------------------
+      LOOP:  cpu time   3098.4956: real time   3119.8361
+
+ eigenvalue-minimisations  : 15120
+ total energy-change (2. order) : 0.2467432E+03  (-0.2585283E+02)
+ number of electron      42.0000000 magnetization      -0.1121814
+ augmentation part       -0.2125554 magnetization      -0.0028190
+
+ DIPCOR: dipole corrections for dipol
+ direction  3 min pos   225,
+ dipolmoment           0.000000      0.000000     -0.000166 electrons x Angstroem
+ Tr[quadrupol]      -270.060396
+
+ energy correction for charged system         0.000000 eV
+ dipol+quadrupol energy correction           -0.000000 eV
+ added-field ion interaction          0.000027 eV  (added to PSCEN)
+
+
+ Free energy of the ion-electron system (eV)
+  ---------------------------------------------------
+  alpha Z        PSCENC =        15.58247138
+  Ewald energy   TEWEN  =      6366.19658577
+  -Hartree energ DENC   =     -7158.68973065
+  -exchange      EXHF   =        63.79214552
+  -V(xc)+E(xc)   XCENC  =        77.12892514
+  PAW double counting   =      3841.20869637    -3831.71536479
+  entropy T*S    EENTRO =        -0.00384952
+  eigenvalues    EBANDS =      -437.20309431
+  atomic energy  EATOM  =       983.73793191
+  ---------------------------------------------------
+  free energy    TOTEN  =       -79.96528320 eV
+
+  energy without entropy =      -79.96143367  energy(sigma->0) =      -79.96335843
+  exchange ACFDT corr.  =        -0.00060145  see jH, gK, PRB 81, 115126
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------- Iteration      1(   6)  ---------------------------------------
+
+
+    POTLOK:  cpu time      0.2854: real time      0.2870
+    SETDIJ:  cpu time      0.1367: real time      0.1374

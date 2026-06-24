@@ -614,3 +614,63 @@
    </energy>
   </scstep>
   <scstep>
+   <time name="total">   21.81   22.00</time>
+   <dipole>
+    <v name="dipole">      0.00000000       0.00000000      -0.00016601 </v>
+    <i name="Tr[quadrupol]">   -270.06039568 </i>
+    <i name="Echarged">      0.00000000 </i>
+    <i name="Edipol_quadrupol">      0.00000000 </i>
+    <i name="Eion">      0.00000000 </i>
+   </dipole>
+   <energy>
+    <i name="e_fr_energy">   -111.11040083 </i>
+    <i name="e_wo_entrp">   -111.10237625 </i>
+    <i name="e_0_energy">   -111.10638854 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="total">   21.93   22.06</time>
+   <dipole>
+    <v name="dipole">      0.00000000       0.00000000      -0.00016601 </v>
+    <i name="Tr[quadrupol]">   -270.06039568 </i>
+    <i name="Echarged">      0.00000000 </i>
+    <i name="Edipol_quadrupol">      0.00000000 </i>
+    <i name="Eion">      0.00000000 </i>
+   </dipole>
+   <energy>
+    <i name="e_fr_energy">   -256.12642904 </i>
+    <i name="e_wo_entrp">   -256.12240501 </i>
+    <i name="e_0_energy">   -256.12441703 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="total">   21.51   21.69</time>
+   <dipole>
+    <v name="dipole">      0.00000000       0.00000000      -0.00016601 </v>
+    <i name="Tr[quadrupol]">   -270.06039568 </i>
+    <i name="Echarged">      0.00000000 </i>
+    <i name="Edipol_quadrupol">      0.00000000 </i>
+    <i name="Eion">      0.00000000 </i>
+   </dipole>
+   <energy>
+    <i name="e_fr_energy">   -326.70852081 </i>
+    <i name="e_wo_entrp">   -326.70531315 </i>
+    <i name="e_0_energy">   -326.70691698 </i>
+   </energy>
+  </scstep>
+  <scstep>
+   <time name="total"> 3098.50 3119.84</time>
+   <dipole>
+    <v name="dipole">      0.00000000       0.00000000      -0.00016601 </v>
+    <i name="Tr[quadrupol]">   -270.06039568 </i>
+    <i name="Echarged">      0.00000000 </i>
+    <i name="Edipol_quadrupol">      0.00000000 </i>
+    <i name="Eion">      0.00000000 </i>
+   </dipole>
+   <energy>
+    <i name="e_fr_energy">    -79.96528320 </i>
+    <i name="e_wo_entrp">    -79.96143367 </i>
+    <i name="e_0_energy">    -79.96335843 </i>
+   </energy>
+  </scstep>
+  <scstep>
