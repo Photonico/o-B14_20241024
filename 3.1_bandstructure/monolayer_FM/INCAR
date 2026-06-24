@@ -1,0 +1,51 @@
+#### Calculation Information for FM band structure
+# Created by Lu Niu, LukeNiu@outlook.com, May 18, 2023
+
+## Project name
+SYSTEM = FM_BS
+
+## Start parameters
+ISTART = 0
+ICHARG = 11
+
+## Electronic optimization
+PREC = Accurate
+LORBIT = 11
+ENCUT = 600
+
+# Output wave function file WAVECAR for later LPARD
+LWAVE = .TRUE.
+
+# Do not write a new CHGCAR for band structure
+LCHARG = .FALSE.
+
+ALGO = Normal
+NELM = 64
+EDIFF = 1E-6
+
+SIGMA = 0.1
+ISMEAR = 0
+
+## Spin-polarized calculation
+ISPIN = 2
+MAGMOM = 14*1.0
+
+## No ionic relaxation
+IBRION = -1
+
+## Performance optimization
+NCORE = 8
+LREAL = .FALSE.
+
+## Functional settings
+GGA = PE
+IVDW = 12
+
+## Symmetry
+ISYM = 0
+SYMPREC = 1E-6
+
+## Dipole Correction
+LDIPOL = .TRUE.
+IDIPOL = 3
+DIPOL = 0.5 0.5 0.084097

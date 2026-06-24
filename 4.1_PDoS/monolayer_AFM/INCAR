@@ -1,0 +1,54 @@
+#### Calculation Information for AFM PDoS
+# Created by Lu Niu, LukeNiu@outlook.com, May 18, 2023
+
+## Project name
+SYSTEM = AFM_PDoS
+
+## Start parameters
+ISTART = 0
+ICHARG = 11
+
+## Electronic optimization
+PREC = Accurate
+LORBIT = 11
+NEDOS = 4000
+ENCUT = 600
+
+# Do not write a new CHGCAR
+LCHARG = .FALSE.
+
+# Do not write WAVECAR
+LWAVE = .FALSE.
+
+ALGO = Normal
+NELM = 64
+EDIFF = 1E-6
+
+## Broadening and DOS related values
+SIGMA = 0.05
+ISMEAR = 0
+SYMPREC = 1E-6
+
+## Spin-polarized calculation
+ISPIN = 2
+MAGMOM = -1.0 1.0 -1.0 1.0 -1.0 1.0 -1.0 1.0 1.0 -1.0 1.0 -1.0 1.0 -1.0
+
+## No ionic relaxation
+NSW = 0
+IBRION = -1
+
+## Performance optimization
+NCORE = 8
+LREAL = .FALSE.
+
+## Functional settings
+GGA = PE
+IVDW = 12
+
+## Symmetry
+ISYM = 0
+
+## Dipole Correction
+LDIPOL = .TRUE.
+IDIPOL = 3
+DIPOL = 0.5 0.5 0.084097
