@@ -1,0 +1,168 @@
+ vasp.6.5.0 16Dec24 (build Jan 08 2025 16:17:04) complex                        
+  
+ executed on             LinuxIFC date 2026.06.24  10:18:05
+ running   42 mpi-ranks, on    1 nodes
+ distrk:  each k-point on   42 cores,    1 groups
+ distr:  one band on NCORE=   1 cores,   42 groups
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+ INCAR:
+   SYSTEM = FM_HSE06_SCF
+   ISTART = 1
+   ICHARG = 1
+   PREC = Accurate
+   ENCUT = 600
+   LORBIT = 11
+   LCHARG = .TRUE.
+   LWAVE = .TRUE.
+   ALGO = Damped
+   TIME = 0.4
+   NELM = 120
+   EDIFF = 1E-6
+   SIGMA = 0.05
+   ISMEAR = 0
+   SYMPREC = 1E-6
+   ISPIN = 2
+   MAGMOM = 14*1.0
+   NSW = 0
+   IBRION = -1
+   NCORE = 8
+   LREAL = .FALSE.
+   GGA = PE
+   LHFCALC = .TRUE.
+   AEXX = 0.25
+   HFSCREEN = 0.2
+   PRECFOCK = Normal
+   LASPH = .TRUE.
+   IVDW = 12
+   ISYM = 0
+   LDIPOL = .TRUE.
+   IDIPOL = 3
+   DIPOL = 0.5 0.5 0.084097
+
+ POTCAR:    PAW_PBE B 06Sep2000                   
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     The value NCORE = 8 specified in the INCAR file was overwritten,        |
+|     because it was not compatible with the 42 processes available:          |
+|     NCORE = 1                                                               |
+|     was used instead, please check that this makes sense for your           |
+|     machine.                                                                |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     For optimal performance we recommend to set                             |
+|       NCORE = 2 up to number-of-cores-per-socket                            |
+|     NCORE specifies how many cores store one orbital (NPAR=cpu/NCORE).      |
+|     This setting can greatly improve the performance of VASP for DFT.       |
+|     The default, NCORE=1 might be grossly inefficient on modern             |
+|     multi-core architectures or massively parallel machines. Do your        |
+|     own testing! More info at https://www.vasp.at/wiki/index.php/NCORE      |
+|     Unfortunately you need to use the default for GW and RPA                |
+|     calculations (for HF NCORE is supported but not extensively tested      |
+|     yet).                                                                   |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+ POTCAR:    PAW_PBE B 06Sep2000                   
+   SHA256 =  a32ced30f5ae56fd4d10b4325ff17eb3e4e38ee0f4288bc219fb012fddfa6e97 B/POTCAR              
+   COPYR  = (c) Copyright 06Sep2000 Georg Kresse                                                    
+   COPYR  = This file is part of the software VASP. Any use, copying, and all other rights are regul
+   COPYR  = If you do not have a valid VASP license, you may not use, copy or distribute this file. 
+   VRHFIN =B: s2p1                                                                                  
+   LEXCH  = PE                                                                                      
+   EATOM  =    71.1703 eV,    5.2309 Ry                                                             
+                                                                                                    
+   TITEL  = PAW_PBE B 06Sep2000                                                                     
+   LULTRA =        F    use ultrasoft PP ?                                                          
+   IUNSCR =        1    unscreen: 0-lin 1-nonlin 2-no                                               
+   RPACOR =    1.200    partial core radius                                                         
+   POMASS =   10.811; ZVAL   =    3.000    mass and valenz                                          
+   RCORE  =    1.700    outmost cutoff radius                                                       
+   RWIGS  =    1.710; RWIGS  =    0.905    wigner-seitz radius (au A)                               
+   ENMAX  =  318.614; ENMIN  =  238.960 eV                                                          
+   ICORE  =        2    local potential                                                             
+   LCOR   =        T    correct aug charges                                                         
+   LPAW   =        T    paw PP                                                                      
+   EAUG   =  535.514                                                                                
+   DEXC   =    0.000                                                                                
+   RMAX   =    1.732    core radius for proj-oper                                                   
+   RAUG   =    1.300    factor for augmentation sphere                                              
+   RDEP   =    1.757    radius for radial grids                                                     
+   RDEPT  =    1.436    core radius for aug-charge                                                  
+                                                                                                    
+   Atomic configuration                                                                             
+    4 entries                                                                                       
+     n  l   j            E        occ.                                                              
+     1  0  0.50      -180.5896   2.0000                                                             
+     2  0  0.50        -9.4431   2.0000                                                             
+     2  1  0.50        -3.6068   1.0000                                                             
+     3  2  1.50        -4.0817   0.0000                                                             
+   Description                                                                                      
+     l       E           TYP  RCUT    TYP  RCUT                                                     
+     0     -9.4430752     23  1.500                                                                 
+     0      0.8675899     23  1.500                                                                 
+     1     -3.6067955     23  1.700                                                                 
+     1      6.1086146     23  1.700                                                                 
+     2     -4.0817478      7  1.700                                                                 
+  local pseudopotential read in
+  partial core-charges read in
+  partial kinetic energy density read in
+  atomic valenz-charges read in
+  non local Contribution for L=           0  read in
+    real space projection operators read in
+  non local Contribution for L=           0  read in
+    real space projection operators read in
+  non local Contribution for L=           1  read in
+    real space projection operators read in
+  non local Contribution for L=           1  read in
+    real space projection operators read in
+    PAW grid and wavefunctions read in
+ 
+   number of l-projection  operators is LMAX  =           4
+   number of lm-projection operators is LMMAX =           8
+ 
+  PAW_PBE B 06Sep2000                   :
+ energy of atom  1       EATOM=  -71.1703
+ kinetic energy error for atom=    0.0007 (will be added to EATOM!!)
+ 
+ 
+ POSCAR: o-B14 monolayer
+  positions in direct lattice
+  velocities in cartesian coordinates
+ -----------------------------------------------------------------------------
+|                                                                             |
+|     EEEEEEE  RRRRRR   RRRRRR   OOOOOOO  RRRRRR      ###     ###     ###     |
+|     E        R     R  R     R  O     O  R     R     ###     ###     ###     |
+|     E        R     R  R     R  O     O  R     R     ###     ###     ###     |
+|     EEEEE    RRRRRR   RRRRRR   O     O  RRRRRR       #       #       #      |
+|     E        R   R    R   R    O     O  R   R                               |
+|     E        R    R   R    R   O     O  R    R      ###     ###     ###     |
+|     EEEEEEE  R     R  R     R  OOOOOOO  R     R     ###     ###     ###     |
+|                                                                             |
+|     Unsupported xc functional, please specify VDW_A1, VDW_A2, and           |
+|     VDW_S8 in the INCAR file.                                               |
+|                                                                             |
+|       ---->  I REFUSE TO CONTINUE WITH THIS SICK JOB ... BYE!!! <----       |
+|                                                                             |
+ -----------------------------------------------------------------------------
+

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<modeling>
+ <generator>
+  <i name="program" type="string">vasp </i>
+  <i name="version" type="string">6.5.0  </i>
+  <i name="subversion" type="string">16Dec24 (build Jan 08 2025 16:17:04) complex                          parallel </i>
+  <i name="platform" type="string">LinuxIFC </i>
+  <i name="date" type="string">2026 06 24 </i>
+  <i name="time" type="string">10:18:05 </i>
+ </generator>
+ <incar>
+  <i type="string" name="SYSTEM">FM_HSE06_SCF</i>
+  <i type="int" name="ISTART">     1</i>
+  <i type="string" name="PREC">Accurate</i>
+  <i type="string" name="ALGO">Damped</i>
+  <i type="int" name="ISPIN">     2</i>
+  <i type="int" name="ICHARG">     1</i>
+  <i type="int" name="NELM">   120</i>
+  <i type="int" name="IBRION">    -1</i>
+  <i name="EDIFF">      0.00000100</i>
+  <i type="int" name="NSW">     0</i>
+  <i type="int" name="ISYM">     0</i>
+  <i name="SYMPREC">      0.00000100</i>
+  <i name="ENCUT">    600.00000000</i>
+  <v name="MAGMOM">      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000      1.00000000</v>
+  <i type="logical" name="LREAL"> F  </i>
+  <i name="TIME">      0.40000000</i>
+  <i type="int" name="ISMEAR">     0</i>
+  <i name="SIGMA">      0.05000000</i>
+  <i type="logical" name="LWAVE"> T  </i>
+  <i type="logical" name="LCHARG"> T  </i>
+  <i type="int" name="LORBIT">    11</i>
+  <i type="logical" name="LASPH"> T  </i>
+  <i name="HFSCREEN">      0.20000000</i>
+  <i type="logical" name="LHFCALC"> T  </i>
+  <i type="string" name="GGA">PE</i>
+  <i name="AEXX">      0.25000000</i>
+  <i type="string" name="PRECFOCK">Normal</i>
+  <i type="logical" name="LDIPOL"> T  </i>
+  <i type="int" name="IDIPOL">     3</i>
+  <v name="DIPOL">      0.50000000      0.50000000      0.08409700</v>
+  <i type="int" name="IVDW">    12</i>
