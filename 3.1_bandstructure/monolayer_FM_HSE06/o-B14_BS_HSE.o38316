@@ -1,0 +1,12 @@
+Warning: no access to tty (Inappropriate ioctl for device).
+Thus no job control in this shell.
+Current load:
+	4 processes running on 96 cores
+	224GB memory available
+
+Please check load with:
+	top -d 1 -c
+
+stty: 'standard input': Inappropriate ioctl for device
+Loading oneapi-2024.2/compiler/2024.2.1
+  Loading requirement: oneapi-2024.2/tbb/latest oneapi-2024.2/compiler-rt/latest
