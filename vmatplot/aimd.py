@@ -1,4 +1,5 @@
-# pylint: disable = C0103, C0114, C0116, C0301, C0321, R0913, R0914
+#### AIMD
+# pylint: disable = C0103, C0114, C0116, C0301, C0321, R0913, R0914, R0915
 
 # Necessary packages invoking
 import os
@@ -17,9 +18,10 @@ mpl.rcParams["lines.dash_capstyle"]  = "round"
 mpl.rcParams["lines.solid_joinstyle"] = "round"
 mpl.rcParams["lines.dash_joinstyle"]  = "round"
 
+
 def _resolve_oszicar_path(target_directory=".", filename="OSZICAR"):
     """
-    Resolve OSZICAR path from either a directory or a direct file path.
+    Resolve OSZICAR path from either a calculation directory or a direct file path.
     """
     if os.path.isdir(target_directory):
         oszicar_path = os.path.join(target_directory, filename)
@@ -38,14 +40,66 @@ def _extract_value_after_key(tokens, key):
     """
     key_token = f"{key}="
 
-    for index, token in enumerate(tokens):
-        if token == key_token and index + 1 < len(tokens):
-            return float(tokens[index + 1])
+    for token_index, token in enumerate(tokens):
+        if token == key_token and token_index + 1 < len(tokens):
+            return float(tokens[token_index + 1])
 
         if token.startswith(key_token) and len(token) > len(key_token):
             return float(token.split("=", 1)[1])
 
     raise ValueError(f"Cannot find key {key_token} in OSZICAR line.")
+
+
+def _select_color(color_input, color_index=1):
+    """
+    Select color from vmatplot color family, direct hex color, or matplotlib color name.
+    """
+    if color_input is None:
+        return None
+
+    if isinstance(color_input, str) and color_input.startswith("#"):
+        return color_input
+
+    try:
+        color_list = color_sampling(color_input)
+        if isinstance(color_list, (list, tuple)) and len(color_list) > color_index:
+            return color_list[color_index]
+        if isinstance(color_list, (list, tuple)) and len(color_list) > 0:
+            return color_list[-1]
+    except Exception:
+        pass
+
+    return color_input
+
+
+def _apply_axis_boundary(ax, axis_name, boundary):
+    """
+    Apply x or y axis boundary while allowing None as one side.
+    """
+    if boundary is None:
+        return
+
+    boundary_low, boundary_high = process_boundary(boundary)
+
+    if axis_name == "x":
+        current_low, current_high = ax.get_xlim()
+
+        if boundary_low is None:
+            boundary_low = current_low
+        if boundary_high is None:
+            boundary_high = current_high
+
+        ax.set_xlim(boundary_low, boundary_high)
+
+    elif axis_name == "y":
+        current_low, current_high = ax.get_ylim()
+
+        if boundary_low is None:
+            boundary_low = current_low
+        if boundary_high is None:
+            boundary_high = current_high
+
+        ax.set_ylim(boundary_low, boundary_high)
 
 
 def extract_aimd_oszicar(target_directory=".", filename="OSZICAR",
@@ -57,7 +111,6 @@ def extract_aimd_oszicar(target_directory=".", filename="OSZICAR",
         target_directory: Directory containing OSZICAR, or direct OSZICAR path.
         filename: OSZICAR file name.
         energy_key: Energy tag to extract, such as "F", "E", or "E0".
-                    Default "F" follows the original senior code.
         time_step: Time interval per AIMD step in fs.
         time_shift: Additional shift applied to the time axis in fs.
 
@@ -79,7 +132,7 @@ def extract_aimd_oszicar(target_directory=".", filename="OSZICAR",
             tokens = line.split()
 
             try:
-                current_step = int(tokens[0])
+                current_step = int(float(tokens[0]))
                 current_temperature = _extract_value_after_key(tokens, "T")
                 current_energy = _extract_value_after_key(tokens, energy_key)
 
@@ -104,6 +157,13 @@ def extract_aimd_oszicar(target_directory=".", filename="OSZICAR",
     }
 
 
+def read_aimd_oszicar(*args, **kwargs):
+    """
+    Alias of extract_aimd_oszicar.
+    """
+    return extract_aimd_oszicar(*args, **kwargs)
+
+
 def summarize_aimd_oszicar(target_directory=".", filename="OSZICAR",
                            energy_key="F", time_step=1.0, time_shift=0.0):
     """
@@ -122,6 +182,10 @@ def summarize_aimd_oszicar(target_directory=".", filename="OSZICAR",
         "initial energy": energy[0],
         "final energy": energy[-1],
         "energy drift": energy[-1] - energy[0],
+        "mean energy": np.mean(energy),
+        "energy std": np.std(energy),
+        "minimum energy": np.min(energy),
+        "maximum energy": np.max(energy),
         "mean temperature": np.mean(temperature),
         "temperature std": np.std(temperature),
         "minimum temperature": np.min(temperature),
@@ -131,27 +195,15 @@ def summarize_aimd_oszicar(target_directory=".", filename="OSZICAR",
     return summary
 
 
-def _apply_axis_boundary(ax, axis, boundary):
-    """
-    Apply x or y boundary using the vmatplot boundary convention.
-    """
-    boundary_start, boundary_end = process_boundary(boundary)
-
-    if axis == "x":
-        if boundary_start is not None or boundary_end is not None:
-            ax.set_xlim(boundary_start, boundary_end)
-
-    elif axis == "y":
-        if boundary_start is not None or boundary_end is not None:
-            ax.set_ylim(boundary_start, boundary_end)
-
-
 def plot_aimd(title=None, target_directory=".", filename="OSZICAR",
               energy_key="F", time_step=1.0, time_shift=0.0,
               x_boundary=None, energy_boundary=None, temperature_boundary=None,
               energy_color="Blue", temperature_color="Red",
-              line_style="solid", line_weight=1.5, line_alpha=1.0,
-              legend_loc=False, grid=False):
+              energy_line_weight=1.5, temperature_line_weight=1.5,
+              energy_line_style="solid", temperature_line_style="solid",
+              energy_line_alpha=1.0, temperature_line_alpha=1.0,
+              energy_label=None, temperature_label=None,
+              legend_loc=False, grid=False, figure_size=(10, 6)):
     """
     Plot AIMD energy and temperature evolution from OSZICAR.
 
@@ -165,13 +217,19 @@ def plot_aimd(title=None, target_directory=".", filename="OSZICAR",
         x_boundary: X-axis boundary in fs.
         energy_boundary: Y-axis boundary for energy.
         temperature_boundary: Y-axis boundary for temperature.
-        energy_color: Color family for energy curve.
-        temperature_color: Color family for temperature curve.
-        line_style: Line style.
-        line_weight: Line width.
-        line_alpha: Line alpha.
+        energy_color: Color family, hex color, or matplotlib color for energy curve.
+        temperature_color: Color family, hex color, or matplotlib color for temperature curve.
+        energy_line_weight: Line width of energy curve.
+        temperature_line_weight: Line width of temperature curve.
+        energy_line_style: Line style of energy curve.
+        temperature_line_style: Line style of temperature curve.
+        energy_line_alpha: Line alpha of energy curve.
+        temperature_line_alpha: Line alpha of temperature curve.
+        energy_label: Legend label of energy curve.
+        temperature_label: Legend label of temperature curve.
         legend_loc: Legend location. Set False to disable legend.
         grid: Whether to show grid.
+        figure_size: Figure size, such as (10, 6).
 
     Returns:
         tuple: fig, axes, aimd_data.
@@ -184,7 +242,11 @@ def plot_aimd(title=None, target_directory=".", filename="OSZICAR",
         time_step: AIMD time step in fs;
         x_boundary: x-axis boundary in fs;
         energy_boundary: y-axis boundary for energy;
-        temperature_boundary: y-axis boundary for temperature.
+        temperature_boundary: y-axis boundary for temperature;
+        energy_color: color for energy curve;
+        temperature_color: color for temperature curve;
+        energy_line_weight: line width for energy curve;
+        temperature_line_weight: line width for temperature curve.
     """
     if title in ["help", "Help"]:
         print(help_info)
@@ -201,7 +263,7 @@ def plot_aimd(title=None, target_directory=".", filename="OSZICAR",
     temperature = aimd_data["temperature"]
 
     # Figure settings
-    fig_setting = canvas_setting(10, 6)
+    fig_setting = canvas_setting(figure_size[0], figure_size[1])
     params = fig_setting[2]
     plt.rcParams.update(params)
 
@@ -209,24 +271,42 @@ def plot_aimd(title=None, target_directory=".", filename="OSZICAR",
     ax_energy, ax_temperature = axes
 
     # Colors calling
-    energy_colors = color_sampling(energy_color)
-    temperature_colors = color_sampling(temperature_color)
+    energy_plot_color = _select_color(energy_color)
+    temperature_plot_color = _select_color(temperature_color)
     annotate_color = color_sampling("Grey")
+
+    # Label setting
+    if energy_label is None:
+        energy_label = f"{energy_key} energy"
+    if temperature_label is None:
+        temperature_label = "Temperature"
 
     # Title
     if title not in [None, False, ""]:
         fig.suptitle(f"{title}", fontsize=fig_setting[3][0], y=1.00)
 
     # Energy plotting
-    ax_energy.plot(time, energy, color=energy_colors[1], linestyle=line_style,
-                   lw=line_weight, alpha=line_alpha, label=f"{energy_key} energy", zorder=4)
+    ax_energy.plot(time, energy,
+                   color=energy_plot_color,
+                   linestyle=energy_line_style,
+                   lw=energy_line_weight,
+                   alpha=energy_line_alpha,
+                   label=energy_label,
+                   zorder=4)
+
     ax_energy.set_ylabel("Energy (eV)")
     ax_energy.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
     ax_energy.tick_params(labelbottom=False)
 
     # Temperature plotting
-    ax_temperature.plot(time, temperature, color=temperature_colors[1], linestyle=line_style,
-                        lw=line_weight, alpha=line_alpha, label="Temperature", zorder=4)
+    ax_temperature.plot(time, temperature,
+                        color=temperature_plot_color,
+                        linestyle=temperature_line_style,
+                        lw=temperature_line_weight,
+                        alpha=temperature_line_alpha,
+                        label=temperature_label,
+                        zorder=4)
+
     ax_temperature.set_xlabel("Time (fs)")
     ax_temperature.set_ylabel("Temperature (K)")
     ax_temperature.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
@@ -250,18 +330,29 @@ def plot_aimd(title=None, target_directory=".", filename="OSZICAR",
 
     # Legend
     if legend_loc not in [None, False]:
-        current_legend_loc = "best" if legend_loc is True else legend_loc
+        current_legend_loc = fig_setting[4] if legend_loc is True else legend_loc
 
-        legend_energy = ax_energy.legend(loc=current_legend_loc, frameon=True, fancybox=True,
-                                         shadow=False, facecolor="white",
-                                         edgecolor=annotate_color[1], framealpha=0.9)
+        legend_energy = ax_energy.legend(loc=current_legend_loc,
+                                         frameon=True,
+                                         fancybox=True,
+                                         shadow=False,
+                                         facecolor="white",
+                                         edgecolor=annotate_color[1],
+                                         framealpha=0.9)
         legend_energy.get_frame().set_linewidth(1.0)
 
-        legend_temperature = ax_temperature.legend(loc=current_legend_loc, frameon=True, fancybox=True,
-                                                   shadow=False, facecolor="white",
-                                                   edgecolor=annotate_color[1], framealpha=0.9)
+        legend_temperature = ax_temperature.legend(loc=current_legend_loc,
+                                                   frameon=True,
+                                                   fancybox=True,
+                                                   shadow=False,
+                                                   facecolor="white",
+                                                   edgecolor=annotate_color[1],
+                                                   framealpha=0.9)
         legend_temperature.get_frame().set_linewidth(1.0)
 
-    plt.tight_layout()
+    if title not in [None, False, ""]:
+        plt.tight_layout(rect=[0, 0, 1, 0.96])
+    else:
+        plt.tight_layout()
 
-    return fig, axes, aimd_data
+    # return fig, axes, aimd_data
