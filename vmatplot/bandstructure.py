@@ -1807,7 +1807,6 @@ def _bs_parse_pair(value, default_pair, duplicate_scalar=True):
         return (parts[0], parts[0])
     return tuple(default_pair)
 
-
 def _bs_resolve_color(color, shade_index=1):
     """Resolve a vmatplot color name through color_sampling; fall back to raw Matplotlib color."""
     try:
@@ -1818,7 +1817,6 @@ def _bs_resolve_color(color, shade_index=1):
         pass
     return color
 
-
 def _bs_normalize_matters_list(matters_list):
     """Accept either a single matter list or a list of matter lists."""
     if matters_list is None:
@@ -1826,7 +1824,6 @@ def _bs_normalize_matters_list(matters_list):
     if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
         return [matters_list]
     return matters_list
-
 
 def create_matters_bs_spin(matters_list):
     """
@@ -1892,7 +1889,6 @@ def create_matters_bs_spin(matters_list):
             )
 
     return matters
-
 
 def _plot_bandstructure_spin(title, matters_list=None, eigen_range=None, legend_loc=False, magnetic_order="FM"):
     help_info = """
@@ -2011,11 +2007,9 @@ def _plot_bandstructure_spin(title, matters_list=None, eigen_range=None, legend_
 
     plt.tight_layout()
 
-
 def plot_bandstructure_FM(title, matters_list=None, eigen_range=None, legend_loc=False):
     """Plot collinear spin-polarized bandstructure for FM calculations."""
     return _plot_bandstructure_spin(title, matters_list, eigen_range, legend_loc, magnetic_order="FM")
-
 
 def plot_bandstructure_AFM(title, matters_list=None, eigen_range=None, legend_loc=False):
     """Plot collinear spin-polarized bandstructure for AFM calculations."""
@@ -2084,7 +2078,6 @@ def create_matters_bs_spin(matters_list):
 
     return matters
 
-
 def _mirror_legend_location(legend_loc):
     if legend_loc is True:
         legend_loc = "upper right"
@@ -2101,10 +2094,8 @@ def _mirror_legend_location(legend_loc):
     else:
         return "upper left"
 
-
 def _loc_to_axes_position(loc):
     loc = str(loc).lower()
-
     if loc == "upper left":
         return 0.02, 0.97, "left", "top"
     elif loc == "upper right":
@@ -2119,7 +2110,6 @@ def _loc_to_axes_position(loc):
         return 0.98, 0.50, "right", "center"
     else:
         return 0.02, 0.97, "left", "top"
-
 
 def plot_bandstructure_spin(title, matters_list=None, state_label=None, eigen_range=None, legend_loc=False):
     # Help information
