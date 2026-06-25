@@ -2019,4 +2019,220 @@ def plot_bandstructure_FM(title, matters_list=None, eigen_range=None, legend_loc
 
 def plot_bandstructure_AFM(title, matters_list=None, eigen_range=None, legend_loc=False):
     """Plot collinear spin-polarized bandstructure for AFM calculations."""
+
     return _plot_bandstructure_spin(title, matters_list, eigen_range, legend_loc, magnetic_order="AFM")
+
+def create_matters_bs_spin(matters_list):
+    # Ensure input is a list of lists
+    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
+        source_data = matters_list[:]
+        matters_list.clear()
+        matters_list.append(source_data)
+
+    matters = []
+    for current_matter in matters_list:
+        bstype, label, directory, *optional = current_matter
+
+        # Set default values using get_or_default
+        color = get_or_default(optional[0] if len(optional) > 0 else None, "default")
+        lstyle = get_or_default(optional[1] if len(optional) > 1 else None, "solid")
+        weight = get_or_default(optional[2] if len(optional) > 2 else None, 1.5)
+        alpha = get_or_default(optional[3] if len(optional) > 3 else None, 1.0)
+        current_tolerance = get_or_default(optional[4] if len(optional) > 4 else None, 0)
+
+        # Spin channel calling
+        label_lower = str(label).lower()
+        if label_lower in ["spin up", "spin-up", "up", "spin 1", "spin1"]:
+            spin_label = "spin up"
+        elif label_lower in ["spin down", "spin-down", "down", "spin 2", "spin2"]:
+            spin_label = "spin down"
+        else:
+            spin_label = "nonpolarized"
+
+        # Bandstructure plotting style: monocolor
+        if bstype.lower() in ["monocolor", "monocolor nonpolarized"]:
+            fermi_energy = extract_fermi(directory)
+            kpath, breaks = extract_kpath(directory, return_breaks=True)
+
+            if spin_label == "spin up":
+                bands = extract_eigenvalues_bands_spinUp(directory)
+            elif spin_label == "spin down":
+                bands = extract_eigenvalues_bands_spinDown(directory)
+            else:
+                bands = extract_eigenvalues_bands_nonpolarized(directory)
+
+            kpath, bands = _apply_breaks_insert_nan(kpath, breaks, bands)
+            matters.append([bstype, label, fermi_energy, kpath, bands, color, lstyle, weight, alpha, current_tolerance, directory])
+
+        # Bandstructure plotting style: bands
+        elif bstype.lower() in ["bands", "bands nonpolarized"]:
+            fermi_energy = extract_fermi(directory)
+            kpath, breaks = extract_kpath(directory, return_breaks=True)
+
+            if spin_label == "spin up":
+                conduction_bands = extract_eigenvalues_conductionBands_spinUp(directory, current_tolerance)
+                valence_bands = extract_eigenvalues_valenceBands_spinUp(directory, current_tolerance)
+            elif spin_label == "spin down":
+                conduction_bands = extract_eigenvalues_conductionBands_spinDown(directory, current_tolerance)
+                valence_bands = extract_eigenvalues_valenceBands_spinDown(directory, current_tolerance)
+            else:
+                conduction_bands = extract_eigenvalues_conductionBands_nonpolarized(directory, current_tolerance)
+                valence_bands = extract_eigenvalues_valenceBands_nonpolarized(directory, current_tolerance)
+
+            kpath, conduction_bands, valence_bands = _apply_breaks_insert_nan(kpath, breaks, conduction_bands, valence_bands)
+            matters.append([bstype, label, fermi_energy, kpath, conduction_bands, valence_bands, color, lstyle, weight, alpha, current_tolerance, directory])
+
+    return matters
+
+
+def _mirror_legend_location(legend_loc):
+    if legend_loc is True:
+        legend_loc = "upper right"
+
+    if legend_loc in [None, False]:
+        return "upper right"
+
+    legend_loc = str(legend_loc).lower()
+
+    if "right" in legend_loc:
+        return legend_loc.replace("right", "left")
+    elif "left" in legend_loc:
+        return legend_loc.replace("left", "right")
+    else:
+        return "upper left"
+
+
+def _loc_to_axes_position(loc):
+    loc = str(loc).lower()
+
+    if loc == "upper left":
+        return 0.02, 0.97, "left", "top"
+    elif loc == "upper right":
+        return 0.98, 0.97, "right", "top"
+    elif loc == "lower left":
+        return 0.02, 0.03, "left", "bottom"
+    elif loc == "lower right":
+        return 0.98, 0.03, "right", "bottom"
+    elif loc == "center left":
+        return 0.02, 0.50, "left", "center"
+    elif loc == "center right":
+        return 0.98, 0.50, "right", "center"
+    else:
+        return 0.02, 0.97, "left", "top"
+
+
+def plot_bandstructure_spin(title, matters_list=None, state_label=None, eigen_range=None, legend_loc=False):
+    # Help information
+    help_info = """
+    Usage: plot_bandstructure_spin
+        arg[0]: title;
+        arg[1]: matters list;
+        arg[2]: state label, such as "FM", "AFM", or any label;
+        arg[3]: the range of eigenvalues, from -arg[3] to arg[3];
+        arg[4]: legend location;
+    """
+    if title in ["help", "Help"]:
+        print(help_info)
+        return
+
+    # Figure settings
+    fig_setting = canvas_setting()
+    plt.figure(figsize=fig_setting[0], dpi = fig_setting[1])
+    params = fig_setting[2]; plt.rcParams.update(params)
+    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
+
+    # Colors calling
+    fermi_color = color_sampling("Violet")
+    annotate_color = color_sampling("Grey")
+
+    # Data calling and plotting
+    matters = create_matters_bs_spin(matters_list)
+
+    for matter in matters:
+        current_label = matter[1]
+
+        if matter[0].lower() in ["monocolor", "monocolor nonpolarized"]:
+            fermi = matter[2]
+            for bands_index in range(0, len(matter[4])):
+                current_band = [eigenvalue - fermi for eigenvalue in matter[4][bands_index]]
+                if bands_index == 0:
+                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], label=f"{current_label}", zorder=4)
+                else:
+                    plt.plot(matter[3], current_band, c=color_sampling(matter[5])[1], linestyle=matter[6], lw=matter[7], alpha=matter[8], zorder=4)
+
+        elif matter[0].lower() in ["bands", "bands nonpolarized"]:
+            fermi = matter[2]
+            for bands_index in range(0, len(matter[4])):
+                current_conduction_band = [eigenvalue - fermi for eigenvalue in matter[4][bands_index]]
+                if bands_index == 0:
+                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Conduction bands for {current_label}", zorder=4)
+                else:
+                    plt.plot(matter[3], current_conduction_band, c=color_sampling(matter[6])[2], linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
+
+            for bands_index in range(0, len(matter[5])):
+                current_valence_band = [eigenvalue - fermi for eigenvalue in matter[5][bands_index]]
+                if bands_index == 0:
+                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], lw=matter[8], alpha=matter[9], label=f"Valence bands for {current_label}", zorder=4)
+                else:
+                    plt.plot(matter[3], current_valence_band, c=color_sampling(matter[6])[0], linestyle=matter[7], lw=matter[8], alpha=matter[9], zorder=4)
+
+        kpath_start = matter[3][0]
+        kpath_end = matter[3][-1]
+        fermi_last = matter[2]
+        reference_directory = matter[-1]
+
+    # Fermi energy as a horizon line
+    plt.axhline(y=0, color=fermi_color[0], alpha=0.8, linestyle="--", label="Fermi energy", zorder=2)
+
+    # Figure title and labels
+    plt.title(f"{title}")
+    plt.ylabel("Energy (eV)")
+
+    # Eigenvalue range
+    demo_boundary = process_boundary(eigen_range)
+    if demo_boundary[0] is None:
+        plt.ylim(demo_boundary[1]*(-1), demo_boundary[1])
+    else:
+        plt.ylim(demo_boundary[0], demo_boundary[1])
+
+    # K-path range
+    plt.xlim(kpath_start, kpath_end)
+
+    # State label, mirrored against the legend location
+    if state_label not in [None, False]:
+        if legend_loc is True:
+            current_legend_loc = fig_setting[4]
+        elif legend_loc in [None, False]:
+            current_legend_loc = False
+        else:
+            current_legend_loc = legend_loc
+
+        state_loc = _mirror_legend_location(current_legend_loc)
+        state_x, state_y, state_ha, state_va = _loc_to_axes_position(state_loc)
+
+        # Fine tune the state label position in axes-relative coordinates
+        state_x = state_x
+        state_y = state_y
+
+        plt.text(state_x, state_y, f"{state_label}", transform=plt.gca().transAxes,
+                 fontsize=16, ha=state_ha, va=state_va,
+                 bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor=annotate_color[1], alpha=0.75),
+                 zorder=6)
+
+    # High symmetry path
+    high_symmetry_positions, high_symmetry_labels = kpoints_path_lists(reference_directory)
+    plt.xticks(high_symmetry_positions, high_symmetry_labels)
+
+    for k_loc in high_symmetry_positions[1:-1]:
+        plt.axvline(x=k_loc, color=annotate_color[1], linestyle="--", alpha=0.8, zorder=1)
+
+    # Legend
+    if legend_loc is True:
+        plt.legend(loc=fig_setting[4])
+    elif legend_loc is None or legend_loc is False:
+        # Do not display the legend
+        pass
+    else:
+        plt.legend(loc=legend_loc)
+
+    plt.tight_layout()
