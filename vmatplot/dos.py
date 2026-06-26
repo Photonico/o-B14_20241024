@@ -521,7 +521,8 @@ def create_matters_dos(matters_list):
     - A list of lists, where each list contains:
       - label: Matter label;
       - dos_data: Extracted DoS data;
-      - spin_direction: unpolarized or spin up or spin down when the spin polarization is active;
+      - spin_direction: unpolarized, spin up, or spin down when the spin polarization is active;
+        spin down is plotted as negative by default;
       - line_color: Color family for plotting;
       - line_style: Line style for plotting;
       - line_weight: Line width for plotting;
@@ -555,24 +556,26 @@ def create_matters_dos(matters_list):
             if spin_direction not in ["unpolarized", "non-polarized", "spin off", "spin-off"]:
                 print("if the spin polarization is turn-on, please input 'spin up' or 'spin down', if not, please input 'unpolarized'.")
         elif spin_label is True:
-            if spin_direction.lower() in ["up", "spin up", "spin-up"]:
+            spin_direction_normalized = spin_direction.lower().strip()
+            if spin_direction_normalized in ["up", "spin up", "spin-up"]:
                 dos_data = extract_dos_spin_up(directory)
-            elif spin_direction.lower() in ["down", "spin down", "spin-down"]:
-                dos_data = extract_dos_spin_down(directory, False)
-            elif spin_direction.lower() in ["negative spin down", "negative spin-down"]:
+            elif spin_direction_normalized in ["down", "spin down", "spin-down", "negative spin down", "negative spin-down"]:
                 dos_data = extract_dos_spin_down(directory, True)
-            else: print("if the spin polarization is turn-on, please input 'spin up', 'spin down', or 'negative spin down', if not, please input 'unpolarized'.")
+            elif spin_direction_normalized in ["positive spin down", "positive spin-down"]:
+                dos_data = extract_dos_spin_down(directory, False)
+            else: print("if the spin polarization is turn-on, please input 'spin up' or 'spin down', if not, please input 'unpolarized'.")
 
         # Append structured matter list
         spin_direction_label = None
         if spin_label is False:
             spin_direction_label = "unpolarized"
         elif spin_label is True:
-            if spin_direction.lower() in ["up", "spin up", "spin-up"]:
+            spin_direction_normalized = spin_direction.lower().strip()
+            if spin_direction_normalized in ["up", "spin up", "spin-up"]:
                 spin_direction_label = "spin-up"
-            elif spin_direction.lower() in ["down", "spin down", "spin-down"]:
+            elif spin_direction_normalized in ["down", "spin down", "spin-down", "negative spin down", "negative spin-down"]:
                 spin_direction_label = "spin-down"
-            elif spin_direction.lower() in ["negative spin down", "negative spin-down"]:
+            elif spin_direction_normalized in ["positive spin down", "positive spin-down"]:
                 spin_direction_label = "spin-down"
 
         matters.append([label, dos_data, spin_direction_label, line_color, line_style, line_weight, line_alpha])
@@ -582,7 +585,9 @@ def create_matters_dos(matters_list):
 def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quantity = None):
     # Help information
     help_info = "Usage: plot_dos \n" + \
-                "Use extract_dos to extract the DoS data into a two-dimensional list firstly.\n"
+                "Use the same argument order as before: title, matters_list, x_range, y_lim, dos_quantity.\n" + \
+                "For spin-polarized calculations, 'spin down' is plotted as negative by default.\n" + \
+                "Use 'positive spin down' only if you explicitly want the spin-down channel above zero.\n"
 
     if title in ["help", "Help"]:
         print(help_info)
@@ -599,9 +604,7 @@ def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quant
 
     def _dos_plain_label(current_label, spin_direction_label):
         if spin_direction_label is None:
-            return f"{current_label}" if current_label not in [None, ""] else ""
-        if current_label in [None, ""]:
-            return f"{spin_direction_label}"
+            return f"{current_label}"
         return f"{current_label} ({spin_direction_label})"
 
     if all(term is not None for term in [x_range, y_lim]):
@@ -1148,7 +1151,7 @@ def create_matters_dos_spin(matters_list):
       The spin_mode field must be written explicitly and is case-insensitive:
       - "spin up", "spin-up", or "up": plot only the spin-up channel;
       - "spin down", "spin-down", or "down": plot only the spin-down channel as negative DoS;
-      - "total": plot the summed total DOS, i.e. spin-up + spin-down.
+      - "total": plot the summed DoS, i.e. spin-up + spin-down.
 
       One matter corresponds to one plotted curve. This function does not expand
       one entry into multiple curves.
@@ -1247,29 +1250,9 @@ def _spin_dos_label(label_prefix, current_label, spin_mode_label):
         "down": "spin-down",
         "spin down": "spin-down",
         "spin-down": "spin-down",
-        "total": "total DOS",
+        "total": "total",
     }
     spin_mode_label = display_labels.get(spin_mode_label, spin_mode_label)
-
-    label_prefix = "" if label_prefix is None else str(label_prefix)
-    current_label_empty = current_label in [None, ""]
-    quantity_label = label_prefix.strip().lower()
-
-    # If the matter label is empty, do not create parentheses.
-    if current_label_empty:
-        if quantity_label == "":
-            return f"{spin_mode_label}"
-        if quantity_label == "total":
-            if spin_mode_label == "total DOS":
-                return "total DOS"
-            return f"{spin_mode_label} DOS"
-        if quantity_label == "integrated":
-            if spin_mode_label == "total DOS":
-                return "integrated total DOS"
-            return f"integrated {spin_mode_label} DOS"
-        return f"{label_prefix}{spin_mode_label}"
-
-    # If the matter label exists, keep the spin channel as a parenthetical qualifier.
     if label_prefix == "":
         return f"{current_label} ({spin_mode_label})"
     return f"{label_prefix}{current_label} ({spin_mode_label})"
@@ -1289,7 +1272,7 @@ def plot_dos_spin(title, matters_list=None, x_range=None, y_lim=None, dos_quanti
       The spin_mode field must be written explicitly and is case-insensitive:
       - "spin up", "spin-up", or "up": plot only the spin-up channel;
       - "spin down", "spin-down", or "down": plot only the spin-down channel as negative DoS;
-      - "total": plot the summed total DOS, i.e. spin-up + spin-down.
+      - "total": plot the summed DoS, i.e. spin-up + spin-down.
 
       One matter corresponds to one plotted curve. This function does not expand
       one entry into multiple curves.
@@ -1308,7 +1291,7 @@ def plot_dos_spin(title, matters_list=None, x_range=None, y_lim=None, dos_quanti
 Use the same argument order as plot_dos: title, matters_list, x_range, y_lim, dos_quantity.
 Each matter should be [label, directory, spin_mode, line_color, line_style, line_weight, line_alpha].
 spin_mode is case-insensitive. Use 'spin up', 'spin-up', or 'up'; 'spin down', 'spin-down', or 'down'; or 'total'.
-One matter corresponds to one curve. 'total' means total DOS, i.e. spin-up plus spin-down.
+One matter corresponds to one curve. 'total' means spin-up plus spin-down.
 This function reads vasprun.xml first, then OUTCAR; DOSCAR is not required.
 """
 
