@@ -592,10 +592,18 @@ def create_matters_dos(matters_list):
         if len(matter_dir) >= 3:
             third = matter_dir[2]
             third_normalized = str(third).lower().strip() if third is not None else ""
-            if third_normalized in spin_direction_aliases:
+
+            # None or blank in the spin_direction position means:
+            # use the default "unpolarized" and continue reading plotting options after it.
+            # Example: [label, directory, None, "blue"] -> line_color is "blue".
+            if third is None or third_normalized == "":
+                spin_direction = "unpolarized"
+                optional_params = list(matter_dir[3:])
+            elif third_normalized in spin_direction_aliases:
                 spin_direction = third
                 optional_params = list(matter_dir[3:])
             else:
+                # Old style: [label, directory, line_color, line_style, ...]
                 spin_direction = "unpolarized"
                 optional_params = list(matter_dir[2:])
 
@@ -705,7 +713,8 @@ def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quant
     matters = create_matters_dos(matters_list)
 
     def _dos_plain_label(current_label, spin_direction_label):
-        return _dos_label_with_mode(current_label, spin_direction_label)
+        # Legend labels are user-controlled.  Do not append spin/unpolarized information automatically.
+        return _clean_legend_label_text(current_label)
 
     def _range_bounds(value, symmetric_y=False):
         if value is None:
@@ -727,22 +736,25 @@ def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quant
                 # Labels
                 current_label = matter[0]
                 current_label = _dos_plain_label(current_label, matter[2])
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[3])[1], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=f"{current_label}", zorder=3)
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[3])[2], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=f"{current_label}", zorder=2)
+                legend_label = f"{current_label}" if current_label else "_nolegend_"
+                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[3])[1], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=legend_label, zorder=3)
+                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[3])[2], linestyle=matter[4], lw=matter[5], alpha=matter[6], label="_nolegend_", zorder=2)
                 efermi = matter[1][0]
         if dos_quantity in ["Total", "total"]:
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
                 current_label = _dos_plain_label(current_label, matter[2])
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[3])[1], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=f"{current_label}", zorder=2)
+                legend_label = f"{current_label}" if current_label else "_nolegend_"
+                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[3])[1], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=legend_label, zorder=2)
                 efermi = matter[1][0]
         if dos_quantity in ["Integrated", "integrated"]:
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
                 current_label = _dos_plain_label(current_label, matter[2])
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[3])[2], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=f"{current_label}", zorder=2)
+                legend_label = f"{current_label}" if current_label else "_nolegend_"
+                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[3])[2], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=legend_label, zorder=2)
                 efermi = matter[1][0]
         # Plot Fermi energy as a vertical line
         shift = efermi
@@ -1368,30 +1380,8 @@ def _set_dos_range(axis_name, value):
 
 
 def _spin_dos_label(label_prefix, current_label, spin_mode_label):
-    """Create compact labels such as 'FM (spin-up)' or just 'spin-up' when label is blank."""
-    spin_mode_label = str(spin_mode_label).lower().strip()
-    display_labels = {
-        "up": "spin-up",
-        "spin up": "spin-up",
-        "spin-up": "spin-up",
-        "down": "spin-down",
-        "spin down": "spin-down",
-        "spin-down": "spin-down",
-        "total": "total DOS",
-        "spin total": "total DOS",
-        "spin-total": "total DOS",
-    }
-    spin_mode_label = display_labels.get(spin_mode_label, spin_mode_label)
-
-    label_prefix = _clean_legend_label_text(label_prefix)
-    current_label = _clean_legend_label_text(current_label)
-
-    mode_part = f"{label_prefix} {spin_mode_label}".strip()
-    if not current_label:
-        return mode_part
-    if _normalize_legend_label_for_compare(current_label) == _normalize_legend_label_for_compare(spin_mode_label):
-        return current_label
-    return f"{label_prefix + ' ' if label_prefix else ''}{current_label} ({spin_mode_label})"
+    """Return only the user-provided matter label for spin-DOS legends."""
+    return _clean_legend_label_text(current_label)
 
 
 # Universal spin-polarized DoS Plotting
@@ -1481,12 +1471,15 @@ fermi_label controls the displayed Fermi-energy text and is False by default.
         for index, label_prefix in dos_indices:
             if spin_mode == "up" and dos_up is not None:
                 up_label = _spin_dos_label(label_prefix, current_label, "up")
+                up_label = up_label if up_label else "_nolegend_"
                 plt.plot(dos_up[5], dos_up[index], c=curve_color, linestyle=line_style, lw=line_weight, alpha=line_alpha, label=up_label, zorder=3)
             elif spin_mode == "down" and dos_down is not None:
                 down_label = _spin_dos_label(label_prefix, current_label, "down")
+                down_label = down_label if down_label else "_nolegend_"
                 plt.plot(dos_down[5], -1.0 * dos_down[index], c=curve_color, linestyle=line_style, lw=line_weight, alpha=line_alpha, label=down_label, zorder=2)
             elif spin_mode == "total" and dos_up is not None and dos_down is not None:
                 total_label = _spin_dos_label(label_prefix, current_label, "total")
+                total_label = total_label if total_label else "_nolegend_"
                 total_dos = dos_up[index] + dos_down[index]
                 plt.plot(dos_up[5], total_dos, c=curve_color, linestyle=line_style, lw=line_weight, alpha=line_alpha, label=total_label, zorder=3)
 
