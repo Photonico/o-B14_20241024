@@ -6,6 +6,11 @@ import xml.etree.ElementTree as ET
 import os
 import numpy as np
 
+# NumPy compatibility: np.trapezoid was added in newer NumPy versions.
+# Keep old environments working by falling back to np.trapz.
+if not hasattr(np, "trapezoid"):
+    np.trapezoid = np.trapz
+
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
@@ -2304,190 +2309,448 @@ def extract_dict_pdos_old(directory_path, index=None):
         return None
 
 # plotting functions
+def _clean_pdos_label_text(label):
+    """Return a safe legend-label string. None and blank strings become an empty string."""
+    if label is None:
+        return ""
+    return str(label).strip()
+
+
+def _normalize_pdos_orbital_name(orbital):
+    """Normalize orbital aliases without changing the public calling style."""
+    if orbital is None:
+        return None
+
+    key = str(orbital).strip()
+    key_lower = key.lower().replace(" ", "_").replace("-", "_")
+
+    aliases = {
+        "total": "total_pdos",
+        "total_pdos": "total_pdos",
+        "pdos": "total_pdos",
+        "total_dos": "total_dos",
+        "dos": "dos",
+        "integrated": "integrated_pdos",
+        "integrated_pdos": "integrated_pdos",
+        "interstitial": "interstitial",
+
+        "s": "s",
+        "p": "p",
+        "d": "d",
+
+        "py": "p_y",
+        "p_y": "p_y",
+        "pz": "p_z",
+        "p_z": "p_z",
+        "px": "p_x",
+        "p_x": "p_x",
+
+        "dxy": "d_xy",
+        "d_xy": "d_xy",
+        "dyz": "d_yz",
+        "d_yz": "d_yz",
+        "dz2": "d_z2",
+        "d_z2": "d_z2",
+        "dzx": "d_zx",
+        "d_zx": "d_zx",
+        "dxz": "d_zx",
+        "d_xz": "d_zx",
+        "x2_y2": "d_x2-y2",
+        "d_x2_y2": "d_x2-y2",
+        "x2-y2": "d_x2-y2",
+        "d_x2-y2": "d_x2-y2",
+    }
+
+    return aliases.get(key_lower, key)
+
+
+def _pdos_orbital_display_name(orbital):
+    """Return a readable orbital label for legends when the user label is blank."""
+    if isinstance(orbital, (list, tuple)) and not isinstance(orbital, str):
+        return " + ".join(_pdos_orbital_display_name(item) for item in orbital)
+
+    key = _normalize_pdos_orbital_name(orbital)
+    display = {
+        "total_pdos": "total PDoS",
+        "total_dos": "total DoS",
+        "dos": "DoS",
+        "integrated_pdos": "integrated PDoS",
+        "interstitial": "interstitial",
+        "s": "s",
+        "p": "p",
+        "d": "d",
+        "p_y": "p_y",
+        "p_z": "p_z",
+        "p_x": "p_x",
+        "d_xy": "d_xy",
+        "d_yz": "d_yz",
+        "d_z2": "d_z2",
+        "d_zx": "d_zx",
+        "d_x2-y2": "d_x2-y2",
+    }
+    return display.get(key, str(orbital))
+
+
+def _pdos_curve_label(label, orbital):
+    """Use the user label when present; otherwise use the orbital label."""
+    label = _clean_pdos_label_text(label)
+    if label:
+        return label
+    return _pdos_orbital_display_name(orbital)
+
+
+def _is_flat_pdos_matter(item):
+    """Return True when item is one matter entry, not a list of matter entries.
+
+    The test only inspects the first element.  This preserves backward compatibility
+    for old flat calls even when later fields are lists/tuples, for example atom lists,
+    atom ranges, or Matplotlib dash patterns.
+    """
+    return isinstance(item, (list, tuple)) and bool(item) and not isinstance(item[0], (list, tuple))
+
+
+def _normalize_pdos_matters_list(matters_list):
+    """Normalize accepted PDoS input styles without mutating the caller's object."""
+    if matters_list is None:
+        return []
+
+    if _is_flat_pdos_matter(matters_list):
+        return [list(matters_list)]
+
+    if isinstance(matters_list, (list, tuple)):
+        return [list(item) if isinstance(item, tuple) else item for item in matters_list]
+
+    return []
+
+
+def _range_bounds(value, symmetric=True):
+    """Accept a scalar, [limit], or [left, right] range specification."""
+    if value is None:
+        return None
+
+    if isinstance(value, (int, float, np.integer, np.floating)):
+        v = float(value)
+        if symmetric:
+            return -abs(v), abs(v)
+        return 0.0, v
+
+    if isinstance(value, (list, tuple, np.ndarray)):
+        if len(value) == 0:
+            return None
+        if len(value) == 1:
+            v = float(value[0])
+            if symmetric:
+                return -abs(v), abs(v)
+            return 0.0, v
+        return float(value[0]), float(value[-1])
+
+    return None
+
+
+def _resolve_pdos_curve(pdos_data, orbital):
+    """Resolve one orbital specification into (energy, curve, normalized_orbital).
+
+    orbital can be one string such as "p" or a list/tuple such as ["s", "p"].
+    A list/tuple is summed into one curve, preserving the original one-entry-one-curve logic.
+    """
+    if isinstance(orbital, (list, tuple)) and not isinstance(orbital, str):
+        energy_ref = None
+        curve_sum = None
+        keys = []
+
+        for item in orbital:
+            energy, curve, key = _resolve_pdos_curve(pdos_data, item)
+            if energy is None or curve is None:
+                return None, None, None
+
+            if curve_sum is None:
+                energy_ref = energy
+                curve_sum = np.array(curve, dtype=float)
+            else:
+                curve_sum = curve_sum + np.array(curve, dtype=float)
+            keys.append(key)
+
+        return energy_ref, curve_sum, keys
+
+    key = _normalize_pdos_orbital_name(orbital)
+    if key not in pdos_data:
+        return None, None, key
+
+    curve = pdos_data[key]
+
+    # Prefer DoS energy grid for total DoS / interstitial if available and matching.
+    pdos_energy = pdos_data.get("pdos_shifted_energy", None)
+    dos_energy = pdos_data.get("dos_shifted_energy", None)
+    energy = pdos_energy
+
+    if key in ["total_dos", "dos", "interstitial"] and dos_energy is not None:
+        try:
+            if hasattr(curve, "__len__") and len(dos_energy) == len(curve):
+                energy = dos_energy
+        except TypeError:
+            pass
+
+    # Some historical "integrated_pdos" values are scalar integrals.
+    # Make them plottable as a horizontal reference line rather than crashing.
+    if np.ndim(curve) == 0:
+        if energy is None:
+            energy = dos_energy
+        if energy is None:
+            return None, None, key
+        curve = np.full_like(np.array(energy, dtype=float), float(curve), dtype=float)
+
+    if energy is None:
+        return None, None, key
+
+    return np.array(energy, dtype=float), np.array(curve, dtype=float), key
+
+
 def create_matters_pdos(matters_list):
     """
     Create a structured list of matters for plotting PDoS.
-    Parameters:
-        matters_list (list): List of configurations for PDoS extraction.
-                             Each item is a list containing:
-                             [label, directory, atoms, orbitals, line_color, line_style, line_weight, line_alpha].
-    Returns:
-        list: List of structured matters with extracted PDoS data.
+
+    Backward-compatible accepted forms:
+        [label, directory, atoms, orbital, color, linestyle, linewidth, alpha]
+        [[label, directory, atoms, orbital, color, linestyle, linewidth, alpha], ...]
+
+    Optional plotting fields may be omitted:
+        color -> "default"
+        linestyle -> "solid"
+        linewidth -> 1.5
+        alpha -> 1.0
+
+    The function does not mutate the input list.
     """
-    # Default values for optional parameters
-    default_values = {"line_color": "default","line_style": "solid","line_weight": 1.5,"line_alpha": 1.0}
-    # Ensure input is a list of lists
-    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
-        source_data = matters_list[:]
-        matters_list.clear()
-        matters_list.append(source_data)
+    default_values = {
+        "line_color": "default",
+        "line_style": "solid",
+        "line_weight": 1.5,
+        "line_alpha": 1.0,
+    }
+
+    normalized_matters = _normalize_pdos_matters_list(matters_list)
+    if not normalized_matters:
+        print("Error: matters_list must contain at least one PDoS configuration.")
+        return []
+
     structured_matters = []
-    for matter_dir in matters_list:
-        # Unpack the list with optional parameters
+
+    for matter_dir in normalized_matters:
+        if len(matter_dir) < 4:
+            print("Error: each PDoS matter should be [label, directory, atoms, orbital, ...].")
+            continue
+
         label, directory, atoms, orbitals, *optional_params = matter_dir
-        line_color = optional_params[0] if len(optional_params) > 0 else default_values["line_color"]
-        line_style = optional_params[1] if len(optional_params) > 1 else default_values["line_style"]
-        line_weight = optional_params[2] if len(optional_params) > 2 else default_values["line_weight"]
-        line_alpha = optional_params[3] if len(optional_params) > 3 else default_values["line_alpha"]
-        # Extract PDoS data
+
+        line_color = get_or_default(optional_params[0] if len(optional_params) > 0 else None, default_values["line_color"])
+        line_style = get_or_default(optional_params[1] if len(optional_params) > 1 else None, default_values["line_style"])
+        line_weight = get_or_default(optional_params[2] if len(optional_params) > 2 else None, default_values["line_weight"])
+        line_alpha = get_or_default(optional_params[3] if len(optional_params) > 3 else None, default_values["line_alpha"])
+
         pdos_data = extract_dict_pdos(directory, atoms)
         if pdos_data is None:
-            print(f"Warning: Failed to extract PDoS data for {label} in directory {directory}. Skipping...")
+            print(f"Warning: Failed to extract PDoS data for {_clean_pdos_label_text(label) or orbitals} in directory {directory}. Skipping...")
             continue
-        # Append structured matter list
+
         structured_matters.append([label, pdos_data, atoms, orbitals, line_color, line_style, line_weight, line_alpha])
+
     return structured_matters
 
-def plot_pdos(title, *args, x_range=None, y_top=None):
-    # General function to plot PDoS for one or multiple systems.
-    help_info = """
-    Usage: plot_pdos(title, *args, x_range=None, y_top=None)
-    Example for single PDoS plot:
-        systems = [["label", "path/to/directory", [indices], "orbital", "color", "linestyle", linewidth, alpha]]
-        plot_pdos("Title", systems, x_range=6, y_top=12)
-    Orbital labels include:
-        - total_pdos (or total)
-        - integrated_pdos (or integrated)
-        - s, p, d, etc.
+
+def _merge_pdos_args(args, x_range=None, y_top=None):
+    """Merge plot_pdos positional arguments while keeping old styles compatible.
+
+    Supported:
+        plot_pdos(title, systems, x_range=6, y_top=12)
+        plot_pdos(title, system, x_range=6, y_top=12)
+        plot_pdos(title, systems, 6, 12)        # tolerated old/manual style
+        plot_pdos(title, system1, system2, ...) # now supported
     """
+    if not args:
+        return [], x_range, y_top
+
+    args = list(args)
+
+    # Tolerate positional x_range / y_top after the first matter list.
+    if len(args) >= 2 and _range_bounds(args[1]) is not None:
+        if x_range is None:
+            x_range = args[1]
+        if len(args) >= 3 and _range_bounds(args[2], symmetric=False) is not None and y_top is None:
+            y_top = args[2]
+            args = [args[0]] + args[3:]
+        else:
+            args = [args[0]] + args[2:]
+
+    merged = []
+    for item in args:
+        normalized = _normalize_pdos_matters_list(item)
+        if not normalized:
+            continue
+        merged.extend(normalized)
+
+    return merged, x_range, y_top
+
+
+def plot_pdos(title, *args, x_range=None, y_top=None, fermi_level=None, legend_loc="best"):
+    """
+    General function to plot PDoS.
+
+    Backward-compatible use:
+        systems = [["label", "path/to/directory", [indices], "orbital",
+                    "color", "linestyle", linewidth, alpha]]
+        plot_pdos("Title", systems, x_range=6, y_top=12)
+
+    Additional compatible use:
+        system = ["label", "path/to/directory", [indices], "p", "blue"]
+        plot_pdos("Title", system, x_range=[-8, 4], y_top=[0, 12])
+
+    Orbital labels include:
+        total_pdos / total, total_dos / dos, interstitial,
+        s, p, d, p_y/py, p_z/pz, p_x/px,
+        d_xy/dxy, d_yz/dyz, d_z2/dz2, d_zx/dzx/d_xz/dxz, d_x2-y2/x2-y2.
+    """
+    help_info = """
+Usage: plot_pdos(title, systems, x_range=None, y_top=None)
+
+Each system/matter should be:
+    [label, directory, atoms, orbital, color, linestyle, linewidth, alpha]
+
+Required fields:
+    label, directory, atoms, orbital
+
+Optional fields:
+    color -> "default"
+    linestyle -> "solid"
+    linewidth -> 1.5
+    alpha -> 1.0
+
+Examples:
+    systems = [["B p", "PDoS/bulk", [1, 2, 3], "p", "blue"]]
+    plot_pdos("PDoS", systems, x_range=6, y_top=12)
+
+    system = ["B p", "PDoS/bulk", [1, 2, 3], "p", "blue"]
+    plot_pdos("PDoS", system, x_range=[-8, 4], y_top=[0, 12])
+
+Orbital labels:
+    total_pdos / total, total_dos / dos, interstitial,
+    s, p, d, p_y/py, p_z/pz, p_x/px,
+    d_xy/dxy, d_yz/dyz, d_z2/dz2, d_zx/dzx/d_xz/dxz, d_x2-y2/x2-y2.
+"""
     if title in ["help", "Help"]:
         print(help_info)
         return
-    if not args:
-        raise ValueError("At least one system must be provided in *args.")
-    if len(args) == 1:
-        return plot_single_pdos(title, matters_list=args[0], x_range=x_range, y_top=y_top)
-    else:
-        raise NotImplementedError("Multi-system PDoS plotting is not yet supported.")
 
-def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None):
-    """
-    Plot PDoS for a single system with individual settings for each orbital.
+    matters_list, x_range, y_top = _merge_pdos_args(args, x_range=x_range, y_top=y_top)
+    if not matters_list:
+        raise ValueError("At least one PDoS system must be provided.")
 
-    Parameters:
-        title (str): Title of the plot.
-        x_range (float): Range of the x-axis (energy range).
-        y_top (float): Maximum value of the y-axis.
-        matters_list (list): List of configurations for each orbital. Each item is a list containing:
-                             [label, directory, atoms, orbital, line_color, line_style, line_weight, line_alpha].
+    return plot_single_pdos(
+        title,
+        matters_list=matters_list,
+        x_range=x_range,
+        y_top=y_top,
+        fermi_level=fermi_level,
+        legend_loc=legend_loc,
+    )
+
+
+def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None, fermi_level=None, legend_loc="best"):
     """
-    # Validate input
-    if not matters_list or len(matters_list) == 0:
+    Plot PDoS for one or more configurations.
+
+    Backward-compatible accepted matter forms:
+        [label, directory, atoms, orbital, color, linestyle, linewidth, alpha]
+        [[label, directory, atoms, orbital, color, linestyle, linewidth, alpha], ...]
+
+    x_range:
+        number -> symmetric range, e.g. 6 means [-6, 6]
+        [left, right] -> asymmetric range
+
+    y_top:
+        number -> [0, y_top]
+        [bottom, top] -> custom y range
+    """
+    if not matters_list:
         raise ValueError("matters_list must contain at least one configuration.")
 
-    # Figure Settings
     fig_setting = canvas_setting()
     plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
     params = fig_setting[2]
     plt.rcParams.update(params)
     plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
 
-    # Color for Fermi energy line
     fermi_color = color_sampling("Violet")
+    structured_matters = create_matters_pdos(matters_list)
 
-    # Plot PDoS for each orbital with individual settings
-    for matter in matters_list:
-        label, directory, atoms, orbital, line_color, line_style, line_weight, line_alpha = matter
-        # Extract PDoS data for this system
-        pdos_data = extract_dict_pdos(directory, atoms)
-        if pdos_data is None:
-            print(f"Warning: Skipping {label} because PDoS data could not be extracted.")
+    first_valid_pdos_data = None
+    plotted_count = 0
+
+    for matter in structured_matters:
+        label, pdos_data, atoms, orbital, line_color, line_style, line_weight, line_alpha = matter
+
+        energy, curve, normalized_orbital = _resolve_pdos_curve(pdos_data, orbital)
+        if energy is None or curve is None:
+            print(f"Warning: Orbital '{orbital}' not found for {_clean_pdos_label_text(label) or 'unnamed PDoS curve'}. Skipping...")
             continue
-        # Ensure the orbital exists in the PDoS data
-        if orbital not in pdos_data:
-            print(f"Warning: Orbital '{orbital}' not found for {label}. Skipping...")
+
+        if len(energy) != len(curve):
+            print(
+                f"Warning: Energy grid and curve length mismatch for "
+                f"{_clean_pdos_label_text(label) or orbital}: {len(energy)} vs {len(curve)}. Skipping..."
+            )
             continue
-        energy = pdos_data["pdos_shifted_energy"]
-        plt.plot(energy, pdos_data[orbital],
-                 color=color_sampling(line_color)[1],
-                 linestyle=line_style, linewidth=line_weight, alpha=line_alpha,
-                 label=f"{label}")
-        
-        # Total DoS
-        # efermi, e_shift, dos_total = read_total_dos_from_doscar(directory)
-        # pdos_total = pdos_data["total_pdos"]
-        # interstitial = dos_total - pdos_total
-        # plt.plot(e_shift, dos_total,  color=color_sampling(line_color)[1], linestyle=line_style, linewidth=line_weight, alpha=line_alpha,label="Total DOS")
-        # plt.plot(e_shift, interstitial,  color=color_sampling(line_color)[1], linestyle=line_style, linewidth=line_weight, alpha=line_alpha, label="Interstitial (DOS - PDOS)")
 
-    # Add Fermi energy line
-    plt.axvline(x=0, linestyle="--", color=fermi_color[0], alpha=0.8, label="Fermi energy")
-    if matters_list:  # Use the first valid pdos_data for Fermi energy annotation
-        fermi_energy_text = f"Fermi energy\n({pdos_data['efermi']:.3f} eV)"
-        plt.text(-x_range * 0.02, y_top * 0.98, fermi_energy_text,
-                 fontsize=12, color=fermi_color[0], rotation=0, va="top", ha="right")
+        plt.plot(
+            energy,
+            curve,
+            color=color_sampling(line_color)[1],
+            linestyle=line_style,
+            linewidth=line_weight,
+            alpha=line_alpha,
+            label=_pdos_curve_label(label, orbital),
+        )
 
-    # Plot settings
-    plt.title(title)
-    plt.xlabel("Energy (eV)")
-    plt.ylabel("Density of States")
-    plt.xlim(-x_range, x_range)
-    plt.ylim(0, y_top)
-    # plt.legend(loc="upper right")
-    plt.legend(loc="best")
-    plt.tight_layout()
-    # plt.show()
+        first_valid_pdos_data = pdos_data if first_valid_pdos_data is None else first_valid_pdos_data
+        plotted_count += 1
 
-def plot_single_pdos_pure(title, matters_list=None, x_range=None, y_top=None):
-    """
-    Plot PDoS for a single system with individual settings for each orbital.
-
-    Parameters:
-        title (str): Title of the plot.
-        x_range (float): Range of the x-axis (energy range).
-        y_top (float): Maximum value of the y-axis.
-        matters_list (list): List of configurations for each orbital. Each item is a list containing:
-                             [label, directory, atoms, orbital, line_color, line_style, line_weight, line_alpha].
-    """
-    # Validate input
-    if not matters_list or len(matters_list) == 0:
-        raise ValueError("matters_list must contain at least one configuration.")
-
-    # Figure Settings
-    fig_setting = canvas_setting()
-    plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
-    params = fig_setting[2]
-    plt.rcParams.update(params)
-    plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
-
-    # Color for Fermi energy line
-    fermi_color = color_sampling("Violet")
-
-    # Plot PDoS for each orbital with individual settings
-    for matter in matters_list:
-        label, directory, atoms, orbital, line_color, line_style, line_weight, line_alpha = matter
-        # Extract PDoS data for this system
-        pdos_data = extract_dict_pdos(directory, atoms)
-        if pdos_data is None:
-            print(f"Warning: Skipping {label} because PDoS data could not be extracted.")
-            continue
-        # Ensure the orbital exists in the PDoS data
-        if orbital not in pdos_data:
-            print(f"Warning: Orbital '{orbital}' not found for {label}. Skipping...")
-            continue
-        energy = pdos_data["pdos_shifted_energy"]
-        plt.plot(energy, pdos_data[orbital],
-                 color=color_sampling(line_color)[1],
-                 linestyle=line_style, linewidth=line_weight, alpha=line_alpha,
-                 label=f"{label}")
-        
-        # Total DoS
-        # efermi, e_shift, dos_total = read_total_dos_from_doscar(directory)
-        # pdos_total = pdos_data["total_pdos"]
-        # interstitial = dos_total - pdos_total
-        # plt.plot(e_shift, dos_total,  color=color_sampling(line_color)[1], linestyle=line_style, linewidth=line_weight, alpha=line_alpha,label="Total DOS")
-        # plt.plot(e_shift, interstitial,  color=color_sampling(line_color)[1], linestyle=line_style, linewidth=line_weight, alpha=line_alpha, label="Interstitial (DOS - PDOS)")
+    if plotted_count == 0:
+        print("Warning: no valid PDoS curves were plotted.")
+        return
 
     # Add Fermi energy line
     plt.axvline(x=0, linestyle="--", color=fermi_color[0], alpha=0.8, label="Fermi energy")
 
-    # Plot settings
     plt.title(title)
     plt.xlabel("Energy (eV)")
     plt.ylabel("Density of States")
-    plt.xlim(-x_range, x_range)
-    plt.ylim(0, y_top)
-    # plt.legend(loc="upper right")
-    plt.legend(loc="best")
+
+    x_bounds = _range_bounds(x_range, symmetric=True)
+    if x_bounds is not None:
+        plt.xlim(x_bounds[0], x_bounds[1])
+
+    y_bounds = _range_bounds(y_top, symmetric=False)
+    if y_bounds is not None:
+        plt.ylim(y_bounds[0], y_bounds[1])
+
+    if fermi_level not in [None, False] and first_valid_pdos_data is not None:
+        x_left, x_right = plt.xlim()
+        y_bottom, y_upper = plt.ylim()
+        x_offset = 0.02 * (x_right - x_left)
+        y_offset = 0.02 * (y_upper - y_bottom)
+        fermi_energy_text = f"Fermi energy\n({first_valid_pdos_data['efermi']:.3f} eV)"
+        plt.text(
+            0 - x_offset,
+            y_upper - y_offset,
+            fermi_energy_text,
+            fontsize=12,
+            color=fermi_color[0],
+            rotation=0,
+            va="top",
+            ha="right",
+        )
+
+    if legend_loc not in [None, False]:
+        plt.legend(loc=legend_loc)
+
     plt.tight_layout()
     # plt.show()
