@@ -2399,6 +2399,20 @@ def _pdos_curve_label(label, orbital):
     return _pdos_orbital_display_name(orbital)
 
 
+def _format_pdos_fermi_label_text(fermi_label, efermi):
+    """Return Fermi-energy text controlled by fermi_label.
+
+    fermi_label=False/None disables the text.
+    fermi_label=True uses the default label.
+    fermi_label="..." uses the provided text as the first line.
+    """
+    if fermi_label in [None, False]:
+        return None
+    if isinstance(fermi_label, str) and fermi_label.strip():
+        return f"{fermi_label.strip()}\n{efermi:.3f} (eV)"
+    return f"Fermi energy\n{efermi:.3f} (eV)"
+
+
 def _is_flat_pdos_matter(item):
     """Return True when item is one matter entry, not a list of matter entries.
 
@@ -2591,7 +2605,7 @@ def _merge_pdos_args(args, x_range=None, y_top=None):
     return merged, x_range, y_top
 
 
-def plot_pdos(title, *args, x_range=None, y_top=None, fermi_level=None, legend_loc="best"):
+def plot_pdos(title, *args, x_range=None, y_top=None, fermi_level=None, legend_loc="best", fermi_label=False):
     """
     General function to plot PDoS.
 
@@ -2610,7 +2624,7 @@ def plot_pdos(title, *args, x_range=None, y_top=None, fermi_level=None, legend_l
         d_xy/dxy, d_yz/dyz, d_z2/dz2, d_zx/dzx/d_xz/dxz, d_x2-y2/x2-y2.
     """
     help_info = """
-Usage: plot_pdos(title, systems, x_range=None, y_top=None)
+Usage: plot_pdos(title, systems, x_range=None, y_top=None, fermi_label=False)
 
 Each system/matter should be:
     [label, directory, atoms, orbital, color, linestyle, linewidth, alpha]
@@ -2626,15 +2640,20 @@ Optional fields:
 
 Examples:
     systems = [["B p", "PDoS/bulk", [1, 2, 3], "p", "blue"]]
-    plot_pdos("PDoS", systems, x_range=6, y_top=12)
+    plot_pdos("PDoS", systems, x_range=6, y_top=12, fermi_label=False)
 
     system = ["B p", "PDoS/bulk", [1, 2, 3], "p", "blue"]
-    plot_pdos("PDoS", system, x_range=[-8, 4], y_top=[0, 12])
+    plot_pdos("PDoS", system, x_range=[-8, 4], y_top=[0, 12], fermi_label=False)
 
 Orbital labels:
     total_pdos / total, total_dos / dos, interstitial,
     s, p, d, p_y/py, p_z/pz, p_x/px,
     d_xy/dxy, d_yz/dyz, d_z2/dz2, d_zx/dzx/d_xz/dxz, d_x2-y2/x2-y2.
+
+fermi_label:
+    False/None -> no Fermi-energy value text;
+    True -> default text;
+    "Fermi level" -> custom first line.
 """
     if title in ["help", "Help"]:
         print(help_info)
@@ -2651,10 +2670,11 @@ Orbital labels:
         y_top=y_top,
         fermi_level=fermi_level,
         legend_loc=legend_loc,
+        fermi_label=fermi_label,
     )
 
 
-def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None, fermi_level=None, legend_loc="best"):
+def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None, fermi_level=None, legend_loc="best", fermi_label=False):
     """
     Plot PDoS for one or more configurations.
 
@@ -2669,6 +2689,14 @@ def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None, fermi_l
     y_top:
         number -> [0, y_top]
         [bottom, top] -> custom y range
+
+    fermi_label:
+        False/None -> no Fermi-energy value text;
+        True -> default text;
+        "Fermi level" -> custom first line.
+
+    fermi_level:
+        Kept as a backward-compatible alias for fermi_label.
     """
     if not matters_list:
         raise ValueError("matters_list must contain at least one configuration.")
@@ -2732,12 +2760,20 @@ def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None, fermi_l
     if y_bounds is not None:
         plt.ylim(y_bounds[0], y_bounds[1])
 
-    if fermi_level not in [None, False] and first_valid_pdos_data is not None:
+    # fermi_level is kept as a backward-compatible alias.
+    if fermi_label in [None, False] and fermi_level not in [None, False]:
+        fermi_label = fermi_level
+
+    if first_valid_pdos_data is not None:
+        fermi_energy_text = _format_pdos_fermi_label_text(fermi_label, first_valid_pdos_data["efermi"])
+    else:
+        fermi_energy_text = None
+
+    if fermi_energy_text is not None:
         x_left, x_right = plt.xlim()
         y_bottom, y_upper = plt.ylim()
         x_offset = 0.02 * (x_right - x_left)
         y_offset = 0.02 * (y_upper - y_bottom)
-        fermi_energy_text = f"Fermi energy\n({first_valid_pdos_data['efermi']:.3f} eV)"
         plt.text(
             0 - x_offset,
             y_upper - y_offset,
