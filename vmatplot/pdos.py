@@ -2392,11 +2392,13 @@ def _pdos_orbital_display_name(orbital):
 
 
 def _pdos_curve_label(label, orbital):
-    """Use the user label when present; otherwise use the orbital label."""
+    """Return only the user-provided matter label for PDoS legends.
+
+    Blank or None labels are suppressed from the legend.  The orbital name is not
+    appended or auto-filled, so legend text stays fully user-controlled.
+    """
     label = _clean_pdos_label_text(label)
-    if label:
-        return label
-    return _pdos_orbital_display_name(orbital)
+    return label if label else "_nolegend_"
 
 
 def _format_pdos_fermi_label_text(fermi_label, efermi):
@@ -2638,6 +2640,10 @@ Optional fields:
     linewidth -> 1.5
     alpha -> 1.0
 
+Legend:
+    Only the first field, label, is used as the legend text.
+    If label is "" or None, the curve is hidden from the legend.
+
 Examples:
     systems = [["B p", "PDoS/bulk", [1, 2, 3], "p", "blue"]]
     plot_pdos("PDoS", systems, x_range=6, y_top=12, fermi_label=False)
@@ -2681,6 +2687,10 @@ def plot_single_pdos(title, matters_list=None, x_range=None, y_top=None, fermi_l
     Backward-compatible accepted matter forms:
         [label, directory, atoms, orbital, color, linestyle, linewidth, alpha]
         [[label, directory, atoms, orbital, color, linestyle, linewidth, alpha], ...]
+
+    Legend labels are user-controlled:
+        Only label is used.
+        If label is "" or None, the curve is hidden from the legend.
 
     x_range:
         number -> symmetric range, e.g. 6 means [-6, 6]
