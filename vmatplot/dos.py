@@ -564,7 +564,18 @@ def create_matters_dos(matters_list):
             else: print("if the spin polarization is turn-on, please input 'spin up', 'spin down', or 'negative spin down', if not, please input 'unpolarized'.")
 
         # Append structured matter list
-        matters.append([label, dos_data, line_color, line_style, line_weight, line_alpha])
+        spin_direction_label = None
+        if spin_label is False:
+            spin_direction_label = "unpolarized"
+        elif spin_label is True:
+            if spin_direction.lower() in ["up", "spin up", "spin-up"]:
+                spin_direction_label = "spin-up"
+            elif spin_direction.lower() in ["down", "spin down", "spin-down"]:
+                spin_direction_label = "spin-down"
+            elif spin_direction.lower() in ["negative spin down", "negative spin-down"]:
+                spin_direction_label = "spin-down"
+
+        matters.append([label, dos_data, spin_direction_label, line_color, line_style, line_weight, line_alpha])
     return matters
 
 # Universal DoS Plotting
@@ -585,26 +596,35 @@ def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_type 
     # Color calling
     fermi_color = color_sampling("Violet")
     matters = create_matters_dos(matters_list)
+
+    def _dos_plain_label(current_label, spin_direction_label):
+        if spin_direction_label is None:
+            return f"{current_label}"
+        return f"{current_label} ({spin_direction_label})"
+
     if all(term is not None for term in [x_range, y_lim]):
         # Data plotting
         if dos_type in ["All", "all"]:
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"{current_label}", zorder=3)
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"{current_label}", zorder=2)
+                current_label = _dos_plain_label(current_label, matter[2])
+                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[3])[1], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=f"{current_label}", zorder=3)
+                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[3])[2], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=f"{current_label}", zorder=2)
                 efermi = matter[1][0]
         if dos_type in ["Total", "total"]:
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[2])[1], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"{current_label}", zorder=2)
+                current_label = _dos_plain_label(current_label, matter[2])
+                plt.plot(matter[1][5], matter[1][6], c=color_sampling(matter[3])[1], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=f"{current_label}", zorder=2)
                 efermi = matter[1][0]
         if dos_type in ["Integrated", "integrated"]:
             for _, matter in enumerate(matters):
                 # Labels
                 current_label = matter[0]
-                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[2])[2], linestyle=matter[3], lw=matter[4], alpha=matter[5], label=f"{current_label}", zorder=2)
+                current_label = _dos_plain_label(current_label, matter[2])
+                plt.plot(matter[1][5], matter[1][7], c=color_sampling(matter[3])[2], linestyle=matter[4], lw=matter[5], alpha=matter[6], label=f"{current_label}", zorder=2)
                 efermi = matter[1][0]
         # Plot Fermi energy as a vertical line
         shift = efermi
@@ -1097,10 +1117,11 @@ def extract_dos_xml_or_outcar_cached(directory_path, spin=1, negate=False):
     return extract_dos_xml_or_outcar(directory_path, spin=spin, negate=negate)
 
 
+
 def _normalize_spin_dos_mode(spin_mode):
     """Normalize spin-DOS plotting mode. Internal helper."""
     if spin_mode is None:
-        return "total"
+        return None
 
     spin_mode = str(spin_mode).lower().strip()
 
@@ -1108,44 +1129,40 @@ def _normalize_spin_dos_mode(spin_mode):
         return "up"
     if spin_mode in ["down", "spin down", "spin-down", "negative spin down", "negative spin-down"]:
         return "down"
-    if spin_mode in ["total", "both", "spin total", "spin-total", "spin both", "spin-both", "up and down", "spin up and down", "up+down"]:
+    if spin_mode in ["total", "spin total", "spin-total"]:
         return "total"
 
-    print("Error: spin mode should be 'spin up', 'spin down', or 'total'. The default 'total' will be used.")
-    return "total"
+    return None
 
 
 def create_matters_dos_spin(matters_list):
     """
-    Create a list of structured lists for spin-polarized DoS plotting.
+    Create a list of structured lists for strict spin-polarized DoS plotting.
 
     Parameters:
-    - matters_list: A list of lists, where each inner list can contain:
+    - matters_list: A list of lists, where each inner list should contain:
       [label, directory, spin_mode, line_color, line_style, line_weight, line_alpha].
 
-      The spin_mode field follows the plot_dos spin-direction position:
-      - "spin up": plot only the spin-up channel;
-      - "spin down": plot only the spin-down channel as negative DoS;
-      - "total": plot both spin-up and spin-down channels from the same calculation.
+      The spin_mode field must be written explicitly and is case-insensitive:
+      - "spin up", "spin-up", or "up": plot only the spin-up channel;
+      - "spin down", "spin-down", or "down": plot only the spin-down channel as negative DoS;
+      - "total": plot the summed DoS, i.e. spin-up + spin-down.
 
-      For convenience, the function also accepts:
-      [label, directory, line_color, line_style, line_weight, line_alpha],
-      in which case spin_mode defaults to "total".
+      One matter corresponds to one plotted curve. This function does not expand
+      one entry into multiple curves.
 
     Returns:
     - A list of lists, where each list contains:
       - label: Matter label;
       - spin_mode: up, down, or total;
       - dos_up: Extracted spin-up DoS data, or None when unused;
-      - dos_down: Extracted spin-down DoS data with negative sign, or None when unused;
+      - dos_down: Extracted spin-down DoS data, or None when unused;
       - line_color: Color family for plotting;
       - line_style: Line style for plotting;
       - line_weight: Line width for plotting;
       - line_alpha: Line transparency (alpha value) for plotting.
     """
-    # Default values for optional parameters
     default_values = {
-        "spin_mode": "total",
         "line_color": "Grey",
         "line_style": "solid",
         "line_weight": 1.5,
@@ -1156,48 +1173,43 @@ def create_matters_dos_spin(matters_list):
         print("Error: please provide matters_list for spin-polarized DoS plotting.")
         return []
 
-    # Ensure input is a list of lists
     if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
         matters_list = [matters_list[:]]
 
-    spin_mode_tokens = [
-        "up", "spin up", "spin-up",
-        "down", "spin down", "spin-down", "negative spin down", "negative spin-down",
-        "total", "both", "spin total", "spin-total", "spin both", "spin-both", "up and down", "spin up and down", "up+down",
-    ]
-
     matters = []
     for matter_dir in matters_list:
-        # Unpack the list with optional parameters
-        label, directory, *optional_params = matter_dir
+        if len(matter_dir) < 3:
+            print("Error: each matter in plot_dos_spin should be [label, directory, spin_mode, ...].")
+            continue
 
-        # The third field is spin_mode only when it is a known spin-mode token.
-        # Otherwise the row is interpreted as [label, directory, line_color, ...]
-        # and spin_mode defaults to "total".
-        spin_mode = default_values["spin_mode"]
-        if optional_params and isinstance(optional_params[0], str) and optional_params[0].lower().strip() in spin_mode_tokens:
-            spin_mode = optional_params[0]
-            optional_params = optional_params[1:]
-        spin_mode = _normalize_spin_dos_mode(spin_mode)
+        label, directory, spin_mode_raw, *optional_params = matter_dir
+        spin_mode = _normalize_spin_dos_mode(spin_mode_raw)
+        if spin_mode is None:
+            print("Error: spin_mode should be explicitly written as 'spin up', 'spin down', or 'total'.")
+            continue
 
         line_color = get_or_default(optional_params[0] if len(optional_params) > 0 else None, default_values["line_color"])
         line_style = get_or_default(optional_params[1] if len(optional_params) > 1 else None, default_values["line_style"])
         line_weight = get_or_default(optional_params[2] if len(optional_params) > 2 else None, default_values["line_weight"])
         line_alpha = get_or_default(optional_params[3] if len(optional_params) > 3 else None, default_values["line_alpha"])
 
-        # Extract only the required spin channel(s). This deliberately avoids DOSCAR.
         dos_up = None
         dos_down = None
         if spin_mode in ["up", "total"]:
             dos_up = extract_dos_xml_or_outcar_cached(directory, spin=1, negate=False)
         if spin_mode in ["down", "total"]:
-            dos_down = extract_dos_xml_or_outcar_cached(directory, spin=2, negate=True)
+            dos_down = extract_dos_xml_or_outcar_cached(directory, spin=2, negate=False)
 
-        if (spin_mode in ["up", "total"] and dos_up is None) or (spin_mode in ["down", "total"] and dos_down is None):
-            print(f"Error: failed to extract spin-polarized DoS data for {label}.")
+        if spin_mode == "up" and dos_up is None:
+            print(f"Error: failed to extract spin-up DoS data for {label}.")
+            continue
+        if spin_mode == "down" and dos_down is None:
+            print(f"Error: failed to extract spin-down DoS data for {label}.")
+            continue
+        if spin_mode == "total" and (dos_up is None or dos_down is None):
+            print(f"Error: failed to extract total spin DoS data for {label}.")
             continue
 
-        # Append structured matter list
         matters.append([label, spin_mode, dos_up, dos_down, line_color, line_style, line_weight, line_alpha])
     return matters
 
@@ -1225,6 +1237,17 @@ def _set_dos_range(axis_name, value):
 
 def _spin_dos_label(label_prefix, current_label, spin_mode_label):
     """Create a compact legend label for spin-DOS plotting. Internal helper."""
+    spin_mode_label = str(spin_mode_label).lower().strip()
+    display_labels = {
+        "up": "spin-up",
+        "spin up": "spin-up",
+        "spin-up": "spin-up",
+        "down": "spin-down",
+        "spin down": "spin-down",
+        "spin-down": "spin-down",
+        "total": "total",
+    }
+    spin_mode_label = display_labels.get(spin_mode_label, spin_mode_label)
     if label_prefix == "":
         return f"{current_label} ({spin_mode_label})"
     return f"{label_prefix}{current_label} ({spin_mode_label})"
@@ -1238,33 +1261,34 @@ def plot_dos_spin(title, matters_list=None, x_range=None, y_lim=None, dos_type=N
 
     Parameters:
     - title: Figure title;
-    - matters_list: A list of lists, where each inner list can contain:
+    - matters_list: A list of lists. Each inner list should contain:
       [label, directory, spin_mode, line_color, line_style, line_weight, line_alpha].
 
-      The spin_mode field accepts:
-      - "spin up": plot only the spin-up channel;
-      - "spin down": plot only the spin-down channel as negative DoS;
-      - "total": plot both spin-up and spin-down channels from the same calculation.
+      The spin_mode field must be written explicitly and is case-insensitive:
+      - "spin up", "spin-up", or "up": plot only the spin-up channel;
+      - "spin down", "spin-down", or "down": plot only the spin-down channel as negative DoS;
+      - "total": plot the summed DoS, i.e. spin-up + spin-down.
 
-      For convenience, [label, directory, line_color, line_style, line_weight, line_alpha]
-      is also accepted and defaults to spin_mode="total".
+      One matter corresponds to one plotted curve. This function does not expand
+      one entry into multiple curves.
 
     - x_range: Energy range. Use a number for symmetric range, or [left, right] for asymmetric range;
     - y_lim: DoS range. Use a number for symmetric range, or [bottom, top] for asymmetric range;
     - dos_type: "Total", "Integrated", or "All". The default is "Total".
 
-    Examples:
-    plot_dos_spin("FM DoS", ["Total", "./8_DOS_FM", "total"], [-8, 4], [-8, 8], "Total")
-    plot_dos_spin("FM DoS", [["Total", "./8_DOS_FM", "total", "Grey", "solid", 1.5, 1.0]], x_range=[-8, 4], y_lim=[-8, 8], dos_type="Total")
-    plot_dos_spin("FM DoS", [["Total", "./8_DOS_FM", "spin up", "Grey"], ["Total", "./8_DOS_FM", "spin down", "Grey"]], [-8, 4], [-8, 8], "Total")
+    Example:
+    matter = [["Sample", "DoS/FM", "spin up", "Blue"],
+              ["Sample", "DoS/FM", "spin down", "Orange"],
+              ["Sample", "DoS/FM", "total", "Purple"]]
+    plot_dos_spin("Spin-polarized DoS", matter, [-8, 4], [-8, 8], "Total")
     """
-    # Help information
-    help_info = "Usage: plot_dos_spin \n" + \
-                "Use the same argument order as plot_dos: title, matters_list, x_range, y_lim, dos_type.\n" + \
-                "Each matter uses [label, directory, spin_mode, line_color, line_style, line_weight, line_alpha].\n" + \
-                "spin_mode accepts 'spin up', 'spin down', or 'total'. The default is 'total'.\n" + \
-                "This function reads vasprun.xml first, then OUTCAR; DOSCAR is not required.\n" + \
-                "Example: plot_dos_spin('FM DoS', ['Total', './8_DOS_FM', 'total'], [-8, 4], [-8, 8], 'Total')\n"
+    help_info = """Usage: plot_dos_spin
+        Use the same argument order as plot_dos: title, matters_list, x_range, y_lim, dos_type.
+        Each matter should be [label, directory, spin_mode, line_color, line_style, line_weight, line_alpha].
+        spin_mode is case-insensitive. Use 'spin up', 'spin-up', or 'up'; 'spin down', 'spin-down', or 'down'; or 'total'.
+        One matter corresponds to one curve. 'total' means spin-up plus spin-down.
+        This function reads vasprun.xml first, then OUTCAR; DOSCAR is not required.
+        """
 
     if title in ["help", "Help"]:
         print(help_info)
@@ -1273,19 +1297,16 @@ def plot_dos_spin(title, matters_list=None, x_range=None, y_lim=None, dos_type=N
     if dos_type is None:
         dos_type = "Total"
 
-    # Figure Settings
     fig_setting = canvas_setting()
     plt.figure(figsize=fig_setting[0], dpi=fig_setting[1])
     params = fig_setting[2]; plt.rcParams.update(params)
     plt.tick_params(direction="in", which="both", top=True, right=True, bottom=True, left=True)
 
-    # Color calling
     fermi_color = color_sampling("Grey")
     matters = create_matters_dos_spin(matters_list)
     if not matters:
         return
 
-    # Data plotting
     if dos_type in ["Total", "total"]:
         dos_indices = [(6, "")]
     elif dos_type in ["Integrated", "integrated"]:
@@ -1306,24 +1327,26 @@ def plot_dos_spin(title, matters_list=None, x_range=None, y_lim=None, dos_type=N
         line_weight = matter[6]
         line_alpha = matter[7]
         dos_color = color_sampling(line_color)
+        curve_color = dos_color[1]
 
         for index, label_prefix in dos_indices:
-            if spin_mode in ["up", "total"] and dos_up is not None:
+            if spin_mode == "up" and dos_up is not None:
                 up_label = _spin_dos_label(label_prefix, current_label, "up")
-                plt.plot(dos_up[5], dos_up[index], c=dos_color[1], linestyle=line_style, lw=line_weight, alpha=line_alpha, label=up_label, zorder=3)
-            if spin_mode in ["down", "total"] and dos_down is not None:
+                plt.plot(dos_up[5], dos_up[index], c=curve_color, linestyle=line_style, lw=line_weight, alpha=line_alpha, label=up_label, zorder=3)
+            elif spin_mode == "down" and dos_down is not None:
                 down_label = _spin_dos_label(label_prefix, current_label, "down")
-                plt.plot(dos_down[5], dos_down[index], c=dos_color[2], linestyle=line_style, lw=line_weight, alpha=line_alpha, label=down_label, zorder=2)
+                plt.plot(dos_down[5], -1.0 * dos_down[index], c=curve_color, linestyle=line_style, lw=line_weight, alpha=line_alpha, label=down_label, zorder=2)
+            elif spin_mode == "total" and dos_up is not None and dos_down is not None:
+                total_label = _spin_dos_label(label_prefix, current_label, "total")
+                total_dos = dos_up[index] + dos_down[index]
+                plt.plot(dos_up[5], total_dos, c=curve_color, linestyle=line_style, lw=line_weight, alpha=line_alpha, label=total_label, zorder=3)
 
-    # Plot Fermi energy and zero DoS reference lines
     plt.axvline(x=0, linestyle="--", c=fermi_color[1], alpha=0.80, zorder=1)
     plt.axhline(y=0, linestyle=":", c=fermi_color[1], alpha=0.80, zorder=1)
 
-    # Title and labels
     plt.title(f"{title}")
     plt.ylabel(r"Density of States (states/eV)"); plt.xlabel(r"Energy (eV)")
 
-    # Axes limit
     _set_dos_range("x", x_range)
     _set_dos_range("y", y_lim)
 
