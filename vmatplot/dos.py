@@ -514,46 +514,91 @@ def extract_dos_spin_down(directory_path, negate_label=False):
 def create_matters_dos(matters_list):
     """
     Create a list of structured lists for DoS (Density of States) plotting.
-    Parameters:
-    - matters_list: A list of lists, where each inner list can contain:
-      [label, directory, line_color, line_style, line_weight, line_alpha].
+
+    Backward-compatible accepted matter forms:
+      New explicit spin form:
+        [label, directory, spin_direction, line_color, line_style, line_weight, line_alpha]
+      Old/default non-spin form:
+        [label, directory, line_color, line_style, line_weight, line_alpha]
+      Minimal default form:
+        [label, directory]
+
+    If spin_direction is omitted, it defaults to "unpolarized".
+    For spin-polarized calculations, write "spin up", "spin down", or "positive spin down" explicitly.
+
     Returns:
     - A list of lists, where each list contains:
       - label: Matter label;
       - dos_data: Extracted DoS data;
-      - spin_direction: unpolarized, spin up, or spin down when the spin polarization is active;
-        spin down is plotted as negative by default;
+      - spin_direction: unpolarized, spin-up, or spin-down;
       - line_color: Color family for plotting;
       - line_style: Line style for plotting;
       - line_weight: Line width for plotting;
-      - line_alpha: Line transparency (alpha value) for plotting.
+      - line_alpha: Line transparency (alpha value).
     """
-    # Default values for optional parameters
     default_values = {
         "line_color": "default",
         "line_style": "solid",
         "line_weight": 1.5,
         "line_alpha": 1.0,
     }
+
+    spin_direction_aliases = {
+        "unpolarized",
+        "non-polarized",
+        "non polarized",
+        "spin off",
+        "spin-off",
+        "up",
+        "spin up",
+        "spin-up",
+        "down",
+        "spin down",
+        "spin-down",
+        "negative spin down",
+        "negative spin-down",
+        "positive spin down",
+        "positive spin-down",
+    }
+
     if matters_list is None:
         print("Error: please provide matters_list for DoS plotting.")
         return []
 
     # Accept one single matter written directly as:
-    # [label, directory, spin_direction, line_color, line_style, line_weight, line_alpha].
-    # This keeps the old flat-list usage compatible, including optional tuple/list line styles.
+    # [label, directory, spin_direction, line_color, line_style, line_weight, line_alpha]
+    # or old style [label, directory, line_color, line_style, line_weight, line_alpha].
+    # This keeps old flat-list usage compatible, including optional tuple/list line styles.
     # Do not mutate the caller's original list.
     if isinstance(matters_list, (list, tuple)) and matters_list and not isinstance(matters_list[0], (list, tuple)):
         matters_list = [list(matters_list)]
 
     matters = []
     for matter_dir in matters_list:
-        if len(matter_dir) < 3:
-            print("Error: each matter in plot_dos should be [label, directory, spin_direction, ...].")
+        if len(matter_dir) < 2:
+            print("Error: each matter in plot_dos should be [label, directory, ...].")
             continue
 
-        # Unpack the list with optional parameters
-        label, directory, spin_direction, *optional_params = matter_dir
+        label = matter_dir[0]
+        directory = matter_dir[1]
+
+        # Default spin direction is unpolarized.
+        # Backward compatibility rule:
+        # - If the third field is a known spin keyword, treat it as spin_direction.
+        # - Otherwise, treat the third field as the old line_color field.
+        spin_direction = "unpolarized"
+        optional_params = []
+
+        if len(matter_dir) >= 3:
+            third = matter_dir[2]
+            third_normalized = str(third).lower().strip() if third is not None else ""
+            if third_normalized in spin_direction_aliases:
+                spin_direction = third
+                optional_params = list(matter_dir[3:])
+            else:
+                spin_direction = "unpolarized"
+                optional_params = list(matter_dir[2:])
+
         spin_direction_normalized = str(spin_direction).lower().strip()
 
         line_color = get_or_default(optional_params[0] if len(optional_params) > 0 else None, default_values["line_color"])
@@ -566,7 +611,7 @@ def create_matters_dos(matters_list):
         spin_label = check_spin(directory)
         if spin_label is False:
             dos_data = extract_dos(directory)
-            if spin_direction_normalized not in ["unpolarized", "non-polarized", "spin off", "spin-off"]:
+            if spin_direction_normalized not in ["unpolarized", "non-polarized", "non polarized", "spin off", "spin-off"]:
                 print("if the spin polarization is turn-on, please input 'spin up' or 'spin down', if not, please input 'unpolarized'.")
         elif spin_label is True:
             if spin_direction_normalized in ["up", "spin up", "spin-up"]:
@@ -621,12 +666,26 @@ def _dos_label_with_mode(current_label, mode_label):
     return f"{current_label} ({mode_label})"
 
 
+def _format_fermi_label_text(fermi_label, efermi):
+    """Return Fermi-energy text controlled by fermi_label.
+
+    fermi_label=False/None disables the text.
+    fermi_label=True uses the default label.
+    fermi_label="..." uses the provided text as the first line.
+    """
+    if fermi_label in [None, False]:
+        return None
+    if isinstance(fermi_label, str) and fermi_label.strip():
+        return f"{fermi_label.strip()}\n{efermi:.3f} (eV)"
+    return f"Fermi energy\n{efermi:.3f} (eV)"
+
+
 # Universal DoS Plotting
-def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quantity = None):
+def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quantity = None, fermi_label = False):
     # Help information
     help_info = "Usage: plot_dos \n" + \
-                "Use the same argument order as before: title, matters_list, x_range, y_lim, dos_quantity.\n" + \
-                "For spin-polarized calculations, 'spin down' is plotted as negative by default.\n" + \
+                "Use the same argument order as before: title, matters_list, x_range, y_lim, dos_quantity, fermi_label.\n" + \
+                "For spin-polarized calculations, 'spin down' is plotted as negative by default.\nIf spin_direction is omitted, it defaults to 'unpolarized'.\nfermi_label controls the displayed Fermi-energy text and is False by default.\n" + \
                 "Use 'positive spin down' only if you explicitly want the spin-down channel above zero.\n"
 
     if title in ["help", "Help"]:
@@ -688,7 +747,7 @@ def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quant
         # Plot Fermi energy as a vertical line
         shift = efermi
         plt.axvline(x=efermi-shift, linestyle="--", c=fermi_color[0], alpha=0.80, label="Fermi energy", zorder=1)
-        fermi_energy_text = f"Fermi energy\n{efermi:.3f} (eV)"
+        fermi_energy_text = _format_fermi_label_text(fermi_label, efermi)
 
         # Title
         # plt.title(f"Electronic density of state for {title} ({supplement})")
@@ -707,14 +766,12 @@ def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quant
         elif isinstance(y_lim, (list, tuple, np.ndarray)) and len(y_lim) > 1:
             plt.ylim(y_lim[0], y_lim[-1])
 
-        if len(matters) == 1:
+        if fermi_energy_text is not None:
             x_left, x_right = plt.xlim()
             y_bottom, y_top = plt.ylim()
             x_offset = 0.02 * (x_right - x_left)
             y_offset = 0.02 * (y_top - y_bottom)
             plt.text(efermi-shift-x_offset, y_top-y_offset, fermi_energy_text, fontsize=1.0*12, c=fermi_color[0], rotation=0, va="top", ha="right")
-        else:
-            pass
 
         y_bot = plt.ylim()[0]
         if y_bot < 0:
@@ -1339,7 +1396,7 @@ def _spin_dos_label(label_prefix, current_label, spin_mode_label):
 
 # Universal spin-polarized DoS Plotting
 
-def plot_dos_spin(title, matters_list=None, x_range=None, y_lim=None, dos_quantity=None):
+def plot_dos_spin(title, matters_list=None, x_range=None, y_lim=None, dos_quantity=None, fermi_label=False):
     """
     Plot spin-polarized DoS from one or more VASP calculations.
 
@@ -1358,20 +1415,22 @@ def plot_dos_spin(title, matters_list=None, x_range=None, y_lim=None, dos_quanti
 
     - x_range: Energy range. Use a number for symmetric range, or [left, right] for asymmetric range;
     - y_lim: DoS range. Use a number for symmetric range, or [bottom, top] for asymmetric range;
-    - dos_quantity: "Total", "Integrated", or "All". The default is "Total".
+    - dos_quantity: "Total", "Integrated", or "All". The default is "Total";
+    - fermi_label: controls the displayed Fermi-energy text. The default is False.
 
     Example:
     matter = [["Sample", "DoS/FM", "spin up", "Blue"],
               ["Sample", "DoS/FM", "spin down", "Orange"],
               ["Sample", "DoS/FM", "total", "Purple"]]
-    plot_dos_spin("Spin-polarized DoS", matter, [-8, 4], [-8, 8], "Total")
+    plot_dos_spin("Spin-polarized DoS", matter, [-8, 4], [-8, 8], "Total", fermi_label=False)
     """
     help_info = """Usage: plot_dos_spin
-Use the same argument order as plot_dos: title, matters_list, x_range, y_lim, dos_quantity.
+Use the same argument order as plot_dos: title, matters_list, x_range, y_lim, dos_quantity, fermi_label.
 Each matter should be [label, directory, spin_mode, line_color, line_style, line_weight, line_alpha].
 spin_mode is case-insensitive. Use 'spin up', 'spin-up', or 'up'; 'spin down', 'spin-down', or 'down'; or 'total'.
 One matter corresponds to one curve. 'total' means spin-up plus spin-down.
 This function reads vasprun.xml first, then OUTCAR; DOSCAR is not required.
+fermi_label controls the displayed Fermi-energy text and is False by default.
 """
 
     if title in ["help", "Help"]:
@@ -1401,11 +1460,17 @@ This function reads vasprun.xml first, then OUTCAR; DOSCAR is not required.
         print("Error: dos_quantity should be 'Total', 'Integrated', or 'All'.")
         return
 
+    efermi = None
     for _, matter in enumerate(matters):
         current_label = matter[0]
         spin_mode = matter[1]
         dos_up = matter[2]
         dos_down = matter[3]
+        if efermi is None:
+            if dos_up is not None:
+                efermi = dos_up[0]
+            elif dos_down is not None:
+                efermi = dos_down[0]
         line_color = matter[4]
         line_style = matter[5]
         line_weight = matter[6]
@@ -1433,6 +1498,14 @@ This function reads vasprun.xml first, then OUTCAR; DOSCAR is not required.
 
     _set_dos_range("x", x_range)
     _set_dos_range("y", y_lim)
+
+    fermi_energy_text = _format_fermi_label_text(fermi_label, efermi) if efermi is not None else None
+    if fermi_energy_text is not None:
+        x_left, x_right = plt.xlim()
+        y_bottom, y_top = plt.ylim()
+        x_offset = 0.02 * (x_right - x_left)
+        y_offset = 0.02 * (y_top - y_bottom)
+        plt.text(0-x_offset, y_top-y_offset, fermi_energy_text, fontsize=1.0*12, c=fermi_color[0], rotation=0, va="top", ha="right")
 
     plt.legend(loc="best")
     plt.tight_layout()
