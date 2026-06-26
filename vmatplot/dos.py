@@ -535,42 +535,55 @@ def create_matters_dos(matters_list):
         "line_weight": 1.5,
         "line_alpha": 1.0,
     }
-    # Ensure input is a list of lists
-    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
-        source_data = matters_list[:]
-        matters_list.clear()
-        matters_list.append(source_data)
+    if matters_list is None:
+        print("Error: please provide matters_list for DoS plotting.")
+        return []
+
+    # Accept one single matter written directly as:
+    # [label, directory, spin_direction, line_color, line_style, line_weight, line_alpha].
+    # This keeps the old flat-list usage compatible, including optional tuple/list line styles.
+    # Do not mutate the caller's original list.
+    if isinstance(matters_list, (list, tuple)) and matters_list and not isinstance(matters_list[0], (list, tuple)):
+        matters_list = [list(matters_list)]
+
     matters = []
     for matter_dir in matters_list:
+        if len(matter_dir) < 3:
+            print("Error: each matter in plot_dos should be [label, directory, spin_direction, ...].")
+            continue
+
         # Unpack the list with optional parameters
         label, directory, spin_direction, *optional_params = matter_dir
+        spin_direction_normalized = str(spin_direction).lower().strip()
+
         line_color = get_or_default(optional_params[0] if len(optional_params) > 0 else None, default_values["line_color"])
         line_style = get_or_default(optional_params[1] if len(optional_params) > 1 else None, default_values["line_style"])
         line_weight = get_or_default(optional_params[2] if len(optional_params) > 2 else None, default_values["line_weight"])
         line_alpha = get_or_default(optional_params[3] if len(optional_params) > 3 else None, default_values["line_alpha"])
 
         # Extract DoS data
+        dos_data = None
         spin_label = check_spin(directory)
         if spin_label is False:
             dos_data = extract_dos(directory)
-            if spin_direction not in ["unpolarized", "non-polarized", "spin off", "spin-off"]:
+            if spin_direction_normalized not in ["unpolarized", "non-polarized", "spin off", "spin-off"]:
                 print("if the spin polarization is turn-on, please input 'spin up' or 'spin down', if not, please input 'unpolarized'.")
         elif spin_label is True:
-            spin_direction_normalized = spin_direction.lower().strip()
             if spin_direction_normalized in ["up", "spin up", "spin-up"]:
                 dos_data = extract_dos_spin_up(directory)
             elif spin_direction_normalized in ["down", "spin down", "spin-down", "negative spin down", "negative spin-down"]:
                 dos_data = extract_dos_spin_down(directory, True)
             elif spin_direction_normalized in ["positive spin down", "positive spin-down"]:
                 dos_data = extract_dos_spin_down(directory, False)
-            else: print("if the spin polarization is turn-on, please input 'spin up' or 'spin down', if not, please input 'unpolarized'.")
+            else:
+                print("if the spin polarization is turn-on, please input 'spin up' or 'spin down', if not, please input 'unpolarized'.")
+                continue
 
         # Append structured matter list
         spin_direction_label = None
         if spin_label is False:
             spin_direction_label = "unpolarized"
         elif spin_label is True:
-            spin_direction_normalized = spin_direction.lower().strip()
             if spin_direction_normalized in ["up", "spin up", "spin-up"]:
                 spin_direction_label = "spin-up"
             elif spin_direction_normalized in ["down", "spin down", "spin-down", "negative spin down", "negative spin-down"]:
@@ -580,6 +593,33 @@ def create_matters_dos(matters_list):
 
         matters.append([label, dos_data, spin_direction_label, line_color, line_style, line_weight, line_alpha])
     return matters
+
+
+def _clean_legend_label_text(label):
+    """Return a safe legend-label string. None and blank strings become an empty string."""
+    if label is None:
+        return ""
+    return str(label).strip()
+
+
+def _normalize_legend_label_for_compare(label):
+    """Normalize labels only for duplicate-label comparison."""
+    return _clean_legend_label_text(label).lower().replace("-", " ").replace("_", " ").strip()
+
+
+def _dos_label_with_mode(current_label, mode_label):
+    """Create compact labels such as 'FM (spin-up)' or just 'spin-up' when label is blank."""
+    current_label = _clean_legend_label_text(current_label)
+    mode_label = _clean_legend_label_text(mode_label)
+
+    if not mode_label:
+        return current_label
+    if not current_label:
+        return mode_label
+    if _normalize_legend_label_for_compare(current_label) == _normalize_legend_label_for_compare(mode_label):
+        return current_label
+    return f"{current_label} ({mode_label})"
+
 
 # Universal DoS Plotting
 def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quantity = None):
@@ -593,6 +633,9 @@ def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quant
         print(help_info)
         return
 
+    if dos_quantity is None:
+        dos_quantity = "Total"
+
     # Figure Settings
     fig_setting = canvas_setting()
     plt.figure(figsize=fig_setting[0], dpi = fig_setting[1])
@@ -603,9 +646,20 @@ def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quant
     matters = create_matters_dos(matters_list)
 
     def _dos_plain_label(current_label, spin_direction_label):
-        if spin_direction_label is None:
-            return f"{current_label}"
-        return f"{current_label} ({spin_direction_label})"
+        return _dos_label_with_mode(current_label, spin_direction_label)
+
+    def _range_bounds(value, symmetric_y=False):
+        if value is None:
+            return None
+        if isinstance(value, (int, float)):
+            if symmetric_y:
+                return -abs(value), abs(value)
+            return -abs(value), abs(value)
+        if isinstance(value, (list, tuple, np.ndarray)) and len(value) == 1:
+            return -abs(value[0]), abs(value[0])
+        if isinstance(value, (list, tuple, np.ndarray)) and len(value) > 1:
+            return value[0], value[-1]
+        return None
 
     if all(term is not None for term in [x_range, y_lim]):
         # Data plotting
@@ -633,23 +687,35 @@ def plot_dos(title, matters_list = None, x_range = None, y_lim = None, dos_quant
                 efermi = matter[1][0]
         # Plot Fermi energy as a vertical line
         shift = efermi
-        plt.axvline(x = efermi-shift, linestyle="--", c=fermi_color[0], alpha=0.80, label="Fermi energy", zorder = 1)
+        plt.axvline(x=efermi-shift, linestyle="--", c=fermi_color[0], alpha=0.80, label="Fermi energy", zorder=1)
         fermi_energy_text = f"Fermi energy\n{efermi:.3f} (eV)"
-        if len(matters) == 1:
-            plt.text(efermi-shift-x_range*0.02, y_lim*0.98, fermi_energy_text, fontsize =1.0*12, c=fermi_color[0], rotation=0, va = "top", ha="right")
-        else: pass
+
         # Title
         # plt.title(f"Electronic density of state for {title} ({supplement})")
         plt.title(f"{title}")
         plt.ylabel(r"Density of States"); plt.xlabel(r"Energy (eV)")
-        # axes limit
-        plt.xlim(x_range*(-1), x_range)
+
+        # Axes limit.  x_range accepts either a number or [left, right].
+        x_bounds = _range_bounds(x_range)
+        if x_bounds is not None:
+            plt.xlim(x_bounds[0], x_bounds[1])
+
         if isinstance(y_lim, (int, float)):
             plt.ylim(None, y_lim)
         elif isinstance(y_lim, (list, tuple, np.ndarray)) and len(y_lim) == 1:
             plt.ylim(None, y_lim[0])
         elif isinstance(y_lim, (list, tuple, np.ndarray)) and len(y_lim) > 1:
-            plt.ylim(y_lim[0],y_lim[-1])
+            plt.ylim(y_lim[0], y_lim[-1])
+
+        if len(matters) == 1:
+            x_left, x_right = plt.xlim()
+            y_bottom, y_top = plt.ylim()
+            x_offset = 0.02 * (x_right - x_left)
+            y_offset = 0.02 * (y_top - y_bottom)
+            plt.text(efermi-shift-x_offset, y_top-y_offset, fermi_energy_text, fontsize=1.0*12, c=fermi_color[0], rotation=0, va="top", ha="right")
+        else:
+            pass
+
         y_bot = plt.ylim()[0]
         if y_bot < 0:
             plt.axhline(y=0, linestyle="--", c=color_sampling("Grey")[1], zorder = 1)
@@ -1178,8 +1244,12 @@ def create_matters_dos_spin(matters_list):
         print("Error: please provide matters_list for spin-polarized DoS plotting.")
         return []
 
-    if isinstance(matters_list, list) and matters_list and not any(isinstance(i, list) for i in matters_list):
-        matters_list = [matters_list[:]]
+    # Accept one single matter written directly as:
+    # [label, directory, spin_mode, line_color, line_style, line_weight, line_alpha].
+    # This keeps the old flat-list usage compatible, including optional tuple/list line styles.
+    # Do not mutate the caller's original list.
+    if isinstance(matters_list, (list, tuple)) and matters_list and not isinstance(matters_list[0], (list, tuple)):
+        matters_list = [list(matters_list)]
 
     matters = []
     for matter_dir in matters_list:
@@ -1241,7 +1311,7 @@ def _set_dos_range(axis_name, value):
 
 
 def _spin_dos_label(label_prefix, current_label, spin_mode_label):
-    """Create a compact legend label for spin-DOS plotting. Internal helper."""
+    """Create compact labels such as 'FM (spin-up)' or just 'spin-up' when label is blank."""
     spin_mode_label = str(spin_mode_label).lower().strip()
     display_labels = {
         "up": "spin-up",
@@ -1250,12 +1320,21 @@ def _spin_dos_label(label_prefix, current_label, spin_mode_label):
         "down": "spin-down",
         "spin down": "spin-down",
         "spin-down": "spin-down",
-        "total": "total",
+        "total": "total DOS",
+        "spin total": "total DOS",
+        "spin-total": "total DOS",
     }
     spin_mode_label = display_labels.get(spin_mode_label, spin_mode_label)
-    if label_prefix == "":
-        return f"{current_label} ({spin_mode_label})"
-    return f"{label_prefix}{current_label} ({spin_mode_label})"
+
+    label_prefix = _clean_legend_label_text(label_prefix)
+    current_label = _clean_legend_label_text(current_label)
+
+    mode_part = f"{label_prefix} {spin_mode_label}".strip()
+    if not current_label:
+        return mode_part
+    if _normalize_legend_label_for_compare(current_label) == _normalize_legend_label_for_compare(spin_mode_label):
+        return current_label
+    return f"{label_prefix + ' ' if label_prefix else ''}{current_label} ({spin_mode_label})"
 
 
 # Universal spin-polarized DoS Plotting
