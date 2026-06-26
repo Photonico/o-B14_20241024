@@ -165,7 +165,7 @@
  kinetic energy error for atom=    0.0004 (will be added to EATOM!!)
  
  
- POSCAR: o-B14 monolayer with Hydrogen
+ POSCAR: o-B14 monolayer with hydrogen termination
   positions in cartesian coordinates
   No initial velocities read in
  IVDW         = 12
@@ -422,7 +422,7 @@ Automatic generation of k-mesh.
    NGXF,Y,Z  is equivalent  to a cutoff of  28.00, 26.33, 26.81 a.u.
 
  SYSTEM =  Parameters                              
- POSCAR =  o-B14 monolayer with Hydrogen           
+ POSCAR =  o-B14 monolayer with hydrogen termination           
 
  Startparameter for this run:
    NWRITE =      2    write-flag & timer

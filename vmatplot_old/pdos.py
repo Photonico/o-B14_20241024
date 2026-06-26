@@ -439,7 +439,7 @@ def extract_element_pdos(directory_path, element):
     d_zx_pdos_sum = np.sum(d_zx_pdos_matrix, axis=1)
     x2_y2_pdos_sum = np.sum(x2_y2_pdos_matrix, axis=1)
     total_pdos_list = s_pdos_sum + p_y_pdos_sum + p_z_pdos_sum + p_x_pdos_sum + d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum + x2_y2_pdos_sum
-    integrated_pdos_list = np.trapz(total_pdos_list, x = energy_dos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x = energy_dos_shift)
     energy_pdos_shift = energy_pdos_sum - shift
     return (efermi, ions_number, kpoints_number, eigen_matrix, occu_matrix,             # 0 ~ 4
             energy_dos_shift,                                                           # 5
@@ -568,7 +568,7 @@ def extract_segment_pdos(directory_path, start, end = None):
     x2_y2_pdos_sum = np.sum(x2_y2_pdos_matrix, axis=1)
     energy_pdos_shift = energy_pdos_sum - shift
     total_pdos_list = s_pdos_sum + p_y_pdos_sum + p_z_pdos_sum + p_x_pdos_sum + d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum + x2_y2_pdos_sum
-    integrated_pdos_list = np.trapz(total_pdos_list, x=energy_dos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x=energy_dos_shift)
 
     return (efermi, ions_number, kpoints_number, eigen_matrix, occu_matrix,                 # 0 ~ 4
             energy_dos_shift, total_pdos_list, integrated_pdos_list,                        # 5 ~ 7
@@ -711,7 +711,7 @@ def extract_index_pdos_backup(directory_path, index=None):
         d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum + x2_y2_pdos_sum
     )
     energy_pdos_shift = energy_pdos_sum - efermi
-    integrated_pdos_list = np.trapz(total_pdos_list, x=energy_pdos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x=energy_pdos_shift)
 
     return (
         efermi, total_ions, kpoints_number, eigen_matrix, occu_matrix,              # 0 ~ 4
@@ -896,7 +896,7 @@ def extract_index_pdos(directory_path, index=None):
         d_xy_pdos_sum + d_yz_pdos_sum + d_z2_pdos_sum + d_zx_pdos_sum + x2_y2_pdos_sum
     )
     energy_pdos_shift = energy_pdos_sum - efermi
-    integrated_pdos_list = np.trapz(total_pdos_list, x=energy_pdos_shift)
+    integrated_pdos_list = np.trapezoid(total_pdos_list, x=energy_pdos_shift)
 
     return (
         efermi, total_ions, kpoints_number, eigen_matrix, occu_matrix,              # 0 ~ 4
