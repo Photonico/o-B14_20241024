@@ -201,7 +201,7 @@
  kinetic energy error for atom=    0.0004 (will be added to EATOM!!)
  
  
- POSCAR: o-B14 bilayer with Hydrogen
+ POSCAR: o-B14 bilayer with hydrogen termination
   positions in direct lattice
   No initial velocities read in
 
@@ -623,7 +623,7 @@ Automatic generation of k-mesh.
    NGXF,Y,Z  is equivalent  to a cutoff of  28.10, 27.04, 26.52 a.u.
 
  SYSTEM =  PDoS                                    
- POSCAR =  o-B14 bilayer with Hydrogen             
+ POSCAR =  o-B14 bilayer with hydrogen termination             
 
  Startparameter for this run:
    NWRITE =      2    write-flag & timer
