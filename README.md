@@ -1,6 +1,6 @@
-# Bulk o-B14
+# o-B14
 
-A study on Bulk o-B14 with DFT.
+A study on o-B14 with DFT.
 
 ## License
 
