@@ -2,8 +2,10 @@
 
 A study on Bulk o-B14 with DFT.
 
-* todo list
+## License
 
-extract bs from hdf5 format or learn py4vasp.
+The source code in the folder `vmatplot` is released under the MIT License.
 
-dielectirc_function_for_2D, ref: A method to restore the intrinsic dielectric functions of 2D materials in periodic calculations.
+You are welcome to use, modify, distribute, and adapt the code for academic, educational, or commercial purposes, provided that the original copyright and license notice are retained.
+
+Unless otherwise stated, this license applies to the Python source code and related scripts in this repository. Research data, manuscript text, figures, and third-party files may be subject to separate terms.
