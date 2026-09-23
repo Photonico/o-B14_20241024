@@ -30,7 +30,7 @@ def quantity(energy, real, imag, kind):
 
 
 def optical_figure(name, rows, labels):
-    fig, axes = plt.subplots(len(rows), 3, figsize=(10, 3.0 * len(rows) + 1.0), squeeze=False)
+    fig, axes = plt.subplots(len(rows), 3, figsize=(10,5.3 if rows[0][0]=='alpha' else 5), squeeze=False)
     for row, (kind, ylabel) in enumerate(rows):
         for col, component in enumerate(('xx', 'yy', 'zz')):
             ax = axes[row, col]
@@ -47,13 +47,22 @@ def optical_figure(name, rows, labels):
             ax.set_xticks([0, 4, 8, 12])
             ax.ticklabel_format(axis='y', style='plain', useOffset=False)
             frame(ax)
-            tab(ax, f'({labels[row]}) {component}' if col == 0 else component)
+            title_side='right' if col==0 and kind in ('loss','R') else 'left'
+            tab(ax, f'({labels[row]}) {component}' if col == 0 else component,loc=title_side)
             if col == 0: ax.set_ylabel(ylabel)
             if row == len(rows) - 1: ax.set_xlabel('Photon energy (eV)')
             else: ax.tick_params(labelbottom=False)
-    legend(fig, axes[0, 0])
-    fig.subplots_adjust(left=.11, right=.985, bottom=.32 if len(rows) == 1 else .23,
-                        top=.95, wspace=.27, hspace=.13)
+    if rows[0][0]=='alpha':
+        handles,names=axes[0,0].get_legend_handles_labels()
+        fig.legend(handles,names,loc='upper right',bbox_to_anchor=(.988,.997),
+                   ncol=4,frameon=True,fancybox=True,borderpad=.35,columnspacing=1.3)
+    else:
+        legend_ax=axes[0,2] if rows[0][0]=='real' else axes[1,1]
+        legend_ax.legend(loc='upper right',frameon=True,fancybox=True,
+                          borderpad=.3,labelspacing=.3,handlelength=1.4)
+    fig.subplots_adjust(left=.10 if rows[0][0] == 'alpha' else .085,
+                        right=.988,bottom=.12,top=.89 if rows[0][0]=='alpha' else .96,
+                        wspace=.20,hspace=.12)
     save(fig, name)
 
 
@@ -62,7 +71,23 @@ optical_figure('fig2.10.pdf', [('real', r'$\varepsilon_1$'), ('imag', r'$\vareps
 optical_figure('fig2.11.pdf', [('alpha', r'Absorption ($\mathrm{\AA}^{-1}$)'),
                             ('loss', r'Energy loss')], ['a', 'b'])
 optical_figure('fig2.12.pdf', [('R', 'Reflectivity'), ('n', 'Refractive index')], ['a', 'b'])
-optical_figure('S2.18.pdf', [('k', 'Extinction coefficient')], ['a'])
+fig,axes=plt.subplots(2,2,figsize=(8,5.6))
+for col,ax in enumerate(axes.flat[:3]):
+    for folder,label,color,factor in systems:
+        energy,real,imag=data[folder]
+        selected=(energy>=0)&(energy<=12)
+        ax.plot(energy[selected],quantity(energy,real,imag,'k')[selected,col],color=color,label=label)
+    ax.set(xlim=(0,12),xlabel='Photon energy (eV)')
+    ax.set_xticks([0,4,8,12]);frame(ax)
+    if col in (0,2):ax.set_ylabel('Extinction coefficient')
+    ax.set_title(f'({"abc"[col]}) {("xx","yy","zz")[col]}',loc='right',x=.975,y=.975,
+                 pad=0,va='top',fontsize=11,bbox={'boxstyle':'round','facecolor':'white',
+                 'edgecolor':plt.rcParams['legend.edgecolor'],'alpha':plt.rcParams['legend.framealpha']})
+axes[1,1].axis('off')
+handles,labels=axes[0,0].get_legend_handles_labels()
+axes[1,1].legend(handles,labels,loc='center',frameon=True,fancybox=True)
+fig.subplots_adjust(left=.105,right=.98,bottom=.115,top=.96,wspace=.17,hspace=.29)
+save(fig,'S2.18.pdf')
 
 # Convergence uses the original density-density arrays, without thickness scaling.
 for name, folders, labels, limits in [
@@ -70,7 +95,7 @@ for name, folders, labels, limits in [
   ['10×14×9', '20×28×18', '26×37×24', '30×42×28', '32×45×29', '34×48×31'], [(1,8),(5,15),(0,4)]),
  ('S2.5.pdf', [f'o-B14_n{k}_k10' for k in (32,64,128,256)],
   ['48 bands', '72 bands', '144 bands', '264 bands'], [(15,25),(15,30),(10,30)])]:
-    fig, axes = plt.subplots(2, 3, figsize=(10, 7))
+    fig, axes = plt.subplots(2, 3, figsize=(10,5))
     for folder, label, color in zip(folders, labels, [GREEN, '#E65050', ORANGE, YELLOW, CYAN, BLUE]):
         energy, real, imag = dielectric(folder)
         for row, values in enumerate((real, imag)):
@@ -79,7 +104,8 @@ for name, folders, labels, limits in [
     for i, ax in enumerate(axes.flat):
         row, col = divmod(i,3)
         ax.set_xlim(limits[col]); frame(ax)
-        tab(ax, ('xx','yy','zz')[col])
+        right_tabs={(0,1),(1,2)} if name=='S2.4.pdf' else {(1,0),(1,1)}
+        tab(ax, ('xx','yy','zz')[col],loc='right' if (row,col) in right_tabs else 'left')
         if col == 0: ax.set_ylabel(r'$\varepsilon_1$' if row == 0 else r'$\varepsilon_2$')
         if row == 1: ax.set_xlabel('Photon energy (eV)')
         else: ax.tick_params(labelbottom=False)
@@ -89,6 +115,8 @@ for name, folders, labels, limits in [
         lo, hi = min(a.min() for a in shown), max(a.max() for a in shown)
         pad = .08 * (hi - lo)
         ax.set_ylim(lo-pad, hi+pad)
-    legend(fig, axes[0,0], ncol=3)
-    fig.subplots_adjust(left=.1,right=.985,bottom=.23,top=.95,wspace=.27,hspace=.13)
+    legend_ax=axes[0,2] if name=='S2.4.pdf' else axes[1,2]
+    legend_ax.legend(loc='upper right',frameon=True,fancybox=True,
+                     borderpad=.25,labelspacing=.15,handlelength=1.4)
+    fig.subplots_adjust(left=.085,right=.988,bottom=.12,top=.96,wspace=.20,hspace=.12)
     save(fig,name)

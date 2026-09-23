@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 from style import *
 
-fig,axes=plt.subplots(1,2,figsize=(10,4.8),sharex=True,sharey=True)
+fig,axes=plt.subplots(1,2,figsize=(10,4),sharex=True,sharey=True)
 cmap=LinearSegmentedColormap.from_list('gap_density',['white',BLUE])
 records={}
 for ax,folder,title in zip(axes,['bulk','bilayer_with_Hydrogen'],
@@ -30,10 +30,11 @@ for ax,folder,title in zip(axes,['bulk','bilayer_with_Hydrogen'],
     ax.set_xticks([0,10,20,30]); tab(ax,title); frame(ax)
     records[folder]=rows
 axes[0].set_ylabel(r'Superconducting gap $\Delta$ (meV)')
-legend(fig,axes[0],1)
-fig.subplots_adjust(left=.09,right=.845,bottom=.24,top=.95,wspace=.08)
-colorbar=fig.colorbar(points,cax=fig.add_axes([.875,.24,.025,.71]))
-colorbar.set_label('Normalized gap density',fontsize=16)
-colorbar.ax.tick_params(direction='in',labelsize=14)
+axes[0].legend(loc='upper right',frameon=True,fancybox=True,borderpad=.3)
+fig.subplots_adjust(left=.08,right=.99,bottom=.16,top=.96,wspace=.08)
+colorbar=fig.colorbar(points,cax=axes[1].inset_axes([.52,.87,.43,.035]),
+                     orientation='horizontal',ticks=[0,.5,1])
+colorbar.set_label('Normalized gap density',fontsize=11)
+colorbar.ax.tick_params(direction='in',labelsize=11)
 save(fig,'fig2.9.pdf')
 (OUT/'gap_summary.json').write_text(json.dumps(records,indent=2)+'\n')

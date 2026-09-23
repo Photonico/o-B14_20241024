@@ -47,8 +47,8 @@ def spin_legend(fig, ax, bilayer=False):
                Line2D([],[],color=CYAN,ls=(0,(4,3)),label='Spin down')]
     if bilayer: handles.append(Line2D([],[],color=BLUE,label='Bilayer bands'))
     handles.append(Line2D([],[],color=GREY,ls='--',label=r'$E_{\mathrm{F}}=0$'))
-    fig.legend(handles=handles,loc='lower left',bbox_to_anchor=(.085,.015),
-               ncol=len(handles),frameon=True,fancybox=True)
+    ax.legend(handles=handles,loc='center',frameon=True,fancybox=True,
+              borderpad=.3,labelspacing=.35,handlelength=1.5)
 
 @lru_cache(None)
 def dos(folder):
