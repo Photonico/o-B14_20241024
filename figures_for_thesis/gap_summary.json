@@ -1,0 +1,1014 @@
+{
+  "bulk": [
+    {
+      "temperature_K": 0.5,
+      "bins": 106,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.27,
+      "density_mean_meV": 4.8307190976694825,
+      "density_min": 1.6207099999832053e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 1.0,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.84616408330869,
+      "density_min": 6.884899999892724e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 1.5,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.8447127994758,
+      "density_min": 6.935100000049488e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 2.0,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.844997349573683,
+      "density_min": 7.322100000095588e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 2.5,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.840988676211782,
+      "density_min": 6.5755000000500274e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 3.0,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.842658683454236,
+      "density_min": 7.164999999975663e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 3.5,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.84374304041795,
+      "density_min": 7.469999999898391e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 4.0,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.841294394592327,
+      "density_min": 6.67750000005185e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 4.5,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.842224403568133,
+      "density_min": 6.67750000005185e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 5.0,
+      "bins": 106,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.3,
+      "density_mean_meV": 4.838426185101582,
+      "density_min": 6.226600000047711e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 5.5,
+      "bins": 106,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.3,
+      "density_mean_meV": 4.84122408841093,
+      "density_min": 6.276099999702467e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 6.0,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.84335499705808,
+      "density_min": 6.767400000384782e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 6.5,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.3,
+      "density_mean_meV": 4.8356907317454025,
+      "density_min": 5.906100000174774e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 7.0,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.3,
+      "density_mean_meV": 4.834016250895838,
+      "density_min": 5.76580000011262e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 7.5,
+      "bins": 107,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.3,
+      "density_mean_meV": 4.835182920897641,
+      "density_min": 5.906100000174774e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 8.0,
+      "bins": 108,
+      "gap_min_meV": 3.12,
+      "gap_max_meV": 6.33,
+      "density_mean_meV": 4.861422876613353,
+      "density_min": 2.1443999997927676e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 8.5,
+      "bins": 108,
+      "gap_min_meV": 3.09,
+      "gap_max_meV": 6.3,
+      "density_mean_meV": 4.8235274039539835,
+      "density_min": 6.41999999828613e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 9.0,
+      "bins": 107,
+      "gap_min_meV": 3.09,
+      "gap_max_meV": 6.3,
+      "density_mean_meV": 4.816968183864671,
+      "density_min": 6.438199999792005e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 9.5,
+      "bins": 107,
+      "gap_min_meV": 3.09,
+      "gap_max_meV": 6.3,
+      "density_mean_meV": 4.815420409860672,
+      "density_min": 5.915799999200999e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 10.0,
+      "bins": 106,
+      "gap_min_meV": 3.09,
+      "gap_max_meV": 6.27,
+      "density_mean_meV": 4.804330231795711,
+      "density_min": 6.129999999160418e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 10.5,
+      "bins": 107,
+      "gap_min_meV": 3.09,
+      "gap_max_meV": 6.27,
+      "density_mean_meV": 4.800511648985531,
+      "density_min": 6.362000000592616e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 11.0,
+      "bins": 108,
+      "gap_min_meV": 3.06,
+      "gap_max_meV": 6.27,
+      "density_mean_meV": 4.79006015052839,
+      "density_min": 6.639999998725443e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 11.5,
+      "bins": 106,
+      "gap_min_meV": 3.06,
+      "gap_max_meV": 6.24,
+      "density_mean_meV": 4.775951126028332,
+      "density_min": 5.078999999241773e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 12.0,
+      "bins": 108,
+      "gap_min_meV": 3.03,
+      "gap_max_meV": 6.24,
+      "density_mean_meV": 4.759132122964442,
+      "density_min": 7.140000004568492e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 12.5,
+      "bins": 106,
+      "gap_min_meV": 3.03,
+      "gap_max_meV": 6.21,
+      "density_mean_meV": 4.7527320289659505,
+      "density_min": 5.485999999166324e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 13.0,
+      "bins": 107,
+      "gap_min_meV": 3.03,
+      "gap_max_meV": 6.21,
+      "density_mean_meV": 4.732937275454195,
+      "density_min": 1.2304000000185056e-05,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 13.5,
+      "bins": 108,
+      "gap_min_meV": 2.97,
+      "gap_max_meV": 6.18,
+      "density_mean_meV": 4.704514816103445,
+      "density_min": 6.0150000003034165e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 14.0,
+      "bins": 106,
+      "gap_min_meV": 2.97,
+      "gap_max_meV": 6.15,
+      "density_mean_meV": 4.68275272809823,
+      "density_min": 5.558999999877301e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 14.5,
+      "bins": 107,
+      "gap_min_meV": 2.94,
+      "gap_max_meV": 6.12,
+      "density_mean_meV": 4.660788942907956,
+      "density_min": 5.215999999919063e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 15.0,
+      "bins": 107,
+      "gap_min_meV": 2.91,
+      "gap_max_meV": 6.09,
+      "density_mean_meV": 4.633692731136396,
+      "density_min": 5.0369999993193915e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 15.5,
+      "bins": 106,
+      "gap_min_meV": 2.91,
+      "gap_max_meV": 6.06,
+      "density_mean_meV": 4.597302091419934,
+      "density_min": 1.0942999999485892e-05,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 16.0,
+      "bins": 107,
+      "gap_min_meV": 2.85,
+      "gap_max_meV": 6.03,
+      "density_mean_meV": 4.559710258290386,
+      "density_min": 5.585000000252194e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 16.5,
+      "bins": 106,
+      "gap_min_meV": 2.82,
+      "gap_max_meV": 5.97,
+      "density_mean_meV": 4.5205050323929585,
+      "density_min": 5.503000000572911e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 17.0,
+      "bins": 106,
+      "gap_min_meV": 2.79,
+      "gap_max_meV": 5.94,
+      "density_mean_meV": 4.486633744455586,
+      "density_min": 5.867999998798723e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 17.5,
+      "bins": 104,
+      "gap_min_meV": 2.76,
+      "gap_max_meV": 5.88,
+      "density_mean_meV": 4.442281307335318,
+      "density_min": 5.847000000613889e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 18.0,
+      "bins": 106,
+      "gap_min_meV": 2.7,
+      "gap_max_meV": 5.85,
+      "density_mean_meV": 4.393533019248809,
+      "density_min": 5.334000000800643e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 18.5,
+      "bins": 105,
+      "gap_min_meV": 2.67,
+      "gap_max_meV": 5.79,
+      "density_mean_meV": 4.335997394223997,
+      "density_min": 5.650000005630318e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 19.0,
+      "bins": 105,
+      "gap_min_meV": 2.61,
+      "gap_max_meV": 5.73,
+      "density_mean_meV": 4.284668294056181,
+      "density_min": 6.285000001327035e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 19.5,
+      "bins": 101,
+      "gap_min_meV": 2.67,
+      "gap_max_meV": 5.67,
+      "density_mean_meV": 4.284184864615734,
+      "density_min": 5.303999998318432e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 20.0,
+      "bins": 103,
+      "gap_min_meV": 2.52,
+      "gap_max_meV": 5.58,
+      "density_mean_meV": 4.159738731353791,
+      "density_min": 4.862000000827038e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 20.5,
+      "bins": 103,
+      "gap_min_meV": 2.46,
+      "gap_max_meV": 5.52,
+      "density_mean_meV": 4.095668617094675,
+      "density_min": 5.182999998964988e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 21.0,
+      "bins": 102,
+      "gap_min_meV": 2.4,
+      "gap_max_meV": 5.43,
+      "density_mean_meV": 4.028776214312889,
+      "density_min": 5.369999982463014e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 21.5,
+      "bins": 102,
+      "gap_min_meV": 2.34,
+      "gap_max_meV": 5.37,
+      "density_mean_meV": 3.9561001543104437,
+      "density_min": 5.04100000142671e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 22.0,
+      "bins": 100,
+      "gap_min_meV": 2.31,
+      "gap_max_meV": 5.28,
+      "density_mean_meV": 3.8926923400346216,
+      "density_min": 4.699999998081239e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 22.5,
+      "bins": 94,
+      "gap_min_meV": 2.4,
+      "gap_max_meV": 5.19,
+      "density_mean_meV": 3.900752690221264,
+      "density_min": 5.700000009767336e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 23.0,
+      "bins": 98,
+      "gap_min_meV": 2.16,
+      "gap_max_meV": 5.07,
+      "density_mean_meV": 3.7274256483029853,
+      "density_min": 5.5679999988456075e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 23.5,
+      "bins": 96,
+      "gap_min_meV": 2.13,
+      "gap_max_meV": 4.98,
+      "density_mean_meV": 3.655687175534636,
+      "density_min": 5.350000016335343e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 24.0,
+      "bins": 99,
+      "gap_min_meV": 1.89,
+      "gap_max_meV": 4.83,
+      "density_mean_meV": 3.451416099271548,
+      "density_min": 5.139999998959865e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 24.5,
+      "bins": 87,
+      "gap_min_meV": 2.13,
+      "gap_max_meV": 4.71,
+      "density_mean_meV": 3.519045510284302,
+      "density_min": 5.244000000459437e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 25.0,
+      "bins": 99,
+      "gap_min_meV": 1.65,
+      "gap_max_meV": 4.59,
+      "density_mean_meV": 3.204480042190211,
+      "density_min": 5.1059999996994065e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 25.5,
+      "bins": 87,
+      "gap_min_meV": 1.83,
+      "gap_max_meV": 4.41,
+      "density_mean_meV": 3.201320133024383,
+      "density_min": 4.2699999980300163e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 26.0,
+      "bins": 94,
+      "gap_min_meV": 1.5,
+      "gap_max_meV": 4.29,
+      "density_mean_meV": 2.9744968196756214,
+      "density_min": 5.375000000640284e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 26.5,
+      "bins": 76,
+      "gap_min_meV": 1.8,
+      "gap_max_meV": 4.05,
+      "density_mean_meV": 3.013108240924496,
+      "density_min": 3.882000001453889e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 27.0,
+      "bins": 91,
+      "gap_min_meV": 1.26,
+      "gap_max_meV": 3.96,
+      "density_mean_meV": 2.6785358224108515,
+      "density_min": 4.510000000124137e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 27.5,
+      "bins": 101,
+      "gap_min_meV": 0.78,
+      "gap_max_meV": 3.78,
+      "density_mean_meV": 2.3210481210343974,
+      "density_min": 7.519000000399956e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 28.0,
+      "bins": 60,
+      "gap_min_meV": 1.41,
+      "gap_max_meV": 3.18,
+      "density_mean_meV": 2.362773718738405,
+      "density_min": 7.725999999763644e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 28.5,
+      "bins": 61,
+      "gap_min_meV": 1.41,
+      "gap_max_meV": 3.21,
+      "density_mean_meV": 2.3851394751323647,
+      "density_min": 3.020000001185963e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 29.0,
+      "bins": 81,
+      "gap_min_meV": 0.45,
+      "gap_max_meV": 3.09,
+      "density_mean_meV": 1.7513792381416806,
+      "density_min": 1.303000001229293e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 29.5,
+      "bins": 48,
+      "gap_min_meV": 0.96,
+      "gap_max_meV": 2.37,
+      "density_mean_meV": 1.712032305014875,
+      "density_min": 5.9410000012860564e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 30.0,
+      "bins": 46,
+      "gap_min_meV": 0.93,
+      "gap_max_meV": 2.28,
+      "density_mean_meV": 1.6679932881335235,
+      "density_min": 6.111000001141065e-06,
+      "density_max": 1.0
+    }
+  ],
+  "bilayer_with_Hydrogen": [
+    {
+      "temperature_K": 0.5,
+      "bins": 119,
+      "gap_min_meV": 1.41,
+      "gap_max_meV": 5.4,
+      "density_mean_meV": 3.4572341781339175,
+      "density_min": 2.1574599999851785e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 1.0,
+      "bins": 120,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.530836476398298,
+      "density_min": 9.251999999460025e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 1.5,
+      "bins": 119,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.535838054977732,
+      "density_min": 1.1289999999331002e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 2.0,
+      "bins": 119,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.5354792134020627,
+      "density_min": 1.1290000001551448e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 2.5,
+      "bins": 120,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.5349642534738153,
+      "density_min": 1.0807000001555878e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 3.0,
+      "bins": 119,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.534702311888713,
+      "density_min": 1.0281999998085212e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 3.5,
+      "bins": 121,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.534308651016959,
+      "density_min": 1.0281999998085212e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 4.0,
+      "bins": 120,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.5324199762804116,
+      "density_min": 1.1459999997853743e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 4.5,
+      "bins": 121,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.531226020717746,
+      "density_min": 1.0642000001226393e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 5.0,
+      "bins": 122,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.5287363629751796,
+      "density_min": 9.253000001763212e-07,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 5.5,
+      "bins": 122,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.5257934884639197,
+      "density_min": 1.0388999998056647e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 6.0,
+      "bins": 122,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.55,
+      "density_mean_meV": 3.531829755572949,
+      "density_min": 1.974099999912937e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 6.5,
+      "bins": 119,
+      "gap_min_meV": 1.47,
+      "gap_max_meV": 5.52,
+      "density_mean_meV": 3.520139605200814,
+      "density_min": 1.5621999995829583e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 7.0,
+      "bins": 122,
+      "gap_min_meV": 1.44,
+      "gap_max_meV": 5.52,
+      "density_mean_meV": 3.511591090084887,
+      "density_min": 2.0105000002601514e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 7.5,
+      "bins": 123,
+      "gap_min_meV": 1.44,
+      "gap_max_meV": 5.52,
+      "density_mean_meV": 3.5082660877204654,
+      "density_min": 2.1404000003499846e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 8.0,
+      "bins": 121,
+      "gap_min_meV": 1.44,
+      "gap_max_meV": 5.49,
+      "density_mean_meV": 3.492491678367547,
+      "density_min": 1.8982000007383704e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 8.5,
+      "bins": 122,
+      "gap_min_meV": 1.44,
+      "gap_max_meV": 5.49,
+      "density_mean_meV": 3.484119045052298,
+      "density_min": 1.146900000748019e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 9.0,
+      "bins": 122,
+      "gap_min_meV": 1.44,
+      "gap_max_meV": 5.46,
+      "density_mean_meV": 3.4687370332928142,
+      "density_min": 1.6110000000679747e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 9.5,
+      "bins": 120,
+      "gap_min_meV": 1.44,
+      "gap_max_meV": 5.43,
+      "density_mean_meV": 3.457724892193171,
+      "density_min": 1.6264999995740936e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 10.0,
+      "bins": 121,
+      "gap_min_meV": 1.44,
+      "gap_max_meV": 5.43,
+      "density_mean_meV": 3.4414747754229897,
+      "density_min": 2.0010000003622963e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 10.5,
+      "bins": 118,
+      "gap_min_meV": 1.44,
+      "gap_max_meV": 5.4,
+      "density_mean_meV": 3.4192428503322376,
+      "density_min": 1.4040000007042863e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 11.0,
+      "bins": 119,
+      "gap_min_meV": 1.41,
+      "gap_max_meV": 5.34,
+      "density_mean_meV": 3.3928085011161127,
+      "density_min": 1.777999999674762e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 11.5,
+      "bins": 117,
+      "gap_min_meV": 1.41,
+      "gap_max_meV": 5.31,
+      "density_mean_meV": 3.365076216398023,
+      "density_min": 2.7550000005760467e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 12.0,
+      "bins": 117,
+      "gap_min_meV": 1.38,
+      "gap_max_meV": 5.28,
+      "density_mean_meV": 3.3208593592801607,
+      "density_min": 1.455999999677715e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 12.5,
+      "bins": 115,
+      "gap_min_meV": 1.38,
+      "gap_max_meV": 5.22,
+      "density_mean_meV": 3.2979399576839405,
+      "density_min": 1.5940000004377453e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 13.0,
+      "bins": 115,
+      "gap_min_meV": 1.35,
+      "gap_max_meV": 5.16,
+      "density_mean_meV": 3.2469027522222746,
+      "density_min": 1.325999999579608e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 13.5,
+      "bins": 116,
+      "gap_min_meV": 1.32,
+      "gap_max_meV": 5.1,
+      "density_mean_meV": 3.202123874779262,
+      "density_min": 1.7749999994265409e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 14.0,
+      "bins": 114,
+      "gap_min_meV": 1.32,
+      "gap_max_meV": 5.04,
+      "density_mean_meV": 3.153682842908665,
+      "density_min": 1.8140000008770585e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 14.5,
+      "bins": 110,
+      "gap_min_meV": 1.29,
+      "gap_max_meV": 4.95,
+      "density_mean_meV": 3.100348457128326,
+      "density_min": 1.756999999713571e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 15.0,
+      "bins": 108,
+      "gap_min_meV": 1.26,
+      "gap_max_meV": 4.89,
+      "density_mean_meV": 3.0479285721515605,
+      "density_min": 2.530999999805772e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 15.5,
+      "bins": 110,
+      "gap_min_meV": 1.23,
+      "gap_max_meV": 4.8,
+      "density_mean_meV": 2.9877479106190066,
+      "density_min": 2.3999999996249244e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 16.0,
+      "bins": 107,
+      "gap_min_meV": 1.2,
+      "gap_max_meV": 4.71,
+      "density_mean_meV": 2.9222082835704932,
+      "density_min": 1.7610000000445325e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 16.5,
+      "bins": 105,
+      "gap_min_meV": 1.17,
+      "gap_max_meV": 4.59,
+      "density_mean_meV": 2.857204489132547,
+      "density_min": 2.27800000018874e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 17.0,
+      "bins": 103,
+      "gap_min_meV": 1.14,
+      "gap_max_meV": 4.5,
+      "density_mean_meV": 2.780040002526584,
+      "density_min": 1.6890000011926531e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 17.5,
+      "bins": 102,
+      "gap_min_meV": 1.14,
+      "gap_max_meV": 4.35,
+      "density_mean_meV": 2.7190538986051607,
+      "density_min": 2.7910000000019863e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 18.0,
+      "bins": 98,
+      "gap_min_meV": 1.08,
+      "gap_max_meV": 4.26,
+      "density_mean_meV": 2.627182336619528,
+      "density_min": 2.5800000003073364e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 18.5,
+      "bins": 97,
+      "gap_min_meV": 0.99,
+      "gap_max_meV": 4.14,
+      "density_mean_meV": 2.509412041347293,
+      "density_min": 1.4325999998732186e-05,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 19.0,
+      "bins": 100,
+      "gap_min_meV": 0.84,
+      "gap_max_meV": 4.02,
+      "density_mean_meV": 2.309302860181245,
+      "density_min": 2.463000001284854e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 19.5,
+      "bins": 87,
+      "gap_min_meV": 0.9,
+      "gap_max_meV": 3.66,
+      "density_mean_meV": 2.2438483155713276,
+      "density_min": 3.4080000013148037e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 20.0,
+      "bins": 86,
+      "gap_min_meV": 0.84,
+      "gap_max_meV": 3.54,
+      "density_mean_meV": 2.1354490591476067,
+      "density_min": 2.0829999982652225e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 20.5,
+      "bins": 93,
+      "gap_min_meV": 0.69,
+      "gap_max_meV": 3.57,
+      "density_mean_meV": 1.9742845409265022,
+      "density_min": 2.029299999861678e-05,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 21.0,
+      "bins": 77,
+      "gap_min_meV": 0.72,
+      "gap_max_meV": 3.09,
+      "density_mean_meV": 1.8606566186504077,
+      "density_min": 1.780999999922983e-05,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 21.5,
+      "bins": 83,
+      "gap_min_meV": 0.48,
+      "gap_max_meV": 3.0,
+      "density_mean_meV": 1.5714481299744343,
+      "density_min": 1.0109999983853868e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 22.0,
+      "bins": 63,
+      "gap_min_meV": 0.57,
+      "gap_max_meV": 2.49,
+      "density_mean_meV": 1.4678235428473225,
+      "density_min": 1.815299999918807e-05,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 22.5,
+      "bins": 67,
+      "gap_min_meV": 0.24,
+      "gap_max_meV": 2.43,
+      "density_mean_meV": 1.124007256431942,
+      "density_min": 1.0177000000055614e-05,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 23.0,
+      "bins": 47,
+      "gap_min_meV": 0.36,
+      "gap_max_meV": 1.77,
+      "density_mean_meV": 0.9956700935475842,
+      "density_min": 1.2379000001061513e-05,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 23.5,
+      "bins": 41,
+      "gap_min_meV": 0.3,
+      "gap_max_meV": 1.5,
+      "density_mean_meV": 0.8327254330113948,
+      "density_min": 0.00043096899999994775,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 24.0,
+      "bins": 33,
+      "gap_min_meV": 0.21,
+      "gap_max_meV": 1.17,
+      "density_mean_meV": 0.63579845792521,
+      "density_min": 8.465000000512646e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 24.5,
+      "bins": 19,
+      "gap_min_meV": 0.03,
+      "gap_max_meV": 0.72,
+      "density_mean_meV": 0.2882315970119678,
+      "density_min": 4.997000001338847e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 25.0,
+      "bins": 7,
+      "gap_min_meV": 0.03,
+      "gap_max_meV": 0.24,
+      "density_mean_meV": 0.1121228210513762,
+      "density_min": 4.6749999995654434e-06,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 25.5,
+      "bins": 3,
+      "gap_min_meV": 0.03,
+      "gap_max_meV": 0.09,
+      "density_mean_meV": 0.04713452500256286,
+      "density_min": 0.1086595449999983,
+      "density_max": 1.0
+    },
+    {
+      "temperature_K": 26.0,
+      "bins": 1,
+      "gap_min_meV": 0.03,
+      "gap_max_meV": 0.03,
+      "density_mean_meV": 0.03,
+      "density_min": 1.0,
+      "density_max": 1.0
+    }
+  ]
+}
