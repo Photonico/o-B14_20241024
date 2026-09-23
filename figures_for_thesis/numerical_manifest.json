@@ -1,0 +1,1170 @@
+{
+  "source_commit": "a9476a5c0e5ce764456c4cc7a50f8e15d64f951c",
+  "style": {
+    "width_inches": 10,
+    "width_pdf_points": 720,
+    "axes_labels": 16,
+    "ticks": 14,
+    "legend": "native shared frame",
+    "tabs": 12,
+    "font_family": "serif",
+    "mathtext": "cm",
+    "line_width": 1.5,
+    "dpi": 196
+  },
+  "figures": {
+    "fig2.10.pdf": {
+      "sources": [
+        {
+          "path": "5.1_dielectric_function/bilayer_with_Hydrogen/vaspout.h5",
+          "sha256": "e60782907507b3fc9b713f0513138792727a53c1cb61fe1f8305989d6621447d"
+        },
+        {
+          "path": "5.1_dielectric_function/bilayer/vaspout.h5",
+          "sha256": "6e585645fe7aeffe74de139b412537811e2c0f717e7a2e3762294575de10f04a"
+        },
+        {
+          "path": "5.1_dielectric_function/monolayer/vaspout.h5",
+          "sha256": "7c293a191a86496dcc66cccba0fb69ffe85cdf44268776c3a40e2e5f183de4f6"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k34/vaspout.h5",
+          "sha256": "719455ba06b832eb910b2e11ba808b0a2d3e0d028b712bee142059ac43211d52"
+        }
+      ],
+      "observable": "density-density diagonal dielectric tensor; derived scalar optical quantities",
+      "thickness_angstrom": {
+        "monolayer": 5.807056948202938,
+        "bilayer": 9.41157,
+        "bilayer_with_Hydrogen": 11.20862
+      },
+      "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
+      "spin": "NM-PBE as in the original optical calculations, no added Drude term",
+      "pdf_sha256": "d91ed0806e3bbadf95321b26729f9ba01e5cc4138fd74421737efe6e251f97a7",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 504.0
+    },
+    "fig2.11.pdf": {
+      "sources": [
+        {
+          "path": "5.1_dielectric_function/bilayer_with_Hydrogen/vaspout.h5",
+          "sha256": "e60782907507b3fc9b713f0513138792727a53c1cb61fe1f8305989d6621447d"
+        },
+        {
+          "path": "5.1_dielectric_function/bilayer/vaspout.h5",
+          "sha256": "6e585645fe7aeffe74de139b412537811e2c0f717e7a2e3762294575de10f04a"
+        },
+        {
+          "path": "5.1_dielectric_function/monolayer/vaspout.h5",
+          "sha256": "7c293a191a86496dcc66cccba0fb69ffe85cdf44268776c3a40e2e5f183de4f6"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k34/vaspout.h5",
+          "sha256": "719455ba06b832eb910b2e11ba808b0a2d3e0d028b712bee142059ac43211d52"
+        }
+      ],
+      "observable": "density-density diagonal dielectric tensor; derived scalar optical quantities",
+      "thickness_angstrom": {
+        "monolayer": 5.807056948202938,
+        "bilayer": 9.41157,
+        "bilayer_with_Hydrogen": 11.20862
+      },
+      "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
+      "spin": "NM-PBE as in the original optical calculations, no added Drude term",
+      "pdf_sha256": "82bc5e32e535a751d577daa6315eb917b11f6ec199cae54ababe7281555dc026",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 504.0
+    },
+    "fig2.12.pdf": {
+      "sources": [
+        {
+          "path": "5.1_dielectric_function/bilayer_with_Hydrogen/vaspout.h5",
+          "sha256": "e60782907507b3fc9b713f0513138792727a53c1cb61fe1f8305989d6621447d"
+        },
+        {
+          "path": "5.1_dielectric_function/bilayer/vaspout.h5",
+          "sha256": "6e585645fe7aeffe74de139b412537811e2c0f717e7a2e3762294575de10f04a"
+        },
+        {
+          "path": "5.1_dielectric_function/monolayer/vaspout.h5",
+          "sha256": "7c293a191a86496dcc66cccba0fb69ffe85cdf44268776c3a40e2e5f183de4f6"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k34/vaspout.h5",
+          "sha256": "719455ba06b832eb910b2e11ba808b0a2d3e0d028b712bee142059ac43211d52"
+        }
+      ],
+      "observable": "density-density diagonal dielectric tensor; derived scalar optical quantities",
+      "thickness_angstrom": {
+        "monolayer": 5.807056948202938,
+        "bilayer": 9.41157,
+        "bilayer_with_Hydrogen": 11.20862
+      },
+      "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
+      "spin": "NM-PBE as in the original optical calculations, no added Drude term",
+      "pdf_sha256": "c1e6a28e2a8c5ec26f78d752594d074d5d510b57574660d14964489131d7db86",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 504.0
+    },
+    "S2.18.pdf": {
+      "sources": [
+        {
+          "path": "5.1_dielectric_function/bilayer_with_Hydrogen/vaspout.h5",
+          "sha256": "e60782907507b3fc9b713f0513138792727a53c1cb61fe1f8305989d6621447d"
+        },
+        {
+          "path": "5.1_dielectric_function/bilayer/vaspout.h5",
+          "sha256": "6e585645fe7aeffe74de139b412537811e2c0f717e7a2e3762294575de10f04a"
+        },
+        {
+          "path": "5.1_dielectric_function/monolayer/vaspout.h5",
+          "sha256": "7c293a191a86496dcc66cccba0fb69ffe85cdf44268776c3a40e2e5f183de4f6"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k34/vaspout.h5",
+          "sha256": "719455ba06b832eb910b2e11ba808b0a2d3e0d028b712bee142059ac43211d52"
+        }
+      ],
+      "observable": "density-density diagonal dielectric tensor; derived scalar optical quantities",
+      "thickness_angstrom": {
+        "monolayer": 5.807056948202938,
+        "bilayer": 9.41157,
+        "bilayer_with_Hydrogen": 11.20862
+      },
+      "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
+      "spin": "NM-PBE as in the original optical calculations, no added Drude term",
+      "pdf_sha256": "29155abf049258069fa34a68bfd2696b4360d938019b83687701cff279434b59",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 288.0
+    },
+    "S2.4.pdf": {
+      "sources": [
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k10/vaspout.h5",
+          "sha256": "d584773bc109af9d35271a700d6ca34b77b39beff06103306d339266d42a5ddd"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k20/vaspout.h5",
+          "sha256": "4d064b9a8adfc45723f7b5457a8c5c108b169182aa27ec347aa28f6f56b179cb"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k26/vaspout.h5",
+          "sha256": "06c77ac71711dc031bd1f53dc0d222536ef315f3f5561e436c592abb8176b6ba"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k30/vaspout.h5",
+          "sha256": "237d51f986860f3fbc6c74f79f3b1f94174fddfc7a31b294d53f40ca2e6c1c17"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k32/vaspout.h5",
+          "sha256": "772e8c9aa98e518bad155a79f6a980176cb24ae1d43ad90888a77e5f295f06d9"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k34/vaspout.h5",
+          "sha256": "719455ba06b832eb910b2e11ba808b0a2d3e0d028b712bee142059ac43211d52"
+        }
+      ],
+      "pdf_sha256": "4abae7396ff7054e8af2e4a98118a5c8ef33a3f8335530e8e4e993be1f7a44de",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 504.0
+    },
+    "S2.5.pdf": {
+      "sources": [
+        {
+          "path": "5.1_dielectric_function/o-B14_n32_k10/vaspout.h5",
+          "sha256": "a04906a3091d774ffc3de2d79b098ad4676550c4f37d38e7f878be666a31c5f8"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n64_k10/vaspout.h5",
+          "sha256": "47d5da5743013908ee72313aac9aabd7e57232f34d3dc316d2c092a8bd0a3996"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n128_k10/vaspout.h5",
+          "sha256": "d584773bc109af9d35271a700d6ca34b77b39beff06103306d339266d42a5ddd"
+        },
+        {
+          "path": "5.1_dielectric_function/o-B14_n256_k10/vaspout.h5",
+          "sha256": "c95934e517d27e7c3e5ff072a92a70f2f2033ac399864e6e5efeb431ee91a26b"
+        }
+      ],
+      "pdf_sha256": "b5239fcbf6ac0f0c5c3f6441279626a18f9f973128187d48488a7850d226e4dd",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 504.0
+    },
+    "fig2.6.pdf": {
+      "sources": [
+        {
+          "path": "3.1_bandstructure/monolayer_FM_HSE06/vasprun.xml",
+          "sha256": "703012d8e91cff50e9c7f23c710bffb069c5b5baaf9ee8a36192667b112ec814"
+        },
+        {
+          "path": "3.1_bandstructure/monolayer_AFM_HSE06/vasprun.xml",
+          "sha256": "09d13e1ba9ad4c45d024247ef7fd80338ba676b7efd012f3fe1f6ca341514df7"
+        },
+        {
+          "path": "3.1_bandstructure/bilayer_HSE/vasprun.xml",
+          "sha256": "ee08920cb2f4cebe1877708c245aa2d469ebce2684bac176d0d79bac895452a1"
+        }
+      ],
+      "energy_reference_eV": {
+        "monolayer_FM_HSE06": -2.8671533,
+        "monolayer_AFM_HSE06": -2.77980867,
+        "bilayer_HSE": -1.26467503
+      },
+      "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
+      "pdf_sha256": "b7260a35d2b4e8ffcf6b62b367ae57d5a3dac9fdbb6a119bee7658ce85fb93f7",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 331.20001220703125
+    },
+    "S2.11.pdf": {
+      "sources": [
+        {
+          "path": "3.1_bandstructure/monolayer_FM/vasprun.xml",
+          "sha256": "89919678227e5bda7fceaee4667aff97f9d035998d17a9a7a89a78debcea6061"
+        },
+        {
+          "path": "3.1_bandstructure/monolayer_FM_HSE06/vasprun.xml",
+          "sha256": "703012d8e91cff50e9c7f23c710bffb069c5b5baaf9ee8a36192667b112ec814"
+        }
+      ],
+      "energy_reference_eV": {
+        "monolayer_FM": -3.58866255,
+        "monolayer_FM_HSE06": -2.8671533
+      },
+      "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
+      "pdf_sha256": "6733915e3a9627a4b89950e5e452fed219a854037aa31e356ae199d514d55fc1",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 338.3999938964844
+    },
+    "S2.13.pdf": {
+      "sources": [
+        {
+          "path": "3.1_bandstructure/monolayer/vasprun.xml",
+          "sha256": "233f1199138d7fdb5743b9b96f285350f532ee02728bd67eca6ac5fc613b385f"
+        },
+        {
+          "path": "3.1_bandstructure/monolayer_HSE/vasprun.xml",
+          "sha256": "c886de74aa8d5e1037a3094df1c1a342821cf36a77403dfcf4d5ee725cd17d3b"
+        },
+        {
+          "path": "3.1_bandstructure/monolayer_R2SCAN/vasprun.xml",
+          "sha256": "9f86931ab80de227eebfe7aca35fca58f083def18f5a5fc55d6ec32e8f0eccb6"
+        }
+      ],
+      "energy_reference_eV": {
+        "monolayer": -4.35306801,
+        "monolayer_HSE": -4.43998494,
+        "monolayer_R2SCAN": -4.46262607
+      },
+      "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
+      "pdf_sha256": "874f59a8e1a5140efb809f447f615dd2e33864357514c4ff93b97edf42c64b2e",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 345.6000061035156
+    },
+    "S2.14.pdf": {
+      "sources": [
+        {
+          "path": "3.1_bandstructure/monolayer/vasprun.xml",
+          "sha256": "233f1199138d7fdb5743b9b96f285350f532ee02728bd67eca6ac5fc613b385f"
+        },
+        {
+          "path": "3.1_bandstructure/monolayer_shifting/vasprun.xml",
+          "sha256": "46966a7ddcf4e23de88681e96f45e7e6b0e6766f423a01600e9e04cbcba74199"
+        },
+        {
+          "path": "3.1_bandstructure/monolayer_sym_off/vasprun.xml",
+          "sha256": "a4c2c0909f48a5b8a065e96fb995c9084ab5c33c112a4fa870194163e127e0ff"
+        }
+      ],
+      "energy_reference_eV": {
+        "monolayer": -4.35306801,
+        "monolayer_shifting": -4.36458269,
+        "monolayer_sym_off": -4.36409245
+      },
+      "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
+      "pdf_sha256": "096889d81df37f552032dfe1f285dc13c9705d89f9dea2a57f2d54928bf22ee0",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 345.6000061035156
+    },
+    "fig2.8.pdf": {
+      "sources": [
+        {
+          "path": "3.1_bandstructure/bilayer_with_Hydrogen/vasprun.xml",
+          "sha256": "65d195e12d8c610eb39b0201eba96b778101f5cd3d19f0712b545df4f4cbcbd2"
+        },
+        {
+          "path": "4.1_PDoS/bilayer_with_Hydrogen/vasprun.xml",
+          "sha256": "a55449f191fd8913e79adc53141f5cff0c797826619a1529db433eaead771f96"
+        }
+      ],
+      "energy_reference_eV": {
+        "bilayer_with_Hydrogen": -4.24622492
+      },
+      "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
+      "pdf_sha256": "d7418abeca6b6fc9504b957c389ddf598d79770fef61050a85992e0b8089b409",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 360.0
+    },
+    "fig2.2.pdf": {
+      "sources": [
+        {
+          "path": "3.1_bandstructure/o-B14_K48/vasprun.xml",
+          "sha256": "c063e736af8ba10829b29bc4fcf21c3e970800a560cbb5f25a1039d71d5867a3"
+        },
+        {
+          "path": "4.1_PDoS/o-B14_K20/vasprun.xml",
+          "sha256": "630fab6d820eb998efabf95eead127b94999402f138a0f68428ac6e54b6c2deb"
+        },
+        {
+          "path": "kpath_tide.pdf",
+          "sha256": "b5c641fb44014f29815ed365fb127f5711c52781a57046d9a34fdbdd6a06d5c4"
+        }
+      ],
+      "energy_reference_eV": {
+        "o-B14_K48": 2.2101389
+      },
+      "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
+      "atom_selections_one_based": {
+        "G2": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "G3": [
+          1,
+          2,
+          3,
+          4,
+          13,
+          14
+        ],
+        "G7": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      },
+      "selection_note": "Same original B2_index/B3_index/B7_index; G7 includes all 14 atoms, not a disjoint third group.",
+      "pdf_sha256": "5fda4eb362f7f0241496e094435e4b52c32cdeedd23d99ec7e80e8d04e87176b",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 590.4000244140625
+    },
+    "S2.16.pdf": {
+      "sources": [
+        {
+          "path": "4.1_PDoS/monolayer_FM_ollie/OUTCAR",
+          "sha256": "503015c5d7a15774cac9748e94f210911d34b908ef03acf75d8ab8aa60a75929"
+        },
+        {
+          "path": "4.1_PDoS/monolayer_AFM_ollie/OUTCAR",
+          "sha256": "9f66a3e1d992adaac92562cdcefece4d1f6a99615aeb9678b9a3860d33ef927c"
+        }
+      ],
+      "method": "Gaussian reconstruction from OUTCAR eigenvalues and k weights, standard deviation 0.05 eV as in original helper; both spin channels now use the same 4000-point absolute energy grid. XML/DOSCAR are incomplete.",
+      "pdf_sha256": "f54b77a721054cb8af709531e004f410c43006457a69ea8d3cd2353b4eae431b",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 345.6000061035156
+    },
+    "S2.12.pdf": {
+      "sources": [
+        {
+          "path": "4.1_PDoS/o-B14_K20/vasprun.xml",
+          "sha256": "630fab6d820eb998efabf95eead127b94999402f138a0f68428ac6e54b6c2deb"
+        },
+        {
+          "path": "4.1_PDoS/monolayer/vasprun.xml",
+          "sha256": "e1d9ede34092e0036cd747aa45a7790a36dac9291fd9370065649867863bcc40"
+        },
+        {
+          "path": "4.1_PDoS/bilayer/vasprun.xml",
+          "sha256": "fb74adc516bed934e5d58258c61a63b5b1d2db5b6f4f400af8cb82e7811205a7"
+        },
+        {
+          "path": "4.1_PDoS/bilayer_with_Hydrogen/vasprun.xml",
+          "sha256": "a55449f191fd8913e79adc53141f5cff0c797826619a1529db433eaead771f96"
+        }
+      ],
+      "pdf_sha256": "b6def9ff2c77144de1782392d3cfd8b15f62594e31e4cec629840f4420901fd8",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 345.6000061035156
+    },
+    "S2.9.pdf": {
+      "sources": [
+        {
+          "path": "3.0_phonon_dispersion_vasp/monolayer_3/OUTCAR",
+          "sha256": "d09603e46a7c7161277bb71bda52371809a7cbe65cefe5dda072ce2cb555e518"
+        },
+        {
+          "path": "3.0_phonon_dispersion_vasp/bilayer_3/OUTCAR",
+          "sha256": "4aab2afb25735e12fae679282408613a711f3d37d98ef27649881fb7ddf66518"
+        },
+        {
+          "path": "3.0_phonon_dispersion_phononpy/monolayer_top/band.yaml",
+          "sha256": "680af828f729bffbeeb7abd35222e0819ac4500dfdbcded9db374cde6ba75af5"
+        },
+        {
+          "path": "3.0_phonon_dispersion_phononpy/bilayer_top/band.yaml",
+          "sha256": "b1b5c587260fd8efa51b9da508fc1ec7cb668a9ca3e7023e12ad564cda571027"
+        }
+      ],
+      "note": "Original frequencies, including negative branches, are retained.",
+      "pdf_sha256": "04c5f5af1ee7e02e3e0c5c873294bb4b9e3689f7919a9e20925f2f833d047315",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 345.6000061035156
+    },
+    "fig2.5.pdf": {
+      "sources": [
+        {
+          "path": "3.0_phonon_dispersion_vasp/monolayer_3/OUTCAR",
+          "sha256": "d09603e46a7c7161277bb71bda52371809a7cbe65cefe5dda072ce2cb555e518"
+        },
+        {
+          "path": "3.0_phonon_dispersion_vasp/bilayer_3/OUTCAR",
+          "sha256": "4aab2afb25735e12fae679282408613a711f3d37d98ef27649881fb7ddf66518"
+        }
+      ],
+      "note": "Original frequencies, including negative branches, are retained.",
+      "pdf_sha256": "2519ac76e9e26f7712d6bfc618a0cfaf5fa60dcc0e710d01e74b089d6cf3aba4",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 345.6000061035156
+    },
+    "S2.8.pdf": {
+      "sources": [
+        {
+          "path": "3.0_phonon_dispersion_vasp/monolayer_2/OUTCAR",
+          "sha256": "9bc1f1986678f63daf30f49bd2e5b638ee7954b068a4a85d8dfc743a904fe03d"
+        },
+        {
+          "path": "3.0_phonon_dispersion_vasp/monolayer_H_2/OUTCAR",
+          "sha256": "0d2b56d717a6632509632ee0764ced666ce4f611c7d3afd75dad7e7dd5387859"
+        },
+        {
+          "path": "3.0_phonon_dispersion_vasp/bilayer_2/OUTCAR",
+          "sha256": "51ae627786f773a93725b78e77dfd3e40717c9575e81277d698f9963eba428bd"
+        },
+        {
+          "path": "3.0_phonon_dispersion_vasp/bilayer_H_2/OUTCAR",
+          "sha256": "f62aa6c4f2ee6aae06fa250a5fe56a51038166b1bfb2b548242c85dad5904705"
+        }
+      ],
+      "note": "Original frequencies, including negative branches, are retained.",
+      "pdf_sha256": "db6ee503df453a4c481e52b7b6dc37d3ad9dd79b80689cb9d85d2e3b8fd622ec",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 345.6000061035156
+    },
+    "fig2.9.pdf": {
+      "sources": [
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_000.50",
+          "sha256": "266414b887fbd5f4dff9ffba30fd687bdf2bfc1bff8092da3c8db37dfa951ad5"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_001.00",
+          "sha256": "e2c3c598da5baaaf0016664910ddfc676e5d3f4cdd9c5ccff796d3003fa02338"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_001.50",
+          "sha256": "70877ee28e9264cb06cb99e7fbc558baac0913c1c2fc580ca9e5273dd2573030"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_002.00",
+          "sha256": "646b56695f211ade04e597a5c60f08423e281894185fc0567f5dab40bc59031a"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_002.50",
+          "sha256": "cb9efc6f94836a6a6ef1418afe743bd9259a14d7d1422fc9387a4fe19d5bcb39"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_003.00",
+          "sha256": "fca923e94aa0534e4256d54f0b24fd2496c9f3981a34eb79b4d848b7c6f85e9f"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_003.50",
+          "sha256": "8f1ea23cc1c66308331591ce6e033b1690cbbcfc6db791292114e281e828fa23"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_004.00",
+          "sha256": "b9c1f5da0bb4daf80872d76524878af817aa4a4ac4c051dc3258cda3e072088d"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_004.50",
+          "sha256": "44ef630c38d26d9af6d97f8b6e00eedf8cfa63b7081a14ff0e781c2c2528a48c"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_005.00",
+          "sha256": "eb917eaf1f16733c8b54c8058e5348575a51c4d66fb10c7713b024a45208ee4d"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_005.50",
+          "sha256": "e64b9adc0fe82119a01beb790c9689d8068bfb580c93741241ab933026d9d496"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_006.00",
+          "sha256": "7cbb3be1eb4f453696a487b786875426158e4b1f3252c3211879227077c0b118"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_006.50",
+          "sha256": "b72095c907608778201bb0b689dccbba4305a9ff2d63cfe0b72113116d5ac08d"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_007.00",
+          "sha256": "b1e2c52a0f61035b5fe55dd86622c5c71c8f4c53730b82b9e3d1b3781e78f0d4"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_007.50",
+          "sha256": "d36eac454cfba02546a732a0855e593d8263a0a5b7e467a14871f08fbabcc074"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_008.00",
+          "sha256": "cc23b29988b1b05eb642a27586010ac7bc6cf0bc13716e1bf214ff2e8493f9a1"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_008.50",
+          "sha256": "e037210b94c18ff04348e199f90b98cf93e8676d4c62bf86c36723699b156098"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_009.00",
+          "sha256": "289c8f2ca050d70dc90d81ccfa98a19ab948b69fae7bbdd856cb9d8a73978049"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_009.50",
+          "sha256": "0736240d3a64aa297c2fb0a3709b1e6e5a17a83d42d7caba72e47c32fe56fc75"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_010.00",
+          "sha256": "95aba090112beef51cc63d35c02edb485460775565783621ef2d1c8494f33c4b"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_010.50",
+          "sha256": "04c91be55539858d30d0194579a86c1def46b17a256bb3cf57e9c415ab07e584"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_011.00",
+          "sha256": "d5fb7f4d6d82f99a7675bf63f6fec0b6d3f48ff317907bb752ee986479ab48e3"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_011.50",
+          "sha256": "57dc25e156e5b7036d185e089f76fe88c52bb275fdc1386c406ffdc995c95c80"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_012.00",
+          "sha256": "16d4eb2a3ef170d2c75d0f825663f1d5daa75170e971795399f160057eecd7a2"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_012.50",
+          "sha256": "0dc16124fd3ea29415f49b83ce42b90e770f7fc4cd60588ad62a6fdf41e1b4be"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_013.00",
+          "sha256": "745a28088a0afd439a7f148c05a7a71cb38a13f7584fb65c006c621ed709f635"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_013.50",
+          "sha256": "119d5a017b03e4683a674918ece8576a8b79dda26aca9fd380b7e157bfc8575a"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_014.00",
+          "sha256": "62623ff07dd255a4021154aa1244f61ea084c16be845928902602dc191e3a7a2"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_014.50",
+          "sha256": "e254996587c5388cc8c51e70eb08730ac1fe25763ed9dfa2042b42a71594ed76"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_015.00",
+          "sha256": "5d646c111ccd973196f89865ddb81605fb164805271a50ab47145e80044e1eb6"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_015.50",
+          "sha256": "2bd8b4bf16e6eb0baaa7691f65c67143831896b41f4f44bbe88af44ca288fb62"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_016.00",
+          "sha256": "7d2fac25bdcfcb12195ebf854826294e968d57e1736e95ea757554b12e54ca23"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_016.50",
+          "sha256": "4a3a23a5a65b8633a964f851eb7ced5c51ae81658d698dc2da73109384d697c2"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_017.00",
+          "sha256": "e74603f9039f91b0979ce87d50ae6e992d64013d9de4a8483b19a2c092563135"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_017.50",
+          "sha256": "bf995d4a212b312f1a73f56a800bb72efef4bf8261d504be8fedf98e49d3a077"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_018.00",
+          "sha256": "e2ce7e00f3fffcfcf30cd2d7a9e802203b2e31f039c0cf0e4abd7f6121079e6f"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_018.50",
+          "sha256": "934cc33c108e6c41041fa65dd40cbd6e2ee713eb89b2e0f81da4ade2ab9ced8c"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_019.00",
+          "sha256": "a38578fd1a187c78c1f0764c7c76f27d2563e66889f8724f23442cdb48757599"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_019.50",
+          "sha256": "cabf1cabaa0971dce1384a6c8de1372c0f136bf4a7ec9a9307bd282f19144643"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_020.00",
+          "sha256": "e2204fe09c934f93326b467e025aa3781018131e9a7c670541c4f128149b6eff"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_020.50",
+          "sha256": "c9c61ad81a9d040463f8be51b88e80d1ccf3d303a4ba6fa3937152b568b22d6b"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_021.00",
+          "sha256": "8d226a25331ef7a007e63ade988424a546f7d57481e50cc2a00f122b6855d588"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_021.50",
+          "sha256": "2ebdb69cc80aab800009ab153eabc59c7e78ce7c9425ddea2cd21a19580d0997"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_022.00",
+          "sha256": "e2b156a50eb6f71e0f58cc513496e72cd58c0da431ac5f2b7bb2c9c1a711b985"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_022.50",
+          "sha256": "e8c02cd9bf1e2aab887ff54da13b5bc2ed89d36666c58caa3cd901ba50aff922"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_023.00",
+          "sha256": "2ba91c175ecfc1e0a17a996068aa4edbff82650be67c6f4fb7799fa0f3d2aec7"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_023.50",
+          "sha256": "b2ee8d9c1489789e5849274aac648326c3601dda7dece8c8f00c6edfc656124d"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_024.00",
+          "sha256": "305ea9e6c1f10a91febda4033fe343bd8c085519be6339009ddf5c1eeb37dd78"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_024.50",
+          "sha256": "2e956383348187cc5563a57188d702738c812da44b342623777f4860260888a9"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_025.00",
+          "sha256": "f9a1d91331ae27ef15822de2f83326d43391dc3595750e601189b7ec114e7c2a"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_025.50",
+          "sha256": "4accf107c7f9c02bde85850668cd278d35017991ac565daaeba2749a0f1407e4"
+        },
+        {
+          "path": "superconductivity/bilayer_with_Hydrogen/B14.imag_aniso_gap0_026.00",
+          "sha256": "12a06048e9fadc26d705b4ea7b7e785bd3835f5af283b4f893ea7f53edabd0f3"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_000.50",
+          "sha256": "18b1719d0c0c6af9aa9cd99cc39dca3fe59fb82e3f4674d39e1c880ab298a59e"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_001.00",
+          "sha256": "168d09844709b847d31f4169a9e69e2800cb90489ae9873a095e340c7b66ea18"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_001.50",
+          "sha256": "728189f7c7bf5e8308e9b0fd6486b490e9811e7c84c301878fe2cfe3c5758282"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_002.00",
+          "sha256": "1bd5e079cf2685a66008cd5a95b20517273ddcb7ffeaa2f6f86ef191b3b7a819"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_002.50",
+          "sha256": "4bc464510c6c1452df1906de2b76004cd1eec957387631988f1790922cae6987"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_003.00",
+          "sha256": "06ed105c999cd6d5b66f187a17cf8a32bacb1eb7c88ed59434d6ebdaae8e73bc"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_003.50",
+          "sha256": "163f40c7e777c1700b26b512e3b4a2f000fc9a99dfed3d870bf56c58a62f207f"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_004.00",
+          "sha256": "72979928dcaf1731398d8185ea30c0f8d71bd0f41d2c99a4544be1af5959f854"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_004.50",
+          "sha256": "a2aba5d390f6f0d3d26f2c3577db9164e43e206299d3c31d543a1048a9c3a594"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_005.00",
+          "sha256": "91509986f2c192283f9a3d904cb606b25fec5817208cc68d5a615e4874b32ebb"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_005.50",
+          "sha256": "27af99c782d178aca0394135ba16aa59313c25feed4168bf54ff01c76f11ff15"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_006.00",
+          "sha256": "1b77acebafbeb7a4534675de32c492120fdc003b5dd350cab260eeea7c1ac29b"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_006.50",
+          "sha256": "548601d957c1ad888006764710d431f47d4d4882fd8b623bbd8babbab7565f3c"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_007.00",
+          "sha256": "43a493b187c963a1557120f311481cae320523cba3b10eea539fbc78b9278152"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_007.50",
+          "sha256": "6947b3bbf89514188fa79790f647092c7a347b08ebbfda5e837523ecbc7926db"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_008.00",
+          "sha256": "fe8a717c7627cbbffe12f054f1272abd2f94ddab424917f3cdc11c7a91fc9f59"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_008.50",
+          "sha256": "dc7f6a76507fd45fa4586045333936aa5182cc3c1f293784ab29ec81baf1d157"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_009.00",
+          "sha256": "cee7693ca9b7449ea92c23b3ffc3c3141eebff48a0ccd62cd6ffc290ba2617b5"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_009.50",
+          "sha256": "ba6ffa64cdd3626033edd25cf599f2eff4e750634559e123d2ecc982564a506e"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_010.00",
+          "sha256": "dd74f83e4a13f40d7b7bdb6590c4178bdf908228dcf57a3440a986099510fe11"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_010.50",
+          "sha256": "a5966644cb0cfb592efe58b43e79faab0d500f9d50c062064fb8b56b8e20cfa7"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_011.00",
+          "sha256": "f39c88d5d97e7a180980a5875d89018b459487efbfe0df77ddb78589637a4f01"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_011.50",
+          "sha256": "3ad8261f2fd00d579bf71a33d1db0fcd1e50e9388ca3374823328cd640361a5b"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_012.00",
+          "sha256": "be94a87dffcd604176610cbff4e732e13627b13c75ebca72e54772651016781e"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_012.50",
+          "sha256": "9142acc3f7e5f15eb53bd43cca1c502d4f8707294b7bc3793496f97b2a74dbc4"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_013.00",
+          "sha256": "f7645cf13c57d9d519985cb071cced0c6b440f158e935d46ea739e5a08cca926"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_013.50",
+          "sha256": "9d20f2e10a7fc143d1e5949ee2f0d0b776260598e6137f15355cbe4b1081c219"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_014.00",
+          "sha256": "e6b7de1ee4a3d62967c7440438c3813d721a738d65a8c403a7a9fe73ae596e26"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_014.50",
+          "sha256": "4aec2751f65c9ed62df9ad5d1bcfd581c9662376e13754939b3e828b0697907c"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_015.00",
+          "sha256": "c9833253487dc208c692faa03839d59b5eebb5e65a06be5ad6884d92cc675faf"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_015.50",
+          "sha256": "7232a4b57e1aca4097f50a30d2d9fe28d860c952d1ccd28e25c4fbd6fa8cd879"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_016.00",
+          "sha256": "616a3045f7e0567c5f82c357444f638f03fe905b4538b121e4a7cac298bb0fdc"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_016.50",
+          "sha256": "7a40f74379af5c72f9793e583318f48122dfc9350182cd3782eae95a0932163d"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_017.00",
+          "sha256": "ccca869fa68684ea1e4adec91bbf4b61bd36739b3a369f7e5d65ecebec01f3eb"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_017.50",
+          "sha256": "de20c5204c8674c1bb3f815d9e7be2c70812f4cfd01c2e417e63ba63459d06cd"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_018.00",
+          "sha256": "cacee979f789102dfa1cf5b4ef490cdedab923afc8e0015a19011d646ee55447"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_018.50",
+          "sha256": "f1c96e21e0cda2817d4f82618920e1af1f86dd4d14c4cdc332c435415f867b5f"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_019.00",
+          "sha256": "00be2a06e294d33cb798a536417ec40fd386ea6eac92ea847140eba6c9028f58"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_019.50",
+          "sha256": "5c23895237386c93c5e718efff1d68aeb7d9c03d8f2e871a32d27dadfd66823d"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_020.00",
+          "sha256": "cb6a65dbb2b1809d29538fc9f8c24be0a3a8ebc4bb7a0b73eeb7261472da9da9"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_020.50",
+          "sha256": "66f05ca9286f2618a972fa1cd7cbb1e8bac46d13988b775bde132f3cd054b2d0"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_021.00",
+          "sha256": "6ae6be282c4e4f49cda9917cad6e84de31ffff120759a62990e4945df720d952"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_021.50",
+          "sha256": "c8bbf0236eb80b4f76021d749b3b86c2d3c61e99e6ae4bfeb767e0172412d70b"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_022.00",
+          "sha256": "c20a37545824b803e450c8e1623b3197f0bcf7ba2457e1c8fc0cad3d1703d9f0"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_022.50",
+          "sha256": "183de445396a69400a7073bf2f01ee4191770b0c40d447173bed7310065ed0c7"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_023.00",
+          "sha256": "c12108555b51550df6e9a300e7e51741693a9de3342e29ccd373dcd25eb07567"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_023.50",
+          "sha256": "0a63a0b12d3e10f1cedfe34d62f95f92cc99cede672290f1f72191d44e574c42"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_024.00",
+          "sha256": "4bfc0a9dca1af8ef1144d64d3e9632010cd0101601c9a77960209fe70446262e"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_024.50",
+          "sha256": "3aa5d44198165e28b4421fa6bc59b7da3c53ca8cd241e949cb8560dbfa512c15"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_025.00",
+          "sha256": "f4e30d8cc405fec5fba187899a7a701fa4e304167e78c388ca8f1e28c0450250"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_025.50",
+          "sha256": "6af74120b46399fe4389c59d9b386dea82ae42bff803d26afa3d47226aad4cdc"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_026.00",
+          "sha256": "b840da0f53db80101742fb827849be09bf362c47eb8f486d497fc8be4f2ae5e1"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_026.50",
+          "sha256": "c0808ef6fdddb3a8ba48fc63fed6fb3ca3e8980749deb42535e34e1c3c5b11fd"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_027.00",
+          "sha256": "3bf1f29c39528747a511fe34f00e4e8c3ce91d2b7989fd952231f39ac6c7fea7"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_027.50",
+          "sha256": "b65a5805ba9a8b1b703f37c5323360269772a54078159e7552dc66b163c1b170"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_028.00",
+          "sha256": "b48ecbdc4d88990562d9c161e73199afefc394c33b8ca53216d0eb596492628c"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_028.50",
+          "sha256": "52ab40b27de4fe6815d8fa43018412fed2d4a3e4ee274856f5a50ad25638718e"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_029.00",
+          "sha256": "4ecbb8ff2388a2a0683d9569999c1228160916d48d18e6001e2b278125e69d53"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_029.50",
+          "sha256": "d15dde72e367a12b39d9e0c29669e267016dd76d5bd5c97ca851b03827bb5e93"
+        },
+        {
+          "path": "superconductivity/bulk/B14.imag_aniso_gap0_030.00",
+          "sha256": "3507b534d257d020229461795bed9a2c9a1d1f5bdee705df5027732e41bd97a4"
+        }
+      ],
+      "format_evidence": [
+        "https://github.com/QEF/q-e/blob/qe-6.8/EPW/src/io_eliashberg.f90#L2034-L2082",
+        "https://github.com/QEF/q-e/blob/develop/EPW/src/io/io_supercond.f90#L3270-L3274"
+      ],
+      "format": "Column 1 = T + rho/max(rho); column 2 = gap in meV. Exact local EPW version is not established.",
+      "temperature": "Filename suffix; 0.5 K increments, bulk 0.5 to 30 K, H-bilayer 0.5 to 26 K.",
+      "density": "Column 1 minus filename temperature; each temperature independently normalized to its peak.",
+      "mean": "sum(density * original gap bin)/sum(density); original uniform 0.03 meV bins; no interpolation.",
+      "sample_counts": {
+        "bulk": 5982,
+        "bilayer_with_Hydrogen": 5092
+      },
+      "temperature_counts": {
+        "bulk": 60,
+        "bilayer_with_Hydrogen": 52
+      },
+      "statistics_file": {
+        "path": "figures_for_thesis/gap_summary.json",
+        "sha256": "07a138758ac4c48ec17b5ab11e614c77ff0ff4b0b9355078a8231511261236d4"
+      },
+      "interpretation": "Distribution mean is a guide, not an order-parameter fit. No fitted Tc is shown. Archived endpoints do not establish precise Tc or a rigorous closure bracket; no normal-state convergence output is available.",
+      "pdf_sha256": "acad5263a117e9b14d44aa8007862e7b57c19807d9da509533ab102b576e7fa0",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 345.6000061035156
+    },
+    "S2.10.pdf": {
+      "sources": [
+        {
+          "path": "6.0_AIMD/bilayer_H/OSZICAR",
+          "sha256": "4b901b2effb476999b9ea9a8d92832871ce12ed78f70daa7d4ce52bccbaaa19a"
+        },
+        {
+          "path": "figures_collection/S2.10b1.png",
+          "sha256": "731b33b3bba996d0c9e3345005049606dbc9c5c8bdf60dfd063ac94e2dac4eb5"
+        },
+        {
+          "path": "figures_collection/S2.10b2.png",
+          "sha256": "e603f478d9a10334856e39f6b9aa5976f2f4af8c576e986b925e8951a9ff9711"
+        }
+      ],
+      "steps": 5500,
+      "time_step_fs": 1,
+      "energy_column": "F, electronic free energy; not conserved total energy",
+      "pdf_sha256": "0ffcd7dba04af0a97d6d2f259ef7912106c2fd53d011e567d5bc9ca288591996",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 388.79998779296875
+    },
+    "S2.1.pdf": {
+      "sources": [
+        {
+          "path": "1.0_energy/o-B14/energy_kpoints_450/energy_parameters.dat",
+          "sha256": "c670f0fad75719625374f72dcaddcea7b6835010d1a2f2c2a8633df9fa14ae1e"
+        },
+        {
+          "path": "1.0_energy/o-B14/energy_kpoints_480/energy_parameters.dat",
+          "sha256": "318d8b72d0e0cf88c3e2baf17b0b0d36f8fe6e1c415abcb30339b1d2fad9c422"
+        },
+        {
+          "path": "1.0_energy/o-B14/energy_encut_1260/energy_parameters.dat",
+          "sha256": "866577df538af1459f4c4fb3d5ee38d88da103f64f52a784cef48d248cf21cdb"
+        },
+        {
+          "path": "1.0_energy/o-B14/energy_encut_8721/energy_parameters.dat",
+          "sha256": "2a2103ecc8ff3ba3ff304a40352249dfc861167cef10b91860c5a23df9112c55"
+        },
+        {
+          "path": "1.0_energy/o-B14/energy_lattice/energy_parameters.dat",
+          "sha256": "a8108704741beea89dfcae10c4eb59b1f811ddc48df4f2e284292abd02e7797e"
+        }
+      ],
+      "pdf_sha256": "4152f71eb54fb55f2e610e65b1322a9ee0e26c2ef382462c45972eb5728c5f18",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 547.2000122070312
+    },
+    "S2.2.pdf": {
+      "sources": [
+        {
+          "path": "1.0_energy/o-B14/energy_kpoints_480/cohesive_energy.dat",
+          "sha256": "c855b8fdde0ac3fc7c1ce3db4bbe52360e8015458c2652c2a1cac237222a3d8e"
+        },
+        {
+          "path": "1.0_energy/o-B14/energy_encut_1260/cohesive_energy.dat",
+          "sha256": "9e00b0126c2411958a5c95099e0c49066d1a425135e9f9689e055de9b88df7d0"
+        }
+      ],
+      "pdf_sha256": "917dca49ace454e2686e5ba335fae2ffa95b8f05d7e5711d753a6523e4a1b02c",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 345.6000061035156
+    },
+    "S2.3.pdf": {
+      "sources": [
+        {
+          "path": "2.1_geometry_optimization/monolayer/energy_vacuum/energy_parameters.dat",
+          "sha256": "95fe7a27f90f0fa3928f907134f86aa5bad9a96e1fd4e920c473ae6ba5ff975f"
+        }
+      ],
+      "pdf_sha256": "5bb26eced52114a66a7005447412ba3ba7b012b72e30a7612835e574bd7fa6e1",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 331.20001220703125
+    },
+    "S2.15.pdf": {
+      "sources": [
+        {
+          "path": "figures_for_thesis/fixed_spin_data.csv",
+          "sha256": "c9ffc9034fca74e5fbaf3233fcc697c32efd06f1afb90cb1675c04a2f78f18e3"
+        }
+      ],
+      "source_note": "Small supplied thesis CSV moved to the calculation repository; not claimed to be recovered raw DFT input/output.",
+      "pdf_sha256": "12889f888c1c9a3248a30760c72a58bab6cd953011479a9a3990059d8c9ca600",
+      "copied_pdf_identical": true,
+      "width_pdf_points": 720.0,
+      "height_pdf_points": 331.20001220703125
+    }
+  },
+  "checks": {
+    "historical_h5_vs_rounded_xml": "Previously checked: maximum absolute dielectric difference about 0.000207 after thickness normalization. The superseded extraction archive is no longer needed.",
+    "actual_nbands": {
+      "32": {
+        "actual": 48,
+        "evidence": "5.1_dielectric_function/o-B14_n32_k10/OUTCAR"
+      },
+      "64": {
+        "actual": 72,
+        "evidence": "5.1_dielectric_function/o-B14_n64_k10/OUTCAR"
+      },
+      "128": {
+        "actual": 144,
+        "evidence": "5.1_dielectric_function/o-B14_n128_k10/OUTCAR"
+      },
+      "256": {
+        "actual": 264,
+        "evidence": "5.1_dielectric_function/o-B14_n256_k10/OUTCAR"
+      }
+    },
+    "lattice_scan": {
+      "rows": 37,
+      "mesh_values": [
+        "(10, 14, 9)"
+      ],
+      "ENCUT_eV": [
+        "600.0"
+      ],
+      "sample_minimum_a_angstrom": 5.7009879
+    },
+    "spin_dos_common_grid": {
+      "monolayer_FM_ollie": {
+        "common_energy_grid_points": 4000,
+        "energy_range_relative_Fermi_eV": [
+          -19.092175413600003,
+          5.9878245864
+        ],
+        "fermi_eV": -2.9085245864,
+        "Gaussian_standard_deviation_eV": 0.05,
+        "bands_per_spin": 32,
+        "irreducible_kpoints": 25,
+        "weight_sum": 0.9999999999999999,
+        "integrated_states_per_spin": [
+          31.99999999996198,
+          31.999999999943178
+        ],
+        "independent_scipy_mixture_max_error": [
+          7.105427357601002e-15,
+          7.993605777301127e-15
+        ],
+        "total_is_exact_pointwise_sum": true,
+        "old_error": "The original helper independently generated spin grids; both curves and their sum now use this common grid."
+      },
+      "monolayer_AFM_ollie": {
+        "common_energy_grid_points": 4000,
+        "energy_range_relative_Fermi_eV": [
+          -19.109422641800002,
+          6.0064773582
+        ],
+        "fermi_eV": -2.8463773582,
+        "Gaussian_standard_deviation_eV": 0.05,
+        "bands_per_spin": 32,
+        "irreducible_kpoints": 25,
+        "weight_sum": 0.9999999999999999,
+        "integrated_states_per_spin": [
+          31.9999999999158,
+          31.999999999961766
+        ],
+        "independent_scipy_mixture_max_error": [
+          2.886579864025407e-14,
+          2.886579864025407e-14
+        ],
+        "total_is_exact_pointwise_sum": true,
+        "old_error": "The original helper independently generated spin grids; both curves and their sum now use this common grid."
+      }
+    },
+    "gap_histograms": {
+      "bulk": {
+        "temperature_count": 60,
+        "saved_bins": 5982,
+        "last_temperature": {
+          "temperature_K": 30.0,
+          "bins": 46,
+          "gap_min_meV": 0.93,
+          "gap_max_meV": 2.28,
+          "density_mean_meV": 1.6679932881335235,
+          "density_min": 6.111000001141065e-06,
+          "density_max": 1.0
+        },
+        "independent_parser_agreement": "All 112 temperatures, bin counts, min/max and weighted means agree within 1e-12."
+      },
+      "bilayer_with_Hydrogen": {
+        "temperature_count": 52,
+        "saved_bins": 5092,
+        "last_temperature": {
+          "temperature_K": 26.0,
+          "bins": 1,
+          "gap_min_meV": 0.03,
+          "gap_max_meV": 0.03,
+          "density_mean_meV": 0.03,
+          "density_min": 1.0,
+          "density_max": 1.0
+        },
+        "independent_parser_agreement": "All 112 temperatures, bin counts, min/max and weighted means agree within 1e-12."
+      }
+    }
+  },
+  "corrections": [
+    "S2.1(c) actual lattice scan uses 10x14x9, not the 34x48x31 previously stated in the caption; 37 original table rows.",
+    "S2.3 x is a3 supercell height, not vacuum width; the original energy_parameters.dat column a3 is plotted.",
+    "S2.5 legends show actual OUTCAR band counts 48/72/144/264; INCAR requests 32/64/128/256.",
+    "fig2.2 original display names Group 1/Group 2/Group 3 correspond to blue B2_index/orange B3_index/purple B7_index. The orange s curve was incorrectly labelled Group 3 while orange p was labelled Group 2. The revised labels consistently use G2/G3/G7 for these unchanged atom selections.",
+    "Previously corrected alpha factor 2pi/10, monolayer effective thickness 5.807 Angstrom, and AIMD H-bilayer identity retained.",
+    "S2.16 old spin channels had different energy grids; reconstruct both on one common grid before forming their pointwise total.",
+    "fig2.9 old fit mistook EPW normalized histogram-density offsets for temperatures; use filename temperatures and recover densities, remove the invalid power-law fit and Tc markers."
+  ]
+}

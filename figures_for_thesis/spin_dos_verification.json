@@ -1,0 +1,46 @@
+{
+  "monolayer_FM_ollie": {
+    "common_energy_grid_points": 4000,
+    "energy_range_relative_Fermi_eV": [
+      -19.092175413600003,
+      5.9878245864
+    ],
+    "fermi_eV": -2.9085245864,
+    "Gaussian_standard_deviation_eV": 0.05,
+    "bands_per_spin": 32,
+    "irreducible_kpoints": 25,
+    "weight_sum": 0.9999999999999999,
+    "integrated_states_per_spin": [
+      31.99999999996198,
+      31.999999999943178
+    ],
+    "independent_scipy_mixture_max_error": [
+      7.105427357601002e-15,
+      7.993605777301127e-15
+    ],
+    "total_is_exact_pointwise_sum": true,
+    "old_error": "The original helper independently generated spin grids; both curves and their sum now use this common grid."
+  },
+  "monolayer_AFM_ollie": {
+    "common_energy_grid_points": 4000,
+    "energy_range_relative_Fermi_eV": [
+      -19.109422641800002,
+      6.0064773582
+    ],
+    "fermi_eV": -2.8463773582,
+    "Gaussian_standard_deviation_eV": 0.05,
+    "bands_per_spin": 32,
+    "irreducible_kpoints": 25,
+    "weight_sum": 0.9999999999999999,
+    "integrated_states_per_spin": [
+      31.9999999999158,
+      31.999999999961766
+    ],
+    "independent_scipy_mixture_max_error": [
+      2.886579864025407e-14,
+      2.886579864025407e-14
+    ],
+    "total_is_exact_pointwise_sum": true,
+    "old_error": "The original helper independently generated spin grids; both curves and their sum now use this common grid."
+  }
+}
