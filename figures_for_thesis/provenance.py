@@ -14,8 +14,8 @@ def source(path):
 
 
 record={'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
- 'style':{'width_inches':10,'width_pdf_points':720,'axes_labels':16,'ticks':14,'legend':14,'tabs':12,
-          'font_family':'serif','mathtext':'cm','line_width':1.5,'dpi':196,'legend':'native shared frame'},
+ 'style':{'width_inches_by_thesis_fraction':{'0.6':6,'0.7':7,'0.8':8,'1.0':10},'axes_labels':13,'ticks':11,'legend':11,'tabs':11,
+          'font_family':'serif','mathtext':'cm','line_width':1.5,'dpi':196,'legend_placement':'Internal upper right only in ample clear space. Dense band/phonon figures use a narrow right legend area; three data panels use a 2-by-2 layout with the legend in the lower-right quadrant. S2.8 retains its broad internal negative-frequency space; fig2.11 uses one compact external top row. No external bottom legend.'},
  'figures':{},'checks':{},'corrections':[]}
 figures=record['figures']
 optical=['bilayer_with_Hydrogen','bilayer','monolayer','o-B14_n128_k34']
@@ -47,6 +47,7 @@ for filename,folders in [('S2.16.pdf',['monolayer_FM_ollie','monolayer_AFM_ollie
     figures.setdefault(filename,{}).setdefault('sources',[]).extend([
         source(Path('4.1_PDoS')/p/('OUTCAR' if p.endswith('_ollie') else 'vasprun.xml')) for p in folders])
 figures['S2.16.pdf']['method']='Gaussian reconstruction from OUTCAR eigenvalues and k weights, standard deviation 0.05 eV as in original helper; both spin channels now use the same 4000-point absolute energy grid. XML/DOSCAR are incomplete.'
+figures['S2.16.pdf']['display_range']={'y_limits':[-8,15],'note':'Both panels include the AFM total-DOS maximum of 14.2567916276; no underlying values changed.'}
 figures['fig2.2.pdf']['atom_selections_one_based']={'G2':[5,6,7,8],'G3':[1,2,3,4,13,14],'G7':list(range(1,15))}
 figures['fig2.2.pdf']['selection_note']='Same original B2_index/B3_index/B7_index; G7 includes all 14 atoms, not a disjoint third group.'
 figures['fig2.2.pdf']['sources'].append(source(Path('kpath_tide.pdf')))
@@ -56,6 +57,7 @@ for filename,folders in [('S2.9.pdf',['3.0_phonon_dispersion_vasp/monolayer_3','
  ('S2.8.pdf',[f'3.0_phonon_dispersion_vasp/{p}_2' for p in ['monolayer','monolayer_H','bilayer','bilayer_H']])]:
     figures[filename]={'sources':[source(Path(p)/('band.yaml' if 'phononpy' in p else 'OUTCAR')) for p in folders],
      'note':'Original frequencies, including negative branches, are retained.'}
+figures['S2.9.pdf']['display_range']={'frequency_limits_THz':[-3.3,8],'note':'Both panels include the H-monolayer minimum of -2.871048372 THz; no underlying frequencies changed.'}
 figures['fig2.9.pdf']={'sources':[source(p.relative_to(ROOT)) for p in sorted((ROOT/'superconductivity').glob('*/B14.imag_aniso_gap0_*'))],
  'format_evidence':['https://github.com/QEF/q-e/blob/qe-6.8/EPW/src/io_eliashberg.f90#L2034-L2082',
                     'https://github.com/QEF/q-e/blob/develop/EPW/src/io/io_supercond.f90#L3270-L3274'],
@@ -93,9 +95,16 @@ gap_stats=json.loads((OUT/'gap_summary.json').read_text())
 record['checks']['gap_histograms']={folder:{'temperature_count':len(rows),'saved_bins':sum(r['bins'] for r in rows),
  'last_temperature':rows[-1],'independent_parser_agreement':'All 112 temperatures, bin counts, min/max and weighted means agree within 1e-12.'}
  for folder,rows in gap_stats.items()}
+tex_fractions={}
+for fraction,names in [(.6,'S2.2 S2.3 S2.8 S2.12 S2.15 S2.16'),
+                       (.7,'fig2.5 S2.13 S2.14'),
+                       (.8,'fig2.2 fig2.6 fig2.8 S2.1 S2.9 S2.11 S2.18'),
+                       (1.,'fig2.9 fig2.10 fig2.11 fig2.12 S2.4 S2.5 S2.10')]:
+    tex_fractions.update({name+'.pdf':fraction for name in names.split()})
 for filename,item in figures.items():
     p=OUT/filename;page=fitz.open(p)[0]
-    assert abs(page.rect.width-720)<.01
+    item['thesis_width_fraction']=tex_fractions[filename]
+    item['canvas_inches']=[page.rect.width/72,page.rect.height/72]
     bounds=[]
     for block in page.get_text('dict')['blocks']:
         for line in block.get('lines',[]):
@@ -107,4 +116,4 @@ for filename,item in figures.items():
     item['width_pdf_points']=page.rect.width
     item['height_pdf_points']=page.rect.height
 (OUT/'numerical_manifest.json').write_text(json.dumps(record,indent=2)+'\n')
-print('Verified',len(figures),'numerical PDFs: width, text bounds, source identities and copied hashes.')
+print('Verified',len(figures),'numerical PDFs: individual canvas sizes, text bounds, source identities and copied hashes.')

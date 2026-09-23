@@ -1,16 +1,21 @@
 {
-  "source_commit": "a9476a5c0e5ce764456c4cc7a50f8e15d64f951c",
+  "source_commit": "beb19f91d2d1b6b9dc0b9a35c9d5dbd96930501a",
   "style": {
-    "width_inches": 10,
-    "width_pdf_points": 720,
-    "axes_labels": 16,
-    "ticks": 14,
-    "legend": "native shared frame",
-    "tabs": 12,
+    "width_inches_by_thesis_fraction": {
+      "0.6": 6,
+      "0.7": 7,
+      "0.8": 8,
+      "1.0": 10
+    },
+    "axes_labels": 13,
+    "ticks": 11,
+    "legend": 11,
+    "tabs": 11,
     "font_family": "serif",
     "mathtext": "cm",
     "line_width": 1.5,
-    "dpi": 196
+    "dpi": 196,
+    "legend_placement": "Internal upper right only in ample clear space. Dense band/phonon figures use a narrow right legend area; three data panels use a 2-by-2 layout with the legend in the lower-right quadrant. S2.8 retains its broad internal negative-frequency space; fig2.11 uses one compact external top row. No external bottom legend."
   },
   "figures": {
     "fig2.10.pdf": {
@@ -40,10 +45,15 @@
       },
       "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
       "spin": "NM-PBE as in the original optical calculations, no added Drude term",
-      "pdf_sha256": "d91ed0806e3bbadf95321b26729f9ba01e5cc4138fd74421737efe6e251f97a7",
+      "thesis_width_fraction": 1.0,
+      "canvas_inches": [
+        10.0,
+        5.0
+      ],
+      "pdf_sha256": "4ef817c15281d2974cba00e7f1bc107f826be3e3e9546701287574b2551093d0",
       "copied_pdf_identical": true,
       "width_pdf_points": 720.0,
-      "height_pdf_points": 504.0
+      "height_pdf_points": 360.0
     },
     "fig2.11.pdf": {
       "sources": [
@@ -72,10 +82,15 @@
       },
       "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
       "spin": "NM-PBE as in the original optical calculations, no added Drude term",
-      "pdf_sha256": "82bc5e32e535a751d577daa6315eb917b11f6ec199cae54ababe7281555dc026",
+      "thesis_width_fraction": 1.0,
+      "canvas_inches": [
+        10.0,
+        5.3000000847710504
+      ],
+      "pdf_sha256": "4cccaca710e0fc7b806838a2a3501f8b04d8eb65b9d16d260dad19d7c05cd263",
       "copied_pdf_identical": true,
       "width_pdf_points": 720.0,
-      "height_pdf_points": 504.0
+      "height_pdf_points": 381.6000061035156
     },
     "fig2.12.pdf": {
       "sources": [
@@ -104,10 +119,15 @@
       },
       "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
       "spin": "NM-PBE as in the original optical calculations, no added Drude term",
-      "pdf_sha256": "c1e6a28e2a8c5ec26f78d752594d074d5d510b57574660d14964489131d7db86",
+      "thesis_width_fraction": 1.0,
+      "canvas_inches": [
+        10.0,
+        5.0
+      ],
+      "pdf_sha256": "38eeddbdc6b6b30b2fcdea35f9c918bc3786e4a9557bdc1161b282ddd3de37eb",
       "copied_pdf_identical": true,
       "width_pdf_points": 720.0,
-      "height_pdf_points": 504.0
+      "height_pdf_points": 360.0
     },
     "S2.18.pdf": {
       "sources": [
@@ -136,10 +156,15 @@
       },
       "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
       "spin": "NM-PBE as in the original optical calculations, no added Drude term",
-      "pdf_sha256": "29155abf049258069fa34a68bfd2696b4360d938019b83687701cff279434b59",
+      "thesis_width_fraction": 0.8,
+      "canvas_inches": [
+        8.0,
+        5.600000169542101
+      ],
+      "pdf_sha256": "f348575f9c235f2c30355afb595c3761d087c0f00c8c001ed1ffb79712530b5a",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 288.0
+      "width_pdf_points": 576.0,
+      "height_pdf_points": 403.20001220703125
     },
     "S2.4.pdf": {
       "sources": [
@@ -168,10 +193,15 @@
           "sha256": "719455ba06b832eb910b2e11ba808b0a2d3e0d028b712bee142059ac43211d52"
         }
       ],
-      "pdf_sha256": "4abae7396ff7054e8af2e4a98118a5c8ef33a3f8335530e8e4e993be1f7a44de",
+      "thesis_width_fraction": 1.0,
+      "canvas_inches": [
+        10.0,
+        5.0
+      ],
+      "pdf_sha256": "8ab8cea8d2384081277f106b3f6c2662c4c18757a14a29fc9e25bcd13034a267",
       "copied_pdf_identical": true,
       "width_pdf_points": 720.0,
-      "height_pdf_points": 504.0
+      "height_pdf_points": 360.0
     },
     "S2.5.pdf": {
       "sources": [
@@ -192,10 +222,15 @@
           "sha256": "c95934e517d27e7c3e5ff072a92a70f2f2033ac399864e6e5efeb431ee91a26b"
         }
       ],
-      "pdf_sha256": "b5239fcbf6ac0f0c5c3f6441279626a18f9f973128187d48488a7850d226e4dd",
+      "thesis_width_fraction": 1.0,
+      "canvas_inches": [
+        10.0,
+        5.0
+      ],
+      "pdf_sha256": "5e5e20a967d365156e61a880ae50232633a690f3466cf839fc95398f1d4dd590",
       "copied_pdf_identical": true,
       "width_pdf_points": 720.0,
-      "height_pdf_points": 504.0
+      "height_pdf_points": 360.0
     },
     "fig2.6.pdf": {
       "sources": [
@@ -218,10 +253,15 @@
         "bilayer_HSE": -1.26467503
       },
       "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
-      "pdf_sha256": "b7260a35d2b4e8ffcf6b62b367ae57d5a3dac9fdbb6a119bee7658ce85fb93f7",
+      "thesis_width_fraction": 0.8,
+      "canvas_inches": [
+        8.0,
+        5.600000169542101
+      ],
+      "pdf_sha256": "5721bec3acf1fd12e8664cbbb333953348019ce491f756aeab56536035c26901",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 331.20001220703125
+      "width_pdf_points": 576.0,
+      "height_pdf_points": 403.20001220703125
     },
     "S2.11.pdf": {
       "sources": [
@@ -239,10 +279,15 @@
         "monolayer_FM_HSE06": -2.8671533
       },
       "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
-      "pdf_sha256": "6733915e3a9627a4b89950e5e452fed219a854037aa31e356ae199d514d55fc1",
+      "thesis_width_fraction": 0.8,
+      "canvas_inches": [
+        8.0,
+        3.4000000423855252
+      ],
+      "pdf_sha256": "ef2c36cac61a4b0c6e4061be95c29a3dd6a6575714afa7e3c5645f09a03c5f34",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 338.3999938964844
+      "width_pdf_points": 576.0,
+      "height_pdf_points": 244.8000030517578
     },
     "S2.13.pdf": {
       "sources": [
@@ -265,10 +310,15 @@
         "monolayer_R2SCAN": -4.46262607
       },
       "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
-      "pdf_sha256": "874f59a8e1a5140efb809f447f615dd2e33864357514c4ff93b97edf42c64b2e",
+      "thesis_width_fraction": 0.7,
+      "canvas_inches": [
+        7.0,
+        3.600000169542101
+      ],
+      "pdf_sha256": "a64b486ca93b4ecc8d77a04e7478bf3838392a1a97eaddf296501c1801517b0d",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 345.6000061035156
+      "width_pdf_points": 504.0,
+      "height_pdf_points": 259.20001220703125
     },
     "S2.14.pdf": {
       "sources": [
@@ -291,10 +341,15 @@
         "monolayer_sym_off": -4.36409245
       },
       "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
-      "pdf_sha256": "096889d81df37f552032dfe1f285dc13c9705d89f9dea2a57f2d54928bf22ee0",
+      "thesis_width_fraction": 0.7,
+      "canvas_inches": [
+        7.0,
+        3.600000169542101
+      ],
+      "pdf_sha256": "1f6431434e9de62c48a10d08c26fb143bf15117f977ceb902fe5c9c9b321fac2",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 345.6000061035156
+      "width_pdf_points": 504.0,
+      "height_pdf_points": 259.20001220703125
     },
     "fig2.8.pdf": {
       "sources": [
@@ -311,10 +366,15 @@
         "bilayer_with_Hydrogen": -4.24622492
       },
       "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
-      "pdf_sha256": "d7418abeca6b6fc9504b957c389ddf598d79770fef61050a85992e0b8089b409",
+      "thesis_width_fraction": 0.8,
+      "canvas_inches": [
+        8.0,
+        4.0
+      ],
+      "pdf_sha256": "7c39c44948da10479d851b4f05bd4a68bacb3e230f7a002957e9c7a0f566643e",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 360.0
+      "width_pdf_points": 576.0,
+      "height_pdf_points": 288.0
     },
     "fig2.2.pdf": {
       "sources": [
@@ -368,10 +428,15 @@
         ]
       },
       "selection_note": "Same original B2_index/B3_index/B7_index; G7 includes all 14 atoms, not a disjoint third group.",
-      "pdf_sha256": "5fda4eb362f7f0241496e094435e4b52c32cdeedd23d99ec7e80e8d04e87176b",
+      "thesis_width_fraction": 0.8,
+      "canvas_inches": [
+        8.0,
+        6.0
+      ],
+      "pdf_sha256": "8bce96c93e0706d3c71009650f14fdf885afeb99e6101ef85d34aff3fbfbbb8a",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 590.4000244140625
+      "width_pdf_points": 576.0,
+      "height_pdf_points": 432.0
     },
     "S2.16.pdf": {
       "sources": [
@@ -385,10 +450,22 @@
         }
       ],
       "method": "Gaussian reconstruction from OUTCAR eigenvalues and k weights, standard deviation 0.05 eV as in original helper; both spin channels now use the same 4000-point absolute energy grid. XML/DOSCAR are incomplete.",
-      "pdf_sha256": "f54b77a721054cb8af709531e004f410c43006457a69ea8d3cd2353b4eae431b",
+      "display_range": {
+        "y_limits": [
+          -8,
+          15
+        ],
+        "note": "Both panels include the AFM total-DOS maximum of 14.2567916276; no underlying values changed."
+      },
+      "thesis_width_fraction": 0.6,
+      "canvas_inches": [
+        6.0,
+        6.0
+      ],
+      "pdf_sha256": "16361bebf5664cc06eddcf89d0c8879210b773552449dff7403b3f443657ebbf",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 345.6000061035156
+      "width_pdf_points": 432.0,
+      "height_pdf_points": 432.0
     },
     "S2.12.pdf": {
       "sources": [
@@ -409,10 +486,15 @@
           "sha256": "a55449f191fd8913e79adc53141f5cff0c797826619a1529db433eaead771f96"
         }
       ],
-      "pdf_sha256": "b6def9ff2c77144de1782392d3cfd8b15f62594e31e4cec629840f4420901fd8",
+      "thesis_width_fraction": 0.6,
+      "canvas_inches": [
+        6.0,
+        3.600000169542101
+      ],
+      "pdf_sha256": "47b5e8743be8a97fbae55ed279876351361d1b1845dfc8cec96b53fc505480cf",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 345.6000061035156
+      "width_pdf_points": 432.0,
+      "height_pdf_points": 259.20001220703125
     },
     "S2.9.pdf": {
       "sources": [
@@ -434,10 +516,22 @@
         }
       ],
       "note": "Original frequencies, including negative branches, are retained.",
-      "pdf_sha256": "04c5f5af1ee7e02e3e0c5c873294bb4b9e3689f7919a9e20925f2f833d047315",
+      "display_range": {
+        "frequency_limits_THz": [
+          -3.3,
+          8
+        ],
+        "note": "Both panels include the H-monolayer minimum of -2.871048372 THz; no underlying frequencies changed."
+      },
+      "thesis_width_fraction": 0.8,
+      "canvas_inches": [
+        8.0,
+        3.4000000423855252
+      ],
+      "pdf_sha256": "825b136f4594fc79aa7a2d94626e4f9708c0373f821e32755a0d400f522d3f57",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 345.6000061035156
+      "width_pdf_points": 576.0,
+      "height_pdf_points": 244.8000030517578
     },
     "fig2.5.pdf": {
       "sources": [
@@ -451,10 +545,15 @@
         }
       ],
       "note": "Original frequencies, including negative branches, are retained.",
-      "pdf_sha256": "2519ac76e9e26f7712d6bfc618a0cfaf5fa60dcc0e710d01e74b089d6cf3aba4",
+      "thesis_width_fraction": 0.7,
+      "canvas_inches": [
+        7.0,
+        3.600000169542101
+      ],
+      "pdf_sha256": "40d2a3dd584a32feb31c4136212cd9a8fad8372d2325867db8d516626162b867",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 345.6000061035156
+      "width_pdf_points": 504.0,
+      "height_pdf_points": 259.20001220703125
     },
     "S2.8.pdf": {
       "sources": [
@@ -476,10 +575,15 @@
         }
       ],
       "note": "Original frequencies, including negative branches, are retained.",
-      "pdf_sha256": "db6ee503df453a4c481e52b7b6dc37d3ad9dd79b80689cb9d85d2e3b8fd622ec",
+      "thesis_width_fraction": 0.6,
+      "canvas_inches": [
+        6.0,
+        3.600000169542101
+      ],
+      "pdf_sha256": "81ce950be3bc88ecc2c6deb3a6d14aa17ef2b2068690860e921b61c9afeefbb0",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 345.6000061035156
+      "width_pdf_points": 432.0,
+      "height_pdf_points": 259.20001220703125
     },
     "fig2.9.pdf": {
       "sources": [
@@ -953,10 +1057,15 @@
         "sha256": "07a138758ac4c48ec17b5ab11e614c77ff0ff4b0b9355078a8231511261236d4"
       },
       "interpretation": "Distribution mean is a guide, not an order-parameter fit. No fitted Tc is shown. Archived endpoints do not establish precise Tc or a rigorous closure bracket; no normal-state convergence output is available.",
-      "pdf_sha256": "acad5263a117e9b14d44aa8007862e7b57c19807d9da509533ab102b576e7fa0",
+      "thesis_width_fraction": 1.0,
+      "canvas_inches": [
+        10.0,
+        4.0
+      ],
+      "pdf_sha256": "56e7cb55a9f905f59c410cd333e06f755773201ba2888eb34ab41ebb2bf40bfc",
       "copied_pdf_identical": true,
       "width_pdf_points": 720.0,
-      "height_pdf_points": 345.6000061035156
+      "height_pdf_points": 288.0
     },
     "S2.10.pdf": {
       "sources": [
@@ -976,10 +1085,15 @@
       "steps": 5500,
       "time_step_fs": 1,
       "energy_column": "F, electronic free energy; not conserved total energy",
-      "pdf_sha256": "0ffcd7dba04af0a97d6d2f259ef7912106c2fd53d011e567d5bc9ca288591996",
+      "thesis_width_fraction": 1.0,
+      "canvas_inches": [
+        10.0,
+        4.5
+      ],
+      "pdf_sha256": "e968da68c6de6eca3e9d37e1521627d7ec37c299541729ce54f0eb6a18c7cd69",
       "copied_pdf_identical": true,
       "width_pdf_points": 720.0,
-      "height_pdf_points": 388.79998779296875
+      "height_pdf_points": 324.0
     },
     "S2.1.pdf": {
       "sources": [
@@ -1004,10 +1118,15 @@
           "sha256": "a8108704741beea89dfcae10c4eb59b1f811ddc48df4f2e284292abd02e7797e"
         }
       ],
-      "pdf_sha256": "4152f71eb54fb55f2e610e65b1322a9ee0e26c2ef382462c45972eb5728c5f18",
+      "thesis_width_fraction": 0.8,
+      "canvas_inches": [
+        8.0,
+        6.0
+      ],
+      "pdf_sha256": "bb1121bd96fdb7c5e6390260137510171cdd1be1a65228187c7247870c328c59",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 547.2000122070312
+      "width_pdf_points": 576.0,
+      "height_pdf_points": 432.0
     },
     "S2.2.pdf": {
       "sources": [
@@ -1020,10 +1139,15 @@
           "sha256": "9e00b0126c2411958a5c95099e0c49066d1a425135e9f9689e055de9b88df7d0"
         }
       ],
-      "pdf_sha256": "917dca49ace454e2686e5ba335fae2ffa95b8f05d7e5711d753a6523e4a1b02c",
+      "thesis_width_fraction": 0.6,
+      "canvas_inches": [
+        6.0,
+        4.5
+      ],
+      "pdf_sha256": "fc069b39fa2566177d6eb80cd016a9cb06f0b9120d22fab34025b7624aea41df",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 345.6000061035156
+      "width_pdf_points": 432.0,
+      "height_pdf_points": 324.0
     },
     "S2.3.pdf": {
       "sources": [
@@ -1032,10 +1156,15 @@
           "sha256": "95fe7a27f90f0fa3928f907134f86aa5bad9a96e1fd4e920c473ae6ba5ff975f"
         }
       ],
-      "pdf_sha256": "5bb26eced52114a66a7005447412ba3ba7b012b72e30a7612835e574bd7fa6e1",
+      "thesis_width_fraction": 0.6,
+      "canvas_inches": [
+        6.0,
+        3.600000169542101
+      ],
+      "pdf_sha256": "6745529146cd7807d10734ef3fabd8a9230b077c81a2d7b3ade52dbc5e3113c7",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 331.20001220703125
+      "width_pdf_points": 432.0,
+      "height_pdf_points": 259.20001220703125
     },
     "S2.15.pdf": {
       "sources": [
@@ -1045,10 +1174,15 @@
         }
       ],
       "source_note": "Small supplied thesis CSV moved to the calculation repository; not claimed to be recovered raw DFT input/output.",
-      "pdf_sha256": "12889f888c1c9a3248a30760c72a58bab6cd953011479a9a3990059d8c9ca600",
+      "thesis_width_fraction": 0.6,
+      "canvas_inches": [
+        6.0,
+        3.600000169542101
+      ],
+      "pdf_sha256": "c03b08b43fcbfd717537fe118ceb3033109314fecd4a900f3ec15300c1534746",
       "copied_pdf_identical": true,
-      "width_pdf_points": 720.0,
-      "height_pdf_points": 331.20001220703125
+      "width_pdf_points": 432.0,
+      "height_pdf_points": 259.20001220703125
     }
   },
   "checks": {

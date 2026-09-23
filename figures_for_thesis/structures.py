@@ -39,7 +39,7 @@ with tempfile.TemporaryDirectory(prefix="thesis-structure-") as temporary:
         pixels = Image.open(work / (name + ".png"))
         w, h = pixels.size
         labels = json.loads((work / (name + ".json")).read_text())
-        bottom_space = .07 if name == "fig2.7" else 0
+        bottom_space = .055 if name == "fig2.7" else 0
         fig = plt.figure(figsize=(width, width * h * (1 + bottom_space) / w))
         ax = fig.add_axes([0, 0, 1, 1])
         ax.imshow(pixels, interpolation="none")
@@ -69,7 +69,7 @@ with tempfile.TemporaryDirectory(prefix="thesis-structure-") as temporary:
                     align = "center"
                 elif text in ["(a)", "(b)"]:
                     x = (0.035 if text == "(a)" else 0.71) * w
-            ax.text(x, y, text, fontsize=12 if is_title else 14, ha=align,
+            ax.text(x, y, text, fontsize=11, ha=align,
                     va="top", bbox=box if is_title else None)
         save(fig, name + ".pdf")
         manifest[name] = {
