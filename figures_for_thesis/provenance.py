@@ -14,12 +14,14 @@ def source(path):
 
 
 record={'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
- 'style':{'width_inches_by_thesis_fraction':{'0.6':6,'0.7':7,'0.8':8,'1.0':10},'axes_labels':13,'ticks':11,'legend':11,'tabs':11,
-          'font_family':'serif','mathtext':'cm','line_width':1.5,'dpi':196,'legend_placement':'Internal upper right only in ample clear space. Dense band/phonon figures use a narrow right legend area; three data panels use a 2-by-2 layout with the legend in the lower-right quadrant. S2.8 retains its broad internal negative-frequency space; fig2.11 uses one compact external top row. No external bottom legend.'},
+ 'style':{'axes_labels':16,'ticks':14,'legend':12,'title':20,'subtitle':18,
+          'font_family':'serif','mathtext':'cm','line_width':1.5,'dpi':196,
+          'canvas_policy':'Original per-figure canvas sizes. Only original three-data-panel rows become 2-by-2 grids with a shared lower-right legend.',
+          'settings_source':'Standalone style.py and editable notebook cell; no output_settings plotting dependency.'},
  'figures':{},'checks':{},'corrections':[]}
 figures=record['figures']
 optical=['bilayer_with_Hydrogen','bilayer','monolayer','o-B14_n128_k34']
-for filename in ['fig2.10.pdf','fig2.11.pdf','fig2.12.pdf','S2.18.pdf']:
+for filename in ['fig2.10.pdf','fig2.11a.pdf','fig2.11b.pdf','fig2.12a.pdf','fig2.12b.pdf','S2.18.pdf']:
     figures[filename]={'sources':[source(Path('5.1_dielectric_function')/p/'vaspout.h5') for p in optical],
      'observable':'density-density diagonal dielectric tensor; derived scalar optical quantities',
      'thickness_angstrom':{'monolayer':5.807056948202938,'bilayer':9.41157,'bilayer_with_Hydrogen':11.208620},
@@ -83,7 +85,7 @@ record['checks']['lattice_scan']={'rows':len(rows),'mesh_values':sorted(set(r['k
  'ENCUT_eV':sorted(set(r['energy cutoff (ENCUT)'] for r in rows)),
  'sample_minimum_a_angstrom':float(min(rows,key=lambda r:float(r['total energy']))['lattice constant'])}
 record['corrections']=[
- 'S2.1(c) actual lattice scan uses 10x14x9, not the 34x48x31 previously stated in the caption; 37 original table rows.',
+ 'S2.1(b) actual lattice scan uses 10x14x9, not the 34x48x31 previously stated in the caption; 37 original table rows.',
  'S2.3 x is a3 supercell height, not vacuum width; the original energy_parameters.dat column a3 is plotted.',
  'S2.5 legends show actual OUTCAR band counts 48/72/144/264; INCAR requests 32/64/128/256.',
  'fig2.2 original display names Group 1/Group 2/Group 3 correspond to blue B2_index/orange B3_index/purple B7_index. The orange s curve was incorrectly labelled Group 3 while orange p was labelled Group 2. The revised labels consistently use G2/G3/G7 for these unchanged atom selections.',
@@ -96,11 +98,10 @@ record['checks']['gap_histograms']={folder:{'temperature_count':len(rows),'saved
  'last_temperature':rows[-1],'independent_parser_agreement':'All 112 temperatures, bin counts, min/max and weighted means agree within 1e-12.'}
  for folder,rows in gap_stats.items()}
 tex_fractions={}
-for fraction,names in [(.6,'S2.2 S2.3 S2.8 S2.12 S2.15 S2.16'),
-                       (.7,'fig2.5 S2.13 S2.14'),
-                       (.8,'fig2.2 fig2.6 fig2.8 S2.1 S2.9 S2.11 S2.18'),
-                       (1.,'fig2.9 fig2.10 fig2.11 fig2.12 S2.4 S2.5 S2.10')]:
-    tex_fractions.update({name+'.pdf':fraction for name in names.split()})
+for tex_file in ['project_2_main.tex', 'project_2_SI.tex']:
+    tex=(THESIS.parent/'src'/tex_file).read_text()
+    for fraction, filename in re.findall(r'\\includegraphics\[width=([0-9.]+)\\(?:textwidth|linewidth)\]\{figures_proj2/([^}]+\.pdf)\}', tex):
+        tex_fractions[filename]=float(fraction)
 for filename,item in figures.items():
     p=OUT/filename;page=fitz.open(p)[0]
     item['thesis_width_fraction']=tex_fractions[filename]

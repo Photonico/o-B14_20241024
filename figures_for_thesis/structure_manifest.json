@@ -1,273 +1,52 @@
 {
   "fig2.1": {
-    "source": "/Users/lu/Repos/PhD_thesis_20251216/figures_proj2/fig2.1/fig2.1_6k.xcf",
-    "source_sha256": "32aff095c9bebe574fe7ee15b3d23e32e04bca72057cd51f7f1d8dcaed2e30b5",
-    "canvas_width_inches": 8.0,
-    "tex_width_fraction": 0.8,
-    "labels": [
-      {
-        "text": "(d) first side view of bilayer",
-        "x": 3120,
-        "y": 2400,
-        "width": 2096,
-        "height": 176
-      },
-      {
-        "text": "(c) top view of bulk",
-        "x": 120,
-        "y": 2400,
-        "width": 1469,
-        "height": 176
-      },
-      {
-        "text": "(b) second side view of bulk",
-        "x": 3120,
-        "y": 320,
-        "width": 2126,
-        "height": 177
-      },
-      {
-        "text": "(a) first side view of bulk",
-        "x": 120,
-        "y": 320,
-        "width": 1895,
-        "height": 176
-      },
-      {
-        "text": "(f) atom groups",
-        "x": 1920,
-        "y": 5600,
-        "width": 1179,
-        "height": 176
-      },
-      {
-        "text": "(e) second side view of bilayer",
-        "x": 3120,
-        "y": 4000,
-        "width": 2313,
-        "height": 177
-      },
-      {
-        "text": "(h) second side view of monolayer",
-        "x": 3120,
-        "y": 6720,
-        "width": 2573,
-        "height": 175
-      },
-      {
-        "text": "(g) first side view of monolayer",
-        "x": 120,
-        "y": 6720,
-        "width": 2371,
-        "height": 176
-      },
-      {
-        "text": "c",
-        "x": 1270,
-        "y": 6295,
-        "width": 101,
-        "height": 211
-      },
-      {
-        "text": "b",
-        "x": 526,
-        "y": 6295,
-        "width": 115,
-        "height": 211
-      },
-      {
-        "text": "a",
-        "x": 667,
-        "y": 5655,
-        "width": 107,
-        "height": 211
-      }
-    ]
+    "source": "/Users/lu/Repos/PhD_thesis_20251216/figures_proj2/fig2.1/fig2.1_6k.png",
+    "source_sha256": "f7cb8ec227717ca9424af67639868f6f9113f3769ff22f9d5e21a6ad3f0dc1e3",
+    "pixel_dimensions": [
+      6000,
+      8000
+    ],
+    "thesis_width_fraction": 0.8,
+    "method": "Original labelled PNG included directly; no conversion."
   },
   "fig2.3": {
-    "source": "/Users/lu/Repos/PhD_thesis_20251216/figures_proj2/fig2.3/fig2.3_4k.xcf",
-    "source_sha256": "990eddf78ab9ad7bb9889e739681fd4c5d01f6da8b26a137f782131645b1673a",
-    "canvas_width_inches": 8.0,
-    "tex_width_fraction": 0.8,
-    "labels": [
-      {
-        "text": "(d)",
-        "x": 3050,
-        "y": 2468,
-        "width": 200,
-        "height": 164
-      },
-      {
-        "text": "(c)",
-        "x": 2756,
-        "y": 2468,
-        "width": 188,
-        "height": 164
-      },
-      {
-        "text": "(b)",
-        "x": 3050,
-        "y": 2168,
-        "width": 200,
-        "height": 164
-      },
-      {
-        "text": "(a)",
-        "x": 2747,
-        "y": 2162,
-        "width": 207,
-        "height": 176
-      }
-    ]
+    "source": "/Users/lu/Repos/PhD_thesis_20251216/figures_proj2/fig2.3/fig2.3_4k.png",
+    "source_sha256": "d62f91b6260af67c68d9c82cab7ed93295b14cffde9b8db8a724d9a2f49e6725",
+    "pixel_dimensions": [
+      6000,
+      5400
+    ],
+    "thesis_width_fraction": 0.8,
+    "method": "Original labelled PNG included directly; no conversion."
   },
   "fig2.4": {
-    "source": "/Users/lu/Repos/PhD_thesis_20251216/figures_proj2/fig2.4/fig2.4.xcf",
-    "source_sha256": "0e871aacb838fbd46724e1d412466ba051692b3662c74757e38aaf6efca43777",
-    "canvas_width_inches": 8.0,
-    "tex_width_fraction": 0.8,
-    "labels": [
-      {
-        "text": "(d)",
-        "x": 3043,
-        "y": 3062,
-        "width": 214,
-        "height": 176
-      },
-      {
-        "text": "(c)",
-        "x": 2749,
-        "y": 3062,
-        "width": 202,
-        "height": 176
-      },
-      {
-        "text": "(b)",
-        "x": 3043,
-        "y": 2762,
-        "width": 214,
-        "height": 176
-      },
-      {
-        "text": "(a)",
-        "x": 2747,
-        "y": 2762,
-        "width": 207,
-        "height": 176
-      }
-    ]
+    "source": "/Users/lu/Repos/PhD_thesis_20251216/figures_proj2/fig2.4/fig2.4_6k.png",
+    "source_sha256": "1dc8810d8cdafa13e04968ecd13994233c49b5d3f656707338b5b074fc4e3b40",
+    "pixel_dimensions": [
+      6000,
+      6000
+    ],
+    "thesis_width_fraction": 0.8,
+    "method": "Original labelled PNG included directly; no conversion."
   },
   "fig2.7": {
-    "source": "/Users/lu/Repos/PhD_thesis_20251216/figures_proj2/fig2.7/fig2.7_from2.6.xcf",
-    "source_sha256": "26fe11a3aa281e72b041a02c28970e3b89dca12d8b204a4e22ab02b84b893a0e",
-    "canvas_width_inches": 7.5,
-    "tex_width_fraction": 0.75,
-    "labels": [
-      {
-        "text": "Lowest unoccupied states along T-Y",
-        "x": 729,
-        "y": 2043,
-        "width": 3239,
-        "height": 211
-      },
-      {
-        "text": "Highest occupied states along T-Y",
-        "x": 729,
-        "y": 164,
-        "width": 3071,
-        "height": 211
-      },
-      {
-        "text": "spin-up",
-        "x": 729,
-        "y": 3428,
-        "width": 449,
-        "height": 141
-      },
-      {
-        "text": "spin-down",
-        "x": 3875,
-        "y": 3428,
-        "width": 624,
-        "height": 141
-      },
-      {
-        "text": "spin-down",
-        "x": 2792,
-        "y": 1549,
-        "width": 624,
-        "height": 141
-      },
-      {
-        "text": "spin-up",
-        "x": 1979,
-        "y": 1549,
-        "width": 449,
-        "height": 141
-      },
-      {
-        "text": "",
-        "x": 1752,
-        "y": 1569,
-        "width": 426,
-        "height": 63
-      },
-      {
-        "text": "(b)",
-        "x": 5079,
-        "y": 634,
-        "width": 284,
-        "height": 234
-      },
-      {
-        "text": "(a)",
-        "x": 227,
-        "y": 634,
-        "width": 275,
-        "height": 234
-      }
-    ]
+    "source": "/Users/lu/Repos/PhD_thesis_20251216/figures_proj2/fig2.7/fig2.7_from2.6.png",
+    "source_sha256": "bfdb734c903fdf4ec9afcf6af1a85d701202f32cfc97be85d34e43a23bd479cb",
+    "pixel_dimensions": [
+      7292,
+      3757
+    ],
+    "thesis_width_fraction": 0.75,
+    "method": "Original labelled PNG included directly; no conversion."
   },
   "S2.17": {
-    "source": "/Users/lu/Repos/o-B14_20241024/figures_collection/S2.17/S2.17_template.xcf",
-    "source_sha256": "aacae893d6a566b5651d649c76d787a60c7dde5a98bbd7c09af7ed32c2391704",
-    "canvas_width_inches": 7.5,
-    "tex_width_fraction": 0.75,
-    "labels": [
-      {
-        "text": "Lowest unoccupied spin-down states along T-Y",
-        "x": 546,
-        "y": 2043,
-        "width": 4231,
-        "height": 211
-      },
-      {
-        "text": "Highest occupied spin-up states along T-Y",
-        "x": 546,
-        "y": 164,
-        "width": 3801,
-        "height": 211
-      },
-      {
-        "text": "",
-        "x": 1752,
-        "y": 1569,
-        "width": 426,
-        "height": 63
-      },
-      {
-        "text": "(b)",
-        "x": 4937,
-        "y": 634,
-        "width": 284,
-        "height": 234
-      },
-      {
-        "text": "(a)",
-        "x": 227,
-        "y": 634,
-        "width": 275,
-        "height": 234
-      }
-    ]
+    "source": "/Users/lu/Repos/PhD_thesis_20251216/figures_proj2/S2.17/S2.17.png",
+    "source_sha256": "93a5ed98852ace43063ab0829a7f4c6bc114e1143d26532d4936f01b0fb7ee4d",
+    "pixel_dimensions": [
+      7292,
+      3757
+    ],
+    "thesis_width_fraction": 0.75,
+    "method": "Original labelled PNG included directly; no conversion."
   }
 }

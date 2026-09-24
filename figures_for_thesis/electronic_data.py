@@ -37,10 +37,10 @@ def draw_bands(ax, folder, spin=False, color=BLUE, label=None, linestyle='-'):
         line = ax.plot(xx, yy, color=(PURPLE, CYAN)[channel] if spin else color,
                        ls=('-', (0,(4,3)))[channel] if spin else linestyle)
         if label: line[0].set_label(label)
-    for tick in ticks[1:-1]: ax.axvline(tick, color=GREY, ls='--', alpha=.4, zorder=0)
-    ax.axhline(0, color=GREY, ls='--', zorder=1)
+    for tick in ticks[1:-1]: ax.axvline(tick, color=GREY, ls='--', alpha=.8, zorder=0)
+    ax.axhline(0, color='#5A3C8C', ls='--', alpha=.8, zorder=1)
     ax.set_xticks(ticks, labels); ax.set_xlim(x[0], x[-1]); ax.set_ylim(-4, 3)
-    ax.set_xlabel(r'Wave vector ($k$)'); frame(ax)
+    frame(ax)
 
 def spin_legend(fig, ax, bilayer=False):
     handles = [Line2D([],[],color=PURPLE,label='Spin up'),
