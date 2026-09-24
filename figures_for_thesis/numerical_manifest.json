@@ -1,5 +1,5 @@
 {
-  "source_commit": "807e036a4326c2c2dc557135b3951473ecfe89f6",
+  "source_commit": "ff5ce1b9eb7ad89841a96b80432f590bc69ff4bc",
   "style": {
     "axes_labels": 16,
     "ticks": 14,
@@ -78,7 +78,7 @@
       },
       "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
       "spin": "NM-PBE as in the original optical calculations, no added Drude term",
-      "thesis_width_fraction": 0.667,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         16.0,
         12.0
@@ -115,7 +115,7 @@
       },
       "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
       "spin": "NM-PBE as in the original optical calculations, no added Drude term",
-      "thesis_width_fraction": 0.667,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         16.0,
         12.0
@@ -152,7 +152,7 @@
       },
       "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
       "spin": "NM-PBE as in the original optical calculations, no added Drude term",
-      "thesis_width_fraction": 0.667,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         16.0,
         12.0
@@ -189,7 +189,7 @@
       },
       "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
       "spin": "NM-PBE as in the original optical calculations, no added Drude term",
-      "thesis_width_fraction": 0.667,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         16.0,
         12.0
@@ -226,7 +226,7 @@
       },
       "alpha": "2 E k/(hbar c), hbar=6.582119569e-16 eV s, c=2.99792458e18 Angstrom/s",
       "spin": "NM-PBE as in the original optical calculations, no added Drude term",
-      "thesis_width_fraction": 0.667,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         16.0,
         12.0
@@ -323,7 +323,7 @@
         "bilayer_HSE": -1.26467503
       },
       "path": "KPOINTS_OPT for HSE06; KPOINTS otherwise; original reciprocal metric and each run own Fermi level",
-      "thesis_width_fraction": 0.667,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         18.0,
         12.0
@@ -498,7 +498,7 @@
         ]
       },
       "selection_note": "Same original B2_index/B3_index/B7_index; G7 includes all 14 atoms, not a disjoint third group.",
-      "thesis_width_fraction": 1.0,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         15.0,
         13.200000339084202
@@ -1127,7 +1127,7 @@
         "sha256": "07a138758ac4c48ec17b5ab11e614c77ff0ff4b0b9355078a8231511261236d4"
       },
       "interpretation": "Distribution mean is a guide, not an order-parameter fit. No fitted Tc is shown. Archived endpoints do not establish precise Tc or a rigorous closure bracket; no normal-state convergence output is available.",
-      "thesis_width_fraction": 0.98,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         16.0,
         6.0
@@ -1155,7 +1155,7 @@
       "steps": 5500,
       "time_step_fs": 1,
       "energy_column": "F, electronic free energy; not conserved total energy",
-      "thesis_width_fraction": 1.0,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         14.0,
         6.0
@@ -1188,7 +1188,7 @@
           "sha256": "a8108704741beea89dfcae10c4eb59b1f811ddc48df4f2e284292abd02e7797e"
         }
       ],
-      "thesis_width_fraction": 1.0,
+      "thesis_width_fraction": 0.8,
       "canvas_inches": [
         20.0,
         7.5
