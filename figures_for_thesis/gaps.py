@@ -4,11 +4,11 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 from style import *
 
-fig,axes=plt.subplots(1,2,figsize=(10,4),sharex=True,sharey=True)
+fig,axes=plt.subplots(1,2,figsize=(16,6))
 cmap=LinearSegmentedColormap.from_list('gap_density',['white',BLUE])
 records={}
 for ax,folder,title in zip(axes,['bulk','bilayer_with_Hydrogen'],
-                          ['(a) Bulk','(b) H-terminated bilayer']):
+                          ['(a) Bulk o-B$_{14}$','(b) H-terminated bilayer o-B$_{14}$']):
     rows=[]
     for file in sorted((ROOT/'superconductivity'/folder).glob('B14.imag_aniso_gap0_*')):
         temperature=float(file.name.rsplit('_',1)[1])
@@ -27,14 +27,14 @@ for ax,folder,title in zip(axes,['bulk','bilayer_with_Hydrogen'],
     ax.plot([r['temperature_K'] for r in rows],[r['density_mean_meV'] for r in rows],
             color=ORANGE,label='Distribution mean')
     ax.set(xlim=(0,31),ylim=(0,6.6),xlabel='Temperature (K)')
-    ax.set_xticks([0,10,20,30]); tab(ax,title); frame(ax)
+    ax.set_title(title); ax.set_ylabel(r'Superconducting gap $\Delta$ (meV)'); frame(ax)
+    ax.legend(loc='upper right')
     records[folder]=rows
-axes[0].set_ylabel(r'Superconducting gap $\Delta$ (meV)')
-axes[0].legend(loc='upper right',frameon=True,fancybox=True,borderpad=.3)
-fig.subplots_adjust(left=.08,right=.99,bottom=.16,top=.96,wspace=.08)
-colorbar=fig.colorbar(points,cax=axes[1].inset_axes([.52,.87,.43,.035]),
-                     orientation='horizontal',ticks=[0,.5,1])
-colorbar.set_label('Normalized gap density',fontsize=11)
-colorbar.ax.tick_params(direction='in',labelsize=11)
+
+fig.subplots_adjust(left=.065,right=.90,bottom=.14,top=.87,wspace=.20)
+colorbar=fig.colorbar(points,cax=fig.add_axes([.925,.14,.020,.73]),
+                     orientation='vertical',ticks=[0,.5,1])
+colorbar.set_label('Normalized gap density',fontsize=12)
+colorbar.ax.tick_params(direction='in',labelsize=12)
 save(fig,'fig2.9.pdf')
 (OUT/'gap_summary.json').write_text(json.dumps(records,indent=2)+'\n')
