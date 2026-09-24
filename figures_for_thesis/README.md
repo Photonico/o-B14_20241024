@@ -10,7 +10,7 @@ Canvas sizes follow the original source PDFs rather than equalizing printed font
 - `fig2.11a`, `fig2.11b`, `fig2.12a`, `fig2.12b`, `S2.18`: each original 24×6 in row becomes a separate 16×12 in grid.
 - `fig2.10`, `S2.4`, `S2.5`: original 24×12 in six-panel layouts.
 - `fig2.2`: bands, Brillouin zone and PDoS form a 2×2 grid with a shared legend in the fourth cell; the column widths are 2:1, on a 15×13.2 in canvas.
-- `S2.1`: dual-x convergence plot and lattice scan are side by side on a 20×7.5 in canvas, labelled (a)/(b).
+- `S2.1`: dual-x convergence plot and lattice scan are side by side on a 20×7.5 in canvas.
 - `S2.9`: two original 9×6 in panels, combined at 18×6 in. `S2.11`: the paired panels use a 14×5 in canvas to enlarge the text at the same thesis insertion width. `S2.16`: two original 12×6 in DOS plots, stacked at 12×12 in.
 - `fig2.8`: 12×6 in; `fig2.9`: two original 8×6 in panels, combined at 16×6 in with a vertical colorbar at the right; `S2.10`: 14×6 in including the original atomic views. `S2.11` has translucent white method labels with light grey rounded borders. Other numerical single plots are 10×6 in, except the original 10×7.5 in dual-x `S2.2`.
 
